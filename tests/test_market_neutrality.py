@@ -12,7 +12,7 @@ BIASED_TERMS = re.compile(
 )
 EXCLUDED_SKILLS = re.compile(
     r"seedance-prompt-25-filipino|filipino-micro-drama|blender-to-seedance|"
-    r"seedance-graybox-world|lark-showcase-aigc|seed-audio-15-api|seed-audio-prompt-15|"
+    r"seedance-graybox-world|seed-audio-15-api|seed-audio-prompt-15|"
     r"blender-mcp-setup"
 )
 CONFIDENTIAL = re.compile(r"seed audio 1\.5|larkoffice\.com|higgsfield", re.IGNORECASE)

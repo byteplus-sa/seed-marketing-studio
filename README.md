@@ -123,7 +123,7 @@ Put these in a gitignored `.env`; never commit them.
 
 ## Skills
 
-The workspace ships **67 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
+The workspace ships **68 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
 
 ### Orchestration and review
 
@@ -253,6 +253,7 @@ The workspace ships **67 skills**. Leaf skills are independent; declared orchest
 
 | Skill | Summary |
 |---|---|
+| **lark-showcase-aigc** | Orchestrates ffmpeg-scene-transitions, lark-demo-doc-builder, lark-doc, lark-wiki, lark-drive, and design-doc-mermaid to build enterprise-facing Lark documents that showcase AIGC (AI-generated content) with prompts, results, and inline media. |
 | **showcase-html** | Maintain the HTML production canvas of pre-Studio canvas projects and build ad-hoc comparison pages (optional for Studio projects). |
 | **media-review** | Emergency OS-player fallback when the required HTML/browser review surface is unavailable. |
 | **update** | Updates the repository from its remote, resolves merge conflicts while preserving local work, and re-runs validation and catalog refresh. |
@@ -263,7 +264,7 @@ The workspace ships **67 skills**. Leaf skills are independent; declared orchest
 
 | Source | Type | Skills |
 |---|---|---|
-| **Project-authored** | `local` | All `seedance-*`, `seedream-*`, `seed-audio-*`, `ugc-*`, `tig-*` and `audio-*` skills, plus `brief-intake`, `film-production`, `template-factory`, `prompt-review`, `byteplus-katana`, `omnihuman-prompt-20`, `html-graphic-render`, `color-grade-palettes`, `source-subject-map`, `ffmpeg-scene-transitions`, `ffmpeg-side-by-side-comparison`, `ark-mcp`, `showcase-html`, `media-review`, `update` |
+| **Project-authored** | `local` | All `seedance-*`, `seedream-*`, `seed-audio-*`, `ugc-*`, `tig-*` and `audio-*` skills, plus `brief-intake`, `film-production`, `template-factory`, `prompt-review`, `byteplus-katana`, `omnihuman-prompt-20`, `html-graphic-render`, `color-grade-palettes`, `source-subject-map`, `ffmpeg-scene-transitions`, `ffmpeg-side-by-side-comparison`, `ark-mcp`, `lark-showcase-aigc`, `showcase-html`, `media-review`, `update` |
 | **HyperFrames (vendored)** | `github: heygen-com/hyperframes` | `hyperframes`, `hyperframes-*` and `general-video`; never installed globally or on demand |
 | **FFmpeg (vendored)** | `github: digitalsamba/claude-code-video-toolkit` | `ffmpeg` |
 

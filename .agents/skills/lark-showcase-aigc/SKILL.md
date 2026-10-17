@@ -1,0 +1,144 @@
+---
+name: lark-showcase-aigc
+description: Orchestrates ffmpeg-scene-transitions, lark-demo-doc-builder, lark-doc, lark-wiki, lark-drive, and design-doc-mermaid to build enterprise-facing Lark documents that showcase AIGC (AI-generated content) with prompts, results, and inline media. When the showcase spans multiple locked videos, assemble them into one compilation highlight video first (via ffmpeg-scene-transitions), then place the compilation at the top of the document in an initial "Production Overview & Capabilities Matrix" + "Highlight Video" section. Invoke when the user wants a standalone customer guide or showcase article in Lark.
+---
+
+# Showcase AIGC
+
+Create a polished external-facing Lark Document that combines two goals at once:
+
+1. **Showcase** what was produced and why it matters.
+2. **Teach** the reader how the workflow works step by step.
+
+Use this skill when the user wants a customer-ready Lark document that feels like a strong product article or breakdown page adapted for enterprise readers and delivered as a Lark Document.
+
+## Primary outcome
+
+Produce a **standalone external guide** that a client can read without any access to the local workspace, repository, or project folder. The document must stand on its own.
+
+The final document should:
+
+- open with the strongest result or business outcome before the detailed walkthrough;
+- explain the business scenario and outcome clearly;
+- walk through the workflow in a logical tutorial sequence;
+- show the exact prompts, references, settings, and outputs that matter;
+- embed images, audio, and video inline when available;
+- read like a polished customer showcase, not an internal engineering note.
+
+## Orchestration
+
+This skill is an orchestrator — it sequences these skills and tools as needed:
+
+- `ffmpeg-scene-transitions` to assemble multiple locked scene videos into one
+  compilation highlight video (with crossfades and locked A/V sync) before
+  building the document. For a plain showreel of equal-looking clips with
+  crossfades and open/close fades, `scripts/assemble_showreel.py` does it in one
+  command and writes a web-ready file (see the playable video delivery guide).
+  It is a convenience wrapper for that simple case (24 fps, the first clip's size,
+  one crossfade length); for hard cuts, per-boundary transition plans or mixed
+  frame rates use `ffmpeg-scene-transitions`.
+- `lark-demo-doc-builder` for the main document-building workflow and prompt/result table patterns.
+- `lark-doc` for document creation and block-level editing.
+- `lark-wiki` when the target is a wiki URL and the underlying doc token must be resolved.
+- `lark-drive` when folder placement, permissions, or document organization is requested.
+- `design-doc-mermaid` when a workflow diagram materially improves clarity.
+
+Before writing to Lark, follow the upstream Lark instructions required by `lark-demo-doc-builder`.
+
+## External-guide rules
+
+This skill is for **client-facing artifacts**, so enforce these rules strictly unless the user explicitly asks otherwise:
+
+- Do **not** mention local files, local paths, repo paths, folder names, asset filenames, shell commands, or workspace structure.
+- Do **not** say things like "stored in", "saved at", "located in", or reference internal directories.
+- Do **not** expose internal-only notes, debugging context, temporary constraints, or implementation caveats irrelevant to the customer — including approval requests, "proposed" labels, asset sources, and edit notes.
+- Do **not** mention reference ads, source ads, inspirations, or recreation of another brand's work.
+- Do **not** present the workflow as dependent on this specific machine or repository.
+- Do **not** include raw MCP, API, or CLI details unless the user explicitly wants a technical appendix.
+
+Translate internal provenance into customer-safe wording:
+
+- "reference image supplied to the model"
+- "generated storyboard frame"
+- "generated video result"
+- "voice prompt"
+- "workflow step"
+- "model configuration"
+
+Never surface filesystem-oriented phrasing in the Lark document.
+
+## Project showcase standard
+
+For a customer-facing showcase containing several commercials or campaign
+directions, use the **project showcase** layout unless the user requests a
+different structure:
+
+1. Place a playable showreel near the beginning, after the title and concise
+   introduction. Assemble it from approved videos by default. When the user
+   explicitly asks to include another existing video, include it in the
+   showreel without altering that video's approval record.
+2. Create one top-level section per project or campaign direction, in showreel
+   order.
+3. Within every project section, place three separate tables: `Elements`,
+   then `Storyboard`, then `Video`. Never combine storyboard and video rows in
+   one table, and do not leave an empty heading or table. Still posters go in a
+   `Posters` section with `Elements` and `Poster` tables per poster.
+   When one project holds several deliverables (spots, episodes, cut-downs)
+   with different inputs, give each deliverable its own subsection with its own
+   `Elements` table. List exactly what that deliverable used: each bound
+   `@Image`/`@Video`/`@Audio` reference, and each logo, text layer, and music or
+   effects asset added in post. Show the reference that was actually sent to
+   the model, such as a solid-background derivative, not only the web original.
+   A deterministic deliverable with no video prompt describes its build in one
+   plain sentence in the prompt cell, and lists its generated audio as an
+   `Elements` row with the exact audio prompt and a player.
+4. Keep the exact frozen image or video prompt in the same row as its result.
+   Use an inline Preview for video; do not turn a prompt/result table into a
+   detached gallery. Caption a prompt "exact" or "frozen" only when it matches
+   the submitted snapshot byte for byte. If client wording rules require
+   removing phrases from a displayed prompt, caption it `Generation prompt` and
+   leave the frozen snapshot unchanged in the project.
+5. Preserve media that the user did not ask to remove. Before and after a
+   scoped update, inventory the project sections, prompts, images, and Preview
+   videos so concurrent edits and existing evidence are not silently lost.
+
+6. Write terse, plain client copy: one sentence where one is enough; product
+   rows read `Product snapshot of <Product>.`; end-card rows read
+   `End card: “<line>”`. Never include internal or approval notes (proposed
+   copy, sources, provenance, trims, QA) and never mention reference ads,
+   source ads, inspirations or "in the style of" — describe each ad on its own
+   terms without claiming it was invented from scratch. Keep open business
+   questions in the chat, not the document.
+7. After the last write, turn on native wrap for every prompt code block (see
+   [prompt cleanup rules](references/guide-prompt-cleanup-rules.md)).
+
+Read [guide-project-showcase-layout.md](references/guide-project-showcase-layout.md)
+for the layout contract and verification checklist.
+
+## Detailed authoring references
+
+Load the applicable layout/content reference for the requested edit. Read the
+pre-publish verification and standalone-document checks before any authorized
+publication. Existing approval to draft does not authorize external messages.
+
+| Need | Reference |
+| --- | --- |
+| Narrative style | [guide-narrative-style.md](references/guide-narrative-style.md) |
+| Breakdown article patterns to emulate | [guide-breakdown-article-patterns.md](references/guide-breakdown-article-patterns.md) |
+| Table-first layout (default) | [guide-table-first-layout-default.md](references/guide-table-first-layout-default.md) |
+| Recommended document structure | [guide-recommended-document-structure.md](references/guide-recommended-document-structure.md) |
+| Section blueprint | [guide-section-blueprint.md](references/guide-section-blueprint.md) |
+| Per-step breakdown block | [guide-per-step-breakdown-block.md](references/guide-per-step-breakdown-block.md) |
+| Breakdown writing pattern | [guide-breakdown-writing-pattern.md](references/guide-breakdown-writing-pattern.md) |
+| Enterprise framing guidance | [guide-enterprise-framing-guidance.md](references/guide-enterprise-framing-guidance.md) |
+| Prompt cleanup rules | [guide-prompt-cleanup-rules.md](references/guide-prompt-cleanup-rules.md) |
+| Media handling rules | [guide-media-handling-rules.md](references/guide-media-handling-rules.md) |
+| Playable video delivery, upload, swap and served-file verification (read before any video goes into a document) | [guide-playable-video-delivery.md](references/guide-playable-video-delivery.md) |
+| Tutorial that teaches one technique and proves it with several examples | [guide-tutorial-with-examples-layout.md](references/guide-tutorial-with-examples-layout.md) |
+| Jargon blocklist | [guide-jargon-blocklist.md](references/guide-jargon-blocklist.md) |
+| Pre-publish verification gate | [guide-pre-publish-verification-gate.md](references/guide-pre-publish-verification-gate.md) |
+| Standalone-document checks | [guide-standalone-document-checks.md](references/guide-standalone-document-checks.md) |
+| Default writing workflow | [guide-default-writing-workflow.md](references/guide-default-writing-workflow.md) |
+| When information is missing | [guide-when-information-is-missing.md](references/guide-when-information-is-missing.md) |
+| Deliverable contract | [guide-deliverable-contract.md](references/guide-deliverable-contract.md) |
+| Example invocation cases | [guide-example-invocation-cases.md](references/guide-example-invocation-cases.md) |

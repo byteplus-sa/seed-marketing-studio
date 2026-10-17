@@ -43,7 +43,7 @@ grid view.
 - A project starts, resumes, changes stage, produces an artifact, or reaches a
   review/approval checkpoint.
 
-Do **not** use for Lark/Feishu documents. For
+Do **not** use for Lark/Feishu documents — that is `lark-showcase-aigc`. For
 composing the side-by-side/grid video itself, use `ffmpeg-side-by-side-comparison`.
 The production canvas is required for project workflows. `media-review` is only
 an unavailable-browser or explicitly requested OS-player fallback and never
@@ -321,7 +321,8 @@ pin exists, put pin + generated take(s) in the same `shot-generation` group.
 ### Before/after comparison table
 
 For VFX scenarios, use a `kind: "table"` section with `Stage | Prompt / Input |
-Generated Result` columns and `BEFORE`/`AFTER` rows.
+Generated Result` columns and `BEFORE`/`AFTER` rows. Mirrors the Lark showcase
+table convention.
 
 ### Combined view (panel)
 

@@ -127,6 +127,12 @@
       "skillPath": "skills/hyperframes-studio/SKILL.md",
       "computedHash": "7449da3952155e40e7d76fc29d4415b4030ab6f7f3ff9c3b94fa1b159cad46c4"
     },
+    "lark-showcase-aigc": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/lark-showcase-aigc/SKILL.md",
+      "computedHash": "b213b997863ae591fab8f2ffca3e0767f381cf58237272f7c6e6f01b815efe4d"
+    },
     "media-review": {
       "source": "./local",
       "sourceType": "local",
@@ -359,7 +365,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/showcase-html/SKILL.md",
-      "computedHash": "b573e2ee3074aa764dd3613c8d961880af325f695770c3cde57bc6bb0f1fda36"
+      "computedHash": "f8d7bae70cfbfe2df8690d0fd4e99d445419680a48965e30a75c811b9d10d362"
     },
     "source-subject-map": {
       "source": "./local",

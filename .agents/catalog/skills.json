@@ -190,6 +190,15 @@
       "upstream_hash": "7449da3952155e40e7d76fc29d4415b4030ab6f7f3ff9c3b94fa1b159cad46c4",
       "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. Local overlay: a Workspace overlay paragraph and the Checking-your-work step use `studio_project.py check` instead of bare `hyperframes check`, route Studio feedback through storyboard comments and Ask agent / Copy to Agent read with `hyperframes preview --context --json` and `--selection --json`, and forbid `feedback`, `usage` and `open` unasked. The rest of the bundle matches upstream."
     },
+    "lark-showcase-aigc": {
+      "kind": "orchestrator",
+      "description": "Orchestrates ffmpeg-scene-transitions, lark-demo-doc-builder, lark-doc, lark-wiki, lark-drive, and design-doc-mermaid to build enterprise-facing Lark documents that showcase AIGC (AI-generated content) with prompts, results, and inline media. When the showcase spans multiple locked videos, assemble them into one compilation highlight video first (via ffmpeg-scene-transitions), then place the compilation at the top of the document in an initial \"Production Overview & Capabilities Matrix\" + \"Highlight Video\" section. Invoke when the user wants a standalone customer guide or showcase article in Lark.",
+      "readme_summary": "Orchestrates ffmpeg-scene-transitions, lark-demo-doc-builder, lark-doc, lark-wiki, lark-drive, and design-doc-mermaid to build enterprise-facing Lark documents that showcase AIGC (AI-generated content) with prompts, results, and inline media.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
     "media-review": {
       "kind": "leaf",
       "description": "Emergency CLI fallback for opening generated images or videos in macOS when Studio preview or the pre-Studio canvas is unavailable, or when the user explicitly requests an OS-native player. Never use it as production-stage review evidence: project workflows require the Studio stage-exit checks (or, for a pre-Studio canvas project with showcase.json, the showcase-html freshness check).",
