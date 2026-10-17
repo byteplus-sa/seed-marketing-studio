@@ -15,7 +15,7 @@ used below.
 | --- | --- | --- |
 | Deterministic graphics (`html-graphic-render`) | `palette`, `typography` files and families, `logos` files with `min_height_px`, `clear_space_ratio`, `allowed_backgrounds`; `cta_style`; `copy_rules.trademark_marks` | Recolor or redraw a logo; substitute an unlicensed font file |
 | HyperFrames supers, lower-thirds, end cards | Same as deterministic graphics; brand fonts load from `assets/fonts/` by local path | Burn brand text into generated footage |
-| Seedream and Seedance prompts | `imagery.style_sentence` in the style or visual-style line; `imagery.avoid` as observable positive direction | Name the brand, describe or request the logo, request on-product text or trademarks |
+| Seedream and Seedance prompts | `imagery.style_sentence` in the style or visual-style line; `imagery.avoid` as observable positive direction; on-product marks only as carried by a bound acquired product reference | Name the brand, ask for a free-standing, corner or end-card logo, or describe a mark or label text the bound reference does not carry |
 | Script and caption writing | `voice`, `cta_style.verbs`, `copy_rules` | Exceed the supported product facts; voice never licenses a claim |
 | `prompt-review` | `copy_rules.banned_words` and `copy_rules.required_lines` for every generation-bound prompt and every spoken or on-screen line | Treat a missing required line as optional when its `when` condition applies |
 | Delivery and compliance | `disclosure.ai_label_text` and `disclosure.placement` only when the deliverable's recorded disclosure decision requires a label | Add an AI label by default to internal reviews or reels |
@@ -36,10 +36,20 @@ used below.
 
 ## Generative prompts
 
-Generated media stays logo-free and text-free; brand identity in footage comes
-from approved acquired product references (see the element identification
-contract) and from style, not from asking the model to draw a mark. Insert the
-style sentence verbatim:
+**One logo rule (`brand.no_generated_logo`)** covers every consumer:
+
+- **Free-standing, corner and end-card logos and wordmarks are always post
+  overlays** made from the kit's `logos` files, never generated.
+- **On-product marks are allowed only when a bound acquired product reference
+  carries them.** The prompt preserves them from that reference and never
+  spells them out; QA checks every readable mark letter for letter against that
+  reference.
+- **A generated logo, wordmark or mark not traceable to a bound reference is a
+  defect**, even when it looks right.
+
+Brand identity in footage otherwise comes from style, not from asking the model
+to draw a mark (see the element identification contract). Insert the style
+sentence verbatim:
 
 ```text
 Style: <imagery.style_sentence>
@@ -59,8 +69,10 @@ For each prompt or script line:
    applies to the deliverable (for example a price is shown), the exact `text`
    must appear in the planned post overlay or end card. Missing is a MAJOR
    finding; it is added in post, never generated into footage.
-3. **Logo requests**: any request to render the logo, wordmark or trademark in
-   generated media is a CRITICAL finding.
+3. **Logo requests** (`brand.no_generated_logo`): any request to generate a
+   free-standing, corner or end-card logo or wordmark, or a mark not carried by
+   a bound acquired product reference, is a CRITICAL finding. Preserving the
+   on-product mark of a bound acquired reference is allowed.
 4. **Pin**: the reviewed prompt records the kit pin it used; a different
    current pin invalidates the review.
 

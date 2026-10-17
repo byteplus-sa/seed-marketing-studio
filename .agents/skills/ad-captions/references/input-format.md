@@ -18,8 +18,8 @@ Keep one small JSON per clip, or one per cut, under
       "start_s": 0.4,
       "end_s": 2.6,
       "text": {
-        "en": "Cold for 24 hours. Hot for 12.",
-        "es": "Frío 24 horas. Caliente 12."
+        "en": "Cold for up to 24 hours. Hot for up to 12.",
+        "es": "Frío hasta 24 horas. Caliente hasta 12."
       }
     }
   ]
@@ -30,7 +30,7 @@ Keep one small JSON per clip, or one per cut, under
 | --- | --- |
 | `schema_version` | Must be `1` |
 | `offset_s` | Optional. Where this file's time zero sits on the cut's timeline |
-| `lines[].id` | Optional stable id used in warnings; defaults to `line-NNN` |
+| `lines[].id` | Optional stable id used in warnings; defaults to `<file-stem>-line-NNN`. Ids must be unique across every `--input` file |
 | `lines[].speaker` | Optional nonempty label (presenter, voiceover); never printed |
 | `lines[].start_s`, `end_s` | Seconds from the file's zero; `end_s` after `start_s` |
 | `lines[].text` | Object keyed by language code: the locked text per language |
@@ -41,7 +41,7 @@ Final time = `start_s` + `offset_s` + the command-line `--offset-s`.
 
 | Value | Source |
 | --- | --- |
-| `text` | The locked ad script and its approved translations; claims, prices and names exactly as approved |
+| `text` | The locked ad script and its approved translations; claims, prices, names and qualifiers ("up to", "from") exactly as approved, never shortened into a stronger claim |
 | `start_s`, `end_s` | Speech-to-text segment or word times on the placed take or voiceover, confirmed by listening |
 | `offset_s` | The clip's `data-start` on the cut's Studio timeline, never a sum of planned durations |
 

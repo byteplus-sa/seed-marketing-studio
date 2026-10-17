@@ -46,7 +46,7 @@
       "expectations": [
         "Recognizes offer and availability as perishable facts that the plain supported command excludes.",
         "Re-reads the live page, records new quotes and retrieved_at, and does not reuse the month-old values.",
-        "Uses product_facts.py supported --max-age-hours with a short window for the deliverable.",
+        "Uses product_facts.py supported --max-age-hours with the 24-hour default window unless the brief records another, and records the window used.",
         "If the offer is no longer on the page, says so and does not put it on the end card."
       ]
     }

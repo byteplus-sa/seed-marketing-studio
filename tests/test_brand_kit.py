@@ -5,6 +5,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -237,6 +238,16 @@ class ValidateTests(BrandKitTestCase):
         path = self.approved_kit()
         self.edit(path, brand_id="other-brand")
         self.assertIn("brand.id_matches_directory", self.rules(path))
+
+    def test_validating_from_inside_the_kit_directory_matches_the_brand_id(self) -> None:
+        path = self.approved_kit()
+        previous = Path.cwd()
+        self.addCleanup(os.chdir, previous)
+        os.chdir(path.parent)
+        self.assertEqual(self.rules(Path("brand.json")), [])
+        code, result = run("pin", "brand.json")
+        self.assertEqual(code, 0)
+        self.assertEqual(result["brand_id"], "acme-home")
 
     def test_duplicate_palette_names_and_primary_logos_are_rejected(self) -> None:
         path = self.approved_kit()

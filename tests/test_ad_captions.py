@@ -186,6 +186,11 @@ class SplittingAndTimingTests(unittest.TestCase):
         self.assertEqual(cues[0].end_ms, 560)
         self.assertTrue(any("minimum" in warning for warning in warnings))
 
+    def test_line_too_short_for_its_text_raises_a_caption_error(self):
+        words = " ".join(f"word{number:02d}" for number in range(20))
+        with self.assertRaisesRegex(CaptionError, "a: .*no duration"):
+            build([make_line("a", 1.0, 1.001, en=words)])
+
     def test_reading_speed_over_limit_is_reported(self):
         _, warnings = build(
             [make_line("a", 0, 1, en="This sentence is far too long for one second.")],
@@ -320,6 +325,30 @@ class InputFileTests(unittest.TestCase):
         broken.write_text("{", encoding="utf-8")
         with self.assertRaisesRegex(CaptionError, "invalid JSON"):
             MODULE.load_lines(broken)
+
+    def test_default_ids_from_different_files_keep_the_minimum_gap(self):
+        first = self.document()
+        del first["lines"][0]["id"]
+        first["lines"][0].update(start_s=0.0, end_s=1.0)
+        second = self.document()
+        del second["lines"][0]["id"]
+        second["lines"][0].update(start_s=1.0, end_s=3.0)
+        lines = MODULE.load_lines(self.write(first, "a.json")) + MODULE.load_lines(
+            self.write(second, "b.json")
+        )
+        self.assertNotEqual(lines[0].line_id, lines[1].line_id)
+        cues, _ = MODULE.build_cues(lines, "en", settings_for("en"))
+        self.assertEqual(cues[0].end_ms, 960)
+        self.assertEqual(cues[1].start_ms, 1000)
+
+    def test_duplicate_line_ids_are_rejected(self):
+        with self.assertRaisesRegex(CaptionError, "duplicate line id 'same'"):
+            build(
+                [
+                    make_line("same", 0, 1.0, en="One."),
+                    make_line("same", 1.0, 2.0, en="Two."),
+                ]
+            )
 
     def test_string_seconds_are_rejected(self):
         document = self.document()

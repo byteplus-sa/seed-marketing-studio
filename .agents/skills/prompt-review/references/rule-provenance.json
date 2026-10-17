@@ -24,6 +24,6 @@
     "video.text_free", "dialogue.speech_budget",
     "dialogue.register", "ad.claims_supported",
     "ad.no_fabricated_testimonial", "ad.disclosure_recorded",
-    "brand.copy_rules", "ad.safe_zone"
+    "brand.copy_rules", "ad.safe_zone", "brand.no_generated_logo"
   ]
 }

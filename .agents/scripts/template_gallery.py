@@ -16,6 +16,7 @@ CODE_HEADING = re.compile(
     r"^(#{2,4})\s+`(?P<id>[a-z0-9]+(?:-[a-z0-9]+)*)`\s+[-–—]\s+(?P<title>.+?)\s*$"
 )
 HEADING = re.compile(r"^(#{1,6})\s")
+FENCE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
 RECIPE_LABEL = re.compile(r"^\*\*[A-Z][A-Za-z ]{0,30}:\*\*\s")
 LIST_MARKER = re.compile(r"^(?:[-*+]|\d+\.)\s+")
 LABEL = re.compile(r"^\*{0,2}([A-Za-z][A-Za-z ]{0,30}?)\*{0,2}:\*{0,2}\s")
@@ -71,17 +72,38 @@ def clean(text: str) -> str:
     return re.sub(r"\s+", " ", text.replace("**", "").replace("`", "")).strip()
 
 
+def closes_fence(line: str, opener: str) -> bool:
+    match = FENCE.match(line)
+    return bool(
+        match
+        and match.group(1)[0] == opener[0]
+        and len(match.group(1)) >= len(opener)
+        and not line[match.end() :].strip()
+    )
+
+
+def fence_mask(lines: list[str]) -> list[bool]:
+    mask: list[bool] = []
+    opener = ""
+    for line in lines:
+        if opener:
+            mask.append(True)
+            if closes_fence(line, opener):
+                opener = ""
+            continue
+        match = FENCE.match(line)
+        opener = match.group(1) if match else ""
+        mask.append(bool(match))
+    return mask
+
+
 def blocks(lines: list[str]) -> list[str]:
     result: list[str] = []
     current: list[str] = []
-    fence = False
-    for line in lines:
+    for line, fenced in zip(lines, fence_mask(lines)):
+        if fenced:
+            continue
         stripped = line.strip()
-        if stripped.startswith(("```", "~~~")):
-            fence = not fence
-            continue
-        if fence:
-            continue
         starts = (
             not stripped
             or LIST_MARKER.match(stripped)
@@ -130,12 +152,10 @@ def entry_heading(line: str) -> tuple[int, str, str, bool] | None:
 
 def scan_document(skill: str, path: Path, source: str) -> list[Entry]:
     lines = path.read_text(encoding="utf-8").splitlines()
+    fenced = fence_mask(lines)
     entries: list[Entry] = []
-    fence = False
     for index, line in enumerate(lines):
-        if line.strip().startswith(("```", "~~~")):
-            fence = not fence
-        heading = None if fence else entry_heading(line)
+        heading = None if fenced[index] else entry_heading(line)
         if heading is None:
             continue
         level, entry_id, title, marked = heading
@@ -143,13 +163,22 @@ def scan_document(skill: str, path: Path, source: str) -> list[Entry]:
             (
                 position
                 for position in range(index + 1, len(lines))
-                if (match := HEADING.match(lines[position]))
+                if not fenced[position]
+                and (match := HEADING.match(lines[position]))
                 and len(match.group(1)) <= level
             ),
             len(lines),
         )
-        body = [text for text in lines[index + 1 : end] if not HEADING.match(text)]
-        if not marked and not any(RECIPE_LABEL.match(text) for text in body):
+        body = [
+            text
+            for position, text in enumerate(lines[index + 1 : end], index + 1)
+            if fenced[position] or not HEADING.match(text)
+        ]
+        labelled = any(
+            not fenced[position] and RECIPE_LABEL.match(lines[position])
+            for position in range(index + 1, end)
+        )
+        if not marked and not labelled:
             continue
         entries.append(
             Entry(skill, entry_id, title, summary_of(body), source, index + 1)

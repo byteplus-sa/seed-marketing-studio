@@ -9,6 +9,9 @@ first.
 Source contract: `.agents/contracts/ad-compliance.md` (provenance label only;
 the rule catalog named in `rule-provenance.json` owns the rule IDs).
 
+Not legal advice; re-verify. The contract's legal and platform rows are dated
+working data; route an unclear case to the user and their counsel.
+
 ## Review inputs
 
 Collect, in addition to the usual review input:
@@ -21,8 +24,9 @@ Collect, in addition to the usual review input:
   that none exists.
 - `paid`: whether the deliverable is a paid ad, and its placement.
 
-A missing facts file or brand kit leaves the dependent checks `incomplete`,
-not passed. Do not infer facts from the prompt itself.
+A missing facts file or brand kit never passes the dependent checks: set
+`reviewer_status: incomplete` (or record `fail` with the missing input as
+evidence). Do not infer facts from the prompt itself.
 
 ## Claims
 
@@ -51,7 +55,8 @@ not passed. Do not infer facts from the prompt itself.
 
 5. **Perishable facts are current (`ad.claims_supported`).** Price, offer and
    availability facts carry `status: perishable` and a retrieval time inside
-   the product card's freshness window; stale or undated ones are MAJOR.
+   the freshness window product intake documents (24 hours by default unless
+   the brief records another window); stale or undated ones are MAJOR.
 
 ## Testimonials
 
@@ -74,10 +79,14 @@ not passed. Do not infer facts from the prompt itself.
    `copy_rules.required_lines` entry whose `when` condition holds appears
    verbatim in the deterministic copy plan. Missing is MAJOR.
 
-9. **Marks and logos stay out of generated media (`brand.copy_rules`).** The
-   generation prompt does not ask the model to render a logo, trademark mark,
-   required line or disclosure label; those are finished in post. Also check
-   `video.text_free` for video prompts. MAJOR.
+9. **Marks and logos stay out of generated media (`brand.copy_rules`,
+   `brand.no_generated_logo`).** The generation prompt does not ask the model
+   to render a free-standing, corner or end-card logo, trademark mark,
+   required line or disclosure label; those are finished in post. An
+   on-product mark passes only when a bound acquired product reference carries
+   it and the prompt preserves it from that reference. Any requested logo or
+   mark not traceable to a reference is CRITICAL. Also check `video.text_free`
+   for video prompts.
 
 ## Disclosure and placement
 

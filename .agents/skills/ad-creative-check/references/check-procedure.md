@@ -2,7 +2,8 @@
 
 Detailed criteria, model questions and commands for each check. Paths are
 relative to the campaign folder; the check folder is
-`qa/creative-check_<deliverable-id>/`.
+`delivery/qa/<deliverable-id>/`, shared with the cut's safe-zone contact
+sheet. Deliverable ids are `{campaign}_{concept}_{axis-values}_v{nn}_<placement>`.
 
 ## Video understanding questions
 
@@ -46,8 +47,12 @@ the status is `needs_human`.
 - Legible means readable when the frame is viewed about 360 px wide, the size
   of a phone feed thumbnail. This is a workspace heuristic, not a platform
   rule.
-- A logo that only appears inside generated footage is a defect to report
-  even when it looks right: logos are finished deterministically.
+- Rule `brand.no_generated_logo`: free-standing, corner and end-card logos
+  and wordmarks must be post overlays from the brand kit; one rendered inside
+  generated footage is `fail` even when it looks right. An on-product mark is
+  allowed only when a bound acquired product reference carries it; check it
+  letter for letter against that reference. A logo or mark not traceable to a
+  reference is `fail`.
 - `not_applicable` only when the brief deliberately shows no logo.
 
 ### opening_change
@@ -109,6 +114,13 @@ Record them as `measured.integrated_lufs` and `measured.true_peak_dbtp`. The
 report recomputes the result against `loudness_target` and rejects a status
 that disagrees with the numbers.
 
+The default target follows the audio-video alignment contract: -16 LUFS
+integrated with peaks at or below -1.5 dBFS. `loudnorm` reports true peak, which
+is never below the sample peak, so the check requires `true_peak_dbtp` at or
+below -1.5; passing it also meets the contract's -1.5 dBFS ceiling. The ±1 LU
+integrated tolerance (`tolerance_lu`) is a workspace heuristic, not a contract
+value; a delivery record may set its own.
+
 ### disclosure_recorded
 
 - Paid deliverable: `pass` needs `disclosure_record` pointing at the decision
@@ -124,8 +136,8 @@ that disagrees with the numbers.
 ```json
 {
   "schema_version": 1,
-  "deliverable_id": "glow-serum_hook-question_9x16_15s_v01",
-  "video": "renders/glow-serum_hook-question_9x16_15s_v01.mp4",
+  "deliverable_id": "glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels",
+  "video": "projects/glow-serum-9x16/studio/renders/glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels.mp4",
   "video_sha256": "<64 hex characters>",
   "duration_s": 15.0,
   "paid": true,
@@ -149,7 +161,7 @@ that disagrees with the numbers.
       "id": "disclosure_recorded",
       "status": "pass",
       "evidence": "User chose end-card disclosure and platform labels.",
-      "disclosure_record": "disclosure_glow-serum_hook-question_9x16_15s_v01.json"
+      "disclosure_record": "disclosure_glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels.json"
     }
   ]
 }

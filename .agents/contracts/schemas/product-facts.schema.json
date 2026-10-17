@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "product-facts.schema.json",
   "title": "Product facts",
-  "description": "Sourced facts and acquired reference images for one product card. Every fact carries a verbatim quote and its source; only supported facts may reach a script, super or caption.",
+  "description": "Sourced facts and acquired reference images for one product card. Every fact carries a verbatim quote and its source; only supported facts, or perishable facts re-verified within the freshness window, may reach a script, super or caption.",
   "type": "object",
   "required": ["schema_version", "product_id", "product_name", "brand_id", "source", "facts", "images"],
   "properties": {

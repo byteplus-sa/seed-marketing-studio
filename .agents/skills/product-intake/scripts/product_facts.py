@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -15,6 +16,14 @@ SCHEMA_PATH = (
 )
 PERISHABLE_KINDS = {"price", "availability", "offer"}
 SUBSTANTIATED_KINDS = {"performance", "comparison"}
+QUALIFIERS = (
+    ("up to", re.compile(r"\bup to\b", re.IGNORECASE)),
+    ("as low as", re.compile(r"\bas low as\b", re.IGNORECASE)),
+    ("from", re.compile(r"\bfrom\s+[^\w\s]?\d", re.IGNORECASE)),
+    ("starting at", re.compile(r"\bstarting at\b", re.IGNORECASE)),
+    ("may", re.compile(r"\bmay\b", re.IGNORECASE)),
+    ("approximately", re.compile(r"\bapproximately\b", re.IGNORECASE)),
+)
 
 
 @dataclass(frozen=True)
@@ -64,8 +73,25 @@ def entries(document: dict[str, Any], key: str) -> list[tuple[int, dict[str, Any
     return [(index, entry) for index, entry in enumerate(value) if isinstance(entry, dict)]
 
 
+def qualifier_findings(fact: dict[str, Any], path: str) -> list[Finding]:
+    claim = fact.get("claim")
+    quote = fact.get("quote")
+    if not isinstance(claim, str) or not isinstance(quote, str):
+        return []
+    return [
+        Finding(
+            "facts.claim_qualifier",
+            f"{path}.claim",
+            f"The quote says {label!r} but the claim drops it; keep the qualifier in the claim",
+            "warning",
+        )
+        for label, pattern in QUALIFIERS
+        if pattern.search(quote) and not pattern.search(claim)
+    ]
+
+
 def fact_findings(fact: dict[str, Any], path: str, now: datetime) -> list[Finding]:
-    findings: list[Finding] = []
+    findings = qualifier_findings(fact, path)
     kind = fact.get("kind")
     status = fact.get("status")
     if not fact.get("source_url") and not fact.get("source_ref"):
@@ -193,22 +219,27 @@ def emit(document: dict[str, Any]) -> None:
     print(json.dumps(document, indent=2, ensure_ascii=False))
 
 
+def blocking(findings: list[Finding]) -> list[Finding]:
+    return [finding for finding in findings if finding.severity == "error"]
+
+
 def checked(path: Path, now: datetime) -> tuple[Any, list[Finding]]:
     document = read_facts(path)
-    findings = validate_facts(document, path.parent, now)
-    return document, [finding for finding in findings if finding.severity == "error"]
+    return document, validate_facts(document, path.resolve().parent, now)
 
 
 def command_validate(args: argparse.Namespace, now: datetime) -> int:
-    _, errors = checked(args.facts, now)
-    emit({"ok": not errors, "findings": [asdict(finding) for finding in errors]})
+    _, findings = checked(args.facts, now)
+    errors = blocking(findings)
+    emit({"ok": not errors, "findings": [asdict(finding) for finding in findings]})
     return int(bool(errors))
 
 
 def command_supported(args: argparse.Namespace, now: datetime) -> int:
     if args.max_age_hours is not None and args.max_age_hours <= 0:
         raise FactsError("--max-age-hours must be greater than zero")
-    document, errors = checked(args.facts, now)
+    document, findings = checked(args.facts, now)
+    errors = blocking(findings)
     if errors:
         emit({"ok": False, "findings": [asdict(finding) for finding in errors]})
         return 1

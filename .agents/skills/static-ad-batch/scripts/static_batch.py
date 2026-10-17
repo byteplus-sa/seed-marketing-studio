@@ -10,6 +10,8 @@ import re
 import shlex
 import sys
 from collections.abc import Mapping
+from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -54,6 +56,8 @@ MAX_COMPARISON_ROWS = 4
 CONTACT_ROWS_PER_PAGE = 12
 CONTACT_TILE = 360
 CONTACT_GAP = 24
+DEFAULT_PERISHABLE_MAX_AGE_HOURS = 24
+CLOCK_SKEW = timedelta(minutes=5)
 
 
 def sha256(path: Path) -> str:
@@ -125,11 +129,23 @@ def canonical_sha256(document: dict[str, Any]) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def verify_pinned_hash(path: Path, expected: Any, label: str) -> str:
+def verify_recorded_hash(path: Path, expected: Any, label: str) -> str:
+    if not isinstance(expected, str) or not expected:
+        raise ValueError(f"{label} has no recorded SHA-256 in the brand kit")
     actual = sha256(path)
-    if expected is not None and expected != actual:
+    if expected != actual:
         raise ValueError(f"{label} SHA-256 differs from the brand kit record")
     return actual
+
+
+def require_license(entry: dict[str, Any], label: str) -> None:
+    value = entry.get("license")
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{label} has no recorded license in the brand kit")
+
+
+def font_alias(role: str) -> str:
+    return f"brand-{role}"
 
 
 def entries_by_role(entries: Any, label: str) -> dict[str, dict[str, Any]]:
@@ -149,7 +165,11 @@ def load_brand(root: Path, spec: dict[str, Any]) -> dict[str, Any]:
         raise TypeError("Brand kit must be a JSON object")
     kit_hash = canonical_sha256(kit)
     pinned = spec.get("brand_kit_sha256")
-    if pinned is not None and pinned != kit_hash:
+    if not isinstance(pinned, str) or not pinned:
+        raise ValueError(
+            "Spec brand_kit_sha256 is required; record the campaign pin from brand_kit.py pin"
+        )
+    if pinned != kit_hash:
         raise ValueError("Brand kit SHA-256 differs from the campaign pin")
     if kit.get("status") != "approved":
         raise ValueError("Brand kit status must be approved before a static batch")
@@ -163,7 +183,7 @@ def load_brand(root: Path, spec: dict[str, Any]) -> dict[str, Any]:
         elif role in REQUIRED_PALETTE_ROLES:
             missing.append(f"palette.{role}")
     typography = entries_by_role(kit.get("typography", []), "typography")
-    fonts: dict[str, dict[str, str]] = {}
+    fonts: dict[str, dict[str, Any]] = {}
     for role in (*REQUIRED_TYPOGRAPHY_ROLES, "cta"):
         entry = typography.get(role)
         if entry is None or not entry.get("family") or not entry.get("file"):
@@ -176,10 +196,14 @@ def load_brand(root: Path, spec: dict[str, Any]) -> dict[str, Any]:
         font_path = contained_file(
             root, path.parent, entry["file"], f"Font for {role}", set(FONT_FORMATS)
         )
+        require_license(entry, f"Font {role}")
+        weight = entry.get("weight")
         fonts[role] = {
             "family": family,
+            "alias": font_alias(role),
+            "weight": weight if isinstance(weight, int) and not isinstance(weight, bool) else None,
             "path": str(font_path),
-            "sha256": verify_pinned_hash(font_path, entry.get("sha256"), f"Font {role}"),
+            "sha256": verify_recorded_hash(font_path, entry.get("sha256"), f"Font {role}"),
         }
     logo_entry = entries_by_role(kit.get("logos", []), "logos").get("primary") or {}
     if not logo_entry.get("file"):
@@ -201,7 +225,7 @@ def load_brand(root: Path, spec: dict[str, Any]) -> dict[str, Any]:
         "fonts": fonts,
         "logo": {
             "path": str(logo_path),
-            "sha256": verify_pinned_hash(logo_path, logo_entry.get("sha256"), "Logo"),
+            "sha256": verify_recorded_hash(logo_path, logo_entry.get("sha256"), "Logo"),
         },
         "banned_words": [
             word for word in copy_rules.get("banned_words", []) if isinstance(word, str)
@@ -222,20 +246,59 @@ def load_facts(root: Path, spec: dict[str, Any]) -> dict[str, Any]:
     return {"path": path, "sha256": sha256(path), "facts": facts}
 
 
-def resolve_claim(reference: Any, facts: list[dict[str, Any]]) -> dict[str, Any]:
+def parse_time(value: Any) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo else None
+
+
+@dataclass(frozen=True)
+class Freshness:
+    now: datetime
+    max_age_hours: float
+
+
+def check_fresh(fact: dict[str, Any], reference: str, freshness: Freshness) -> None:
+    retrieved = parse_time(fact.get("retrieved_at"))
+    if retrieved is None:
+        raise ValueError(
+            f"Perishable claim {reference!r} needs a retrieved_at time with a UTC offset"
+        )
+    if retrieved > freshness.now + CLOCK_SKEW:
+        raise ValueError(f"Perishable claim {reference!r} has a retrieved_at in the future")
+    if freshness.now - retrieved > timedelta(hours=freshness.max_age_hours):
+        raise ValueError(
+            f"Perishable claim {reference!r} is stale: retrieved {fact.get('retrieved_at')}, "
+            f"older than {freshness.max_age_hours:g} hours; re-verify it and update facts.json"
+        )
+
+
+def resolve_claim(
+    reference: Any,
+    facts: list[dict[str, Any]],
+    freshness: Freshness | None = None,
+) -> dict[str, Any]:
     if not isinstance(reference, str) or not reference.strip():
         raise ValueError("Claim references must be non-empty strings")
     for fact in facts:
         if reference in (fact.get("fact_id"), fact.get("claim")):
             status = fact.get("status")
-            if status != "supported":
+            if status == "perishable" and freshness is not None:
+                check_fresh(fact, reference, freshness)
+            elif status != "supported":
+                exception = ", plus fresh perishable offers" if freshness else ""
                 raise ValueError(
                     f"Claim {reference!r} has status {status!r}; "
-                    "only supported claims may appear in an ad"
+                    f"only supported claims may appear in an ad{exception}"
                 )
             return {
                 "ref": reference,
                 "claim": require_text(fact.get("claim"), f"Claim {reference!r}"),
+                "status": status,
                 "source_url": fact.get("source_url"),
                 "retrieved_at": fact.get("retrieved_at"),
             }
@@ -260,7 +323,7 @@ def claim_items(claims: list[dict[str, Any]]) -> str:
 
 
 def layout_content(
-    layout: str, angle: dict[str, Any], facts: list[dict[str, Any]]
+    layout: str, angle: dict[str, Any], facts: list[dict[str, Any]], freshness: Freshness
 ) -> tuple[dict[str, str], dict[str, str], list[dict[str, Any]]]:
     label = f"Angle {angle['id']!r}"
     copy = {
@@ -312,7 +375,7 @@ def layout_content(
         claims.append(proof)
         copy["proof"] = proof["claim"]
     elif layout == "offer":
-        offer = resolve_claim(angle.get("offer"), facts)
+        offer = resolve_claim(angle.get("offer"), facts, freshness)
         claims.append(offer)
         copy["offer"] = offer["claim"]
         terms = angle.get("terms")
@@ -327,7 +390,7 @@ def layout_content(
 
 def check_banned_words(copy: Mapping[str, str], banned: list[str], name: str) -> None:
     for word in banned:
-        pattern = re.compile(rf"(?<!\w){re.escape(word)}(?!\w)", re.IGNORECASE)
+        pattern = re.compile(rf"(?<!\w){re.escape(word)}(?:e?s)?(?!\w)", re.IGNORECASE)
         for key, text in copy.items():
             if pattern.search(text):
                 raise ValueError(f"{name}: {key} uses the banned word {word!r}")
@@ -349,11 +412,14 @@ def display_path(path: Path) -> str:
 def stylesheet(brand: dict[str, Any], output_dir: Path) -> str:
     fonts = brand["fonts"]
     faces = []
-    for family, path in sorted({(f["family"], f["path"]) for f in fonts.values()}):
-        font = Path(path)
+    for role in sorted(fonts):
+        entry = fonts[role]
+        font = Path(entry["path"])
+        weight = "" if entry["weight"] is None else f"  font-weight: {entry['weight']};\n"
         faces.append(
             "@font-face {\n"
-            f"  font-family: '{family}';\n"
+            f"  font-family: '{entry['alias']}';\n"
+            f"{weight}"
             f"  src: url('{relative_url(font, output_dir)}') "
             f"format('{FONT_FORMATS[font.suffix.lower()]}');\n"
             "  font-display: block;\n"
@@ -370,9 +436,9 @@ def stylesheet(brand: dict[str, Any], output_dir: Path) -> str:
             "color_accent": colors.get("accent", colors["primary"]),
             "color_background": colors["background"],
             "color_text": colors["text"],
-            "font_headline": fonts["headline"]["family"],
-            "font_body": fonts["body"]["family"],
-            "font_cta": fonts.get("cta", fonts["body"])["family"],
+            "font_headline": fonts["headline"]["alias"],
+            "font_body": fonts["body"]["alias"],
+            "font_cta": fonts.get("cta", fonts["body"])["alias"],
         },
     )
 
@@ -450,6 +516,7 @@ def build_jobs(
     facts: dict[str, Any],
     product: dict[str, Any],
     plate: dict[str, Any] | None,
+    freshness: Freshness,
 ) -> tuple[list[dict[str, Any]], list[str]]:
     campaign = spec["campaign"]
     version = spec["version"]
@@ -460,7 +527,7 @@ def build_jobs(
     warnings: list[str] = []
     for angle in validate_angles(spec):
         for layout in angle_layouts(angle, layouts):
-            copy, raw, claims = layout_content(layout, angle, facts["facts"])
+            copy, raw, claims = layout_content(layout, angle, facts["facts"], freshness)
             label = f"Angle {angle['id']!r} {layout}"
             check_banned_words(copy, brand["banned_words"], label)
             if brand["cta_verbs"] and copy["cta"] not in brand["cta_verbs"]:
@@ -521,7 +588,7 @@ def build_jobs(
                             width,
                             height,
                             copy,
-                            brand["fonts"]["headline"]["family"],
+                            brand["fonts"]["headline"]["alias"],
                         ),
                     }
                 )
@@ -597,10 +664,19 @@ def validate_spec(spec: Any) -> dict[str, Any]:
     output = spec.get("output_dir")
     if not isinstance(output, str) or not output.strip():
         raise ValueError("Spec output_dir is required")
+    window = spec.setdefault("perishable_max_age_hours", DEFAULT_PERISHABLE_MAX_AGE_HOURS)
+    if not isinstance(window, (int, float)) or isinstance(window, bool) or not window > 0:
+        raise ValueError("Spec perishable_max_age_hours must be a number greater than zero")
     return spec
 
 
-def plan(spec_path: Path, asset_root: Path | None, overwrite: bool) -> dict[str, Any]:
+def plan(
+    spec_path: Path,
+    asset_root: Path | None,
+    overwrite: bool,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    freshness_clock = now or datetime.now(UTC)
     spec_path = spec_path.expanduser().resolve()
     spec = validate_spec(load_json(spec_path, "Spec"))
     root = (asset_root or spec_path.parent).expanduser().resolve()
@@ -628,7 +704,10 @@ def plan(spec_path: Path, asset_root: Path | None, overwrite: bool) -> dict[str,
             root, root, spec["background_plate"], "Background plate", IMAGE_SUFFIXES
         )
         plate = {"path": str(plate_path), "sha256": sha256(plate_path)}
-    jobs, warnings = build_jobs(spec, root, output_dir, brand, facts, product, plate)
+    freshness = Freshness(freshness_clock, float(spec["perishable_max_age_hours"]))
+    jobs, warnings = build_jobs(
+        spec, root, output_dir, brand, facts, product, plate, freshness
+    )
     pages = contact_pages(spec, root, output_dir, jobs)
     css_name = f"static_{spec['campaign']}_v{spec['version']:02d}.css"
     css = stylesheet(brand, output_dir)
@@ -651,6 +730,8 @@ def plan(spec_path: Path, asset_root: Path | None, overwrite: bool) -> dict[str,
         "campaign": spec["campaign"],
         "version": spec["version"],
         "language": spec["language"],
+        "perishable_max_age_hours": spec["perishable_max_age_hours"],
+        "checked_at": freshness_clock.isoformat(),
         "generation": "deterministic_html",
         "renderer": "html-graphic-render",
         "status": "review",
@@ -668,7 +749,13 @@ def plan(spec_path: Path, asset_root: Path | None, overwrite: bool) -> dict[str,
             else {"path": display_path(Path(plate["path"])), "sha256": plate["sha256"]},
             "logo": {"path": display_path(Path(brand["logo"]["path"])), "sha256": brand["logo"]["sha256"]},
             "fonts": {
-                role: {"family": font["family"], "path": display_path(Path(font["path"])), "sha256": font["sha256"]}
+                role: {
+                    "family": font["family"],
+                    "alias": font["alias"],
+                    "weight": font["weight"],
+                    "path": display_path(Path(font["path"])),
+                    "sha256": font["sha256"],
+                }
                 for role, font in sorted(brand["fonts"].items())
             },
             "templates": {

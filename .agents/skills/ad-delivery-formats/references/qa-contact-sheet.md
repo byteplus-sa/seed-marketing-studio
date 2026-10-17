@@ -35,6 +35,16 @@ are recorded through the project's validated writers.
 
 ## Recording
 
-Store the sheet and overlays under `projects/<campaign>/delivery/qa/` with the
-render hash of each cut. A failing item is fixed in the per-ratio overlay or
-crop and the cut re-rendered; never patch a delivered file outside Studio.
+**One QA folder per deliverable:** `projects/<campaign>/delivery/qa/<deliverable-id>/`,
+in the campaign project even when the cut renders in a ratio project. The
+contact sheet, overlays and the `ad-creative-check` evidence for that cut all
+live there, with the render hash of the cut.
+
+The deliverable id is the variant name plus the placement:
+`{campaign}_{concept}_{axis-values}_v{nn}_<placement>`, for example
+`lumo-launch_stays-hot_hook-a_9x16_v01_meta-instagram-reels`. Placements that
+share one cut get one id each, all pointing at the same render. Use the same id
+as the ratio project's `render --name`.
+
+A failing item is fixed in the per-ratio overlay or crop and the cut
+re-rendered; never patch a delivered file outside Studio.

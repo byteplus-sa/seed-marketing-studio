@@ -39,6 +39,9 @@ approving a kit follows the `brand-kit` skill. Summary:
   `assets/` with SHA-256 and source; fonts carry a license.
 - A kit is `draft` until approved under the approving project's
   `approval_mode`, with `approval.decision_ref` pointing into `decisions/`.
+  That library approval makes the entry eligible for pinning; it never
+  approves the kit for another campaign (see
+  [campaign acceptance](#campaign-acceptance)).
 - Any edit returns the kit to `draft` until re-approved and changes its pin.
 
 ## Talent
@@ -83,6 +86,8 @@ Advanced Creation Rights rules in the `seedance-virtual-portrait` skill and its
 
 Rules:
 
+- **Talent binds only authorized, Active assets** (`talent.authorized`):
+  every bound asset is `Active` and its authorization valid and in scope.
 - **Never a real person without authorization.** A real, identifiable face,
   likeness or voice enters the roster only with a recorded, valid
   authorization on the account, and never in an AIGC Virtual Portrait group.
@@ -111,11 +116,13 @@ library_pins:
       path: library/brands/acme-home/brand.json
       sha256: <output of brand_kit.py pin>
       pinned_at: 2026-10-17T10:00:00Z
+      acceptance_ref: decisions/library_acme-home_acceptance.json
   talent:
     river-host:
       path: library/talent/river-host/talent.json
       sha256: <SHA-256 of talent.json bytes>
       pinned_at: 2026-10-17T10:00:00Z
+      acceptance_ref: decisions/library_river-host_acceptance.json
 ```
 
 - **Brand pin** = the canonical SHA-256 printed by
@@ -125,14 +132,33 @@ library_pins:
 - **Talent pin** = the SHA-256 of the `talent.json` file bytes.
 - Production generation and delivery use **approved** entries only. A
   prompt-only draft may pin a draft brand kit and says so.
-- Before each use, a consumer re-computes the pin and compares it with
-  `project.md` (`brand_kit.py pin --expect <sha256>` for brands). A mismatch
-  stops the step.
+- **Pins stay current** (`library.pin_current`): before each use, a consumer
+  re-computes the pin and compares it with `project.md`
+  (`brand_kit.py pin --expect <sha256>` for brands). A mismatch stops the
+  step.
 - Re-pinning is a deliberate, recorded campaign change: update `project.md`,
   then revalidate dependent prompts, deterministic renders and reviews that
   used the old values. Never re-pin silently to clear a mismatch.
-- A campaign never copies another campaign's approval; it pins the library
-  entry, whose own approval record stands.
+
+## Campaign acceptance
+
+**Each campaign records its own mode-authorized acceptance of every pinned
+library entry; it never inherits the library entry's approval or another
+campaign's.** This applies the
+[element identification](element-identification.md) rule that an approval is
+never copied across projects.
+
+- Under `ask_for_approval`, the acceptance is a user decision whose record
+  quotes the user's own chat words.
+- Under `approve_for_me`, the acceptance is an agent decision record bound to
+  the pinned SHA-256, written after the agent inspects the entry for this
+  campaign's brief.
+- The record lives in the campaign (`acceptance_ref` in the pin) and names the
+  pin it accepts. A re-pin needs a new acceptance.
+- The library entry's own approval record stays where it is: it shows the
+  entry is eligible, not that this campaign accepted it.
+- Talent acceptance is a creative decision only; it never extends the
+  authorization scope checked under `talent.authorized`.
 
 ## Git policy
 

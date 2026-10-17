@@ -24,7 +24,8 @@ Do this once per hero, before any row prompt:
 3. Run `source-subject-map` once on the hero. Every swap row cites the same
    subject, object and cut IDs; an unresolved ambiguity blocks every swap row.
 4. Record the hero's opening-beat length (normally 0–2 s, at most 3 s) and the
-   cut where the hero's body begins. Hook rows replace exactly that span.
+   cut where the hero's body begins. Hook rows replace exactly that span in
+   Studio; the generated opening itself is longer (see [Hook](#hook)).
 
 ## Hook
 
@@ -34,10 +35,15 @@ Do this once per hero, before any row prompt:
   (`references/hooks.md`) and write the opening as a new Seedance 2.5 shot with
   `seedance-prompt-25` grammar, at the hero's ratio and with the same talent,
   wardrobe, product and setting references as the hero.
-- Keep the new opening at the recorded span length so the hero's body and
-  timing stay unchanged.
-- Place the new opening in the variant's Studio composition before the hero's
-  body from the recorded cut onward. Check the seam (eyeline, product side,
+- Seedance 2.5 generates 4–30 s per request, so a 0–3 s opening cannot be
+  generated at its span length. Generate at the **4 s minimum** (`--param
+  duration=4`, which the planner adds to hook steps) and direct the hook
+  action into the first part of the clip so the cut point lands cleanly.
+- **Trim in Studio** to the recorded span so the hero's body and timing stay
+  unchanged; the surplus seconds are discarded, never stretched over the body.
+- Place the trimmed opening in the variant's Studio shot
+  (`scenes/variant-<kebab-name>/`) before the hero's body from the recorded
+  cut onward. Check the seam (eyeline, product side,
   light direction, ambient sound) and recut by frames rather than regenerating
   when it only needs a trim.
 - A hook never changes product facts, locked copy, supported claims or the
@@ -45,8 +51,11 @@ Do this once per hero, before any row prompt:
 
 ## Talent, product, outfit, location
 
-**Route:** Object Swap on the muted hero master with `seedance-object-swap`.
-It keeps motion, framing, cuts and timing and replaces one element class.
+**Route:** `source-subject-map` on the hero (once, shared by every swap row),
+then Object Swap on the muted hero master with `seedance-object-swap`. It
+keeps motion, framing, cuts and timing and replaces one element class. A swap
+is a source-preserving edit, so its register command records that exemption
+instead of requiring the shot-plan rules.
 
 | Axis | Target reference | Notes |
 | --- | --- | --- |
@@ -56,7 +65,8 @@ It keeps motion, framing, cuts and timing and replaces one element class.
 | `location` | Location sheet or plate | Environment behind kept subjects |
 
 - Parameters follow the swap route: `@Video 1` is the muted master,
-  `generate_audio: false`, ratio and duration omitted, 480p first.
+  `generate_audio: false`, ratio and duration omitted (locked to the input),
+  `resolution: 480p` for the draft.
 - Sound returns in post: the hero's audio track, re-cut if the swap changed
   any timing.
 
@@ -69,6 +79,8 @@ It keeps motion, framing, cuts and timing and replaces one element class.
 - Write delivery direction with `seedance-prompt-25-dialogue` when a new
   native-speech take is needed, or re-voice the hero's soundtrack with
   `audio-dubbing` when the picture stays.
+- The dub is audio: mux it onto the hero picture in post and place the muxed
+  take in the variant's Studio shot. It has no draft/final resolution step.
 - Make per-language captions with `ad-captions` from the locked translated
   script and the measured timing; burn-in or sidecar is decided per placement
   in delivery.
@@ -93,7 +105,8 @@ swaps (or one Motion Transfer) → hook → language → ratio.
 
 - **Talent and location together** become one Motion Transfer with
   `seedance-motion-recast`, because two whole-subject changes are not an
-  Object Swap.
+  Object Swap. The row costs one `motion-recast` unit, not the talent and
+  location units added together, because it is one provider operation.
 - **Two other swap classes** (for example product and outfit) run as
   sequential swaps, the second using the inspected output of the first as its
   master. Each step has its own asset ID, prompt, review and registry entry.

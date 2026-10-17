@@ -5,31 +5,31 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-captions/SKILL.md",
-      "computedHash": "b5daefdeac22f3a6f09637d76a6f4806559735f948b4f2ffe1f78d1ebccd5a20"
+      "computedHash": "5e217d6e880c9d4947d1077202508ad070b6b0e69c81e305e914c29c364d37ad"
     },
     "ad-creative-check": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-creative-check/SKILL.md",
-      "computedHash": "8a495d35fc208d69c0c2e282d05de4e6cc7880b2525da2b5f645bd456f870910"
+      "computedHash": "536f607401948a8c19746da09cada7c5c8ba6d045030abe5ef2431bf73fac3b0"
     },
     "ad-delivery-formats": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-delivery-formats/SKILL.md",
-      "computedHash": "91caeaed1daaf9e0c299864eb7a56b5c8ad08713f91cf46b6d925cfcc7c718d9"
+      "computedHash": "b1fdd9ca1352fc745a7099886de37e8df15ba79beffef79e76512aa488537eb5"
     },
     "ad-performance-loop": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-performance-loop/SKILL.md",
-      "computedHash": "6386c3b11c05fe9644001ba929f79c5d64df8aafbbb4f6585ed0af8f0a770ab0"
+      "computedHash": "2bd650e6faf155b13548b0c8cdf8c5cc526b0eebb02bbd9853543d0cc716e23a"
     },
     "ad-variant-matrix": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-variant-matrix/SKILL.md",
-      "computedHash": "79120a8620784a2368d72b4448f13e82c324763d94812cdb1225e03b1f657574"
+      "computedHash": "d1b3e482bd408404f05dd07bc5dada8d4e6a646fda740afa19c1f7feb174bb01"
     },
     "ark-mcp": {
       "source": "./local",
@@ -53,7 +53,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/brand-kit/SKILL.md",
-      "computedHash": "cd50483282c4fd6228341ccb2638c4f814608f0fcf5e5bb158ca769138f764f8"
+      "computedHash": "caf8e10ba5dcda782e7dd1cdda9d6d3f01045470a06a07827e42b4e64b78a92d"
     },
     "brief-intake": {
       "source": "./local",
@@ -179,13 +179,13 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/product-intake/SKILL.md",
-      "computedHash": "72602658379f4e47d881bd7202922dab8dffc336a991f7e8bf2f5404b25be82b"
+      "computedHash": "cb939562035e8b3b4d5e8bd3701867d68d24dee48891e3947371d6a48db670fd"
     },
     "prompt-review": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/prompt-review/SKILL.md",
-      "computedHash": "5b732981a7c1bc56c5db4d3bc0a9677826894fd63e54254a9adde1f7056ccd1c"
+      "computedHash": "dfddd1da252de5dc8c692eeaaa9baa10f9f765e6744d4ae3729d54dab8fbfc19"
     },
     "reference-edit-rebuild": {
       "source": "./local",
@@ -383,7 +383,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-product-shot/SKILL.md",
-      "computedHash": "584bd97b3a95d5a693004ed6bcc287775bee052456ce3515ea90ff34777fc3d3"
+      "computedHash": "fa74dc901f696dc7cf496e7ba610a00c570599ff52a87147aa9808d0b6344fcb"
     },
     "seedream-prompt": {
       "source": "./local",
@@ -425,13 +425,13 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/static-ad-batch/SKILL.md",
-      "computedHash": "d09462a3fde1fba715c6d970ad003ac04ae3e99b5654064808dc21f93df8dc4c"
+      "computedHash": "3ef02534986253173fa7303a5bac1edd32b8eace9ead49cb13593794487de598"
     },
     "template-factory": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/template-factory/SKILL.md",
-      "computedHash": "413b5b3391d46ed0daa8e11f6767d8c96c9375d859659abdaf4c1776f1561610"
+      "computedHash": "034cf2d66f5f36ab8ebbb864b8638171ac6657f318ebb1fee45f5618f1f80a3c"
     },
     "tig-blocking-map": {
       "source": "./local",
@@ -449,7 +449,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ugc-ad-modes/SKILL.md",
-      "computedHash": "6442384a5e42dfd2d158ca4ddcb2e0e6d90d25cb04197ff54a61160a618acaae"
+      "computedHash": "99b9c193a6266c51cc1f4a21804d6e5a1e5de72c7e52129b5432e9329704c305"
     },
     "ugc-motion-presets": {
       "source": "./local",

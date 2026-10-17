@@ -90,6 +90,7 @@ Use explicit input first; filenames below are fallback hints, not authority:
 | Seedream image, screen UI or brand/title card | `prompt_concept_*`, `prompt_screen_*`, `prompt_card_*` | `checklist-seedream.md` |
 | Seedream storyboard | `prompt_sNN_kf*` (multi-panel) | `checklist-seedream.md` |
 | Seedream character sheet or outfit variant, location, prop | `prompt_char_*`, `prompt_loc_*`, `prompt_prop_*` | `checklist-seedream-elements.md` |
+| Seedream product shot | `prompt_product_*` | `checklist-seedream.md` + `checklist-seedream-elements.md` (prop asset items) |
 | UGC hooks and scripts | Stage 1 drafts | `checklist-music-ugc.md` |
 | Ad copy or any prompt for an ad deliverable (claims, testimonials, brand copy, disclosure) | explicit ad deliverable; stacks on the type's checklist | `checklist-ad-compliance.md` |
 
@@ -401,8 +402,9 @@ mentioned: `prompt.positive_direction`, `prompt.parameters_in_request`,
 `dialogue.speech_budget`, `audio.native_route`, `seedance.draft_promotion`,
 `references.no_board_binding` and, for spoken lines,
 `dialogue.register`. For an ad deliverable also add `ad.claims_supported`,
-`ad.no_fabricated_testimonial`, `ad.disclosure_recorded`, `brand.copy_rules`
-and `ad.safe_zone` from `references/checklist-ad-compliance.md`. Add a check
+`ad.no_fabricated_testimonial`, `ad.disclosure_recorded`, `brand.copy_rules`,
+`brand.no_generated_logo` and `ad.safe_zone` from
+`references/checklist-ad-compliance.md`. Add a check
 for each one that applies, even when the caller did not list it as required.
 Record `fail` for a CRITICAL or MAJOR finding, which blocks the request; a
 MINOR finding records `pass` with the note in its evidence and the

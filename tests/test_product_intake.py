@@ -5,6 +5,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -181,6 +182,50 @@ class ValidateTests(ProductFactsTestCase):
         document["product_id"] = "other-bottle"
         self.write(document)
         self.assertIn("facts.product_directory", self.rules())
+
+    def test_validating_from_inside_the_card_directory_matches_product_id(self) -> None:
+        previous = Path.cwd()
+        self.addCleanup(os.chdir, previous)
+        os.chdir(self.card)
+        code, result = run("validate", "facts.json")
+        self.assertEqual(code, 0)
+        self.assertEqual(result["findings"], [])
+
+    def test_claim_dropping_a_quoted_qualifier_warns_without_failing(self) -> None:
+        cases = [
+            ("Keeps drinks cold for up to 24 hours.", "Keeps drinks cold for 24 hours"),
+            ("Prices from 32.00 per bottle", "Priced at 32.00"),
+            ("Starting at 29.00", "Priced at 29.00"),
+            ("As low as 25.00 in the bundle", "25.00 in the bundle"),
+            ("Approximately 450 g empty", "Weighs 450 g empty"),
+            ("Results may vary with use", "Results vary with use"),
+        ]
+        for quote, claim in cases:
+            with self.subTest(quote=quote):
+                self.with_fact(0, quote=quote, claim=claim)
+                code, result = run("validate", str(self.path))
+                self.assertEqual(code, 0)
+                self.assertTrue(result["ok"])
+                warnings = [
+                    finding
+                    for finding in result["findings"]
+                    if finding["rule_id"] == "facts.claim_qualifier"
+                ]
+                self.assertEqual(len(warnings), 1)
+                self.assertEqual(warnings[0]["severity"], "warning")
+                self.assertEqual(warnings[0]["path"], "facts.0.claim")
+
+    def test_claim_keeping_its_qualifier_or_non_price_from_does_not_warn(self) -> None:
+        cases = [
+            ("Keeps drinks cold for up to 24 hours.", "Keeps drinks cold for up to 24 hours"),
+            ("Prices from 32.00 per bottle", "From 32.00"),
+            ("Made from recycled steel", "Made of recycled steel"),
+            ("Mayfield steel body", "Steel body"),
+        ]
+        for quote, claim in cases:
+            with self.subTest(quote=quote):
+                self.with_fact(0, quote=quote, claim=claim)
+                self.assertNotIn("facts.claim_qualifier", self.rules())
 
     def test_empty_card_from_failed_parse_is_valid(self) -> None:
         document = self.document()

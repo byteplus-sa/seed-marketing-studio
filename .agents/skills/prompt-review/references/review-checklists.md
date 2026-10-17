@@ -19,6 +19,7 @@ specific generation.
 | Seedream image generation and storyboards | [Seedream](checklist-seedream.md) |
 | Seedream character, location and prop sheets | [Seedream elements](checklist-seedream-elements.md) |
 | Seedance music video; UGC hooks and scripts | [Music video and UGC](checklist-music-ugc.md) |
+| Ad copy and any prompt for an ad deliverable (claims, testimonials, brand copy, disclosure) | [Ad compliance](checklist-ad-compliance.md) |
 
 Stack files when a prompt matches several types, for example Seedance 2.5 plus
 non-English dialogue. Rule IDs in parentheses are the stable IDs from the rule

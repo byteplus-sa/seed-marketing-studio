@@ -151,6 +151,23 @@ class HookLibraryTests(unittest.TestCase):
             entry = next(entry for entry in self.entries if entry["id"] == hook_id)
             self.assertRegex(entry["fields"]["Risks"], r"approved")
 
+    def test_product_interrupt_stays_silent_until_the_product_stops(self):
+        entry = next(entry for entry in self.entries if entry["id"] == "hook-product-interrupt")
+        beat = entry["fields"]["Seedance beat (0–2 s)"]
+        self.assertIn("silently", beat.split("At 1.5-2 s")[0])
+        self.assertIn("no speech until", entry["fields"]["Audio"])
+
+    def test_platform_evidence_quotes_the_guide_and_dates_the_one_pager(self):
+        self.assertNotIn("relatable opener", self.text)
+        self.assertIn('"Reveal a transformation or surprise visual"', self.text)
+        self.assertIn("May 2023", self.text)
+        self.assertIn("workspace", self.text.split("## Evidence")[0])
+
+    def test_testimony_wording_matches_the_compliance_contract(self):
+        self.assertNotIn("clearly fictional to the viewer", self.text)
+        self.assertIn("never framed as a real customer", self.text)
+        self.assertIn("no blanket prohibition on AI avatars", self.text)
+
     def test_library_states_hook_scope_and_exclusivity(self):
         self.assertIn("never", self.text.split("## Evidence")[0].lower())
         self.assertIn("mutually exclusive", self.text)
@@ -193,6 +210,16 @@ class ScriptFormulaTests(unittest.TestCase):
             body = "\n".join(entry["lines"])
             self.assertIn("| 6 s bumper | 15 s | 30 s |", body, entry["id"])
             self.assertRegex(body, r"(?m)^\|[^|\n]*CTA[^|\n]*\|", entry["id"])
+
+    def test_official_formula_cites_a_dated_platform_source(self):
+        entry = next(entry for entry in self.entries if entry["id"] == "formula-hook-proposition-cta")
+        self.assertIn("Creative_Codes_One_Pager_CA.pdf", entry["fields"]["Evidence"])
+        self.assertIn("May 2023", entry["fields"]["Evidence"])
+
+    def test_testimonial_formula_is_not_read_as_an_avatar_ban(self):
+        text = (REFERENCES / "script-formulas.md").read_text()
+        self.assertIn("no blanket prohibition on AI-generated avatars", text)
+        self.assertIn("Not legal advice; re-verify", text)
 
     def test_evidence_is_labelled(self):
         for entry in self.entries:

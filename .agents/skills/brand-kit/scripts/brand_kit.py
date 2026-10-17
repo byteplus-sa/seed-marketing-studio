@@ -299,7 +299,7 @@ def emit(document: dict[str, Any]) -> None:
 
 def validated(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     kit = read_kit(path)
-    findings = validate_kit(kit, path.parent)
+    findings = validate_kit(kit, path.resolve().parent)
     return (kit if isinstance(kit, dict) and not blocking(findings) else None), findings
 
 

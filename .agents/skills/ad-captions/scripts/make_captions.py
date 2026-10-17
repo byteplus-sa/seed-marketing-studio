@@ -450,6 +450,11 @@ def extend_for_reading(
         if new_end > cue.end_ms:
             cue = replace(cue, end_ms=new_end)
         duration = cue.end_ms - cue.start_ms
+        if duration <= 0:
+            raise CaptionError(
+                f"{cue.source_id}: a cue has no duration; the line's timing is too "
+                "short for its text, so lengthen the line or shorten the text"
+            )
         if duration < settings.min_duration_ms:
             warnings.append(
                 f"{cue.source_id}: cue lasts {duration} ms, below the {settings.min_duration_ms} ms minimum"
@@ -479,6 +484,13 @@ def build_cues(
             raise CaptionError(
                 f"line {line.line_id} ({line.speaker}) has no {language} text"
             )
+    seen: set[str] = set()
+    for line in lines:
+        if line.line_id in seen:
+            raise CaptionError(
+                f"duplicate line id {line.line_id!r}; ids must be unique across inputs"
+            )
+        seen.add(line.line_id)
     warnings: list[str] = []
     cues: list[Cue] = []
     for line in lines:
@@ -530,7 +542,7 @@ def render_vtt(cues: list[Cue]) -> str:
 def parse_line(entry: Any, index: int, offset_ms: int, source: str) -> Line:
     if not isinstance(entry, dict):
         raise CaptionError(f"{source}: lines[{index}] must be an object")
-    line_id = str(entry.get("id") or f"line-{index + 1:03d}")
+    line_id = str(entry.get("id") or f"{Path(source).stem}-line-{index + 1:03d}")
     label = f"{source}: {line_id}"
     speaker = entry.get("speaker", "voice")
     if not isinstance(speaker, str) or not speaker.strip():

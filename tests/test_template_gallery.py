@@ -91,6 +91,28 @@ class TemplateGalleryTests(unittest.TestCase):
             "Look: The room folds like a paper model around a still subject.",
         )
 
+    def test_fenced_hash_lines_do_not_end_an_entry(self):
+        self.write(
+            "fence-kit/references/recipes.md",
+            "# Recipes\n\n"
+            "### `fence-card` - Fence card\n"
+            "```bash\n# install step\nrun thing\n```\n"
+            "**Look:** Text after the fence.\n\n"
+            "### Tilde card <!-- id: tilde-card -->\n"
+            "~~~markdown\n```\n## Not a heading\n~~~\n"
+            "- Job: still part of the tilde card.\n",
+        )
+        entries = {
+            entry.entry_id: entry
+            for entry in template_gallery.scan(self.skills)
+            if entry.skill == "fence-kit"
+        }
+        self.assertEqual(set(entries), {"fence-card", "tilde-card"})
+        self.assertEqual(entries["fence-card"].summary, "Look: Text after the fence.")
+        self.assertEqual(
+            entries["tilde-card"].summary, "Job: still part of the tilde card."
+        )
+
     def test_gallery_is_static_escaped_and_grouped_by_skill(self):
         result, page = self.build()
         self.assertEqual((result["skills"], result["entries"]), (2, 3))

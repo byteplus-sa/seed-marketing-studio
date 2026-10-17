@@ -22,7 +22,7 @@ sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 
 FFMPEG_AVAILABLE = bool(shutil.which("ffmpeg"))
-DELIVERABLE = "glow-serum_hook-question_9x16_15s_v01"
+DELIVERABLE = "glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels"
 FRAME = "frames/frame_00002.png"
 
 

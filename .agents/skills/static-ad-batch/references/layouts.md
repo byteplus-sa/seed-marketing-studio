@@ -30,6 +30,8 @@ Rules for editing:
 - Brand values enter only through the CSS variables `--brand-primary`,
   `--brand-accent`, `--brand-background`, `--brand-text`, `--font-headline`,
   `--font-body` and `--font-cta`. Do not hard-code brand colors in a template.
+  The font variables hold per-role aliases (`brand-headline`, `brand-body`,
+  `brand-cta`), not the kit family names.
 - Sizes scale from `--unit` (1% of the shorter canvas side), so one template
   serves every ratio.
 
@@ -41,7 +43,7 @@ Rules for editing:
 | `problem-solution` | logo, problem line, headline as the answer, claims, product, CTA | problem, claims |
 | `comparison` | logo, headline, two-column table, product, CTA | comparison rows of supported facts on both sides |
 | `social-proof` | logo, proof quote, headline, product, CTA | one supported proof fact |
-| `offer` | logo, headline, offer, product, CTA, terms | one supported offer fact, optional terms |
+| `offer` | logo, headline, offer, product, CTA, terms | one supported offer fact, or a perishable one inside the freshness window; optional terms |
 
 Portrait and square canvases stack the areas; 16:9 puts copy left and the
 product right.

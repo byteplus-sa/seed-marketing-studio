@@ -324,6 +324,187 @@ class PerformanceLoopTests(unittest.TestCase):
         )
         self.assertEqual(code, 1)
 
+    def test_abbreviated_scientific_and_percent_values_are_never_misparsed(self):
+        self.assertEqual(loop.parse_number("1.2E+05", "."), 120000)
+        self.assertEqual(loop.parse_number("3e2", "."), 300)
+        self.assertEqual(loop.parse_number("1,2E+05", ","), 120000)
+        for bad in ("1.5K", "2.3M", "1B", "3%", "12abc", "x12", "1,2,3", "12,34"):
+            with self.assertRaises(ValueError, msg=bad):
+                loop.parse_number(bad, ".")
+        with self.assertRaisesRegex(ValueError, "abbreviated"):
+            loop.parse_number("1.5K", ".")
+        with self.assertRaisesRegex(ValueError, "percent"):
+            loop.parse_number("3%", ".")
+
+    def test_only_known_currency_marks_are_stripped(self):
+        self.assertEqual(loop.parse_number("USD 12.50", ".", "USD"), 12.5)
+        self.assertEqual(loop.parse_number("12.50 EUR", ".", "EUR"), 12.5)
+        self.assertEqual(loop.parse_number("£1,000", "."), 1000)
+        with self.assertRaisesRegex(ValueError, "currency"):
+            loop.parse_number("EUR 12.50", ".", "USD")
+        with self.assertRaises(ValueError):
+            loop.parse_number("USD 12.50", ".")
+
+    def test_abbreviated_cells_become_issues_not_wrong_numbers(self):
+        export = HEADER + f"{HERO},2026-10-01,1.5K,1000,300,3%,$1,0\n"
+        _, metrics = self.ingest(export=export)
+        record = metrics["records"][0]
+        self.assertIsNone(record["impressions"])
+        self.assertIsNone(record["clicks"])
+        self.assertEqual(
+            {i["field"] for i in metrics["issues"]}, {"impressions", "clicks"}
+        )
+
+    def test_frequency_uses_reach_only_when_every_row_has_it(self):
+        full = [
+            {"impressions": 100, "reach": 50, "frequency": None},
+            {"impressions": 100, "reach": 50, "frequency": None},
+        ]
+        self.assertEqual(loop.aggregate(full)["frequency"], 2)
+        partial = [
+            {"impressions": 100, "reach": 50, "frequency": None},
+            {"impressions": 900, "reach": None, "frequency": None},
+        ]
+        self.assertIsNone(loop.aggregate(partial)["frequency"])
+        mixed = [
+            {"impressions": 100, "reach": 50, "frequency": 2.0},
+            {"impressions": 300, "reach": None, "frequency": 4.0},
+        ]
+        self.assertEqual(loop.aggregate(mixed)["frequency"], 3.5)
+
+    def test_longest_variant_name_wins_over_a_contained_shorter_name(self):
+        names = ["acme_hook", "acme_hook-callout", "acme_other"]
+        self.assertEqual(
+            loop.match_variant("acme_hook-callout - Copy", names),
+            ("acme_hook-callout", ["acme_hook-callout"]),
+        )
+        variant, found = loop.match_variant("acme_hook vs acme_other", names)
+        self.assertIsNone(variant)
+        self.assertEqual(found, ["acme_hook", "acme_other"])
+
+    def test_default_impression_floor_keeps_tiny_ads_out_of_the_ranking(self):
+        export = HEADER + (
+            f"{HERO},2026-10-01,5000,4000,1000,50,$50,5\n"
+            f"{CALLOUT},2026-10-01,1,1,1,1,$1,1\n"
+        )
+        path, _ = self.ingest(export=export)
+        _, ranking = self.run_cli("rank", path, "--kpi", "ctr")
+        self.assertEqual(ranking["min_impressions"], loop.DEFAULT_MIN_IMPRESSIONS)
+        self.assertEqual([e["key"] for e in ranking["ranked"]], [HERO])
+        tiny = next(e for e in ranking["not_ranked"] if e["key"] == CALLOUT)
+        self.assertIn("impressions", tiny["reason"])
+        _, lowered = self.run_cli("rank", path, "--kpi", "ctr", "--min-impressions", 0)
+        winner = lowered["ranked"][0]
+        self.assertEqual(winner["key"], CALLOUT)
+        self.assertTrue(winner["low_volume"])
+        self.assertFalse(lowered["ranked"][1]["low_volume"])
+
+    def test_floor_without_an_impressions_column_says_why(self):
+        columns = {k: v for k, v in MAPPING["columns"].items() if k != "impressions"}
+        path, _ = self.ingest(mapping={"columns": columns})
+        _, ranking = self.run_cli("rank", path, "--kpi", "cpa")
+        self.assertEqual(ranking["ranked"], [])
+        reasons = {e["key"]: e["reason"] for e in ranking["not_ranked"]}
+        self.assertIn("missing impressions", reasons[HERO])
+        self.assertIn("missing impressions", reasons[CALLOUT])
+        self.assertEqual(reasons["Mystery ad"], "zero conversions")
+        _, unfloored = self.run_cli(
+            "rank", path, "--kpi", "cpa", "--min-impressions", 0
+        )
+        self.assertEqual(unfloored["ranked"][0]["key"], CALLOUT)
+        self.assertTrue(unfloored["ranked"][0]["low_volume"])
+
+    def test_next_matrix_warns_when_the_winner_is_low_volume(self):
+        export = HEADER + f"{CALLOUT},2026-10-01,10,10,5,5,$1,1\n"
+        path, _ = self.ingest(export=export)
+        code, result = self.run_cli(
+            "next-matrix",
+            path,
+            "--matrix",
+            self.write("matrix.json", MATRIX),
+            "--kpi",
+            "ctr",
+            "--axis",
+            "hook=hook-x",
+            "--min-impressions",
+            0,
+            "--out",
+            self.root / "draft.json",
+        )
+        self.assertEqual(code, 0, result)
+        self.assertTrue(any("low volume" in w for w in result["warnings"]))
+
+    def test_round_trip_plan_cost_ingest_next_matrix_cost(self):
+        matrix = dict(
+            MATRIX,
+            naming="{campaign}_{concept}_{hook}_{talent}_{outfit}_{ratio}_v{nn}",
+            unit_cost_usd={"hook": 2, "talent": 5, "outfit": 4, "ratio": 0},
+        )
+        matrix["hero"] = dict(
+            MATRIX["hero"], values=dict(MATRIX["hero"]["values"], outfit="outfit-a")
+        )
+        matrix_path = self.write("matrix.json", matrix)
+        code, plan = self.variant_cli("plan", matrix_path)
+        self.assertEqual(code, 0, plan)
+        code, cost = self.variant_cli("cost", matrix_path)
+        self.assertEqual(code, 0, cost)
+        names = [row["name"] for row in plan["rows"]]
+        export = HEADER + "".join(
+            f"{name} - ad,2026-10-01,{5000 + 1000 * i},4000,900,{40 + 20 * i},$50,4\n"
+            for i, name in enumerate(names)
+        )
+        path, metrics = self.ingest(export=export, plan=plan)
+        self.assertEqual(metrics["unmatched_ads"], [])
+        out = self.root / "round-02" / "matrix.json"
+        code, result = self.run_cli(
+            "next-matrix",
+            path,
+            "--matrix",
+            matrix_path,
+            "--kpi",
+            "ctr",
+            "--axis",
+            "outfit=outfit-b,outfit-c",
+            "--out",
+            out,
+        )
+        self.assertEqual(code, 0, result)
+        draft = json.loads(out.read_text())
+        self.assertEqual(draft["naming"], matrix["naming"])
+        self.assertEqual(draft["unit_cost_usd"], matrix["unit_cost_usd"])
+        code, second = self.variant_cli("cost", out)
+        self.assertEqual(code, 0, second)
+        self.assertEqual(second["total_estimated_usd"], 8)
+        self.assertTrue(all("_outfit-" in row["name"] for row in second["rows"]))
+
+    def test_next_matrix_refuses_custom_naming_without_the_new_axis(self):
+        path, _ = self.ingest()
+        matrix = dict(
+            MATRIX, naming="{campaign}_{concept}_{hook}_{talent}_{ratio}_v{nn}"
+        )
+        code, result = self.run_cli(
+            "next-matrix",
+            path,
+            "--matrix",
+            self.write("matrix.json", matrix),
+            "--kpi",
+            "ctr",
+            "--axis",
+            "outfit=outfit-b",
+            "--hero-value",
+            "outfit-a",
+            "--out",
+            self.root / "draft.json",
+        )
+        self.assertEqual(code, 1)
+        self.assertIn("{outfit}", result["error"])
+
+    def variant_cli(self, *argv):
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = variant_matrix.main([str(item) for item in argv])
+        return code, json.loads(output.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()

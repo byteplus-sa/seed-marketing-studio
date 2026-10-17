@@ -16,13 +16,16 @@ mode prompt, not a ranking, an API requirement or a demonstrated result.
   hook on top.
 - **The hook must lead into a supported payoff.** The beat after the hook shows
   or says something the product facts support.
-- **Spoken hooks are short.** Native speech lands 0.5–1.5 s late, so put a
+- **Spoken hooks are short.** Native speech lands 0.5–1.5 s late (a workspace
+  observation, not a platform figure), so put a
   visible action at 0 s and keep the hook line to about five words. On-screen
   hook text is a finishing layer, never prompted into the clip.
 - **Testimony is evidence, not texture.** Social-proof and skeptic hooks need a
-  real, approved testimonial used within its approved scope, or a dramatization
-  that is clearly fictional to the viewer. Never present a synthetic presenter
-  as a real customer, and never invent review counts, ratings or quotes.
+  real, approved testimonial used within its approved scope, or an obviously
+  fictional dramatization that is never framed as a real customer (under the
+  FTC Q&A, an obviously fictional dramatization is not a testimonial). Never
+  present a synthetic presenter as a real customer, and never invent review
+  counts, ratings or quotes.
 - **The brief supplies the market.** Entries assume no country, language,
   culture or platform; setting, wardrobe and wording come from the brief.
 
@@ -32,10 +35,12 @@ Verified on 2026-10-17; re-verify before relying on any figure.
 
 - **Official timing anchor:** TikTok's
   [Video Advertising Guide](https://ads.tiktok.com/business/en/guides/video-advertising-guide)
-  advises hooking viewers in the first 3 s, and its
+  advises hooking viewers in the first 3 s and lists four hook options: "Show
+  the product in action right away", "Ask a relatable question", "Drop a bold
+  statement" and "Reveal a transformation or surprise visual". Its
   [Creative Codes one-pager](https://ads.tiktok.com/business/library/Creative_Codes_One_Pager_CA.pdf)
-  stresses the first 6 s for recall and the value proposition. Meta and
-  YouTube publish no hook taxonomy.
+  (May 2023, Canada edition) stresses the first 6 s for recall and the value
+  proposition. Meta and YouTube publish no hook taxonomy.
 - **Hook types are practitioner taxonomy (low confidence).** No platform
   publishes which hook type performs best.
 - **Hook rate** (3-second views ÷ impressions) has **no official benchmark**;
@@ -43,8 +48,10 @@ Verified on 2026-10-17; re-verify before relying on any figure.
   audience, and never promise a number.
 - **Testimonials:** the FTC rule on consumer reviews and testimonials
   ([16 CFR 465, Q&A](https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers))
-  bans fake testimonials, including AI-generated reviews from people who do not
-  exist. Other jurisdictions have their own rules; check the target market's.
+  prohibits fake testimonials, including AI-generated reviews from people who
+  do not exist. It has no blanket prohibition on AI avatars, and an obviously
+  fictional dramatization is not a testimonial. Other jurisdictions have their
+  own rules; check the target market's. Not legal advice; re-verify.
 
 ## Stunt hooks
 
@@ -55,12 +62,12 @@ fully in frame and label-side to camera through the action.
 - **Job:** Break the expected opening with the product physically entering the
   frame mid-action.
 - **Valid modes:** ugc, ugc-how-to, ugc-unboxing, product-review, ugc-virtual-try-on, wild-card
-- **Seedance beat (0–2 s):** "At 0-1.5 s the presenter starts speaking to the
+- **Seedance beat (0–2 s):** "At 0-1.5 s the presenter looks silently at the
   lens in an eye-level medium shot; her right hand, frame-left, lifts the
   product up into the foreground and stops it level with her chin, label toward
-  the lens. At 1.5-2 s she holds it still and glances at it."
-- **Audio:** Diegetic room sound and the soft knock of the product being set;
-  the first spoken line starts after the product stops.
+  the lens. At 1.5-2 s she holds it still and starts her first line."
+- **Audio:** Diegetic room sound and the soft rustle of the lift; no speech
+  until the product stops at about 1.5 s.
 - **Risks:** Fast motion blurs or deforms the product; a cut-off sentence reads
   as an error. Keep the move short and the product rigid.
 - **Evidence:** Practitioner pattern-interrupt type; no measured advantage.
@@ -94,8 +101,7 @@ A subtle hook earns attention with a question, a viewpoint or a visible result.
 - **Risks:** Exaggerated harm or fear claims; a problem the product does not
   actually solve. The inferred problem is a hypothesis unless the brief
   supplies it.
-- **Evidence:** Practitioner type; TikTok guidance lists a relatable opener as
-  one hook option.
+- **Evidence:** Practitioner problem-callout type; no measured advantage.
 
 ### Point-of-View Interrupt <!-- id: hook-pov-interrupt -->
 - **Job:** Put the viewer inside a first-person moment so the product arrives
@@ -119,8 +125,9 @@ A subtle hook earns attention with a question, a viewpoint or a visible result.
 - **Risks:** Before/after imagery implying unsupported efficacy, especially
   bodily, health or cosmetic outcomes. Show only an operational change the
   facts support; generated imagery is not proof.
-- **Evidence:** Practitioner result-first / before-after type; efficacy claims
-  need substantiation.
+- **Evidence:** Practitioner result-first / before-after type; TikTok's Video
+  Advertising Guide lists "Reveal a transformation or surprise visual" as a
+  hook option. Efficacy claims need substantiation.
 
 ### Unboxing Reveal <!-- id: hook-unboxing-reveal -->
 - **Job:** Use the moment of opening to create anticipation for the product.
@@ -143,8 +150,8 @@ A subtle hook earns attention with a question, a viewpoint or a visible result.
 - **Audio:** One spoken question of about five words; room tone.
 - **Risks:** A question the ad never answers, or one that implies a result the
   facts do not support. The answer must appear before the CTA.
-- **Evidence:** Practitioner question / open-loop type; TikTok guidance lists a
-  relatable question as one hook option.
+- **Evidence:** Practitioner question / open-loop type; TikTok's Video
+  Advertising Guide lists "Ask a relatable question" as a hook option.
 
 ### Contrarian Line <!-- id: hook-contrarian-line -->
 - **Job:** Challenge a common assumption, then resolve it with a supported fact.
@@ -163,10 +170,11 @@ A subtle hook earns attention with a question, a viewpoint or a visible result.
 - **Seedance beat (0–2 s):** "At 0-2 s the presenter turns the product over in
   both hands in a medium close-up, brows drawn, then looks up at the lens."
 - **Audio:** Room tone; a short line only when it is real, approved testimony
-  or a clearly fictional dramatization.
+  or an obviously fictional dramatization never framed as a real customer.
 - **Risks:** A fabricated personal history presented as real. Requires an
-  approved testimonial within its scope, or a dramatization the viewer can see
-  is fictional; otherwise stage neutral curiosity without a first-person claim.
+  approved testimonial within its scope, or an obviously fictional
+  dramatization never framed as a real customer; otherwise stage neutral
+  curiosity without a first-person claim.
 - **Evidence:** Practitioner type; testimonial rules apply (see Evidence above).
 
 ### List Promise <!-- id: hook-list-promise -->

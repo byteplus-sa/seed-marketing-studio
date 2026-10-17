@@ -38,7 +38,8 @@ parseable by tools.
 | Product shot | `product_<product-id>_<preset>_t<NN>_v<NN>.png` | `product_lumo-mug_studio-white_t01_v01.png` |
 | Product shot plate (empty) | `plate_<product-id>_<preset>_t<NN>_v<NN>.png` | `plate_lumo-mug_color-pop_t02_v01.png` |
 | Reference (seed) | `ref_<NN>_<descriptor>.<ext>` | `ref_01_front.png` |
-| Acquired brand/product source copy | `elements/<id>/refs/ref_<descriptor>.<ext>` | `elements/spicy-sardine-can/refs/ref_primary_packshot.jpg` |
+| Product-intake card image | `elements/<product-id>/ref_<NN>_<view>.<ext>` beside `facts.json` | `elements/lumo-mug/ref_01_front.png` |
+| Acquired brand/product source copy (no product card) | `elements/<id>/refs/ref_<descriptor>.<ext>` | `elements/spicy-sardine-can/refs/ref_primary_packshot.jpg` |
 | Brand/product provenance | `elements/<id>/PROVENANCE.md` | `elements/brand-555/PROVENANCE.md` |
 
 ### Deterministic static graphic sources
@@ -65,7 +66,10 @@ When locking a real logo, packshot, or labeled product from the web or the user
 
 - Promote the chosen file to the canonical `prop_…` / `screen_…` / `card_…`
   name under `elements/<element-id>/`.
-- Keep optional source copies under `elements/<element-id>/refs/`.
+- Keep optional source copies under `elements/<element-id>/refs/`. A
+  product-intake card is the exception: its acquired images sit beside
+  `facts.json` as `ref_<NN>_<view>.<ext>` (png, jpg, jpeg or webp), hashed in
+  `facts.json`, and `product_facts.py validate` refuses them in any subfolder.
 - Record `source: web_download` or `user_supplied`, `generation: none`,
   content SHA-256, and provenance (URL or supplier note) in the element
   manifest and/or `PROVENANCE.md`.

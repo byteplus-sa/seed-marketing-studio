@@ -269,18 +269,67 @@ class CommandLineTests(unittest.TestCase):
             )
             self.assertEqual(code, MODULE.EXIT_INVALID)
             self.assertIn("invalid JSON", stderr)
+            document = load_contract()
+            document["placements"].append(copy.deepcopy(document["placements"][0]))
             duplicate = Path(directory) / "duplicate.json"
-            duplicate.write_text(
-                json.dumps(
-                    {"schema_version": 1, "placements": [{"id": "a"}, {"id": "a"}]}
-                ),
-                encoding="utf-8",
-            )
+            duplicate.write_text(json.dumps(document), encoding="utf-8")
             code, _, stderr = run_cli(
-                "--platforms", str(duplicate), "zones", "--placement", "a"
+                "--platforms",
+                str(duplicate),
+                "zones",
+                "--placement",
+                document["placements"][0]["id"],
             )
             self.assertEqual(code, MODULE.EXIT_INVALID)
             self.assertIn("duplicate", stderr)
+
+    def custom_platforms(self, directory, change):
+        document = load_contract()
+        placement = next(
+            entry
+            for entry in document["placements"]
+            if entry["id"] == "meta-instagram-reels"
+        )
+        change(placement)
+        path = Path(directory) / "custom.json"
+        path.write_text(json.dumps(document), encoding="utf-8")
+        return path
+
+    def test_custom_placement_without_aspect_ratio_is_a_clean_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.custom_platforms(
+                directory, lambda placement: placement.pop("aspect_ratio")
+            )
+            code, stdout, stderr = run_cli(
+                "--platforms", str(path), "zones", "--placement", "meta-instagram-reels"
+            )
+        self.assertEqual(code, MODULE.EXIT_INVALID)
+        self.assertEqual(stdout, "")
+        self.assertIn("aspect_ratio", stderr)
+        self.assertIn("does not match the ad-platforms schema", stderr)
+
+    def test_custom_string_resolution_is_named_in_the_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.custom_platforms(
+                directory,
+                lambda placement: placement.update(recommended_resolution="1080x1920"),
+            )
+            code, _, stderr = run_cli(
+                "--platforms", str(path), "zones", "--placement", "meta-instagram-reels"
+            )
+        self.assertEqual(code, MODULE.EXIT_INVALID)
+        self.assertIn("recommended_resolution", stderr)
+
+    def test_custom_placement_without_a_safe_zone_is_a_clean_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.custom_platforms(
+                directory, lambda placement: placement.pop("safe_zone")
+            )
+            code, _, stderr = run_cli(
+                "--platforms", str(path), "zones", "--placement", "meta-instagram-reels"
+            )
+        self.assertEqual(code, MODULE.EXIT_INVALID)
+        self.assertIn("safe_zone", stderr)
 
 
 class OverlayTests(unittest.TestCase):

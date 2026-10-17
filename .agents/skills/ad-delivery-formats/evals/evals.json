@@ -11,7 +11,9 @@
         "Serves Reels and Stories from one 9:16 cut laid out against the intersection of their safe zones (14% top, 35% bottom, 6% sides).",
         "Flags the Meta feed spec as unverified and asks the user to confirm it instead of inventing a safe zone.",
         "Rebuilds the price and CTA per ratio as overlays inside the safe rectangle rather than cropping them from the master.",
-        "Plans a safe-zone overlay contact sheet and a check of the logo, product and CTA boxes per cut."
+        "Plans a safe-zone overlay contact sheet and a check of the logo, product and CTA boxes per cut.",
+        "Creates one Studio project per ratio (for example projects/<campaign>-4x5) with its own project.md copied from the campaign with the same approval_mode, and shot manifests whose takes are hash-pinned byte copies of the master's selected takes, then runs init, sync --take and record-selection there.",
+        "Stores each cut's QA under projects/<campaign>/delivery/qa/<deliverable-id>/ with deliverable ids of the form {campaign}_{concept}_{axis-values}_v{nn}_<placement>."
       ]
     },
     {

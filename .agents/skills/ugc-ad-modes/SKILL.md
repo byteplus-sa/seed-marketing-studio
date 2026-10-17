@@ -103,7 +103,8 @@ Load only the entry a request needs, by its id:
   check its **Valid modes** against the chosen mode. It never changes product
   facts or the CTA, and it is never stacked on a reference-ad recreation, whose
   own opening is the hook. Social-proof and skeptic hooks need real, approved
-  testimony or a clearly fictional dramatization.
+  testimony or an obviously fictional dramatization never framed as a real
+  customer.
 - [Setting library](references/settings.md) when the location is open or a
   named setting is requested. A setting changes where, never what; heightened
   settings are conceptual staging, not product capability.
@@ -159,8 +160,8 @@ invent a brand name for a missing field.
 Ad formats hit the same few Seedance failure modes; apply these to every mode
 (the generic rules live with the Seedance prompt grammar):
 
-- **Speech budget and tail.** Budget about 2.2 spoken words per second. Native
-  lines land 0.5–1.5 s late (later after a long pre-line action) and speech
+- **Speech budget and tail** (workspace observations, not platform figures).
+  Budget about 2.2 spoken words per second. Native lines land 0.5–1.5 s late (later after a long pre-line action) and speech
   runs to the clip end, so a 15 s clip carries roughly 25–30 words. End the CTA
   line at least 0.4 s before the clip end, keep the last 3 s to one or two state
   changes, and choose hook words speech recognition hears cleanly. Trimming the

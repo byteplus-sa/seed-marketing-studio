@@ -10,8 +10,12 @@ from pathlib import Path
 from typing import Any
 from xml.sax.saxutils import escape
 
+from jsonschema import Draft202012Validator
+
 ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_PLATFORMS = ROOT / ".agents/contracts/ad-platforms.json"
+SCHEMA_PATH = ROOT / ".agents/contracts/schemas/ad-platforms.schema.json"
+MAX_REPORTED_ERRORS = 5
 RATIO_TOLERANCE = 0.01
 MAX_SIDE = 16384
 SIDES = ("top", "bottom", "left", "right")
@@ -61,20 +65,32 @@ class Resolution:
     unpublished: list[dict[str, str]]
 
 
+def schema_errors(document: Any) -> list[str]:
+    validator = Draft202012Validator(
+        json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    )
+    errors = sorted(validator.iter_errors(document), key=lambda item: list(item.path))
+    return [
+        f"{'/'.join(str(part) for part in error.absolute_path) or '<root>'}: {error.message}"
+        for error in errors
+    ]
+
+
 def load_document(path: Path) -> tuple[dict[str, dict[str, Any]], str]:
     try:
         document = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as error:
         raise SafeZoneError(f"{path}: invalid JSON: {error}") from error
-    if not isinstance(document, dict) or document.get("schema_version") != 1:
-        raise SafeZoneError(f"{path}: expected an object with schema_version 1")
-    entries = document.get("placements")
-    if not isinstance(entries, list) or not entries:
-        raise SafeZoneError(f"{path}: placements must be a nonempty list")
+    errors = schema_errors(document)
+    if errors:
+        shown = "; ".join(errors[:MAX_REPORTED_ERRORS])
+        more = len(errors) - MAX_REPORTED_ERRORS
+        suffix = f"; and {more} more" if more > 0 else ""
+        raise SafeZoneError(
+            f"{path}: does not match the ad-platforms schema: {shown}{suffix}"
+        )
     placements: dict[str, dict[str, Any]] = {}
-    for entry in entries:
-        if not isinstance(entry, dict) or not isinstance(entry.get("id"), str):
-            raise SafeZoneError(f"{path}: every placement needs a string id")
+    for entry in document["placements"]:
         if entry["id"] in placements:
             raise SafeZoneError(f"{path}: duplicate placement id {entry['id']}")
         placements[entry["id"]] = entry

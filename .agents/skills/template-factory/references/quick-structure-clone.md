@@ -58,17 +58,27 @@ top of it.
    evidence the card does not have (a testimonial, a number, a comparison)
    becomes a neutral demonstration or is flagged unresolved; never invent the
    evidence. The CTA beat uses the brief's CTA verbatim.
-5. **One Seedance prompt per beat.** Write each beat, or a run of adjacent
+5. **Shot plan and shot manifests.** Group the beats into natural-duration
+   clips (one beat, or a run of adjacent short beats), then write one shot
+   manifest per clip at `scenes/scene-NN/sNN_shNNN/shot.md` so
+   `studio_project.py sync` and `place` can find it. Each manifest records the
+   clip's beats and the shot plan from the beat sheet: duration, shot size,
+   angle, camera move, lens intent and a named light source. A static camera
+   or constant light carries a recorded reason. When the beat sheet does not
+   settle those values, compose with `seedance-shot-design` to fill them.
+6. **One Seedance prompt per clip.** Write each beat, or a run of adjacent
    short beats grouped into one natural-duration clip, as a Seedance 2.5
-   prompt (compose with `seedance-prompt-25`, and with `ugc-ad-modes` for the
+   prompt that carries its manifest's shot plan (compose with `seedance-prompt-25`, and with `ugc-ad-modes` for the
    mode texture). Bind only the product reference and approved elements. Keep
    every clip text-free; supers, prices and the CTA card are finishing layers
    (`html-graphic-render` overlays).
-6. **Review and submit.** Every prompt passes `prompt-review` inline. Prepare
-   and register each request with `prepare_request.py --register`, submit a
-   480p native Draft, review it, then promote the selected Draft. Approval
-   follows the project's approval mode.
-7. **Assemble** the takes in Studio to the beat sheet's cut times, retiming in
+7. **Review and submit.** Every prompt passes `prompt-review` inline. Prepare
+   and register each request with `prepare_request.py --register`, then
+   submit a 480p draft (`resolution: "480p"`), review it, and select under the
+   project's approval mode before final-resolution generation. Use native
+   Draft/promotion only after verifying current tool, model and operation
+   support; otherwise the final is a new registered, reviewed request.
+8. **Assemble** the takes in Studio to the beat sheet's cut times, retiming in
    the edit rather than regenerating, and add overlays and audio in post.
 
 ## Stage mapping
@@ -76,7 +86,7 @@ top of it.
 | Work | Stage | Exit evidence |
 | --- | --- | --- |
 | Reference intake, rights check, product card | `brief-development` | reference hash, product card, CTA |
-| Beat sheet and product mapping | `scene-breakdown` | `beat-sheet.md` with reference hash and every beat mapped or flagged |
+| Beat sheet, product mapping and shot plan | `scene-breakdown` | `beat-sheet.md` with reference hash and every beat mapped or flagged; one `shot.md` per clip with its shot plan |
 | Product reference | `canon-elements` | approved product reference with hash |
 | Storyboard | `storyboard-visual-plan` | skipped with `--reason "quick structure clone"` |
 | Per-beat clips | `shot-generation` | reviewed prompts, registered requests, Studio frame per take |

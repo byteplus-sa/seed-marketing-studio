@@ -23,6 +23,18 @@ quote and source, and wait for evidence.
 `conditions` carries the scope a claim holds under ("with the lid closed, at
 room temperature"). Copy that uses a claim keeps its conditions.
 
+A claim keeps every qualifier its quote carries: "up to", "as low as", "from"
+before a price, "starting at", "may", "approximately". "Up to 24 hours" never
+becomes "24 hours". `validate` warns (`facts.claim_qualifier`) when a claim
+drops one.
+
+## Freshness window
+
+A `perishable` fact is usable for 24 hours after its `retrieved_at` unless the
+brief records another window. Re-read the source and update `quote` and
+`retrieved_at` to extend it. Record the window used in the deliverable's
+manifest or `element.md`, and pass it to `supported --max-age-hours`.
+
 ## facts.json example
 
 ```json
@@ -49,7 +61,7 @@ room temperature"). Copy that uses a claim keeps its conditions.
     {
       "fact_id": "f02",
       "kind": "performance",
-      "claim": "Keeps drinks cold for 24 hours",
+      "claim": "Keeps drinks cold for up to 24 hours",
       "quote": "Double-wall insulation keeps drinks cold for up to 24 hours.",
       "source_url": "https://trailblend.example/products/insulated-bottle",
       "retrieved_at": "2026-10-17T09:30:00Z",
@@ -84,7 +96,8 @@ that file or the user's chat message. A user-supplied image uses
 `"source": "user_supplied"`.
 
 Image files are plain names beside `facts.json`, matching
-`ref_NN_<view>.<ext>` (png, jpg, jpeg or webp).
+`ref_NN_<view>.<ext>` (png, jpg, jpeg or webp). Product cards do not use a
+`refs/` subfolder; the asset naming contract lists this layout.
 
 ## element.md example
 

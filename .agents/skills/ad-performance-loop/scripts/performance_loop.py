@@ -43,7 +43,14 @@ KPIS = {
 }
 EMPTY_VALUES = {"", "-", "--", "—", "n/a", "na", "none", "null"}
 SPACES = re.compile(r"[\s  ']")
-NUMBER = re.compile(r"^-?\d+(?:\.\d+)?$")
+CURRENCY_SYMBOLS = re.compile(r"[$€£¥₹₩₱₫฿₺₽₦₴₪₡¢]")
+ABBREVIATED = re.compile(r"^-?[\d.,]+[KkMmBb]$")
+NUMBER = re.compile(r"^-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$")
+GROUPED = {
+    ".": re.compile(r"^-?\d{1,3}(?:,\d{3})+(?:\.\d+)?(?:[eE][+-]?\d+)?$"),
+    ",": re.compile(r"^-?\d{1,3}(?:\.\d{3})+(?:,\d+)?(?:[eE][+-]?\d+)?$"),
+}
+DEFAULT_MIN_IMPRESSIONS = 1000.0
 BENCHMARK_NOTE = (
     "Ranked within this account export only. No external or platform benchmark "
     "is implied; vendor benchmarks are not official."
@@ -59,18 +66,44 @@ def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def parse_number(text: str, decimal: str) -> float | None:
+def strip_currency(value: str, currency: str) -> str:
+    value = CURRENCY_SYMBOLS.sub("", value)
+    if currency and value.startswith(currency):
+        value = value[len(currency) :]
+    if currency and value.endswith(currency):
+        value = value[: -len(currency)]
+    return value
+
+
+def normalize_separators(value: str, decimal: str) -> str:
+    thousands = "," if decimal == "." else "."
+    if thousands in value:
+        if not GROUPED[decimal].fullmatch(value):
+            raise ValueError(f"misplaced thousands separator in {value!r}")
+        value = value.replace(thousands, "")
+    return value.replace(",", ".") if decimal == "," else value
+
+
+def parse_number(text: str, decimal: str, currency: str = "") -> float | None:
     value = text.strip()
     if value.lower() in EMPTY_VALUES:
         return None
     negative = value.startswith("(") and value.endswith(")")
-    value = SPACES.sub("", value.strip("()"))
-    value = re.sub(r"[^0-9.,\-]", "", value)
-    value = (
-        value.replace(".", "").replace(",", ".")
-        if decimal == ","
-        else value.replace(",", "")
-    )
+    value = strip_currency(SPACES.sub("", value.strip("()")), currency)
+    if value.endswith("%"):
+        raise ValueError(
+            f"percentage {text!r} where a count or amount is expected; map the raw column"
+        )
+    if ABBREVIATED.fullmatch(value):
+        raise ValueError(
+            f"abbreviated value {text!r}; export full numbers instead of K/M/B"
+        )
+    if re.search(r"[A-DF-Za-df-z]", value):
+        raise ValueError(
+            f"unexpected letters or currency in {text!r} (expected currency: "
+            f"{currency or 'none set'})"
+        )
+    value = normalize_separators(value, decimal)
     if not NUMBER.fullmatch(value):
         raise ValueError(f"not a number: {text!r}")
     number = float(value)
@@ -160,10 +193,15 @@ def match_variant(ad_name: str, names: Iterable[str]) -> tuple[str | None, list[
     candidates = sorted(names)
     if ad_name in candidates:
         return ad_name, [ad_name]
-    found = [
+    matched = [
         name
         for name in candidates
         if re.search(rf"(?<![A-Za-z0-9]){re.escape(name)}(?![A-Za-z0-9])", ad_name)
+    ]
+    found = [
+        name
+        for name in matched
+        if not any(name != other and name in other for other in matched)
     ]
     return (found[0] if len(found) == 1 else None), found
 
@@ -193,7 +231,9 @@ def ingest(args: argparse.Namespace) -> dict[str, Any]:
                 continue
             raw = row.get(present[field]) or ""
             try:
-                record[field] = parse_number(raw, mapping["decimal"])
+                record[field] = parse_number(
+                    raw, mapping["decimal"], mapping["currency"]
+                )
             except ValueError as error:
                 issues.append({"line": line, "field": field, "problem": str(error)})
         record["date"] = None
@@ -264,21 +304,26 @@ def kpi_values(totals: dict[str, float | None]) -> dict[str, float | None]:
 
 def aggregate(records: list[dict[str, Any]]) -> dict[str, float | None]:
     totals = {field: total(records, field) for field in SUMMED}
-    frequencies = [
-        (record["frequency"], record.get("impressions") or 0)
-        for record in records
-        if record.get("frequency") is not None
-    ]
-    weight = sum(impressions for _, impressions in frequencies)
-    if totals["reach"]:
-        totals["frequency"] = ratio(totals["impressions"], totals["reach"])
-    elif frequencies and weight:
-        totals["frequency"] = (
-            sum(value * impressions for value, impressions in frequencies) / weight
-        )
-    else:
-        totals["frequency"] = None
+    totals["frequency"] = frequency(records, totals)
     return {**totals, **kpi_values(totals)}
+
+
+def frequency(
+    records: list[dict[str, Any]], totals: dict[str, float | None]
+) -> float | None:
+    if records and all(record.get("reach") for record in records):
+        return ratio(totals["impressions"], totals["reach"])
+    if not records or any(
+        record.get("frequency") is None or record.get("impressions") is None
+        for record in records
+    ):
+        return None
+    weight = sum(record["impressions"] for record in records)
+    if not weight:
+        return None
+    return (
+        sum(record["frequency"] * record["impressions"] for record in records) / weight
+    )
 
 
 def group(
@@ -298,6 +343,8 @@ def ineligible_reason(
         return f"missing {numerator if metrics[numerator] is None else denominator}"
     if not metrics[denominator]:
         return f"zero {denominator}"
+    if metrics["impressions"] is None and min_impressions > 0:
+        return "missing impressions for the impression floor; set --min-impressions 0 to rank without it"
     if (metrics["impressions"] or 0) < min_impressions:
         return f"fewer than {min_impressions:g} impressions"
     return None
@@ -328,11 +375,13 @@ def rank(
     )
     for position, entity in enumerate(eligible, start=1):
         entity["rank"] = position
+        entity["low_volume"] = (entity["impressions"] or 0) < DEFAULT_MIN_IMPRESSIONS
         del entity["reason"]
     return {
         "kpi": kpi,
         "direction": direction,
         "min_impressions": min_impressions,
+        "low_volume_below": DEFAULT_MIN_IMPRESSIONS,
         "currency": metrics_document.get("currency", ""),
         "note": BENCHMARK_NOTE,
         "ranked": eligible,
@@ -447,6 +496,12 @@ def next_matrix(args: argparse.Namespace) -> dict[str, Any]:
             "Winner has no axis values; ingest with --variants <plan.json>"
         )
     axis, levels = parse_axis(args.axis)
+    naming = matrix.get("naming")
+    if isinstance(naming, str) and f"{{{axis}}}" not in naming:
+        raise InputError(
+            f"The matrix naming has no {{{axis}}} placeholder; add it so the new "
+            "variants get distinct names"
+        )
     if axis not in values:
         if not args.hero_value:
             raise InputError(f"{axis} is new to this campaign; pass --hero-value")
@@ -475,16 +530,32 @@ def next_matrix(args: argparse.Namespace) -> dict[str, Any]:
             "Bind hero to the approved winning take before planning."
         ),
     }
+    for key in ("naming", "unit_cost_usd"):
+        if key in matrix:
+            draft[key] = matrix[key]
     target = args.out
     if target.is_symlink() or target.exists():
         raise InputError(f"Refusing to overwrite: {target}")
     target.parent.mkdir(parents=True, exist_ok=True)
     with target.open("x", encoding="utf-8") as handle:
         handle.write(json.dumps(draft, indent=2, ensure_ascii=False) + "\n")
+    warnings = (
+        [
+            (
+                f"{winner} won on low volume ({winners[0]['impressions'] or 0:g} "
+                f"impressions, below {DEFAULT_MIN_IMPRESSIONS:g}); let the test run "
+                "longer before treating it as the winner"
+            )
+        ]
+        if winners[0]["low_volume"]
+        else []
+    )
     return {
         "winner": winner,
         "kpi": args.kpi,
         "kpi_value": winners[0][args.kpi],
+        "min_impressions": args.min_impressions,
+        "warnings": warnings,
         "draft": str(target),
         "matrix": draft,
     }
@@ -521,7 +592,9 @@ def parser() -> argparse.ArgumentParser:
     rank_cli = commands.add_parser("rank")
     rank_cli.add_argument("metrics", type=Path)
     rank_cli.add_argument("--kpi", choices=sorted(KPIS), required=True)
-    rank_cli.add_argument("--min-impressions", type=float, default=0)
+    rank_cli.add_argument(
+        "--min-impressions", type=float, default=DEFAULT_MIN_IMPRESSIONS
+    )
     fatigue_cli = commands.add_parser("fatigue")
     fatigue_cli.add_argument("metrics", type=Path)
     fatigue_cli.add_argument("--window-days", type=int, default=7)
@@ -531,7 +604,9 @@ def parser() -> argparse.ArgumentParser:
     next_cli.add_argument("--kpi", choices=sorted(KPIS), required=True)
     next_cli.add_argument("--axis", required=True)
     next_cli.add_argument("--hero-value")
-    next_cli.add_argument("--min-impressions", type=float, default=0)
+    next_cli.add_argument(
+        "--min-impressions", type=float, default=DEFAULT_MIN_IMPRESSIONS
+    )
     next_cli.add_argument("--out", type=Path, required=True)
     return cli
 

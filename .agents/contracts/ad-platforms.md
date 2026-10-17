@@ -3,7 +3,7 @@
 **Platform specs are dated data, not rules of nature.** Every value below was
 read from the cited official page on **2026-10-17**. Platforms change these
 pages without notice: re-verify a placement against its source before a paid
-delivery and update both this file and
+delivery (`delivery.specs_reverify`) and update both this file and
 [ad-platforms.json](ad-platforms.json) in the same change. The JSON is the
 machine-readable copy; it validates against
 [ad-platforms.schema.json](schemas/ad-platforms.schema.json).
@@ -16,8 +16,9 @@ machine-readable copy; it validates against
 | `partial` | Some values are published; missing ones are `null`, never estimated |
 | `unverified` | The official page was not readable; every value must be confirmed before use |
 
-**A `null` safe zone means unpublished.** Tools return "unpublished, use the
-platform template" for it and never invent margins. Lay out against the
+**A `null` safe zone means unpublished** (`delivery.safe_zone_unpublished`).
+Tools return "unpublished, use the platform template" for it and never invent
+margins. Lay out against the
 platform's own downloadable template or preview instead.
 
 ## Placements
@@ -26,17 +27,20 @@ platform's own downloadable template or preview instead.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `tiktok-in-feed` | TikTok | In-feed auction ad (non-Spark) | **9:16** (16:9, 1:1) | min 540×960; no recommended value | up to 600 s | **Template files only**, no numbers | partial |
 | `meta-instagram-reels` | Meta | Instagram Reels | **9:16** | 1440×2560 recommended; min width 500 px | 0–900 s | **14% / 35% / 6%** | verified |
-| `meta-instagram-stories` | Meta | Instagram Stories | **9:16** | 1440×2560 recommended; min width 250 px | 1–3600 s; under 16 s plays whole | **14% / 35% / 6%** | verified |
+| `meta-instagram-stories` | Meta | Instagram Stories | **9:16** | 1440×2560 recommended; min width 250 px | 1–3600 s | **14% / 35% / 6%** | verified |
 | `meta-feed` | Meta | Facebook and Instagram Feed | 4:5 (1:1) | unverified | unverified | unverified | unverified |
 | `youtube-shorts` | YouTube | Shorts ads | **9:16** (16:9, 1:1) | not stated | up to 180 s; first 60 s play in feed; 10–60 s recommended | Right-hand panel and CTA card; no numbers | partial |
 | `youtube-skippable-in-stream` | YouTube | Skippable in-stream | 16:9 (not stated) | not stated | no max; under 180 s recommended; skip at 5 s | not published | partial |
-| `youtube-bumper` | YouTube | Bumper | 16:9 (not stated) | not stated | max 6 s | not published | partial |
+| `youtube-bumper` | YouTube | Bumper | 16:9 (not stated) | not stated | 5–6 s | not published | partial |
 
 ## Conflicts kept visible
 
-- **TikTok duration:** the June 2026 in-feed page allows **up to 10 minutes**;
-  older TikTok spec pages list **5–60 s**. The current page is recorded; check
-  again before delivery.
+- **TikTok duration:** the June 2026 in-feed help page allows **up to 10
+  minutes**; the TikTok
+  [Video Advertising Guide](https://ads.tiktok.com/business/en/guides/video-advertising-guide)
+  (read 2026-10-17) lists in-feed ads as up to 60 s, with 21–34 s performing
+  best; older spec pages listing 5–60 s are unsourced, historical. The help
+  page is recorded; check again before delivery.
 - **TikTok safe zone:** published **only as downloadable templates** (standard
   left-to-right, Arabic right-to-left, each with and without an anchor). The
   zone depends on ratio, ad-caption length and extra formats, so no fractions
@@ -47,8 +51,9 @@ platform's own downloadable template or preview instead.
   on the cited page.
 - **YouTube in-stream and bumper ratio:** the format page lists lengths, not
   ratios. 16:9 is the conventional landscape player ratio; confirm it.
-- **YouTube bumper minimum:** the table reads "6 seconds (>=5 seconds
-  minimum)"; the minimum is left `null` because the wording is ambiguous.
+- **YouTube bumper length:** the format page says bumper ads last "between 5
+  and 6 seconds" and its table reads "6 seconds (>=5 seconds minimum)"; 5–6 s
+  is recorded.
 
 ## Placement notes
 
@@ -58,8 +63,9 @@ platform's own downloadable template or preview instead.
 - **Instagram Reels:** minimum width 250 px under 30 s, 500 px at 30 s or more.
   Captions optional but recommended; sound strongly recommended; no licensed
   music.
-- **Instagram Stories:** 16 s or longer may split into up to three cards;
-  aspect ratio tolerance 1%.
+- **Instagram Stories:** under 16 s plays in full and 16 s or longer may split
+  into up to three cards; Meta states this as playback behavior, not a
+  recommended length. Aspect ratio tolerance 1%.
 - **YouTube Shorts:** CTA button at 3 s (Performance Max, App, Demand Gen) or
   10 s (Video View, Video Reach); horizontal assets get blurred bands; the page
   asks for AI labels where regulation requires them.

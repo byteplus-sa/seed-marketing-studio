@@ -21,6 +21,13 @@ through generation. This is a leaf capability: it returns a prompt package or a
 composite plan and runs QA on candidates; it does not submit generation,
 render graphics, or approve a result.
 
+**Logo and label rule (`product_shot.no_generated_label`):** free-standing,
+corner and end-card logos and wordmarks are always post overlays from the brand
+kit. On-product marks are allowed only when the bound acquired product
+reference carries them, and QA checks them letter for letter against that
+reference. A generated logo, label or mark not traceable to the bound reference
+is a defect.
+
 Compose with: `seedream-prop-asset` for the identity sheet this skill binds,
 `seedream-prompt` for imagery outside these presets, `html-graphic-render` for
 composites and exact copy, and `static-ad-batch` when the shot becomes the

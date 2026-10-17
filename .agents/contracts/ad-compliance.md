@@ -13,7 +13,8 @@ exception to them.
 verified on 2026-10-17 from the listed sources. Laws, platform policies and
 their effective dates change: re-verify every row against its source before a
 deliverable relies on it, and route an unclear case to the user and their
-counsel rather than deciding it.
+counsel rather than deciding it. The
+[reference data](#legal-and-platform-reference-data) is non-exhaustive.
 
 - [Inputs](#inputs)
 - [Claims and comparatives](#claims-and-comparatives)
@@ -53,8 +54,9 @@ unchecked and say so.
   "30%").
 - Price, offer and availability facts carry `status: perishable` and their
   retrieval time. They reach a deliverable only when retrieved within the
-  freshness window the product card export uses, and are re-checked against
-  the source before delivery.
+  freshness window documented in [product intake](../skills/product-intake/SKILL.md)
+  (**24 hours by default unless the brief records another window**), and are
+  re-checked against the source before delivery.
 - **Comparatives** ("faster than", "No. 1", "lasts twice as long", "better
   than the leading brand") need a supported fact that names the comparison
   basis, its `conditions` (test, sample, period, market), its source and its
@@ -74,7 +76,9 @@ unchecked and say so.
   or shown by an AI-generated or hired performer is a dramatization unless a
   real, identified customer gave that testimonial. It must not be framed as a
   real customer's experience: no invented name, age, location, review stars,
-  "verified buyer" badge or review count.
+  "verified buyer" badge or review count. An obviously fictional dramatization
+  is not a testimonial under the FTC rule Q&A; a performer portraying a
+  customer whose underlying testimonial is fake or false is.
 - Real testimonials are used only from supplied, authorized sources, with the
   speaker's consent recorded, and keep the speaker's wording and typical-result
   context.
@@ -150,8 +154,13 @@ states the risk once and records the user's words). `unknown` facts stay
 - Each `copy_rules.required_lines` entry appears verbatim whenever its `when`
   condition holds (for example a price shown on screen).
 - Trademark marks from `copy_rules.trademark_marks` appear on the first
-  on-screen use of the mark in deterministic copy. Generated media never
-  renders a logo, mark or required line; those are finished in post.
+  on-screen use of the mark in deterministic copy. Required lines and
+  disclosure labels are finished in post, never generated.
+- **Logos** (`brand.no_generated_logo`): free-standing, corner and end-card
+  logos are always post overlays from the pinned brand kit. An on-product mark
+  is allowed only when a bound acquired product reference carries it, and the
+  output is checked against that reference. A generated logo or mark not
+  traceable to a reference is a defect.
 - Voice `do` and `dont` guidance and `cta_style` verbs shape the copy; a
   departure needs a recorded user instruction.
 
@@ -177,14 +186,16 @@ or disclosure decision never grants rights or consent by inference.
 ## Legal and platform reference data
 
 All rows: `verified_on: 2026-10-17`. Re-verify before use. Not legal advice.
+Non-exhaustive; other jurisdictions (e.g. EU, India) have their own AI
+disclosure rules; check the target market's with counsel.
 
 | ID | Applies to | Summary | Source |
 | --- | --- | --- | --- |
 | `us-ftc-16-cfr-465` | Reviews and testimonials in US commerce (effective 2024-10-21) | Prohibits fake consumer reviews and testimonials, including ones attributed to people who do not exist or are AI-generated, and misrepresenting a testimonial as a real customer's experience. AI avatars are not banned as such; presenting an avatar's testimonial as a real customer's is. | [FTC rule Q&A](https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers); [16 CFR Part 465](https://www.ecfr.gov/current/title-16/chapter-I/subchapter-D/part-465) |
-| `us-ny-gbl-396-b` | Ads for New York audiences that knowingly include a synthetic performer (effective 2026-06-09) | Requires a conspicuous disclosure. Audio-only and translation-only uses are exempt. Civil penalties of $1,000 for a first violation and $5,000 for each later one. | [Cooley, 2026-01-29](https://www.cooley.com/news/insight/2026/2026-01-29-new-york-enacts-synthetic-performer-disclosure-law-for-advertisements-including-those-using-generative-ai) |
-| `tiktok-aigc-disclaimer` | TikTok ads with fully or significantly AI-generated media | The AI-generated content disclaimer is mandatory; for in-feed ads the label shows for the whole ad. | [TikTok ad disclaimers, Sep 2025](https://ads.tiktok.com/help/article/about-ad-disclaimers-in-tiktok-ads-manager) |
-| `meta-ai-info` | Meta ads with images or video created or significantly edited with AI | Meta shows an "AI info" label (in the ad menu or at the top of the ad); detection extends to some outside AI tools through industry signals. Political and social-issue ads must self-disclose digitally created or altered photorealistic media. | [Meta help: AI-generated images in ads](https://www.meta.com/en-gb/help/artificial-intelligence/355108217670024/) |
-| `google-ai-label` | Google and YouTube ads | An advertiser AI-content label setting is rolling out from 2026-07-09; election ads need an altered or synthetic content disclosure. | [Google Ads policy](https://support.google.com/adspolicy/answer/17257106) |
+| `us-ny-gbl-396-b` | Ads that a person in the business of dealing in property or services, for a commercial purpose, produces or creates with actual knowledge that they include a synthetic performer (effective 2026-06-09); whether a given campaign falls within its reach is counsel's call | Requires a conspicuous disclosure that a synthetic performer is in the ad. A synthetic performer is a digitally created asset meant to look like a human performer who is **not recognizable as any identifiable natural performer**, so digital replicas of real people fall outside this definition (other rules govern them). Exempt: audio ads; AI used solely to translate a human performer's language; ads for expressive works when the synthetic performer's use is consistent with its use in the work; and the media that only publish or broadcast the ad. Civil penalties of $1,000 for a first violation and $5,000 for each later one. | [NY Senate S8420-A (GBL § 396-b)](https://www.nysenate.gov/legislation/bills/2025/S8420/amendment/A); [Cooley, 2026-01-29](https://www.cooley.com/news/insight/2026/2026-01-29-new-york-enacts-synthetic-performer-disclosure-law-for-advertisements-including-those-using-generative-ai) |
+| `tiktok-aigc-disclaimer` | TikTok ads with fully or significantly AI-generated media | The AI-generated content disclaimer is mandatory. The page states that disclaimers in general show at the bottom of the in-feed video for the duration of the ad; that the AI label does the same is inferred from that general rule, not stated for it. | [TikTok ad disclaimers, Sep 2025](https://ads.tiktok.com/help/article/about-ad-disclaimers-in-tiktok-ads-manager) |
+| `meta-ai-info` | Meta ads created or significantly edited with Meta's own generative AI creative features; ads made with outside AI tools only when Meta detects them | **Sources conflict; keep both visible.** The help page labels ads made with Meta's own generative AI features (in the three-dot menu, or next to "Sponsored" when an image includes an AI-generated photorealistic human) and lists ads made with third-party creation or AI tools as **not** labelled. The newsroom post (updated 2026-06-01) says Meta will begin detecting ads made with third-party AI tools through industry-standard signals and label them in "About this ad"; secondary reports say those signals are C2PA metadata. Detection depends on metadata, so outputs from this workspace may carry no Meta label at all. Political and social-issue ads must self-disclose digitally created or altered photorealistic media. | [Meta help: AI-generated images in ads](https://www.meta.com/en-gb/help/artificial-intelligence/355108217670024/); [Meta newsroom, 2025-02-03, updated 2026-06-01](https://about.fb.com/news/2025/02/gen-ai-transparency-metas-ads-products/); [Social Media Today, 2026-07-07](https://socialmediatoday.com/news/meta-adds-updated-disclosure-tags-for-ai-generated-ads/824658) |
+| `google-ai-label` | Google and YouTube ads | An optional advertiser AI-content label setting, announced 2026-07-09, rolls out gradually through July 2026. Using it does not by itself ensure compliance with any regulation, and Google may automatically label assets generated with Google's own AI tools. Election ads keep the altered or synthetic content disclosure. | [Google Ads policy 17257106, posted 2026-07-09](https://support.google.com/adspolicy/answer/17257106) |
 
 ## Rule IDs
 
@@ -192,6 +203,6 @@ All rows: `verified_on: 2026-10-17`. Re-verify before use. Not legal advice.
 | --- | --- | --- |
 | `ad.claims_supported` | this contract | prompt-review ad checklist; ad creative check |
 | `ad.no_fabricated_testimonial` | this contract | prompt-review ad checklist |
-| `ad.disclosure_recorded` | this contract | ad creative check before paid delivery |
+| `ad.disclosure_recorded` | this contract | prompt-review ad checklist (no baked label); ad creative check before paid delivery |
 | `brand.copy_rules` | this contract | prompt-review ad checklist; ad creative check |
-| `ad.safe_zone` | this contract | ad creative check |
+| `ad.safe_zone` | this contract | prompt-review ad checklist; ad creative check |

@@ -3,10 +3,11 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Run the creative check on renders/glow-serum_hook-question_9x16_15s_v01.mp4 before we spend on it. It is a paid Instagram Reels ad, the hook reveals the bottle at 1.5 s, and the brand kit and facts file are in the campaign.",
+      "prompt": "Run the creative check on projects/glow-serum-9x16/studio/renders/glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels.mp4 before we spend on it. It is a paid Instagram Reels ad, the hook reveals the bottle at 1.5 s, and the brand kit and facts file are in the campaign.",
       "expected_output": "A check folder with sampled frames, saved understanding and transcript evidence, a filled checks.json covering all ten checks, and a validated report with a verdict, timestamps and frame paths.",
       "files": [],
       "expectations": [
+        "Puts all evidence in projects/glow-serum/delivery/qa/glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels/, the deliverable's shared QA folder.",
         "Samples frames with the creative_check.py frames command, including a dense pass over the opening seconds.",
         "Uses 1.5 s as the reveal time rather than the 2 s default and cites the first frame where the bottle is identifiable.",
         "Confirms model answers against the sampled frames instead of passing items on the model's word alone.",

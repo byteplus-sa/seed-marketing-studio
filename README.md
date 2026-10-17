@@ -152,6 +152,7 @@ The workspace ships **77 skills**. Leaf skills are independent; declared orchest
 | **film-production** | Orchestrates multi-scene, multi-modality production one stage at a time while keeping one HyperFrames Studio project synchronized for review and handoff. |
 | **template-factory** | Reverse-engineer a reference video and soundtrack into a timed visual and audio recipe, with reviewable assets and shot takes reviewed in a synchronized Studio project. |
 | **prompt-review** | Review and fix BytePlus Seedance, Seed Audio, and Seedream prompts against the repo's best practices inline by default; use a sub-agent only when explicitly requested for a project or specific generation. |
+| **ad-variant-matrix** | Turn one approved hero ad into a one-axis-at-a-time variant matrix with routing, naming, cost and budget gates; every row still goes through prompt-review and registration. |
 
 ### Campaign layer
 
@@ -159,7 +160,6 @@ The workspace ships **77 skills**. Leaf skills are independent; declared orchest
 |---|---|
 | **brand-kit** | Build, validate and pin a sourced brand kit (logos, palette, fonts, voice, copy rules) in the shared library; unknown values stay null and listed, never invented. |
 | **product-intake** | Turn a product URL or images into a sourced product card: facts with verbatim quotes and statuses plus hashed acquired images; only supported claims reach copy. |
-| **ad-variant-matrix** | Turn one approved hero ad into a one-axis-at-a-time variant matrix with routing, naming, cost and budget gates; every row still goes through prompt-review and registration. |
 | **ad-delivery-formats** | Turn one approved ad master into per-placement cuts: regenerate or reframe per ratio, lay out text inside dated safe zones, and check with overlay contact sheets. |
 | **ad-captions** | Write per-language SRT/WebVTT ad captions from the locked script and measured timing, with an optional HyperFrames burn-in layer inside the placement safe zone. |
 | **ad-creative-check** | Honest pre-spend pass/fail/needs-human checklist for a finished ad cut: reveal, logo, opening, safe zone, claims, speech, loudness and disclosure; no performance prediction. |

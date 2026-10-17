@@ -317,6 +317,8 @@ repository maintenance unless explicitly scoped.
 | `projects/<project>/library/` | Reusable non-shot music, SFX and ambience |
 | `projects/<project>/variants/` | `matrix.json`, `plan.json` and one folder per variant with prompts, reviews and takes |
 | `projects/<project>/performance/` | `metrics.json` and user-exported ad results; never tracked |
+| `projects/<project>/delivery/` | Per-placement deliverables, `qa/<deliverable-id>/` creative-check reports and `disclosure_<deliverable-id>.json` records |
+| `projects/<project>/captions/` | Per-language SRT/WebVTT sidecars and caption burn-in compositions |
 | `library/brands/<brand-id>/` and `library/talent/<talent-id>/` | Workspace-level shared brand kits and approved talent, pinned by SHA-256 from `project.md`; separate from `projects/<project>/library/` and never committed |
 
 Folders and IDs use lowercase kebab-case. Scene IDs use two digits; shot/panel

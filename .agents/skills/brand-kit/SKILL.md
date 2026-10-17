@@ -25,9 +25,12 @@ the kit as described in [consumers](references/consumers.md).
    listed in `missing`. A plausible guess is still an invention.
 2. **Extracted values are draft.** A kit stays `status: draft` until it is
    approved under the project approval mode with a recorded decision.
-3. **Generated media never renders the logo.** Logos, exact type and CTA
-   geometry go through deterministic graphics in post; generative prompts
-   receive only `imagery.style_sentence`.
+3. **Generated media never draws the logo** (`brand.no_generated_logo`).
+   Free-standing, corner and end-card logos, exact type and CTA geometry go
+   through deterministic graphics in post; generative prompts receive only
+   `imagery.style_sentence`. An on-product mark may appear only when a bound
+   acquired product reference carries it, checked letter for letter against
+   that reference; any other generated mark is a defect.
 
 ## Where the kit lives
 

@@ -11,7 +11,8 @@
         "Asks for or records the hero's current hook, talent and ratio values and the hero take's SHA-256 before approving the matrix.",
         "Routes hooks to a regenerated opening beat spliced in Studio, presenters to Object Swap with Virtual Portrait asset:// references, and ratios to delivery reframes with no provider step.",
         "Runs variant_matrix.py plan and cost with explicit unit costs and reports the total against the budget before any spend.",
-        "States that each provider row needs its own frozen prompt, inline prompt-review bound to the request hash and prepare_request.py --register before submission, starting with a 480p draft."
+        "States that each provider row needs its own frozen prompt, inline prompt-review bound to the request hash and prepare_request.py --register before submission, starting with a 480p draft.",
+        "Plans each variant as its own Studio shot under scenes/variant-<kebab-name>/ and registers hook steps as 4 s 480p drafts trimmed to the opening span in Studio, with take- and stage-specific asset IDs."
       ]
     },
     {

@@ -172,6 +172,7 @@ class CampaignLayerIntegrationTests(unittest.TestCase):
                     "needs-substantiation",
                     "performance",
                 ),
+                fact("f04", "20% off this week", "perishable", "offer"),
             ],
             "images": [
                 {
@@ -187,7 +188,7 @@ class CampaignLayerIntegrationTests(unittest.TestCase):
         path.write_text(json.dumps(document, indent=2))
         return path
 
-    def spec(self, claims: list[str]) -> Path:
+    def spec(self, claims: list[str], layout: str = "hero-product") -> Path:
         spec = {
             "campaign": "lumo-launch",
             "language": "en",
@@ -201,7 +202,7 @@ class CampaignLayerIntegrationTests(unittest.TestCase):
                 "image": "elements/lumo-mug/ref_01_front.png",
             },
             "output_dir": "statics",
-            "layouts": ["hero-product"],
+            "layouts": [layout],
             "ratios": ["1:1", "9:16"],
             "angles": [
                 {
@@ -209,6 +210,8 @@ class CampaignLayerIntegrationTests(unittest.TestCase):
                     "type": "demonstration",
                     "headline": "Locks in one click",
                     "claims": claims,
+                    "offer": "f04",
+                    "terms": "Ends Sunday.",
                     "cta": "Shop now",
                 }
             ],
@@ -234,7 +237,7 @@ class CampaignLayerIntegrationTests(unittest.TestCase):
         self.assertEqual(fact_errors, [])
 
     def test_static_batch_plans_from_validated_kit_and_facts_by_fact_id(self) -> None:
-        result = STATIC_BATCH.plan(self.spec(["f01", "f02"]), self.root, False)
+        result = STATIC_BATCH.plan(self.spec(["f01", "f02"]), self.root, False, now=NOW)
         names = sorted(job["name"] for job in result["jobs"])
         self.assertEqual(
             names,
@@ -248,7 +251,27 @@ class CampaignLayerIntegrationTests(unittest.TestCase):
         self,
     ) -> None:
         with self.assertRaises(ValueError):
-            STATIC_BATCH.plan(self.spec(["f03"]), self.root, False)
+            STATIC_BATCH.plan(self.spec(["f03"]), self.root, False, now=NOW)
+
+    def test_offer_layout_plans_from_a_validated_perishable_offer_fact(self) -> None:
+        facts = json.loads(self.facts_path.read_text())
+        offer = next(fact for fact in facts["facts"] if fact["fact_id"] == "f04")
+        self.assertEqual(offer["status"], "perishable")
+        errors = [
+            finding
+            for finding in PRODUCT_FACTS.validate_facts(facts, self.facts_path.parent, NOW)
+            if finding.severity == "error"
+        ]
+        self.assertEqual(errors, [])
+        result = STATIC_BATCH.plan(self.spec(["f01"], "offer"), self.root, False, now=NOW)
+        self.assertEqual(len(result["jobs"]), 2)
+        self.assertEqual(result["jobs"][0]["copy"]["offer"], "20% off this week")
+        self.assertEqual(result["jobs"][0]["claims"][0]["ref"], "f04")
+
+    def test_offer_layout_refuses_the_same_offer_once_it_is_stale(self) -> None:
+        later = datetime(2026, 10, 18, 12, 0, tzinfo=UTC)
+        with self.assertRaisesRegex(ValueError, "stale"):
+            STATIC_BATCH.plan(self.spec(["f01"], "offer"), self.root, False, now=later)
 
 
 if __name__ == "__main__":

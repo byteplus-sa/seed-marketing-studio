@@ -57,9 +57,15 @@ Read [reframe recipe](references/reframe-recipe.md) when reframing. In short:
 1. Sample frames of each shot and ask `seed_understand` for normalized subject
    boxes (product, face, hands, logo) per sampled time. Treat the boxes as
    approximate and spot-check them on the frames.
-2. Create **one Studio project per delivered ratio** with
-   `studio_project.py init <project> --aspect <ratio> --resolution <short-side>p`
-   and place the master's approved shots, not the flattened master render.
+2. Create **one Studio project per delivered ratio** at
+   `projects/<campaign>-<ratio>/`, because `render` renders one canvas per
+   project. It needs its own `project.md` (the campaign brief copied with the
+   same `approval_mode` and a pin of the master's path and hash) and one shot
+   manifest per master shot whose take is a byte copy of the master's selected
+   take, pinned by hash. Then `init --aspect <ratio> --resolution <short-side>p`,
+   `sync --take <shot>=<file>` and `record-selection` per shot. Place the
+   master's approved shots, never the flattened master render. Exact files,
+   commands and stage exits are in the recipe.
 3. Wrap each shot's video in a crop wrapper and keyframe its position so the
    union of the subject boxes stays inside the safe rectangle; hold the crop
    still unless the subject moves, and ease any move.
@@ -83,7 +89,7 @@ Read [QA contact sheet](references/qa-contact-sheet.md) before sign-off.
 uv run python .agents/skills/ad-delivery-formats/scripts/safe_zones.py \
   overlay --placement meta-instagram-reels --size 1080x1920 \
   --box logo=80,300,280,120 --box cta=120,1120,840,110 \
-  --out projects/<campaign>/delivery/qa/reels_overlay.svg
+  --out projects/<campaign>/delivery/qa/<deliverable-id>/overlay.svg
 ```
 
 For each cut, snapshot the hook frame, the product-reveal frame, every frame
@@ -103,8 +109,10 @@ layout fix in the overlay composition, not a crop of the master.
 | `overlay --placement ID --size WxH --out FILE.svg [--box ...] [--overwrite]` | An SVG with the unsafe area tinted, the safe rectangle dashed and boxes outlined | 0 written, 3 unpublished (no file) |
 
 Margins round inward. A size whose ratio differs from the placement by more than
-1%, mixed ratios across placements, unknown ids and malformed boxes exit 2 with
-a one-line error. Overlay output must end in `.svg` and stay under the current
+1%, mixed ratios across placements, unknown ids, malformed boxes and a
+`--platforms` file that does not match
+[the ad-platforms schema](../../contracts/schemas/ad-platforms.schema.json)
+exit 2 with a one-line error naming the field. Overlay output must end in `.svg` and stay under the current
 directory.
 
 ## Boundaries

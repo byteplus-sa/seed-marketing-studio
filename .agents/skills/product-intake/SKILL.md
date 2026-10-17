@@ -33,6 +33,15 @@ prints.
 5. **Images are acquired, not generated.** Download from the brand's product
    page or take user files; record source and SHA-256.
 
+**Rule `facts.supported_only`:** scripts, supers and captions use only
+`supported` facts, or `perishable` facts re-verified within the freshness
+window.
+
+**Freshness window:** 24 hours from `retrieved_at` unless the brief records
+another window. Record the window used in the deliverable's manifest (for
+example a static batch spec's `perishable_max_age_hours`) or in `element.md`;
+other skills point here rather than restating a default.
+
 ## Card location and contents
 
 ```
@@ -95,20 +104,23 @@ field-by-field examples and status rules are in
    uv run python .agents/skills/product-intake/scripts/product_facts.py supported projects/<campaign>/elements/<product-id>/facts.json --max-age-hours 24
    ```
 
-   The second form adds perishable facts retrieved within the window, for a
-   deliverable that shows a price or offer right after re-verification.
+   The second form adds perishable facts retrieved within the freshness window
+   (24 hours by default), for a deliverable that shows a price or offer right
+   after re-verification.
 
 ## Script reference
 
 | Command | Prints | Exit 1 when |
 | --- | --- | --- |
-| `validate <facts.json>` | `{"ok", "findings"}` | Schema error, missing source, price/availability/offer not perishable, supported performance or comparison claim without substantiation, future or offset-less retrieval time, duplicate IDs, image missing, outside the card, or hash mismatch, product_id not matching its directory |
+| `validate <facts.json>` | `{"ok", "findings"}`; warnings such as a dropped qualifier do not fail | Schema error, missing source, price/availability/offer not perishable, supported performance or comparison claim without substantiation, future or offset-less retrieval time, duplicate IDs, image missing, outside the card, or hash mismatch, product_id not matching its directory |
 | `supported <facts.json> [--max-age-hours H]` | Claims usable in copy, with quote, conditions and source | The file is invalid (no claims are printed from an invalid record) |
 
 Rule IDs: `facts.schema`, `facts.source`, `facts.perishable`,
 `facts.substantiation`, `facts.retrieved_at`, `facts.unique`,
 `facts.image_contained`, `facts.image_exists`, `facts.image_hash`,
-`facts.product_directory`.
+`facts.product_directory`, and the warning `facts.claim_qualifier` (the claim
+drops "up to", "as low as", "from" before a number, "starting at", "may" or
+"approximately" that its quote carries).
 
 ## Failure handling
 

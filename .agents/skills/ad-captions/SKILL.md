@@ -82,7 +82,11 @@ a check at thumbnail size.
 
 1. Confirm the cut's speech QA passed and the script is locked.
 2. Write the timing JSON with times from the final timeline.
-3. Run from the repository root:
+3. Pick the Studio project that renders the cut: the campaign project for the
+   master ratio, or the per-ratio project `projects/<campaign>-<ratio>/` that
+   `ad-delivery-formats` sets up (its own `project.md`, hash-pinned shot
+   manifests, `init` and `sync` already run, so `studio/compositions/`
+   exists). Run from the repository root:
 
 ```bash
 uv run python .agents/skills/ad-captions/scripts/make_captions.py \
@@ -113,7 +117,8 @@ flags: `--composition-dir` (turns burn-in on), `--composition-prefix`,
 `--font-family`, `--font-src` (relative path inside the Studio project),
 `--font-size`, `--text-color`, `--box-color` (`#RRGGBB` or `#RRGGBBAA`),
 `--anchor bottom|top`. It exits 2 with a one-line error and writes nothing for
-invalid input, missing or blank language text, a cue past the master duration,
+invalid input, missing or blank language text, a line id repeated across
+inputs, a line too short to give each cue any time, a cue past the master duration,
 an unpublished safe zone without `--safe-rect`, or an existing target.
 
 ## Boundaries

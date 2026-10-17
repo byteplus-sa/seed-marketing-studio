@@ -15,23 +15,73 @@ from validate_request import Finding, schema_findings
 AXES = ("hook", "talent", "product", "outfit", "location", "language", "ratio")
 SWAP_AXES = ("talent", "product", "outfit", "location")
 RECAST_TRIGGER = {"talent", "location"}
+RECAST_COST_KEY = "motion-recast"
+COST_KEYS = (*AXES, RECAST_COST_KEY)
 AD_GROUP_CREATIVES = 5
+HOOK_MIN_DURATION_S = 4
+DRAFT_RESOLUTION = "480p"
 PLACEHOLDER = re.compile(r"\{([a-z]+)\}")
+TAKE = re.compile(r"^t\d{2}$")
+RESOLUTION = re.compile(r"^\d{3,4}p$")
 STEP_SKILLS = {
-    "object-swap": ["seedance-object-swap"],
+    "object-swap": ["source-subject-map", "seedance-object-swap"],
     "motion-recast": ["seedance-motion-recast"],
     "hook-opening": ["ugc-ad-modes", "seedance-prompt-25"],
     "language-dub": ["audio-dubbing", "seedance-prompt-25-dialogue", "ad-captions"],
     "ratio-reframe": ["ad-delivery-formats"],
 }
 STEP_OUTPUT_SUFFIX = {"language-dub": ".wav"}
+STEP_NOTES = {
+    "hook-opening": (
+        f"Generate at the {HOOK_MIN_DURATION_S} s minimum supported duration, then "
+        "trim it in Studio to the hero's recorded opening span before the hero body"
+    ),
+    "language-dub": (
+        "Mux the dubbed audio onto the hero picture in post and place the muxed "
+        "take in the variant shot"
+    ),
+    "ratio-reframe": (
+        "Reframe per placement with ad-delivery-formats; no provider operation "
+        "or registry entry"
+    ),
+}
 REGISTER_PROCEDURE = [
+    "Write the variant shot manifest at studio.manifest with studio.frontmatter",
     "Write and freeze the row prompt at the --prompt path",
     "Run hash_command and bind prompt-review to the printed request_sha256",
     "Resolve CRITICAL and MAJOR findings, then run register_command",
     "Submit only a registered operation, in 'after' order, under the project approval mode",
+    (
+        "Select a passing 480p draft with a hash-bound decision before running "
+        "register --stage final; a retake uses a new --take"
+    ),
 ]
 PROVIDER_ROUTES = {"object-swap", "motion-recast", "hook-opening", "language-dub"}
+AUDIO_ROUTES = {"language-dub"}
+SOURCE_PRESERVING_ROUTES = {"object-swap", "motion-recast"}
+COMMON_RULES = (
+    "ad.claims_supported",
+    "ad.no_fabricated_testimonial",
+    "brand.copy_rules",
+    "library.pin_current",
+    "ad.variant_one_axis",
+    "ad.variant_budget_gate",
+)
+VIDEO_RULES = ("video.text_free",)
+SHOT_RULES = ("shot.plan_bound", "shot.variety", "shot.axis_carry")
+STATIC_BY_DESIGN = (
+    "ugc",
+    "ugc-how-to",
+    "ugc-unboxing",
+    "product-review",
+    "ugc-virtual-try-on",
+    "ugc-preset",
+    "talking-head",
+    "avatar",
+    "news",
+    "frame-break",
+    "user-lock",
+)
 
 
 def slug(value: str) -> str:
@@ -107,6 +157,10 @@ def combinations(matrix: dict[str, Any]) -> list[dict[str, str]]:
     return rows
 
 
+def step_cost_key(route: str, axes: list[str]) -> str:
+    return RECAST_COST_KEY if route == "motion-recast" else axes[0]
+
+
 def plan_steps(changed: list[str]) -> list[dict[str, Any]]:
     swaps = [axis for axis in SWAP_AXES if axis in changed]
     routed: list[tuple[str, list[str]]] = []
@@ -120,15 +174,43 @@ def plan_steps(changed: list[str]) -> list[dict[str, Any]]:
         routed.append(("language-dub", ["language"]))
     if "ratio" in changed:
         routed.append(("ratio-reframe", ["ratio"]))
-    return [
-        {
+    steps: list[dict[str, Any]] = []
+    for route, axes in routed:
+        step: dict[str, Any] = {
             "route": route,
             "axes": axes,
             "skills": STEP_SKILLS[route],
             "provider_operation": route in PROVIDER_ROUTES,
+            "cost_key": step_cost_key(route, axes),
         }
-        for route, axes in routed
-    ]
+        if route == "hook-opening":
+            step["generate_duration_s"] = HOOK_MIN_DURATION_S
+        if route in STEP_NOTES:
+            step["studio_note"] = STEP_NOTES[route]
+        steps.append(step)
+    return steps
+
+
+def studio_target(name: str) -> dict[str, Any]:
+    shot_id = f"variant-{slug(name)}"
+    directory = f"scenes/{shot_id}"
+    frontmatter = {"shot_id": shot_id, "title": name, "variant": name}
+    return {
+        "shot_id": shot_id,
+        "directory": directory,
+        "manifest": f"{directory}/shot.md",
+        "frontmatter": frontmatter,
+    }
+
+
+def delivery_target(campaign: str, values: dict[str, str]) -> dict[str, Any] | None:
+    if "ratio" not in values:
+        return None
+    return {
+        "skill": "ad-delivery-formats",
+        "aspect": values["ratio"],
+        "project": f"projects/{slug(campaign)}-{slug(values['ratio'])}",
+    }
 
 
 def variant_name(matrix: dict[str, Any], values: dict[str, str]) -> str:
@@ -147,14 +229,19 @@ def expand(matrix: dict[str, Any]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for index, values in enumerate(combinations(matrix)):
         changed = [axis for axis in values if values[axis] != hero[axis]]
+        name = variant_name(matrix, values)
         rows.append(
             {
                 "index": index,
-                "name": variant_name(matrix, values),
+                "name": name,
                 "role": "variant" if changed else "hero",
                 "values": values,
                 "changed_axes": changed,
                 "steps": plan_steps(changed),
+                "studio": studio_target(name)
+                if any(axis != "ratio" for axis in changed)
+                else None,
+                "delivery": delivery_target(matrix["campaign"], values),
             }
         )
     return rows
@@ -169,6 +256,16 @@ def gate_findings(matrix: dict[str, Any], rows: list[dict[str, Any]]) -> list[Fi
             Finding(
                 "matrix.unique_names",
                 f"Variant names collide: {', '.join(duplicates)}",
+                "naming",
+            )
+        )
+    shot_ids = [row["studio"]["shot_id"] for row in rows if row["studio"]]
+    shared = sorted({shot for shot in shot_ids if shot_ids.count(shot) > 1})
+    if shared and not duplicates:
+        findings.append(
+            Finding(
+                "matrix.unique_shot_ids",
+                f"Variant names map to the same Studio shot folder: {', '.join(shared)}",
                 "naming",
             )
         )
@@ -201,9 +298,10 @@ def parse_unit_costs(items: list[str]) -> dict[str, float]:
     costs: dict[str, float] = {}
     for item in items:
         axis, separator, value = item.partition("=")
-        if not separator or axis not in AXES:
+        if not separator or axis not in COST_KEYS:
             raise ValueError(
-                f"Expected --unit-cost <axis>=<usd> with a known axis: {item}"
+                "Expected --unit-cost <axis|motion-recast>=<usd> with a known "
+                f"axis: {item}"
             )
         amount = float(value)
         if not math.isfinite(amount) or amount < 0:
@@ -218,14 +316,19 @@ def apply_costs(
     units = {**matrix.get("unit_cost_usd", {}), **overrides}
     findings: list[Finding] = []
     missing = sorted(
-        {axis for row in rows for axis in row["changed_axes"] if axis not in units},
-        key=AXES.index,
+        {
+            step["cost_key"]
+            for row in rows
+            for step in row["steps"]
+            if step["cost_key"] not in units
+        },
+        key=COST_KEYS.index,
     )
     if missing:
         findings.append(
             Finding(
                 "cost.unit_missing",
-                f"No unit cost for axes: {', '.join(missing)}",
+                f"No unit cost for: {', '.join(missing)}",
                 "unit_cost_usd",
             )
         )
@@ -233,7 +336,7 @@ def apply_costs(
     total = 0.0
     for row in rows:
         row["estimated_cost_usd"] = round(
-            sum(units[axis] for axis in row["changed_axes"]), 2
+            sum(units[step["cost_key"]] for step in row["steps"]), 2
         )
         total += row["estimated_cost_usd"]
     total = round(total, 2)
@@ -246,28 +349,83 @@ def apply_costs(
             )
         )
     summary = {
-        "unit_cost_usd": {axis: units[axis] for axis in AXES if axis in units},
+        "unit_cost_usd": {key: units[key] for key in COST_KEYS if key in units},
         "total_estimated_usd": total,
         "budget_usd": matrix["budget_usd"],
         "currency": "USD",
-        "estimate_note": "Estimate from supplied unit costs; confirmed cost is recorded per operation after completion",
+        "estimate_note": (
+            "Estimate from supplied unit costs, one unit per routed step (a combined "
+            "talent and location Motion Transfer costs one motion-recast unit) "
+            "covering its draft and final; confirmed cost is recorded per operation "
+            "after completion"
+        ),
     }
     return summary, findings
+
+
+def shot_rule_exemption(route: str, static_by_design: str | None) -> str | None:
+    if route in AUDIO_ROUTES:
+        return "no video shot: audio re-voice of the hero soundtrack"
+    if route in SOURCE_PRESERVING_ROUTES:
+        return "source-preserving edit: keeps the hero's camera, cuts and timing"
+    if static_by_design:
+        return f"static-by-design format: {static_by_design}"
+    return None
+
+
+def step_params(route: str, options: argparse.Namespace) -> list[str]:
+    if route in AUDIO_ROUTES:
+        return []
+    resolution = (
+        DRAFT_RESOLUTION if options.stage == "draft" else options.final_resolution
+    )
+    params = [f"resolution={resolution}"]
+    if route == "hook-opening":
+        params.append(f"duration={HOOK_MIN_DURATION_S}")
+    return params
+
+
+def step_rules(route: str, exemption: str | None) -> list[str]:
+    rules = list(COMMON_RULES)
+    if route not in AUDIO_ROUTES:
+        rules.extend(VIDEO_RULES)
+    if exemption is None:
+        rules.extend(SHOT_RULES)
+    return rules
+
+
+def flag_pairs(flag: str, values: list[str]) -> list[str]:
+    return [item for value in values for item in (flag, value)]
+
+
+def staged_steps(row: dict[str, Any], stage: str) -> list[dict[str, Any]]:
+    return [
+        step
+        for step in row["steps"]
+        if step["provider_operation"]
+        and (stage == "draft" or step["route"] not in AUDIO_ROUTES)
+    ]
 
 
 def operation_commands(
     project: str, row: dict[str, Any], options: argparse.Namespace
 ) -> list[dict[str, Any]]:
     paid = [step for step in row["steps"] if step["provider_operation"]]
+    if not paid or row["studio"] is None:
+        return []
+    folder = row["studio"]["directory"]
     operations: list[dict[str, Any]] = []
     previous: str | None = None
-    for step in paid:
+    for step in staged_steps(row, options.stage):
         route = step["route"]
-        asset = (
+        audio = route in AUDIO_ROUTES
+        stem = (
             row["name"] if len(paid) == 1 else f"{row['name']}_{'-'.join(step['axes'])}"
         )
-        folder = f"variants/{row['name']}"
-        audio = route == "language-dub"
+        asset = f"{stem}_{options.take}_{'audio' if audio else options.stage}"
+        params = step_params(route, options)
+        exemption = shot_rule_exemption(route, options.static_by_design)
+        rules = step_rules(route, exemption)
         base = [
             "uv",
             "run",
@@ -283,15 +441,22 @@ def operation_commands(
             options.audio_model if audio else options.video_model,
             "--operation",
             options.audio_operation if audio else options.video_operation,
+            *flag_pairs("--param", params),
             "--expected-output",
             f"{folder}/{asset}{STEP_OUTPUT_SUFFIX.get(route, '.mp4')}",
+            *flag_pairs("--required-rule", rules),
         ]
         operations.append(
             {
                 "asset": asset,
                 "route": route,
+                "stage": options.stage,
+                "take": options.take,
                 "skills": step["skills"],
                 "after": previous,
+                "params": params,
+                "required_rules": rules,
+                "shot_rule_exemption": exemption,
                 "hash_command": base,
                 "register_command": [
                     *base,
@@ -330,6 +495,53 @@ def register_findings(matrix: dict[str, Any]) -> list[Finding]:
     return findings
 
 
+def unresolved(value: str | None) -> bool:
+    return not value or not value.strip() or "<" in value or ">" in value
+
+
+def option_findings(
+    rows: list[dict[str, Any]], options: argparse.Namespace
+) -> list[Finding]:
+    findings: list[Finding] = []
+    if options.stage == "final" and (
+        not options.final_resolution
+        or not RESOLUTION.fullmatch(options.final_resolution)
+        or options.final_resolution == DRAFT_RESOLUTION
+    ):
+        findings.append(
+            Finding(
+                "register.final_resolution",
+                "--stage final needs --final-resolution at the delivery target "
+                "(for example 1080p); a 480p delivery reuses the selected draft",
+                "--final-resolution",
+            )
+        )
+    routes = {
+        step["route"]
+        for row in rows
+        if row["role"] == "variant"
+        for step in staged_steps(row, options.stage)
+    }
+    needed: list[str] = []
+    if routes - AUDIO_ROUTES:
+        needed += ["video_model", "video_operation"]
+    if routes & AUDIO_ROUTES:
+        needed += ["audio_model", "audio_operation"]
+    if routes:
+        needed.append("capabilities")
+    missing = [name for name in needed if unresolved(getattr(options, name))]
+    if missing:
+        flags = ", ".join(f"--{name.replace('_', '-')}" for name in missing)
+        findings.append(
+            Finding(
+                "register.placeholder",
+                f"Pass resolved values for {flags} before register commands are printed",
+                "register",
+            )
+        )
+    return findings
+
+
 def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
     matrix, findings = load_matrix(args.matrix)
     if findings:
@@ -351,9 +563,14 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
         findings.extend(cost_findings)
     result["rows"] = rows
     if args.command == "register":
+        if not TAKE.fullmatch(args.take):
+            raise ValueError(f"--take must look like t01: {args.take}")
         findings.extend(register_findings(matrix))
+        findings.extend(option_findings(rows, args))
         if not blocking(findings):
             result["dry_run"] = True
+            result["stage"] = args.stage
+            result["take"] = args.take
             result["procedure"] = REGISTER_PROCEDURE
             result["operations"] = {
                 row["name"]: operation_commands(str(args.project), row, args)
@@ -381,11 +598,15 @@ def parser() -> argparse.ArgumentParser:
     register.add_argument("matrix", type=Path)
     register.add_argument("--project", type=Path, required=True)
     register.add_argument("--unit-cost", action="append", default=[])
-    register.add_argument("--video-model", default="<video-model-id>")
-    register.add_argument("--video-operation", default="<video-operation>")
-    register.add_argument("--audio-model", default="<audio-model-id>")
-    register.add_argument("--audio-operation", default="<audio-operation>")
-    register.add_argument("--capabilities", default="<capability-evidence.json>")
+    register.add_argument("--video-model")
+    register.add_argument("--video-operation")
+    register.add_argument("--audio-model")
+    register.add_argument("--audio-operation")
+    register.add_argument("--capabilities")
+    register.add_argument("--stage", choices=("draft", "final"), default="draft")
+    register.add_argument("--final-resolution")
+    register.add_argument("--take", default="t01")
+    register.add_argument("--static-by-design", choices=STATIC_BY_DESIGN)
     return cli
 
 

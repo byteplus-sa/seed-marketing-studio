@@ -9,21 +9,26 @@ allocations**, not rules; a user-requested structure wins, and a hook from the
 
 - **Timings are allocations, not edit points.** Seedance tends to stretch dense
   beat timelines by about 0.5–1.2 s; leave slack and retime in the edit.
-- **Word budget:** about 2.2 spoken words per second for native speech, with the
+- **Word budget** (workspace observation, not a platform figure): about 2.2
+  spoken words per second for native speech, with the
   CTA line ending at least 0.4 s before the clip end: roughly 12 words in 6 s,
   25–30 in 15 s and 60 across 30 s. A voiceover added in post can run faster.
 - **30 s is several generations.** Build it from natural-duration clips of
   about 5–10 s, split on beat boundaries, then assemble.
 - **Every beat has one visible event** and every claim stays within supplied,
   supported facts. Proof beats need real evidence; testimonial beats need
-  approved testimony or a clearly fictional dramatization.
+  approved testimony or an obviously fictional dramatization that is never
+  framed as a real customer's experience.
 - **On-screen text, brand cards and the CTA card are finishing layers.**
 - **Placement anchors** (verified on 2026-10-17; re-verify before use): a
-  YouTube bumper is at most 6 s, and a skippable in-stream ad can be skipped
+  YouTube bumper lasts 5–6 s, and a skippable in-stream ad can be skipped
   at 5 s, so brand and hook land before 5 s
   ([Google Ads Help 2375464](https://support.google.com/google-ads/answer/2375464)).
   TikTok advises hooking viewers in the first 3 s
   ([Video Advertising Guide](https://ads.tiktok.com/business/en/guides/video-advertising-guide)).
+- **Not legal advice; re-verify.** Testimonial and comparison notes below are
+  dated working guidance; the
+  [ad compliance contract](../../../contracts/ad-compliance.md) owns the rules.
 - **Evidence labels:** `official` means a platform publishes the structure;
   `practitioner` means vendor or creator guidance with low confidence. No
   formula has an official performance ranking; compare variants within one
@@ -34,7 +39,11 @@ formula's beats cannot each show a visible event in that length; use
 Hook → Proposition → CTA instead.
 
 ### Hook, Proposition, CTA <!-- id: formula-hook-proposition-cta -->
-- **Evidence:** official (TikTok creative guidance: hook, selling points, clear CTA).
+- **Evidence:** official structure, from TikTok's
+  [Creative Codes one-pager](https://ads.tiktok.com/business/library/Creative_Codes_One_Pager_CA.pdf)
+  (May 2023, Canada edition): hook, body, close. Filling the body with one to
+  three supported selling points and closing on the CTA is this library's
+  allocation.
 - **Use when:** any length, and always for a 6 s bumper.
 
 | Beat | 6 s bumper | 15 s | 30 s |
@@ -44,8 +53,9 @@ Hook → Proposition → CTA instead.
 | CTA | 4.5–5.6 | 11–14.6 | 24–29.6 |
 
 ### Direct-Response Six Beat <!-- id: formula-dr-six-beat -->
-- **Evidence:** practitioner. The source figure of about 60 words in under
-  20 s exceeds the native-speech budget; trim to the budget or use voiceover.
+- **Evidence:** practitioner. The practitioner source's figure of about 60
+  words in under 20 s is not a platform figure and exceeds the native-speech
+  budget; trim to the budget or use voiceover.
 - **Use when:** a product solves a clear problem and proof is supplied.
 
 | Beat | 6 s bumper | 15 s | 30 s |
@@ -58,7 +68,10 @@ Hook → Proposition → CTA instead.
 | CTA | not recommended | 12.5–14.6 | 25–29.6 |
 
 ### Problem, Agitate, Solve <!-- id: formula-pas -->
-- **Evidence:** practitioner.
+- **Evidence:** practitioner. TikTok's
+  [Video Advertising Guide](https://ads.tiktok.com/business/en/guides/video-advertising-guide)
+  lists a related "Problem → Solution → Benefit" framework, without an
+  agitate beat.
 - **Use when:** the problem is concrete and recognizable. Agitation stays
   truthful; no exaggerated harm, fear or health claims.
 
@@ -81,11 +94,16 @@ Hook → Proposition → CTA instead.
 | Action (CTA) | 4.5–5.6 | 12–14.6 | 24–29.6 |
 
 ### Testimonial <!-- id: formula-testimonial -->
-- **Evidence:** practitioner; testimonial law applies (FTC 16 CFR 465 bans fake
-  and AI-generated reviews from people who do not exist; see the
-  [FTC Q&A](https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers)).
+- **Evidence:** practitioner; testimonial law applies. FTC 16 CFR 465
+  prohibits fake testimonials, including AI-generated ones attributed to
+  people who do not exist. The
+  [FTC Q&A](https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers)
+  says the rule has no blanket prohibition on AI-generated avatars and that an
+  obviously fictional dramatization is not a testimonial; presenting a
+  performer's lines as a real customer's experience is the problem.
 - **Use when:** a real, approved testimonial is supplied with its scope, or the
-  dramatization is clearly fictional to the viewer. Otherwise use Demonstration.
+  beat is an obviously fictional dramatization never framed as a real
+  customer. Otherwise use Demonstration.
 
 | Beat | 6 s bumper | 15 s | 30 s |
 | --- | --- | --- | --- |

@@ -66,8 +66,12 @@ run with `uv run python`. Every command prints JSON with `ok`.
    [--min-impressions N]`. Entities are variants (or raw ad names when
    unmatched). An entity is not ranked when an input column is missing, its
    denominator is zero (no impressions, clicks or conversions) or it is below
-   the impression floor; the reason is printed. Agree the floor with the user
-   before ranking when volumes are small.
+   the impression floor; the reason is printed. **The floor defaults to 1000
+   impressions** so a handful of impressions cannot win; an export without an
+   impressions column needs an explicit `--min-impressions 0`. Agree the
+   floor with the user before ranking when volumes are small. A ranked entity
+   below 1000 impressions (possible only with a lowered floor) is marked
+   `low_volume: true`; say so beside the ranking.
 3. **Check fatigue.** `performance_loop.py fatigue metrics.json
    [--window-days 7]`. Rows are bucketed into date windows from the earliest
    date; a variant is `fatigued` when, in its latest window versus the
@@ -77,8 +81,11 @@ run with `uv run python`. Every command prints JSON with `ok`.
    --matrix variants/matrix.json --kpi <kpi> --axis <axis>=<v1>,<v2>
    [--hero-value <current value>] --out variants/round-02/matrix.json`. The
    draft keeps the winner's values for every axis already tested, varies one
-   new axis, bumps `version`, and is `status: draft` with an empty hero hash.
-   It refuses to overwrite an existing file.
+   new axis, bumps `version`, carries the source matrix's `naming` and
+   `unit_cost_usd`, and is `status: draft` with an empty hero hash. It uses
+   the same 1000-impression default floor, prints `warnings` when the winner
+   is low volume, refuses a custom `naming` that lacks the new axis
+   placeholder, and refuses to overwrite an existing file.
 5. **Hand off.** Bind the draft's hero to the approved winning take (shot,
    take, SHA-256, decision), then plan and cost it with `ad-variant-matrix`.
 

@@ -21,7 +21,7 @@
         "source": "Published only as downloadable template files (standard left-to-right, Arabic right-to-left, each with and without anchor); the size depends on ratio, caption length and extra formats. No fractions are published."
       },
       "conflicts": [
-        "The June 2026 page allows up to 10 minutes; older TikTok spec pages list 5-60 s. Use the current page and re-check before delivery."
+        "The June 2026 in-feed help page allows up to 10 minutes; the TikTok Video Advertising Guide (https://ads.tiktok.com/business/en/guides/video-advertising-guide, read 2026-10-17) lists in-feed ads as up to 60 s with 21-34 s performing best; older spec pages listing 5-60 s are unsourced, historical. Use the current help page and re-check before delivery."
       ],
       "notes": [
         "Vertical 9:16 is recommended; 16:9 needs at least 960x540 and 1:1 at least 640x640.",
@@ -70,7 +70,7 @@
       "accepted_aspect_ratios": ["9:16"],
       "recommended_resolution": [1440, 2560],
       "min_resolution": {"width": 250, "height": null},
-      "duration": {"min_s": 1, "max_s": 3600, "recommended": {"min_s": null, "max_s": 15}},
+      "duration": {"min_s": 1, "max_s": 3600, "recommended": null},
       "safe_zone": {
         "top": 0.14,
         "bottom": 0.35,
@@ -80,7 +80,7 @@
       },
       "conflicts": [],
       "notes": [
-        "Videos under 16 s play in full; 16 s or longer may be split into up to three Stories cards.",
+        "Videos under 16 s play in full; 16 s or longer may be split into up to three Stories cards. Meta states this as playback behavior, not a recommended length.",
         "Aspect ratio tolerance is 1%.",
         "Captions are optional but recommended; sound is optional but recommended.",
         "Primary text recommendation: 125 characters (platform UI text, not video text)."
@@ -180,7 +180,7 @@
       "accepted_aspect_ratios": ["16:9"],
       "recommended_resolution": null,
       "min_resolution": null,
-      "duration": {"min_s": null, "max_s": 6, "recommended": null},
+      "duration": {"min_s": 5, "max_s": 6, "recommended": null},
       "safe_zone": {
         "top": null,
         "bottom": null,
@@ -189,11 +189,10 @@
         "source": "Not published on the format page."
       },
       "conflicts": [
-        "The format table lists '6 seconds (>=5 seconds minimum)'; the minimum is ambiguous and left null.",
         "The format page does not state an aspect ratio; 16:9 is the conventional landscape player ratio. Confirm before delivery."
       ],
       "notes": [
-        "Non-skippable."
+        "Non-skippable. The format page describes bumper ads as lasting between 5 and 6 seconds; its table lists '6 seconds (>=5 seconds minimum)'."
       ],
       "source_url": "https://support.google.com/google-ads/answer/2375464",
       "verified_on": "2026-10-17"

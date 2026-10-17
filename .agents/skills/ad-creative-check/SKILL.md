@@ -40,7 +40,7 @@ regenerate media, approve a variant, decide a disclosure or upload an ad.
 | Brand kit | the campaign's pinned `brand.json` and its logo files | `logo_legible` and `brand_copy` are `needs_human` |
 | Product facts | `elements/<product-id>/facts.json` | `claims_supported` fails for any claim |
 | Locked script and supers | the script or copy plan | `speech_intelligible` compares against what was heard only, and says so |
-| Loudness target | the delivery record; default -16 LUFS integrated, peaks at or below -1.5 dBTP, tolerance 1 LU (workspace audio contract) | use the default and say so |
+| Loudness target | the delivery record; default from the [audio contract](../../contracts/audio-video-alignment.md): -16 LUFS integrated, peaks at or below -1.5 dBFS, checked here as true peak at or below -1.5 dBTP (stricter, so it also meets the contract); the ±1 LU integrated tolerance is a workspace heuristic, not part of the contract | use the default and say so |
 | Paid flag and disclosure record | `delivery/disclosure_<deliverable-id>.json` | a paid deliverable fails `disclosure_recorded` |
 
 Check the cut's SHA-256 against the render record before starting. A check
@@ -71,11 +71,13 @@ first check.
 ## Procedure
 
 1. **Set up the check folder** in the campaign:
-   `qa/creative-check_<deliverable-id>/`. Everything the report cites lives
-   inside it.
+   `delivery/qa/<deliverable-id>/`, the same folder as the cut's safe-zone
+   contact sheet. The deliverable id is the variant name plus the placement,
+   `{campaign}_{concept}_{axis-values}_v{nn}_<placement>`. Everything the
+   report cites lives inside it.
 2. **Sample frames.** Run
-   `uv run python .agents/skills/ad-creative-check/scripts/creative_check.py frames <cut> --out qa/creative-check_<id>/frames --every 0.5`
-   and a dense opening pass with `--every 0.25 --until 3 --out qa/creative-check_<id>/opening`.
+   `uv run python .agents/skills/ad-creative-check/scripts/creative_check.py frames <cut> --out delivery/qa/<deliverable-id>/frames --every 0.5`
+   and a dense opening pass with `--every 0.25 --until 3 --out delivery/qa/<deliverable-id>/opening`.
    The command prints each frame's path and time. Look at the frames yourself.
 3. **Ask the video model.** Run `seed_understand` (through `ark-mcp`) on the
    cut with the questions in the check procedure. Upload the cut with
@@ -95,7 +97,7 @@ first check.
    check, timestamps in seconds from the start of the cut and frame paths
    relative to the check folder.
 9. **Validate and summarize:**
-   `uv run python .agents/skills/ad-creative-check/scripts/creative_check.py report qa/creative-check_<id>/checks.json --out qa/creative-check_<id>/report.json`.
+   `uv run python .agents/skills/ad-creative-check/scripts/creative_check.py report delivery/qa/<deliverable-id>/checks.json --out delivery/qa/<deliverable-id>/report.json`.
    Exit 0 means every check passed or does not apply, 1 means a `fail` or
    `needs_human` remains, and 2 means the checklist is invalid (the errors
    are listed). Fix the checklist, not the evidence.

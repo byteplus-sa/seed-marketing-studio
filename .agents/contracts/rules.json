@@ -542,6 +542,9 @@
       "id": "ad.disclosure_recorded",
       "severity": "error",
       "applies_to": [
+        "ad_copy",
+        "narrative_video",
+        "static_image",
         "ad_delivery"
       ],
       "owner_path": ".agents/contracts/ad-compliance.md",
@@ -564,6 +567,8 @@
       "id": "ad.safe_zone",
       "severity": "error",
       "applies_to": [
+        "ad_copy",
+        "narrative_video",
         "static_image",
         "ad_delivery"
       ],
@@ -579,7 +584,7 @@
         "static_image"
       ],
       "owner_path": ".agents/skills/brand-kit/references/consumers.md",
-      "summary": "Generated media never renders a brand logo or wordmark; logos are post overlays from the pinned brand kit.",
+      "summary": "Free-standing, corner and end-card logos are post overlays from the pinned brand kit; an on-product mark appears only when carried by a bound acquired product reference and is checked against it; a generated logo not traceable to a reference is a defect.",
       "exceptions": []
     },
     {
@@ -661,7 +666,7 @@
         "ad_copy"
       ],
       "owner_path": ".agents/skills/static-ad-batch/SKILL.md",
-      "summary": "Every claim on a static ad resolves to a supported product fact; the planner refuses anything else.",
+      "summary": "Every claim on a static ad resolves to a supported product fact, or in the offer layout to a perishable fact retrieved within the freshness window; the planner refuses anything else.",
       "exceptions": []
     },
     {
@@ -671,7 +676,17 @@
         "static_image"
       ],
       "owner_path": ".agents/skills/seedream-product-shot/SKILL.md",
-      "summary": "Legible product labels and logos are composited from acquired files, never generated.",
+      "summary": "Free-standing, corner and end-card logos and wordmarks are post overlays from the brand kit; an on-product label or mark is allowed only when the bound acquired product reference carries it and matches it letter for letter; a generated mark not traceable to that reference is a defect.",
+      "exceptions": []
+    },
+    {
+      "id": "facts.claim_qualifier",
+      "severity": "warning",
+      "applies_to": [
+        "preflight"
+      ],
+      "owner_path": ".agents/skills/product-intake/SKILL.md",
+      "summary": "A claim keeps qualifiers its quote carries (up to, as low as, from + number, starting at, may, approximately).",
       "exceptions": []
     }
   ]

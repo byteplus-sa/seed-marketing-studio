@@ -11,7 +11,8 @@
         "Explains that 12 ads are planned and names them {campaign}_{angle}_{layout}_{ratio}_v01, for example lumo-launch_stays-hot_offer_4x5_v01.",
         "Sets an asset root covering both the project and the shared brand library.",
         "Runs or lists the html-graphic-render commands with --copy values and --require-local-font, then the contact sheet command last.",
-        "Flags the discount as a perishable fact to re-check before delivery and leaves results in review."
+        "Pins the kit with brand_kit_sha256 from brand_kit.py pin and keeps the default 24-hour perishable_max_age_hours unless the brief sets another window.",
+        "Treats the discount as a perishable fact usable only in the offer layout while fresh, re-checks it before delivery, and leaves results in review."
       ]
     },
     {
@@ -33,7 +34,7 @@
       "expectations": [
         "Does not invent a text color or a body font for the brand kit.",
         "Names the missing roles and asks the user or brand owner to supply and approve them in the kit.",
-        "Explains that the batch can be planned once the kit is approved and re-pinned if the campaign pins its hash."
+        "Explains that the batch can be planned once the kit is approved and the campaign records the new pin."
       ]
     },
     {

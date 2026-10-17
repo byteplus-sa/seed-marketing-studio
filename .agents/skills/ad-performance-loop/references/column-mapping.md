@@ -24,6 +24,11 @@ example "Clicks (all)" versus "Link clicks").
 | `reach` | Unique accounts reached | Frequency (impressions / reach) |
 | `frequency` | Frequency as exported | Fatigue when reach is absent |
 
+Frequency for a window or variant is impressions over summed reach only when
+**every** row in it has reach; otherwise it is the impression-weighted
+exported frequency when every row has one, and otherwise missing, so fatigue
+reports `insufficient_data` instead of an inflated number.
+
 Only `ad_name` is required. A mapped header that is missing from the export is
 listed in `missing_columns`, and every KPI that needs it is reported as not
 ranked.
@@ -50,8 +55,13 @@ ranked.
 ```
 
 - `decimal`: `.` (default) or `,` for exports that write `1.234,50`.
-  Thousands separators, spaces, apostrophes and currency symbols or codes are
-  removed before parsing; `(12.00)` reads as negative.
+  Spaces, apostrophes, common currency symbols and the mapping's `currency`
+  code are removed before parsing; thousands separators must sit in groups of
+  three; `(12.00)` reads as negative and `1.2E+05` as 120000.
+- **Never guessed:** abbreviated values (`1.5K`, `2.3M`, `1B`), percentages
+  (`3%`), a different currency code, misplaced separators and any other
+  letters are reported in `issues` and the cell stays missing. Ask the user
+  to export full numbers rather than rounded or abbreviated ones.
 - `date_format`: a Python `strptime` pattern; an ISO date at the start of the
   cell is accepted as a fallback. Unreadable dates are reported in `issues`
   and the row still counts for ranking.
@@ -63,9 +73,10 @@ ranked.
 ## Joining ad names to variants
 
 1. An ad name equal to a variant name matches it.
-2. Otherwise an ad name that contains exactly one variant name as a whole
-   token (bounded by non-alphanumeric characters) matches it, so platform
-   suffixes such as ` - Copy` are tolerated.
+2. Otherwise the ad name is searched for variant names as whole tokens
+   (bounded by non-alphanumeric characters), so platform suffixes such as
+   ` - Copy` are tolerated. A found name contained in a longer found name is
+   dropped, so the longest match wins; exactly one remaining name matches.
 3. An ad name containing two or more variant names is listed in
    `ambiguous_ads` and left unmatched.
 4. Anything else is listed in `unmatched_ads`; its rows are kept and ranked

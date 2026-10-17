@@ -110,7 +110,7 @@
     "unit_cost_usd": {
       "type": "object",
       "propertyNames": {
-        "$ref": "#/$defs/axis"
+        "$ref": "#/$defs/costKey"
       },
       "additionalProperties": {
         "type": "number",
@@ -145,6 +145,16 @@
         "location",
         "language",
         "ratio"
+      ]
+    },
+    "costKey": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/axis"
+        },
+        {
+          "const": "motion-recast"
+        }
       ]
     },
     "value": {

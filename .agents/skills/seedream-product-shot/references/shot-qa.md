@@ -13,13 +13,19 @@ image obeyed it; inspect every sample at delivery size and at thumbnail size.
 
 ## Label legibility
 
+Rule `product_shot.no_generated_label`: an on-product label or mark passes only
+when the bound acquired product reference carries it and it matches that
+reference letter for letter. Free-standing, corner and end-card logos are post
+overlays from the brand kit, never part of a product shot. Any mark not
+traceable to the bound reference is a defect.
+
 Record one outcome per sample:
 
 | Outcome | Result |
 | --- | --- |
-| Readable label matches the reference letter for letter at delivery size | Pass |
+| Readable on-product label carried by the bound acquired reference, matching it letter for letter at delivery size | Pass |
 | Label turned away, soft, partial or too small to read, and the brief accepts that | Pass, noted |
-| Any readable or near-readable text that differs from the reference: misspelling, invented words, warped logo, pseudo-letters | **Fail** |
+| Any readable or near-readable text that differs from the reference, or a mark the reference does not carry: misspelling, invented words, warped or added logo, pseudo-letters | **Fail** |
 | Label must be legible but the sample was generated | Fail the route: re-plan as plate + composite with the authorized packshot |
 
 Never repair a label by prompting Seedream again for the text. Composite the
@@ -58,7 +64,8 @@ authorized packshot or label area deterministically, as a new versioned render.
 
 ## Text and marks elsewhere
 
-- No added text, logos, watermarks or signage anywhere in the frame.
+- No added text, logos, watermarks or signage anywhere in the frame: only the
+  bound reference's own on-product marks may appear.
 - Companion objects, plinths and surfaces are plain.
 
 ## Composition and use

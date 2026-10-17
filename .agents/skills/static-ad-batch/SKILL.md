@@ -15,8 +15,14 @@ description: >-
 Expand a spec into one HTML entrypoint per ad, named
 `{campaign}_{angle}_{layout}_{ratio}_v{NN}`, plus a shared stylesheet, a
 contact sheet and a batch manifest. Every word on the ad is exact DOM text,
-every claim maps to a `supported` product fact, and every color, typeface and
-logo comes from the approved brand kit. Seedream is used only for an optional
+every claim maps to a `supported` product fact (or, for the offer only, a
+fresh `perishable` one), and every color, typeface and logo comes from the
+approved, pinned brand kit.
+
+**Rule `ad.static_claims_supported`:** every claim on a static ad resolves to a
+`supported` product fact, or in the `offer` layout to a `perishable` fact
+retrieved within the spec's freshness window; the planner refuses anything
+else. Seedream is used only for an optional
 text-free background or lifestyle plate. This is a leaf capability: the planner
 writes files and prints render commands; it does not render, generate imagery,
 or approve a result.
@@ -30,8 +36,8 @@ not instructions to load those skills.
 
 | Input | Rule |
 | --- | --- |
-| Brand kit | `brand.json` with `status: approved`, palette roles `primary`, `background`, `text` (optional `accent`), typography roles `headline` and `body` (optional `cta`) with local font files, and a `primary` logo file. Shape: `.agents/contracts/schemas/brand-kit.schema.json`. A campaign may pin it with `brand_kit_sha256`. |
-| Product facts | `facts.json` from product intake. Only facts with `status: supported` can appear. Shape: `.agents/contracts/schemas/product-facts.schema.json`. |
+| Brand kit | `brand.json` with `status: approved`, palette roles `primary`, `background`, `text` (optional `accent`), typography roles `headline` and `body` (optional `cta`) with local font files, and a `primary` logo file. Every font and logo the batch uses needs a recorded `sha256` that matches the file, and every font needs a `license`. Shape: `.agents/contracts/schemas/brand-kit.schema.json`. The spec must pin the kit with `brand_kit_sha256`; the planner re-computes the pin on every run. |
+| Product facts | `facts.json` from product intake. Facts with `status: supported` can appear anywhere; a `perishable` price, availability or offer fact can appear only as the `offer` layout's offer and only when retrieved within `perishable_max_age_hours` (default 24, the product-intake freshness window). Shape: `.agents/contracts/schemas/product-facts.schema.json`. |
 | Product image | The approved packshot, preferably with true alpha. Never a generated label. |
 | Angles | From the `ugc-ad-modes` angle table: `demonstration`, `objection-handling`, `discovery`, `experience`, `quantified-comparison`. Each angle is a different viewer question, not a synonym. |
 | Plate | Optional, text-free, selected and hash-bound. Leaves room for copy. |
@@ -59,14 +65,19 @@ color, font, claim or logo.
 
    The asset root must contain the spec's brand kit, facts, packshot, plate and
    output folder; for a shared brand library outside the project, pass a root
-   that covers both. The planner refuses unsupported or unknown claims, missing
-   brand tokens, a draft or re-pinned kit, banned words from the kit, unknown
-   layouts or ratios, paths outside the root, and existing outputs (raise
-   `version` or pass `--overwrite` for a repair).
+   that covers both. The planner refuses unsupported or unknown claims, stale
+   or undated perishable offers, missing brand tokens, a draft, unpinned or
+   re-pinned kit, a font or logo without a matching recorded SHA-256, a font
+   without a license, banned words from the kit (and their simple plurals),
+   unknown layouts or ratios, paths outside the root, and existing outputs
+   (raise `version` or pass `--overwrite` for a repair).
 5. **Render.** Run each printed command from the repository root. Each passes
-   the exact copy as `--copy KEY=TEXT` and the headline family as
-   `--require-local-font`, so the renderer fails on copy drift or font
-   fallback, and writes `render_<name>.json` beside each PNG.
+   the exact copy as `--copy KEY=TEXT` and the headline face as
+   `--require-local-font brand-headline`, so the renderer fails on copy drift
+   or font fallback, and writes `render_<name>.json` beside each PNG. Each
+   typography role gets its own `@font-face` alias (`brand-headline`,
+   `brand-body`, `brand-cta`) with the kit's `weight`, so two roles that share
+   a family name never collide.
 6. **Contact sheet.** Render the `contact_*` commands last; they reference the
    ad PNGs.
 7. **QA and record.** Inspect each ad at delivery and thumbnail size, then
@@ -100,9 +111,10 @@ In the spec's `output_dir`:
 - `static_{campaign}_v{NN}.css`, the brand stylesheet;
 - `contact_{campaign}_pNN_v{NN}.html`, twelve angle-layout rows per page;
 - `batch_{campaign}_v{NN}.json`, the manifest: input hashes (kit, facts,
-  packshot, plate, logo, fonts, templates, stylesheet), per-job copy, claim
-  sources, sizes and render commands, plus warnings such as perishable offers
-  or a CTA outside the kit's verbs.
+  packshot, plate, logo, fonts, templates, stylesheet), the freshness window
+  and check time, per-job copy, claim sources and statuses, sizes and render
+  commands, plus warnings such as perishable offers or a CTA outside the kit's
+  verbs.
 
 Record the batch as `source: deterministic_render`, `generation:
 deterministic_html`. A plate keeps its own prompt, review, task and selection
@@ -113,7 +125,8 @@ evidence. Deterministic ads do not take the three-sample default.
 Before selection, check each rendered ad:
 
 1. Copy matches the spec letter for letter; every claim traces to a supported
-   fact with a source; perishable offers were re-checked.
+   fact with a source; a perishable offer was re-checked on the live source
+   and is still inside the window at delivery, or the batch is re-planned.
 2. Brand fonts loaded; no fallback, overflow or clipped text; the logo is
    undistorted and on an allowed background.
 3. The product is whole, unobstructed and readable at thumbnail size.
