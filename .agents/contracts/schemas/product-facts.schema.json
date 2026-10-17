@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "product-facts.schema.json",
+  "title": "Product facts",
+  "description": "Sourced facts and acquired reference images for one product card. Every fact carries a verbatim quote and its source; only supported facts, or perishable facts re-verified within the freshness window, may reach a script, super or caption.",
+  "type": "object",
+  "required": ["schema_version", "product_id", "product_name", "brand_id", "source", "facts", "images"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "product_id": {"$ref": "#/$defs/kebab"},
+    "product_name": {"type": ["string", "null"], "minLength": 1},
+    "brand_id": {"oneOf": [{"$ref": "#/$defs/kebab"}, {"type": "null"}]},
+    "source": {
+      "type": "object",
+      "required": ["method", "urls", "parse_status"],
+      "properties": {
+        "method": {"enum": ["product_page", "user_supplied", "mixed"]},
+        "urls": {"type": "array", "items": {"$ref": "#/$defs/web_url"}, "uniqueItems": true},
+        "parse_status": {
+          "enum": ["parsed", "partial", "failed"],
+          "description": "failed means the page could not be read; the card then rests on user-supplied images and statements only."
+        }
+      },
+      "additionalProperties": false
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["fact_id", "kind", "claim", "quote", "retrieved_at", "status"],
+        "properties": {
+          "fact_id": {"type": "string", "pattern": "^f[0-9]{2,3}$"},
+          "kind": {
+            "enum": [
+              "name",
+              "feature",
+              "specification",
+              "material",
+              "variant",
+              "usage",
+              "certification",
+              "performance",
+              "comparison",
+              "price",
+              "availability",
+              "offer",
+              "other"
+            ]
+          },
+          "claim": {"type": "string", "minLength": 1},
+          "quote": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Verbatim text from the source that supports the claim."
+          },
+          "source_url": {"$ref": "#/$defs/web_url"},
+          "source_ref": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Locator for a user-supplied source, such as a file name and page."
+          },
+          "retrieved_at": {"type": "string", "format": "date-time"},
+          "status": {"enum": ["supported", "needs-substantiation", "perishable"]},
+          "conditions": {"type": "string", "minLength": 1},
+          "substantiation": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Evidence reference beyond marketing copy, required before a performance or comparison claim is supported."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["file", "source", "sha256", "retrieved_at"],
+        "properties": {
+          "file": {"type": "string", "pattern": "^ref_[0-9]{2}_[a-z0-9]+(-[a-z0-9]+)*\\.(png|jpg|jpeg|webp)$"},
+          "source": {"type": "string", "pattern": "^(https://[^\\s]+|user_supplied)$"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "retrieved_at": {"type": "string", "format": "date-time"},
+          "view": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "kebab": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 64},
+    "web_url": {"type": "string", "pattern": "^https?://[^\\s]+$"}
+  }
+}

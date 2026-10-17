@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ad Variant Matrix"
+  short_description: "Plan, cost and gate one-axis variants of an approved ad"
+  default_prompt: "Use $ad-variant-matrix to plan, cost and route a variant test matrix from this approved hero ad."

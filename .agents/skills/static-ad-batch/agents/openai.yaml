@@ -1,0 +1,4 @@
+interface:
+  display_name: "Static Ad Batch"
+  short_description: "Plan angle x layout x ratio static ad grids"
+  default_prompt: "Use $static-ad-batch to plan and render a static ad batch from the approved brand kit and supported product facts."

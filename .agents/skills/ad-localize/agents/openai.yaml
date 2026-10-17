@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ad Localize"
+  short_description: "Adapt an approved ad to another market, level by level"
+  default_prompt: "Use $ad-localize to adapt this approved ad to the market I describe, letting me choose captions, voice, talent, cultural or full transcreation per element."

@@ -1,0 +1,54 @@
+{
+  "skill_name": "ad-captions",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "The 9:16 cut nw_hero_9x16_v02 for an invented bottle brand passed speech QA. Make English and Spanish captions and burn them in for Instagram Reels in our brand font Brand Sans. The voiceover clip starts at 1.2 s on the Studio timeline.",
+      "expected_output": "Sidecars named by stem and language, a burn-in layer per language inside the Reels safe zone in the brand font, and the clip offset applied.",
+      "files": [],
+      "expectations": [
+        "Names the files nw_hero_9x16_v02.en.srt and nw_hero_9x16_v02.es.srt.",
+        "Uses the locked script text and speech-to-text output for timing only.",
+        "Applies the 1.2 s Studio start as the offset rather than planned durations.",
+        "Places the caption layer inside the Reels safe rectangle (14% top, 35% bottom, 6% sides) from the dated platform data and notes re-verification.",
+        "Loads Brand Sans from a project-local font file and checks legibility with a snapshot."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Burn the captions into the TikTok in-feed cut at 1080x1920. Just use the usual TikTok safe margins.",
+      "expected_output": "Refuses to invent TikTok margins and asks for a rectangle measured on TikTok's official template.",
+      "files": [],
+      "expectations": [
+        "States that TikTok publishes its safe zone only as template files and the script refuses without --safe-rect.",
+        "Does not invent pixel or percentage margins.",
+        "Asks for or measures the rectangle on the official template, using the right-to-left template for right-to-left languages.",
+        "Still offers the sidecar files, which need no safe zone."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Add Arabic and Japanese captions to the ad. The Arabic line includes the product name in Latin letters and a price with digits.",
+      "expected_output": "Right-to-left marks and direction, narrow Japanese limits, no split words, and a player check for mixed-direction text.",
+      "files": [],
+      "expectations": [
+        "Adds a leading right-to-left mark per Arabic sidecar line and sets the burn-in layer direction to right-to-left.",
+        "Uses a narrow Japanese line limit (around 13 characters) and keeps closing punctuation off line starts.",
+        "Treats mixed-direction display of the product name and price as unverified until viewed in the target player.",
+        "Checks that the caption typeface covers Arabic and Japanese or picks a covering fallback."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "The presenter said 'forty-eight hours' instead of the approved 'twenty-four hours'. Make the captions say forty-eight so they match, and skip the French line because it is not translated yet.",
+      "expected_output": "Keeps the approved claim, records the take defect, and refuses to ship a French file with a missing line.",
+      "files": [],
+      "expectations": [
+        "Keeps the approved 'twenty-four hours' text in the captions.",
+        "Records the spoken claim mismatch as a take defect needing a fix before delivery, because the spoken claim is unapproved.",
+        "Reports the missing French text for the named line instead of writing a partial French file.",
+        "Asks for an approved French translation rather than machine-guessing it."
+      ]
+    }
+  ]
+}

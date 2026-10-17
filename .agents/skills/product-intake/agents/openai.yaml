@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Intake"
+  short_description: "Turn a product URL or images into a sourced card"
+  default_prompt: "Use $product-intake to build a sourced product card with facts.json and acquired reference images from this product page or my images."

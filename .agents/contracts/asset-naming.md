@@ -21,6 +21,10 @@ parseable by tools.
 | Shot take | `<scene>_sh<NNN>_t<NN>_v<NN>.<ext>` | `s01_sh010_t01_v01.mp4` |
 | Shot final | `<scene>_sh<NNN>_final_v<NN>.<ext>` | `s01_sh010_final_v01.mp4` |
 | Scene render | `<scene>_render_v<NN>.<ext>` | `s01_render_v01.mp4` |
+| Ad variant name (`ad-variant-matrix`) | `<campaign>_<concept>_<axis-values>_v<NN>` (or the matrix `naming`) | `spring-launch_demo_hook-a_vp-a_9x16_v01` |
+| Variant operation asset id | `<variant-name>[_<axes>]_t<NN>_draft\|final\|audio` | `spring-launch_demo_hook-a_vp-a_9x16_v01_t01_draft` |
+| Deliverable id | `<variant-name>_<placement-id>` | `spring-launch_demo_hook-a_vp-a_9x16_v01_meta-instagram-reels` |
+| Caption sidecar (`ad-captions`) | `<master-stem>.<language-code>.srt` / `.vtt` | `spring-launch_render_v02.es-MX.srt` |
 
 ## Image
 
@@ -35,9 +39,12 @@ parseable by tools.
 | Character sheet | `char_<character-id>_<sheet-type>_v<NN>.png` | `char_gloria_turnaround_v01.png` |
 | Location sheet | `loc_<location-id>_<view>_v<NN>.png` | `loc_neon-alley_wide_v01.png` |
 | Prop sheet | `prop_<prop-id>_<view>_v<NN>.png` | `prop_red-motorcycle_side_v01.png` |
+| Product shot | `product_<product-id>_<preset>_t<NN>_v<NN>.png` | `product_lumo-mug_studio-white_t01_v01.png` |
+| Product shot plate (empty) | `plate_<product-id>_<preset>_t<NN>_v<NN>.png` | `plate_lumo-mug_color-pop_t02_v01.png` |
 | Reference (seed) | `ref_<NN>_<descriptor>.<ext>` | `ref_01_front.png` |
-| Acquired brand/product source copy | `elements/<id>/refs/ref_<descriptor>.<ext>` | `elements/spicy-paksiw-can/refs/ref_primary_packshot.jpg` |
-| Brand/product provenance | `elements/<id>/PROVENANCE.md` | `elements/brand-555/PROVENANCE.md` |
+| Product-intake card image | `elements/<product-id>/ref_<NN>_<view>.<ext>` beside `facts.json` | `elements/lumo-mug/ref_01_front.png` |
+| Acquired brand/product source copy (no product card) | `elements/<id>/refs/ref_<descriptor>.<ext>` | `elements/citrus-soda-can/refs/ref_primary_packshot.jpg` |
+| Brand/product provenance | `elements/<id>/PROVENANCE.md` | `elements/acme-home/PROVENANCE.md` |
 
 ### Deterministic static graphic sources
 
@@ -49,6 +56,8 @@ not use a `prompt_` prefix because no model prompt is submitted.
 | Screen / UI | `screen_<descriptor>_v<NN>.html` / `.png` | `render_screen_<descriptor>_v<NN>.json` |
 | Brand / title / poster card | `card_<descriptor>_v<NN>.html` / `.png` | `render_card_<descriptor>_v<NN>.json` |
 | Static transparent overlay | `overlay_<descriptor>_v<NN>.html` / `.png` | `render_overlay_<descriptor>_v<NN>.json` |
+| Static ad (static-ad-batch) | `<campaign>_<angle>_<layout>_<ratio>_v<NN>.html` / `.png` | `render_<campaign>_<angle>_<layout>_<ratio>_v<NN>.json` |
+| Static ad batch manifest and contact sheet | `batch_<campaign>_v<NN>.json`, `contact_<campaign>_p<NN>_v<NN>.html` / `.png` | render record per contact page |
 
 Use `source: deterministic_render` and `generation: deterministic_html` in the
 owning manifest. A solid-background model reference and transparent delivery
@@ -61,7 +70,10 @@ When locking a real logo, packshot, or labeled product from the web or the user
 
 - Promote the chosen file to the canonical `prop_…` / `screen_…` / `card_…`
   name under `elements/<element-id>/`.
-- Keep optional source copies under `elements/<element-id>/refs/`.
+- Keep optional source copies under `elements/<element-id>/refs/`. A
+  product-intake card is the exception: its acquired images sit beside
+  `facts.json` as `ref_<NN>_<view>.<ext>` (png, jpg, jpeg or webp), hashed in
+  `facts.json`, and `product_facts.py validate` refuses them in any subfolder.
 - Record `source: web_download` or `user_supplied`, `generation: none`,
   content SHA-256, and provenance (URL or supplier note) in the element
   manifest and/or `PROVENANCE.md`.
@@ -97,6 +109,7 @@ the mapping in `elements/INDEX.md`.
 | Storyboard grid prompt | `prompt_<scene>_sh<NNN>_board_t<NN>_v<NN>.md` | `prompt_s01_sh010_board_t01_v01.md` |
 | Screen ref prompt | `prompt_screen_<descriptor>_v<NN>.md` | `prompt_screen_speedtest_v01.md` |
 | Card prompt | `prompt_card_<descriptor>_v<NN>.md` | `prompt_card_end-logo_v01.md` |
+| Product shot prompt | `prompt_product_<product-id>_<preset>_v<NN>.md` | `prompt_product_lumo-mug_studio-white_v01.md` |
 | Character sheet prompt | `prompt_char_<character-id>_<sheet-type>_v<NN>.md` | `prompt_char_gloria_turnaround_v01.md` |
 | Location sheet prompt | `prompt_loc_<location-id>_<view>_v<NN>.md` | `prompt_loc_neon-alley_wide_v01.md` |
 | Prop sheet prompt | `prompt_prop_<prop-id>_<view>_v<NN>.md` | `prompt_prop_red-motorcycle_side_v01.md` |

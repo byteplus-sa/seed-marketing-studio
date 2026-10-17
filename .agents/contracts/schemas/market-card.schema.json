@@ -1,0 +1,419 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "market-card.schema.json",
+  "title": "Market card",
+  "description": "User-supplied or sourced facts about one target market for adapting an approved ad. No market is built in: every value comes from the user or a cited source, unknown values stay null and are listed in missing. Lives at projects/<campaign>/markets/<market-id>/market.json.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "market_id",
+    "campaign",
+    "label",
+    "languages",
+    "subtitle_languages",
+    "casting_notes",
+    "settings_notes",
+    "props_wardrobe_notes",
+    "gestures_and_taboos",
+    "currency",
+    "number_and_date_formats",
+    "units",
+    "facts_ref",
+    "price_source",
+    "legal_lines",
+    "ai_disclosure",
+    "placements",
+    "reviewer",
+    "level_default",
+    "missing",
+    "status",
+    "approval"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "market_id": {
+      "$ref": "#/$defs/marketId"
+    },
+    "campaign": {
+      "$ref": "#/$defs/kebab"
+    },
+    "label": {
+      "$ref": "#/$defs/note"
+    },
+    "languages": {
+      "description": "Spoken and on-screen languages for this market. null means unknown.",
+      "type": [
+        "array",
+        "null"
+      ],
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "variety",
+          "register",
+          "direction"
+        ],
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/bcp47"
+          },
+          "variety": {
+            "$ref": "#/$defs/note"
+          },
+          "register": {
+            "$ref": "#/$defs/note"
+          },
+          "direction": {
+            "enum": [
+              "ltr",
+              "rtl"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "subtitle_languages": {
+      "description": "Caption sidecar languages. An empty list means the user wants none; null means unknown.",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/bcp47"
+      },
+      "uniqueItems": true
+    },
+    "casting_notes": {
+      "$ref": "#/$defs/note",
+      "description": "The user's own casting direction for this market. Never filled from assumptions about the market."
+    },
+    "settings_notes": {
+      "$ref": "#/$defs/note"
+    },
+    "props_wardrobe_notes": {
+      "$ref": "#/$defs/note"
+    },
+    "gestures_and_taboos": {
+      "$ref": "#/$defs/note"
+    },
+    "currency": {
+      "type": "object",
+      "required": [
+        "code",
+        "symbol",
+        "format"
+      ],
+      "properties": {
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Z]{3}$"
+        },
+        "symbol": {
+          "$ref": "#/$defs/note"
+        },
+        "format": {
+          "$ref": "#/$defs/note",
+          "description": "How a price is written, for example '{symbol}{amount}' with the separators the user supplied."
+        }
+      },
+      "additionalProperties": false
+    },
+    "number_and_date_formats": {
+      "type": "object",
+      "required": [
+        "number",
+        "date"
+      ],
+      "properties": {
+        "number": {
+          "$ref": "#/$defs/note"
+        },
+        "date": {
+          "$ref": "#/$defs/note"
+        }
+      },
+      "additionalProperties": false
+    },
+    "units": {
+      "enum": [
+        "metric",
+        "imperial",
+        "mixed",
+        null
+      ]
+    },
+    "facts_ref": {
+      "description": "Repository-relative path of this market's product facts file, built with product-intake from sources valid for this market.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^projects/[a-z0-9]+(-[a-z0-9]+)*/elements/[a-z0-9]+(-[a-z0-9]+)*/facts\\.json$"
+    },
+    "price_source": {
+      "description": "fact_id of the perishable price fact in facts_ref.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^f[0-9]{2,3}$"
+    },
+    "legal_lines": {
+      "description": "Exact legal lines the user supplied for this market. An empty list means the user confirmed none; null means unknown.",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "required": [
+          "text",
+          "when",
+          "source"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "when": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "$ref": "#/$defs/note"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "ai_disclosure": {
+      "type": "object",
+      "required": [
+        "jurisdictions",
+        "decision_refs"
+      ],
+      "properties": {
+        "jurisdictions": {
+          "description": "Target jurisdictions the user named, as ISO 3166 codes such as a country or a country-subdivision. null means unknown.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}(-[A-Z0-9]{1,3})?$"
+          },
+          "uniqueItems": true
+        },
+        "decision_refs": {
+          "description": "Per-deliverable disclosure records, for example projects/<campaign>-<market-id>/delivery/disclosure_<deliverable-id>.json.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "placements": {
+      "description": "Placement ids from .agents/contracts/ad-platforms.json. null means unknown.",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/kebab"
+      },
+      "uniqueItems": true
+    },
+    "reviewer": {
+      "type": "object",
+      "required": [
+        "role",
+        "name",
+        "status",
+        "decision_ref",
+        "evidence"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "native_speaker",
+            "local_reviewer",
+            null
+          ]
+        },
+        "name": {
+          "$ref": "#/$defs/note"
+        },
+        "status": {
+          "enum": [
+            "none",
+            "pending",
+            "signed_off"
+          ]
+        },
+        "decision_ref": {
+          "$ref": "#/$defs/note",
+          "description": "Path, relative to the market card directory, of the sign-off record (native-review.schema.json) that names the reviewed files, their SHA-256 and the reviewed card-field hash."
+        },
+        "evidence": {
+          "$ref": "#/$defs/note",
+          "description": "The reviewer's or user's own words, quoted. An agent never supplies this."
+        }
+      },
+      "additionalProperties": false
+    },
+    "level_default": {
+      "enum": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        null
+      ]
+    },
+    "missing": {
+      "type": "array",
+      "description": "Dotted paths of values that are unknown and left null rather than invented.",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z_]+(\\.[a-z0-9_]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "approved"
+      ]
+    },
+    "approval": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "mode",
+            "actor",
+            "decision_ref",
+            "decided_at",
+            "card_sha256"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "approve_for_me",
+                "ask_for_approval"
+              ]
+            },
+            "actor": {
+              "enum": [
+                "agent",
+                "user"
+              ]
+            },
+            "decision_ref": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Path, relative to the market card directory, of the approval decision record. It must exist."
+            },
+            "decided_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "ISO-8601 date-time with a UTC offset; market_card.py validate parses it because the format keyword alone is not enforced."
+            },
+            "card_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "description": "market_card.py fingerprint card_sha256 at approval: the canonical card without status, approval, reviewer status/name/decision_ref/evidence and ai_disclosure.decision_refs. A mismatch returns the card to draft at the gate."
+            }
+          },
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "mode": {
+                    "const": "ask_for_approval"
+                  }
+                },
+                "required": [
+                  "mode"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "actor": {
+                    "const": "user"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "approved"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "approval": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "kebab": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 64
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "bcp47": {
+      "type": "string",
+      "maxLength": 35,
+      "description": "BCP 47 language, extended language, script, region and variant subtags only; extension and private-use singletons are not accepted, which keeps every tag usable by ad-captions.",
+      "pattern": "^[A-Za-z]{2,3}(-[A-Za-z]{3}){0,3}(-[A-Za-z]{4})?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*$"
+    },
+    "marketId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 48
+    }
+  }
+}

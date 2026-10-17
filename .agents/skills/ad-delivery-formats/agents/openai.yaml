@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ad Delivery Formats"
+  short_description: "Reframe an ad master per placement inside safe zones"
+  default_prompt: "Use $ad-delivery-formats to plan and check per-placement cuts of this approved ad master."

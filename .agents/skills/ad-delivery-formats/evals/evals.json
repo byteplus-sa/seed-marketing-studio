@@ -1,0 +1,55 @@
+{
+  "skill_name": "ad-delivery-formats",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our 20-second 16:9 hero ad for an invented water bottle brand is approved. Ship it to Instagram Reels, Instagram Stories and a 4:5 feed cut. The end card has a price and a Shop now button.",
+      "expected_output": "A delivery list from the dated platform data, one shared 9:16 cut for Reels and Stories, a flagged unverified feed spec, and per-ratio text layout inside the safe zone.",
+      "files": [],
+      "expectations": [
+        "Reads ratios, sizes and safe zones from the ad-platforms contract and states they were verified on 2026-10-17 and need re-verification.",
+        "Serves Reels and Stories from one 9:16 cut laid out against the intersection of their safe zones (14% top, 35% bottom, 6% sides).",
+        "Flags the Meta feed spec as unverified and asks the user to confirm it instead of inventing a safe zone.",
+        "Rebuilds the price and CTA per ratio as overlays inside the safe rectangle rather than cropping them from the master.",
+        "Plans a safe-zone overlay contact sheet and a check of the logo, product and CTA boxes per cut.",
+        "Creates one Studio project per ratio (for example projects/<campaign>-4x5) with its own project.md copied from the campaign with the same approval_mode, and shot manifests whose takes are hash-pinned byte copies of the master's selected takes, then runs init, sync --take and record-selection there.",
+        "Stores each cut's QA under projects/<campaign>/delivery/qa/<deliverable-id>/ with deliverable ids of the form {campaign}_{concept}_{axis-values}_v{nn}_<placement>."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Make a TikTok in-feed version and give me the exact safe-zone pixel margins for 1080x1920.",
+      "expected_output": "Reports that TikTok publishes its safe zone only as downloadable templates and does not invent pixel margins.",
+      "files": [],
+      "expectations": [
+        "Runs or describes safe_zones.py zones for tiktok-in-feed and reports the unpublished result.",
+        "Does not state invented pixel or percentage margins for TikTok.",
+        "Directs the layout and QA to TikTok's official template files, including the right-to-left variant when relevant.",
+        "Notes the duration conflict between the current page (up to 10 minutes) and older 5-60 s pages."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The hero shot shows two people passing the product across a wide 16:9 table. Just crop it to 9:16 for Shorts.",
+      "expected_output": "Recognizes the crop would drop a subject and recommends native 9:16 regeneration with the same approved references.",
+      "files": [],
+      "expectations": [
+        "Measures subject boxes with seed_understand and checks whether both subjects and the product fit the crop window.",
+        "Recommends native 9:16 generation for the hero shot because the composition carries the idea.",
+        "Sends the regenerated shot through prompt-review, the 480p draft rule and registry registration.",
+        "Explains the trade-off and keeps a letterbox only as a last resort the user must accept."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "One cut for Instagram Reels and YouTube bumper please, same file for both.",
+      "expected_output": "Refuses to serve 9:16 and 16:9 placements from one file and plans two cuts.",
+      "files": [],
+      "expectations": [
+        "Explains that the placements have different ratios and one cut cannot serve both.",
+        "Plans a separate 16:9 cut no longer than 6 seconds for the bumper.",
+        "Notes that the YouTube format page does not state the bumper ratio or safe zone and asks for confirmation or template use."
+      ]
+    }
+  ]
+}

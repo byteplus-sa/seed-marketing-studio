@@ -511,6 +511,229 @@
       "owner_path": ".agents/skills/seedance-prompt-25-dialogue/SKILL.md",
       "summary": "Approved lines keep their words, register and code-switching; new drafts follow the language, register and code-switching the brief sets, never an assumed market default; an accent request is a delivery note outside the dialogue braces, not code-switching.",
       "exceptions": []
+    },
+    {
+      "id": "ad.claims_supported",
+      "severity": "error",
+      "applies_to": [
+        "ad_copy",
+        "narrative_video",
+        "static_image",
+        "ad_delivery"
+      ],
+      "owner_path": ".agents/contracts/ad-compliance.md",
+      "summary": "Every on-screen or spoken claim maps to a supported product fact; comparatives state conditions and source.",
+      "exceptions": []
+    },
+    {
+      "id": "ad.no_fabricated_testimonial",
+      "severity": "error",
+      "applies_to": [
+        "ad_copy",
+        "narrative_video"
+      ],
+      "owner_path": ".agents/contracts/ad-compliance.md",
+      "summary": "No first-person endorsement by a synthetic or hired performer is presented as a real customer's experience.",
+      "exceptions": [
+        "A supplied, authorized testimonial from a real, identified customer with recorded consent."
+      ]
+    },
+    {
+      "id": "ad.disclosure_recorded",
+      "severity": "error",
+      "applies_to": [
+        "ad_copy",
+        "narrative_video",
+        "static_image",
+        "ad_delivery"
+      ],
+      "owner_path": ".agents/contracts/ad-compliance.md",
+      "summary": "Every paid deliverable records the user's synthetic-performer and platform AI-label decision; internal reels carry no label.",
+      "exceptions": []
+    },
+    {
+      "id": "brand.copy_rules",
+      "severity": "error",
+      "applies_to": [
+        "ad_copy",
+        "static_image",
+        "ad_delivery"
+      ],
+      "owner_path": ".agents/contracts/ad-compliance.md",
+      "summary": "Copy avoids brand-kit banned words and carries required lines and trademark marks.",
+      "exceptions": []
+    },
+    {
+      "id": "ad.safe_zone",
+      "severity": "error",
+      "applies_to": [
+        "ad_copy",
+        "narrative_video",
+        "static_image",
+        "ad_delivery"
+      ],
+      "owner_path": ".agents/contracts/ad-compliance.md",
+      "summary": "CTA, offer, logo and required lines sit inside the placement safe zone and read with the sound off.",
+      "exceptions": []
+    },
+    {
+      "id": "brand.no_generated_logo",
+      "severity": "error",
+      "applies_to": [
+        "preflight",
+        "static_image"
+      ],
+      "owner_path": ".agents/skills/brand-kit/references/consumers.md",
+      "summary": "Free-standing, corner and end-card logos are post overlays from the pinned brand kit; an on-product mark appears only when carried by a bound acquired product reference and is checked against it; a generated logo not traceable to a reference is a defect.",
+      "exceptions": []
+    },
+    {
+      "id": "library.pin_current",
+      "severity": "error",
+      "applies_to": [
+        "preflight",
+        "stage_exit"
+      ],
+      "owner_path": ".agents/contracts/shared-library.md",
+      "summary": "Brand kit and talent entries match the SHA-256 pinned in project.md.",
+      "exceptions": []
+    },
+    {
+      "id": "talent.authorized",
+      "severity": "error",
+      "applies_to": [
+        "preflight"
+      ],
+      "owner_path": ".agents/contracts/shared-library.md",
+      "summary": "Talent entries bind only Active assets with valid, in-scope authorization; never a real person without one.",
+      "exceptions": []
+    },
+    {
+      "id": "facts.supported_only",
+      "severity": "error",
+      "applies_to": [
+        "preflight"
+      ],
+      "owner_path": ".agents/skills/product-intake/SKILL.md",
+      "summary": "Scripts, supers and captions use only supported facts, or perishable facts re-verified within the window.",
+      "exceptions": []
+    },
+    {
+      "id": "delivery.safe_zone_unpublished",
+      "severity": "error",
+      "applies_to": [
+        "ad_delivery"
+      ],
+      "owner_path": ".agents/contracts/ad-platforms.md",
+      "summary": "Never invent margins for a placement whose safe zone is unpublished; lay out against the platform template.",
+      "exceptions": []
+    },
+    {
+      "id": "delivery.specs_reverify",
+      "severity": "error",
+      "applies_to": [
+        "ad_delivery"
+      ],
+      "owner_path": ".agents/contracts/ad-platforms.md",
+      "summary": "Platform specs are dated data; re-verify against the source before paid delivery.",
+      "exceptions": []
+    },
+    {
+      "id": "ad.variant_one_axis",
+      "severity": "error",
+      "applies_to": [
+        "preflight"
+      ],
+      "owner_path": ".agents/skills/ad-variant-matrix/SKILL.md",
+      "summary": "Each variant changes one axis from the hero unless a full-factorial test was explicitly requested.",
+      "exceptions": []
+    },
+    {
+      "id": "ad.variant_budget_gate",
+      "severity": "error",
+      "applies_to": [
+        "preflight"
+      ],
+      "owner_path": ".agents/skills/ad-variant-matrix/SKILL.md",
+      "summary": "No variant production proceeds after variant_matrix.py cost refuses the matrix for budget or variant count.",
+      "exceptions": []
+    },
+    {
+      "id": "ad.static_claims_supported",
+      "severity": "error",
+      "applies_to": [
+        "static_image",
+        "ad_copy"
+      ],
+      "owner_path": ".agents/skills/static-ad-batch/SKILL.md",
+      "summary": "Every claim on a static ad resolves to a supported product fact, or in the offer layout to a perishable fact retrieved within the freshness window; the planner refuses anything else.",
+      "exceptions": []
+    },
+    {
+      "id": "product_shot.no_generated_label",
+      "severity": "error",
+      "applies_to": [
+        "static_image"
+      ],
+      "owner_path": ".agents/skills/seedream-product-shot/SKILL.md",
+      "summary": "Free-standing, corner and end-card logos and wordmarks are post overlays from the brand kit; an on-product label or mark is allowed only when the bound acquired product reference carries it and matches it letter for letter; a generated mark not traceable to that reference is a defect.",
+      "exceptions": []
+    },
+    {
+      "id": "facts.claim_qualifier",
+      "severity": "warning",
+      "applies_to": [
+        "preflight"
+      ],
+      "owner_path": ".agents/skills/product-intake/SKILL.md",
+      "summary": "A claim keeps qualifiers its quote carries (up to, as low as, from + number, starting at, may, approximately); product_facts.py validate warns, supported withholds the claim under blocked, and static-ad-batch refuses it.",
+      "exceptions": []
+    },
+    {
+      "id": "localize.native_review",
+      "severity": "error",
+      "applies_to": [
+        "preflight",
+        "stage_exit",
+        "ad_delivery"
+      ],
+      "owner_path": ".agents/skills/ad-localize/SKILL.md",
+      "summary": "L3-L5 market adaptations need a native-speaker or local-reviewer sign-off decided by the reviewer or user, bound to inventory.md, translation.md and the reviewed card-field hashes (per market or per matrix variant), before final-resolution generation and delivery; the agent never signs off.",
+      "exceptions": []
+    },
+    {
+      "id": "localize.source_untouched",
+      "severity": "error",
+      "applies_to": [
+        "preflight",
+        "stage_exit"
+      ],
+      "owner_path": ".agents/skills/ad-localize/SKILL.md",
+      "summary": "Localization never changes the source campaign; output goes to projects/<campaign>-<market-id>/ as a new version.",
+      "exceptions": []
+    },
+    {
+      "id": "localize.claims_market_scoped",
+      "severity": "error",
+      "applies_to": [
+        "ad_copy",
+        "narrative_video",
+        "static_image",
+        "ad_delivery"
+      ],
+      "owner_path": ".agents/skills/ad-localize/SKILL.md",
+      "summary": "Every localized claim, price and offer resolves to a supported or current perishable fact in the target market's own facts file; on-screen market values (price, CTA, legal lines) are L1 text and still subject to this rule.",
+      "exceptions": []
+    },
+    {
+      "id": "localize.market_card_sourced",
+      "severity": "error",
+      "applies_to": [
+        "preflight"
+      ],
+      "owner_path": ".agents/skills/ad-localize/references/market-card.md",
+      "summary": "Every market-card value is user-supplied or sourced; no market is inferred or assumed.",
+      "exceptions": []
     }
   ]
 }

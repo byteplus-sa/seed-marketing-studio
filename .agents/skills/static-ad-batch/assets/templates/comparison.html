@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="{{stylesheet}}">
+</head>
+<body class="{{ratio_class}}">
+<main class="canvas layout-comparison">
+{{plate}}
+<div class="safe">
+<header class="brand"><img class="logo" src="{{logo_src}}" alt="{{brand_name}}"></header>
+<section class="copy">
+<h1 class="headline" data-copy-key="headline">{{headline}}</h1>
+<table class="compare">
+<thead><tr><th></th><th class="ours" data-copy-key="ours_label">{{ours_label}}</th><th data-copy-key="alternative_label">{{alternative_label}}</th></tr></thead>
+<tbody>{{rows}}</tbody>
+</table>
+</section>
+<figure class="product"><img src="{{product_src}}" alt="{{product_name}}"></figure>
+<footer class="action"><p class="cta" data-copy-key="cta">{{cta}}</p>{{legal}}</footer>
+</div>
+</main>
+</body>
+</html>

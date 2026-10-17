@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ad Creative Check"
+  short_description: "Pre-spend pass/fail checklist for a finished ad cut, with timestamps and frames"
+  default_prompt: "Use $ad-creative-check to check my finished ad cut before paid delivery and report pass, fail or needs-human per item with frames."

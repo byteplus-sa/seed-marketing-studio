@@ -1,6 +1,60 @@
 {
   "schema_version": 1,
   "skills": {
+    "ad-captions": {
+      "kind": "leaf",
+      "description": "Write per-language ad captions (SRT, WebVTT) named <master-stem>.<language-code>.srt from the locked ad script and measured speech timing, and optionally a HyperFrames caption layer placed inside a placement's safe zone in brand typography for sound-off viewing. Caption text follows the locked script, never the heard words. Wraps by grapheme cluster so CJK, Indic, Thai with word breaks and right-to-left scripts are never split inside a word; enforces line length, reading speed and cue duration; resolves overlaps; refuses to invent margins for unpublished safe zones. Use for any market or language after speech QA on the cut. Does not translate, transcribe, generate media or render the master.",
+      "readme_summary": "Write per-language SRT/WebVTT ad captions from the locked script and measured timing, with an optional HyperFrames burn-in layer inside the placement safe zone.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "ad-creative-check": {
+      "kind": "leaf",
+      "description": "Run an honest pre-spend checklist on a finished ad cut: product identifiable by its declared reveal time, logo legible and undistorted against the brand kit, a visible change in the opening seconds, CTA and offer inside the placement safe zone and readable with the sound off, every claim supported, speech intelligible, loudness on target, and a recorded disclosure decision for paid delivery. Samples frames with FFmpeg, uses video understanding and speech-to-text as evidence, and writes a pass, fail or needs-human report with timestamps and frame paths. Use before an ad is uploaded or a variant is promoted to paid spend. Not a virality, hook-rate or performance prediction, not prompt review, and not a fix or approval step.",
+      "readme_summary": "Honest pre-spend pass/fail/needs-human checklist for a finished ad cut: reveal, logo, opening, safe zone, claims, speech, loudness and disclosure; no performance prediction.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "ad-delivery-formats": {
+      "kind": "leaf",
+      "description": "Turn one finished ad master into per-placement cuts (9:16, 4:5, 1:1, 16:9 and others) using dated platform specs from the ad-platforms contract. Chooses native regeneration per ratio for composition-critical hero shots, otherwise a per-ratio HyperFrames Studio reframe with a subject-aware crop; lays out supers, CTA and captions deterministically inside each placement's safe zone; and checks every cut with a safe-zone overlay contact sheet. Reports unpublished safe zones instead of inventing margins. Use when an approved ad must ship to several placements or ratios. Not for writing the ad, generating the master, or caption timing.",
+      "readme_summary": "Turn one approved ad master into per-placement cuts: regenerate or reframe per ratio, lay out text inside dated safe zones, and check with overlay contact sheets.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "ad-localize": {
+      "kind": "orchestrator",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null,
+      "description": "Orchestrator that adapts an approved ad to another market at the depth the user chooses, per element: L1 translated captions and re-rendered on-screen text, L2 voice (dub keeping voices or a line-scoped re-voice that keeps the source soundtrack), L3 talent replaced through authorized Virtual Portraits, L4 cultural adaptation of settings, props, wardrobe, product and soundtrack, or L5 full transcreation into a new hero ad. Keeps a market card of user-supplied facts, an inventory of every spoken line and on-screen text, a translation sheet with review statuses, market-scoped claims, a recorded native or local reviewer sign-off before final generation at L3 to L5, an honest lip-sync verdict, and a new version in its own project without touching the source. No market is built in. Use to localize, translate, dub, recast or transcreate a finished ad for another market or language. Not for writing a first ad, a caption file alone (ad-captions) or ratio cuts alone (ad-delivery-formats).",
+      "readme_summary": "Adapt an approved ad to another market at the depth chosen per element: captions/text, voice, talent, cultural adaptation or full transcreation, with native review gates."
+    },
+    "ad-performance-loop": {
+      "kind": "leaf",
+      "description": "Import a user-exported ad-platform results CSV, join rows to ad variant names, compute hook rate (3-second views per impression), CTR, conversion rate and CPA, rank variants by the user's chosen KPI within that account, flag creative fatigue when frequency rises while CTR or hook rate falls, and draft the next variant matrix that keeps the winner and tests one new axis. Handles configurable column mapping, missing columns, zero impressions, currency symbols, thousands separators and unknown ad names, which are reported rather than dropped. Use after a variant test has run and the user supplies an export. No platform API access, no external benchmarks, no media generation.",
+      "readme_summary": "Rank a user-exported ad results CSV by variant (hook rate, CTR, CVR, CPA) within the account, flag fatigue, and draft the next variant matrix.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "ad-variant-matrix": {
+      "kind": "orchestrator",
+      "description": "Orchestrator that turns one approved hero ad into a planned variant test matrix: one axis at a time by default (full factorial only on request) across hook, talent, product, outfit, location, language, market and ratio. Routes each axis to its specialist (new opening beat spliced in Studio, object swap, dubbing with captions, market adaptation, per-ratio delivery), names every variant {campaign}_{concept}_{axis-values}_v{nn}, previews cost, and refuses rows over the budget or variant cap. Every row still passes prompt-review and registry registration; nothing is submitted by the planner. Use to multiply a winning ad into testable variants. Not for writing the hero ad, separate concept tests, or reading performance results.",
+      "readme_summary": "Turn one approved hero ad into a one-axis-at-a-time variant matrix with routing, naming, cost and budget gates; every row still goes through prompt-review and registration.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
     "ark-mcp": {
       "kind": "tooling",
       "description": "Guide for using the Ark Seed Multimodal MCP server to generate or edit images, audio, video, and 3D models (including Seedance 2.5 and whitelist-only 2.5 Premium 4K, Hyper3D, Hitem3d, BytePlus VOD AI MediaKit enhancement, transcoding, subtitle burn-in/removal, and voice/background audio separation), understand images and videos through Seed 2.1, understand or reason about audio, transcribe speech to text, manage Advanced Creation Rights face and voice assets (virtual portraits, authorized real people, copyright IP referenced as asset://), reuse completed onboarding and diagnose privacy input rejections with BytePlus AK/SK, run background jobs, upload reference media, and fetch persisted artifacts. Long-running work is submitted through ark_job_capabilities, ark_job_submit, ark_job_get, and ark_job_cancel by default, because most clients cannot negotiate MCP task augmentation; clients that do negotiate it may call the tools with native task metadata instead.",
@@ -28,19 +82,19 @@
       "upstream_hash": null,
       "overlay_notes": null
     },
-    "brief-intake": {
+    "brand-kit": {
       "kind": "leaf",
-      "description": "Shape a creative brief around the intended audience reaction, central visual idea, and practical constraints. Derive applicable directing choices with reasons; offer two distinct treatments during exploration or a compact proposal when direction is settled. Confirm only decisions that need a lock. When the brief cites real brand video ads or other footage for visual or motion inspiration, record that reference and hand off media acquisition plus seed_understand or template-factory \u2014 do not treat scripts or article text as the reference. Use for a new project or a scoped brief revision. Never generates media.",
-      "readme_summary": "Shape intent-led briefs and treatments; hand off brand-ad / footage inspiration for watchable-media analysis; preserve confirmed decisions.",
+      "description": "Build, validate and pin a machine-readable brand kit (logos, palette, typography, voice, copy rules, CTA style, imagery sentence, disclosure text) from the brand's own website, user-supplied files or manual input, stored once in the shared library and pinned by SHA-256 per campaign. Never invents a value: unknowns stay null and listed. Use when a campaign needs brand identity, a kit is created or updated, or a kit must be checked before use. Does not generate media, write ad copy or approve rights.",
+      "readme_summary": "Build, validate and pin a sourced brand kit (logos, palette, fonts, voice, copy rules) in the shared library; unknown values stay null and listed, never invented.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
       "overlay_notes": null
     },
-    "byteplus-katana": {
+    "brief-intake": {
       "kind": "leaf",
-      "description": "Plan a reference video edit rebuilt with the user's own characters, products or clothing. Measures the reference into an edit decision list (shot order, cut times, beat grid, motion inventory, text), maps up to five assets to slots, and splits the rebuild into two layers: a footage layer (varied generated shots of the character for people-led formats, animated asset layers for product and motion-graphics formats) and a deterministic HyperFrames type-and-effects layer. Keeps the cut grid in the assembly, sets a version and credit budget, and tracks per-segment refinements. Use for \"make this edit with my product\", aura-farming, fashion and product-launch formats. Planning only. Not for style recipes (template-factory), recasting one clip (seedance-motion-recast), one-element swaps (seedance-object-swap) or single shot prompts (seedance-prompt-25).",
-      "readme_summary": "Plans a reference edit rebuilt with your own characters, products or clothing: measured edit list, beat grid and motion inventory, varied generated shots for people-led formats or animated asset layers for product formats, a code-built type-and-effects layer, a credit budget and per-segment refinement.",
+      "description": "Shape a creative brief around the intended audience reaction, central visual idea, and practical constraints. Derive applicable directing choices with reasons; offer two distinct treatments during exploration or a compact proposal when direction is settled. Confirm only decisions that need a lock. When the brief cites real brand video ads or other footage for visual or motion inspiration, record that reference and hand off media acquisition plus seed_understand or template-factory \u2014 do not treat scripts or article text as the reference. Use for a new project or a scoped brief revision. Never generates media.",
+      "readme_summary": "Shape intent-led briefs and treatments; hand off brand-ad / footage inspiration for watchable-media analysis; preserve confirmed decisions.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
@@ -217,10 +271,28 @@
       "upstream_hash": null,
       "overlay_notes": null
     },
+    "product-intake": {
+      "kind": "leaf",
+      "description": "Turn a product page URL or user-supplied product images into a reusable, sourced product card under elements/<product-id>/: an element.md manifest, facts.json with every claim's source URL, verbatim quote, retrieval time and status (supported, needs-substantiation, perishable), and acquired reference images with SHA-256. Use before writing ad scripts, prop sheets, packshots or supers for a real product. Falls back to user-supplied material when a page cannot be read; never invents facts or images. Does not generate media or write copy.",
+      "readme_summary": "Turn a product URL or images into a sourced product card: facts with verbatim quotes and statuses plus hashed acquired images; only supported claims reach copy.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
     "prompt-review": {
       "kind": "orchestrator",
       "description": "Review BytePlus Seedance, Seedream, and Seed Audio prompts inline by default, with sub-agent review only when the user explicitly requests it for a project or specific generation. Use explicit model, operation, change contract, and request hash. Return rule findings and complete or incomplete status; fix and re-review changed prompts before generation. Use for video, VFX, multilingual dialogue, image/character/location/prop/UI/card/storyboard prompts, music, SFX, or ambience. Trigger when asked to review, QA, validate, or lint prompts, or before submitting newly authored generation prompts. Exclude manifest-only edits, generated-media review, and frozen snapshots unless re-review is explicitly requested.",
       "readme_summary": "Review and fix BytePlus Seedance, Seed Audio, and Seedream prompts against the repo's best practices inline by default; use a sub-agent only when explicitly requested for a project or specific generation.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "reference-edit-rebuild": {
+      "kind": "leaf",
+      "description": "Plan a reference video edit rebuilt with the user's own characters, products or clothing. Measures the reference into an edit decision list (shot order, cut times, beat grid, motion inventory, text), maps up to five assets to slots, and splits the rebuild into two layers: a footage layer (varied generated shots of the character for people-led formats, animated asset layers for product and motion-graphics formats) and a deterministic HyperFrames type-and-effects layer. Keeps the cut grid in the assembly, sets a version and credit budget, and tracks per-segment refinements. Use for \"make this edit with my product\", aura-farming, fashion and product-launch formats. Planning only. Not for style recipes (template-factory), recasting one clip (seedance-motion-recast), one-element swaps (seedance-object-swap) or single shot prompts (seedance-prompt-25).",
+      "readme_summary": "Plans a reference edit rebuilt with your own characters, products or clothing: measured edit list, beat grid and motion inventory, varied generated shots for people-led formats or animated asset layers for product formats, a code-built type-and-effects layer, a credit budget and per-segment refinement.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
@@ -505,6 +577,15 @@
       "upstream_hash": null,
       "overlay_notes": null
     },
+    "seedream-product-shot": {
+      "kind": "leaf",
+      "description": "Write Seedream prompts for commercial product shots from named presets (studio-white, color-pop, editorial, macro-detail, in-use, faceless-hands, flat-lay, lifestyle, hero-plinth and marketplace dark, pastel and surreal-3d backgrounds), bound to the approved product reference, with label-legibility, brand-color and white-background QA. Use for packshots, marketplace images, ad backgrounds with the product and lifestyle stills of an approved product. Do not use for product identity sheets, exact labels, copy or layouts, or products with no approved reference.",
+      "readme_summary": "Preset Seedream product shots (studio white, color pop, lifestyle, plinth, marketplace backgrounds) bound to the approved product, with label, brand-color and white-background QA.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
     "seedream-prompt": {
       "kind": "leaf",
       "description": "Write structured Seedream 5.0 Pro/Lite image generation prompts with input reference labeling, subject definitions, style and composition control, interactive image editing (local edits, sketch rendering, layer separation, multi-image fusion, color/material replacement), high-density infographics, sequential generation, and constraints. Invoke when the user asks for a Seedream prompt, generated or edited imagery, infographics, or expressive poster/UI/brand artwork. Do not use it to reproduce exact static typography, pricing, CTA, product-grid, logo, or pixel-layout geometry that deterministic HTML-entrypoint graphics can render.",
@@ -559,9 +640,18 @@
       "upstream_hash": null,
       "overlay_notes": null
     },
+    "static-ad-batch": {
+      "kind": "leaf",
+      "description": "Plan a grid of static ads as selling angle x layout x ratio, with exact copy from supported product facts, brand-kit palette, type and logo, five starter HTML templates (hero-product, problem-solution, comparison, social-proof, offer) and ratios 1:1, 4:5, 9:16 and 16:9, rendered by the deterministic HTML renderer with a contact sheet and per-file provenance. Use for batches of static social or display ads. Do not use for video, single bespoke posters, or copy that lacks supported facts or an approved brand kit.",
+      "readme_summary": "Plan angle x layout x ratio static ad grids from supported facts and the brand kit as HTML templates, rendered deterministically with contact sheet and provenance.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
     "template-factory": {
       "kind": "orchestrator",
-      "description": "Reverse-engineer a reference video (\"pin\") into reproducible AIGC output. Orchestrates pin intake (prefer a public HTTPS URL seed_understand can watch; download and media_upload only when unusable), video and audio breakdown, per-beat motion analysis, keyframes, a planning-only sketch storyboard, optional element sheets (Seedream for invented identity; web/user download-first for authorized real brands/logos/products; deterministic HTML-entrypoint graphics for exact posters, cards, screens, product layouts, and overlays), and a Seedance 2.5 video \u2014 generation-bound prompts through prompt-review; reviewed in a HyperFrames Studio project. Explicit orchestrator composing ark-mcp (including seed_audio_understand), seedream-storyboard, seedance-prompt-25, prompt-review, html-graphic-render, hyperframes, and ffmpeg; never calls the Ark REST API. Use to replicate style/composition/grammar, build a reusable template, or turn a cited brand ad, Pinterest pin, or other reference video into elements and video.",
+      "description": "Reverse-engineer a reference video (\"pin\") into reproducible AIGC output. Orchestrates pin intake (a public HTTPS URL seed_understand can watch first; download and media_upload only when unusable), video and audio breakdown, per-beat motion analysis, keyframes, a planning-only sketch storyboard, optional element sheets (Seedream for invented identity; download-first for authorized real brands/logos/products; deterministic HTML graphics for exact posters, cards, screens and overlays), and a Seedance 2.5 video \u2014 generation-bound prompts through prompt-review; reviewed in HyperFrames Studio. Explicit orchestrator composing ark-mcp (including seed_audio_understand), seedream-storyboard, seedance-prompt-25, prompt-review, html-graphic-render, hyperframes, and ffmpeg; never calls the Ark REST API. Use to replicate style/composition/grammar, build a reusable template, or turn a cited brand ad, Pinterest pin, or other reference video into elements and video, or quick-clone an ad's structure onto a product.",
       "readme_summary": "Reverse-engineer a reference video and soundtrack into a timed visual and audio recipe, with reviewable assets and shot takes reviewed in a synchronized Studio project.",
       "dependencies": [],
       "source_revision": "workspace",
@@ -588,7 +678,7 @@
     },
     "ugc-ad-modes": {
       "kind": "leaf",
-      "description": "Write Seedance video ad prompts for nine UGC, demonstration, review, showcase, broadcast, experimental, and try-on modes. Ground hooks in supplied product facts, audience objections, and the requested CTA; develop distinct persuasive angles with coherent visual direction. Use for branded video prompts and scoped revisions. Does not generate media or invoke other skills.",
+      "description": "Write Seedance video ad prompts for nine UGC, demonstration, review, showcase, broadcast, experimental, and try-on modes. Ground hooks in supplied product facts, audience objections, and the requested CTA; develop distinct persuasive angles with coherent visual direction. Includes a hook library (stunt and subtle openings), a setting library and script formulas timed for 6, 15 and 30 s placements. Use for branded video prompts, hook or setting swaps and scoped revisions. Does not generate media or invoke other skills.",
       "readme_summary": "Write hooks, scripts and Seedance prompts for nine ad modes using supplied product facts, audience objections, supported claims and accurate CTAs.",
       "dependencies": [],
       "source_revision": "workspace",

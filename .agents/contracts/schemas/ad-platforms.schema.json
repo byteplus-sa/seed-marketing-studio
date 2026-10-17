@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ad platform placements",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "verified_on",
+    "reverify_before_use",
+    "placements"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "verified_on": {
+      "$ref": "#/$defs/date"
+    },
+    "reverify_before_use": {
+      "const": true
+    },
+    "placements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/placement"
+      }
+    }
+  },
+  "$defs": {
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "ratio": {
+      "type": "string",
+      "pattern": "^[1-9]\\d*:[1-9]\\d*$"
+    },
+    "seconds": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "fraction": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMaximum": 0.5
+    },
+    "placement": {
+      "type": "object",
+      "required": [
+        "id",
+        "platform",
+        "placement",
+        "status",
+        "aspect_ratio",
+        "accepted_aspect_ratios",
+        "recommended_resolution",
+        "min_resolution",
+        "duration",
+        "safe_zone",
+        "conflicts",
+        "notes",
+        "source_url",
+        "verified_on"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "platform": {
+          "type": "string",
+          "minLength": 1
+        },
+        "placement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "partial",
+            "unverified"
+          ]
+        },
+        "aspect_ratio": {
+          "$ref": "#/$defs/ratio"
+        },
+        "accepted_aspect_ratios": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ratio"
+          }
+        },
+        "recommended_resolution": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            }
+          ]
+        },
+        "min_resolution": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "width",
+                "height"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "width": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                },
+                "height": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                }
+              }
+            }
+          ]
+        },
+        "duration": {
+          "type": "object",
+          "required": [
+            "min_s",
+            "max_s",
+            "recommended"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "min_s": {
+              "$ref": "#/$defs/seconds"
+            },
+            "max_s": {
+              "$ref": "#/$defs/seconds"
+            },
+            "recommended": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "min_s",
+                    "max_s"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "min_s": {
+                      "$ref": "#/$defs/seconds"
+                    },
+                    "max_s": {
+                      "$ref": "#/$defs/seconds"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "safe_zone": {
+          "type": "object",
+          "required": [
+            "top",
+            "bottom",
+            "left",
+            "right",
+            "source"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "top": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "bottom": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "left": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "right": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "source": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "oneOf": [
+            {
+              "properties": {
+                "top": {
+                  "type": "null"
+                },
+                "bottom": {
+                  "type": "null"
+                },
+                "left": {
+                  "type": "null"
+                },
+                "right": {
+                  "type": "null"
+                }
+              }
+            },
+            {
+              "properties": {
+                "top": {
+                  "$ref": "#/$defs/fraction"
+                },
+                "bottom": {
+                  "$ref": "#/$defs/fraction"
+                },
+                "left": {
+                  "$ref": "#/$defs/fraction"
+                },
+                "right": {
+                  "$ref": "#/$defs/fraction"
+                }
+              }
+            }
+          ]
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://"
+        },
+        "verified_on": {
+          "$ref": "#/$defs/date"
+        }
+      }
+    }
+  }
+}

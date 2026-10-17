@@ -1,6 +1,42 @@
 {
   "version": 1,
   "skills": {
+    "ad-captions": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/ad-captions/SKILL.md",
+      "computedHash": "7d927e686365bd782f6edbf24b58b88bdcfe08c4de6ba5a299d29b7e73e8f789"
+    },
+    "ad-creative-check": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/ad-creative-check/SKILL.md",
+      "computedHash": "f92ec640dd4e721eada29f219c96961eb4794c34f0128c9e993e410526c5dd5a"
+    },
+    "ad-delivery-formats": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/ad-delivery-formats/SKILL.md",
+      "computedHash": "afdb524d5b352a59c5477364b78948ada77a7ec873bdaaab2e2ac8d94ee8c498"
+    },
+    "ad-localize": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/ad-localize/SKILL.md",
+      "computedHash": "43808639fdcc7f76b40a24254f07ab0a3b57282317626c9031809a4ffb634f28"
+    },
+    "ad-performance-loop": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/ad-performance-loop/SKILL.md",
+      "computedHash": "5d9cbf78e3996019d4c6052f1bf06046465289d6724b0e4cd6531276ff078e71"
+    },
+    "ad-variant-matrix": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/ad-variant-matrix/SKILL.md",
+      "computedHash": "6cd3a3912a325d83239fa010e6aeede600d08129e7754755eeb45797dbf27ddf"
+    },
     "ark-mcp": {
       "source": "./local",
       "sourceType": "local",
@@ -19,17 +55,17 @@
       "skillPath": ".agents/skills/audio-split/SKILL.md",
       "computedHash": "151908a87630109d3db99aa65d23906df760632d0bd4e26a40acf18c19f321e7"
     },
+    "brand-kit": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/brand-kit/SKILL.md",
+      "computedHash": "2c9ac6b1fa8ad9b95afbb4e9ebbc01413206521076cd3e870f763c9364df8c7b"
+    },
     "brief-intake": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/brief-intake/SKILL.md",
       "computedHash": "6623adfcc4c254a9ecb34efd529b662548010ec52c36ec62350265ebdf1938f5"
-    },
-    "byteplus-katana": {
-      "source": "./local",
-      "sourceType": "local",
-      "skillPath": ".agents/skills/byteplus-katana/SKILL.md",
-      "computedHash": "ea27a696007fc25b1b41d0d4fa0794c9eee556088bc41ccf39bbb43d49eee096"
     },
     "color-grade-palettes": {
       "source": "./local",
@@ -145,11 +181,23 @@
       "skillPath": ".agents/skills/omnihuman-prompt-20/SKILL.md",
       "computedHash": "fe7d559ea925d2cf0ae82aaa174ffda1fdc1d9fd7afca58ef1eb1c83d27ec83d"
     },
+    "product-intake": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/product-intake/SKILL.md",
+      "computedHash": "563eb339f691c0136cd38bfc810e5e0d818e5b4b0f8ed196c561545e39fe4fa0"
+    },
     "prompt-review": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/prompt-review/SKILL.md",
-      "computedHash": "2a797c252e89b09a541efd21a64ceb96ab25a92a501660a774e1fd48a84011cf"
+      "computedHash": "dfddd1da252de5dc8c692eeaaa9baa10f9f765e6744d4ae3729d54dab8fbfc19"
+    },
+    "reference-edit-rebuild": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/reference-edit-rebuild/SKILL.md",
+      "computedHash": "897f706f7f073a35d8c98cc395c41158f6fb6b0da6e613a916eec5833935f8c2"
     },
     "seed-audio-commercial": {
       "source": "./local",
@@ -337,6 +385,12 @@
       "skillPath": ".agents/skills/seedream-location-asset/SKILL.md",
       "computedHash": "9bf159f36b24830bb42b8539649ec4b2a4bfb7903cc81f86cc9b69d0ae324d9d"
     },
+    "seedream-product-shot": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedream-product-shot/SKILL.md",
+      "computedHash": "fa74dc901f696dc7cf496e7ba610a00c570599ff52a87147aa9808d0b6344fcb"
+    },
     "seedream-prompt": {
       "source": "./local",
       "sourceType": "local",
@@ -373,11 +427,17 @@
       "skillPath": ".agents/skills/source-subject-map/SKILL.md",
       "computedHash": "82f56a15589cfc876353234b6d8389033d7fef202286cddf9b2912995e0c2017"
     },
+    "static-ad-batch": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/static-ad-batch/SKILL.md",
+      "computedHash": "9f4698eee612917137ac79d94cfdc1c7e72605a3311b5bc83dcfd77e5b337903"
+    },
     "template-factory": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/template-factory/SKILL.md",
-      "computedHash": "60b533594bcb1bd1cbff264748b398c1263ce2923e4b45c7b36558af87ec1d89"
+      "computedHash": "034cf2d66f5f36ab8ebbb864b8638171ac6657f318ebb1fee45f5618f1f80a3c"
     },
     "tig-blocking-map": {
       "source": "./local",
@@ -395,7 +455,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ugc-ad-modes/SKILL.md",
-      "computedHash": "f17746641bac516a949906e10988610df4815e9a661b85ec43141189e4fd4c06"
+      "computedHash": "99b9c193a6266c51cc1f4a21804d6e5a1e5de72c7e52129b5432e9329704c305"
     },
     "ugc-motion-presets": {
       "source": "./local",

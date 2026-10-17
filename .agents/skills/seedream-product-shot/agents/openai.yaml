@@ -1,0 +1,4 @@
+interface:
+  display_name: "Seedream Product Shot"
+  short_description: "Preset product shots bound to the approved product"
+  default_prompt: "Use $seedream-product-shot to write a preset product-shot prompt for this approved product and check the result."

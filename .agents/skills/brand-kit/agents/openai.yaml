@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brand Kit"
+  short_description: "Build, validate and pin a sourced brand kit"
+  default_prompt: "Use $brand-kit to build or validate the brand kit for this campaign from the brand's own site or supplied files, listing anything missing instead of inventing it."

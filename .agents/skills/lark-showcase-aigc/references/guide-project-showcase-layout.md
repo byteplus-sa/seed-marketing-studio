@@ -51,12 +51,12 @@ cell — no provenance or process explanation:
 
 | Row | Prompt-cell text |
 | --- | --- |
-| Official product image | `Product snapshot of RC Cola Zero Sugar.` |
-| End card | `End card: “Some things are still good, even at zero.”` |
-| Caption overlay | `Caption: “status: nag-break muna”` |
+| Official product image | `Product snapshot of the Lumo travel mug.` |
+| End card | `End card: “Warm from the first sip to the last.”` |
+| Caption overlay | `Caption: “status: on a short break”` |
 
 Give every uploaded image a reader-facing `name` at insert time
-(`Level Up Lola – end card.jpg`), never the local filename, because the name is
+(`Lumo travel mug – end card.jpg`), never the local filename, because the name is
 shown when a reader downloads the image.
 
 ### Client-facing tone (default for this layout)

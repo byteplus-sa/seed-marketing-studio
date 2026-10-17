@@ -4,7 +4,9 @@ description: >
   Write Seedance video ad prompts for nine UGC, demonstration, review, showcase,
   broadcast, experimental, and try-on modes. Ground hooks in supplied product
   facts, audience objections, and the requested CTA; develop distinct persuasive
-  angles with coherent visual direction. Use for branded video prompts and
+  angles with coherent visual direction. Includes a hook library (stunt and
+  subtle openings), a setting library and script formulas timed for 6, 15 and
+  30 s placements. Use for branded video prompts, hook or setting swaps and
   scoped revisions. Does not generate media or invoke other skills.
 ---
 
@@ -92,6 +94,27 @@ Synonyms for "You need this" are not distinct angles. Do not claim any formula
 wins hold rate or conversion without relevant campaign evidence. A proposed
 comparison test is not an observed result.
 
+### Hooks, settings and script formulas
+
+Load only the entry a request needs, by its id:
+
+- [Hook library](references/hooks.md) when a brief asks for a hook, hook
+  alternatives or a hook-only swap. A hook fills the opening 0–2 s beat only;
+  check its **Valid modes** against the chosen mode. It never changes product
+  facts or the CTA, and it is never stacked on a reference-ad recreation, whose
+  own opening is the hook. Social-proof and skeptic hooks need real, approved
+  testimony or an obviously fictional dramatization never framed as a real
+  customer.
+- [Setting library](references/settings.md) when the location is open or a
+  named setting is requested. A setting changes where, never what; heightened
+  settings are conceptual staging, not product capability.
+- [Script formulas](references/script-formulas.md) when a brief names a
+  structure (PAS, AIDA, three reasons) or a placement length needs beat timings.
+
+A hook and a setting compose with any formula when both list the chosen mode
+under **Valid modes**; name each by its id in the response. A requested
+structure or location still wins over a library entry.
+
 ## 3. Make the visual idea executable
 
 Connect the product truth to a visible event. Describe framing, light, interaction,
@@ -137,8 +160,8 @@ invent a brand name for a missing field.
 Ad formats hit the same few Seedance failure modes; apply these to every mode
 (the generic rules live with the Seedance prompt grammar):
 
-- **Speech budget and tail.** Budget about 2.2 spoken words per second. Native
-  lines land 0.5–1.5 s late (later after a long pre-line action) and speech
+- **Speech budget and tail** (workspace observations, not platform figures).
+  Budget about 2.2 spoken words per second. Native lines land 0.5–1.5 s late (later after a long pre-line action) and speech
   runs to the clip end, so a 15 s clip carries roughly 25–30 words. End the CTA
   line at least 0.4 s before the clip end, keep the last 3 s to one or two state
   changes, and choose hook words speech recognition hears cleanly. Trimming the

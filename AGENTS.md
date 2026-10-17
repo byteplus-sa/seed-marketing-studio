@@ -41,6 +41,10 @@ Load only the contract relevant to the current stage:
 | Requested dialogue synchronization and assembly | [Audio-video alignment](.agents/contracts/audio-video-alignment.md) |
 | Video-to-video identity references, muted source and post audio | [Video-to-video inputs](.agents/contracts/video-to-video-inputs.md) |
 | Shot plan, camera, lens, lighting, acting and other axes | [Directorial axes](.agents/contracts/seedance-reference.md) |
+| Ad claims, testimonials, brand copy rules, placement safe zone and paid-ad AI disclosure | [Ad compliance](.agents/contracts/ad-compliance.md) |
+| Ad placement specs, ratios, durations and safe zones (dated) | [Ad platforms](.agents/contracts/ad-platforms.md) |
+| Shared brand kits, talent roster and campaign pins | [Shared library](.agents/contracts/shared-library.md) |
+| Market adaptation: market card, levels, translation sheet, native review gate | [ad-localize](.agents/skills/ad-localize/SKILL.md), [market card schema](.agents/contracts/schemas/market-card.schema.json) and [native review schema](.agents/contracts/schemas/native-review.schema.json) |
 
 Stable validation rule IDs live in `.agents/contracts/rules.json`. Request,
 registry and review schemas live in `.agents/contracts/schemas/`.
@@ -84,7 +88,10 @@ One skill provides one capability. Leaf skills remain independently usable;
 composition hints are prose, not directives to load siblings. Declared
 orchestrators own cross-skill sequencing, generation gates and delegation.
 `film-production` manages multi-scene production using its stage/handoff
-contracts. Load only specialists needed for the current stage or requested axis.
+contracts. `ad-variant-matrix` (variant tests) and `ad-localize` (market
+adaptation) are declared orchestrators: they plan and gate, hand every prompt,
+edit and render to specialists, and never bypass prompt-review, the registry
+or the approval mode. Load only specialists needed for the current stage or requested axis.
 
 ### Skill sources and symlinks
 
@@ -183,6 +190,15 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   agent switch to `ask_for_approval`, record a recommendation, and wait for the
   user to confirm in chat; there is no browser selection UI. Neither mode promotes an
   unreviewed candidate or overrides an explicit user lock.
+- Two campaign decisions are never agent decisions, in either approval mode:
+  the paid-ad AI disclosure decision per deliverable (`ad.disclosure_recorded`,
+  quoting the user's words; see [Ad compliance](.agents/contracts/ad-compliance.md)),
+  and the native-speaker or local-reviewer sign-off that L3 to L5 localization
+  needs before final-resolution generation and delivery
+  (`localize.native_review`). Claims, prices and offers resolve to `supported`
+  (or fresh `perishable`) product facts for the target market, and shared brand
+  kits and talent are used only through a current `project.md` pin with the
+  campaign's own acceptance (`library.pin_current`).
 - Static assets use visible-design criteria. Narrative, ad, UGC,
   music-video and showcase shots need action and intent, and a recorded shot
   plan (per-shot duration, size, angle, camera move, lens intent and named light
@@ -296,8 +312,8 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
 
 ## Local production state and naming
 
-`projects/<project-name>/` is the durable local source of truth, never a default
-Git staging target. Keep existing production assets and manifests untouched by
+`projects/<project-name>/` and the workspace `library/` are the durable local
+source of truth, never a default Git staging target. Keep existing production assets and manifests untouched by
 repository maintenance unless explicitly scoped.
 
 | Location | Contents |
@@ -311,10 +327,25 @@ repository maintenance unless explicitly scoped.
 | `projects/<project>/elements/<element-id>/` | Reusable identity/location/prop manifests, references, and deterministic graphic sources/renders |
 | `projects/<project>/scenes/scene-NN/` | Scene manifest, keyframes and scene renders |
 | `projects/<project>/scenes/scene-NN/sNN_shNNN/` | Shot manifest, exact prompt snapshots, takes and dialogue |
+| `projects/<project>/scenes/variant-<kebab-name>/` | One Studio shot per generated variant row (`ad-variant-matrix`): `shot.md`, prompt snapshots, reviews, requests and takes; `<kebab-name>` is the variant name lowercased with `_` turned into `-` |
+| `projects/<project>/elements/<product-id>/` | Product card from `product-intake`: `element.md`, `facts.json` and acquired `ref_<NN>_<view>.<ext>` images beside it; product shots `product_<product-id>_<preset>_t<NN>_v<NN>.png` |
+| `projects/<project>/decisions/` | Hash-bound decision records named by `decision_ref` and `acceptance_ref`, including the campaign's library acceptances (`library_<id>_acceptance.json`) |
+| `projects/<project>/static_batch.json` and its `output_dir` | Static ad spec, HTML entrypoints, PNGs, render records, contact sheets and `batch_<campaign>_v<NN>.json` (`static-ad-batch`) |
 | `projects/<project>/library/` | Reusable non-shot music, SFX and ambience |
+| `projects/<project>/variants/` | `matrix.json` and the saved `plan.json`, `cost.json` and `register.json` from `variant_matrix.py`; `round-<NN>/matrix.json` next-round drafts from `ad-performance-loop`. Per-variant prompts, reviews and takes live in the variant's Studio shot folder |
+| `projects/<project>/performance/` | `metrics.json` and user-exported ad results; never tracked |
+| `projects/<project>/delivery/` | Delivery records: `qa/<deliverable-id>/` contact sheets, overlays and `ad-creative-check` reports (kept here even when the cut renders in a ratio project), `disclosure_<deliverable-id>.json` paid-ad decisions and `<shot-id>_subjects.json` reframe subject boxes; `<deliverable-id>` is the variant name plus the placement, and rendered cuts stay in each project's `studio/renders/` |
+| `projects/<project>/markets/<market-id>/` | `market.json`, `inventory.md`, `translation.md` and `decisions/` for one target market (`ad-localize`); each `<variant-key>/` subfolder holds that variant's own `inventory.md`, `translation.md` and `decisions/native_review.json`, while the card stays at the market level |
+| `projects/<campaign>-<ratio>/` | Per-ratio delivery project from `ad-delivery-formats` (for example `-4x5`): its own `project.md`, hash-pinned byte copies of the master's selected takes, and a Studio project at that canvas |
+| `projects/<campaign>-<market-id>/` and `projects/<campaign>-<market-id>-<ratio>/` | Localized version of a campaign and its per-ratio cuts (`ad-localize`); the source campaign gains only its `markets/` folder |
+| `projects/<campaign>-<variant-key>-<market-id>[-<ratio>]/` and `projects/<campaign>-<variant-key>-<ratio>/` | Variant-specific localized and delivery projects for full-factorial rows that change a generated axis together with market or ratio; `plan` refuses duplicates (`matrix.unique_projects`) |
+| `projects/<project>/captions/` | Caption timing input and `out/` with `<master-stem>.<language-code>.srt`/`.vtt` sidecars and the JSON report; burn-in layers `captions-<language-code>.html` go into the rendering project's `studio/compositions/` |
+| `library/brands/<brand-id>/` and `library/talent/<talent-id>/` | Workspace-level shared brand kits and approved talent, pinned by SHA-256 from `project.md`; separate from `projects/<project>/library/` and never committed |
 
 Folders and IDs use lowercase kebab-case. Scene IDs use two digits; shot/panel
-numbers use three digits with gaps of ten. Asset prefixes distinguish modality;
+numbers use three digits with gaps of ten. Variant shots are the exception:
+`scenes/variant-<kebab-name>/shot.md` sits directly under `scenes/` (Studio
+discovers `scenes/*/shot.md`). Asset prefixes distinguish modality;
 see the naming contract. Prompt snapshots use `prompt_<asset-stem>.md` beside
 the media and are immutable after submission. Manifest `prompt_file` and
 `prompt_sha256` identify the canonical snapshot rather than duplicating it.
@@ -327,7 +358,7 @@ URLs are transport data. Selection manifests are authoritative; derived JSON
 and browser state must agree with validated committed selections.
 
 `docs/`, `plans/` and `specs/` contain local research, implementation plans and
-exploratory specifications. Never stage their contents or `projects/` by default.
+exploratory specifications. Never stage their contents, `projects/` or `library/` by default.
 Plans use `PLAN_<NAME>.md` and include concrete implementation details.
 Reusable operational contracts, schemas, scripts, tests and maintenance runtime
 configuration are an explicit tracked exception to the local-document rule.
@@ -372,6 +403,11 @@ PYTHONPYCACHEPREFIX=/tmp/seed-marketing-studio-pycache uv run python -m compilea
 uv run pip-audit
 git diff --check
 ```
+
+Helper changes under `.agents/skills/<name>/scripts/` also run `uv run ruff
+check` and `uv run mypy` on the changed script files.
+`uv run python .agents/scripts/template_gallery.py --out <dir>` writes a static
+catalog of preset, hook, effect and mode IDs (a visual aid, never a gate).
 
 Whitespace checks also apply to new files. `pip-audit` needs network access;
 report unavailable evidence accurately. The offline validator never generates

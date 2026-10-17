@@ -13,7 +13,7 @@
         "The monochrome sketch is never bound as a video input; its staging is translated into prompt text.",
         "The storyboard and Seedance prompts pass prompt-review before submission.",
         "The audio-preparation stage is explicitly skipped with the user's no-audio decision.",
-        "The silent run sets generate_audio false and submits a 480p native Draft before any promotion."
+        "The silent run sets generate_audio false and submits a 480p draft, using native Draft/promotion only after verifying current tool support."
       ]
     },
     {
