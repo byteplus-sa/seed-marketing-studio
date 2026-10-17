@@ -3,9 +3,10 @@ name: ad-variant-matrix
 description: >-
   Orchestrator that turns one approved hero ad into a planned variant test
   matrix: one axis at a time by default (full factorial only on request) across
-  hook, talent, product, outfit, location, language and ratio. Routes each axis
-  to its specialist (new opening beat spliced in Studio, object swap, dubbing
-  with captions, per-ratio delivery), names every variant
+  hook, talent, product, outfit, location, language, market and ratio. Routes
+  each axis to its specialist (new opening beat spliced in Studio, object swap,
+  dubbing with captions, market adaptation, per-ratio delivery), names every
+  variant
   {campaign}_{concept}_{axis-values}_v{nn}, previews cost, and refuses rows over
   the budget or variant cap. Every row still passes prompt-review and registry
   registration; nothing is submitted by the planner. Use to multiply a winning
@@ -41,7 +42,8 @@ full factorial.** One change per row is what makes a result attributable.
 2. **The hero's current value for every axis** that will vary (for example
    `hook: hook-demo-first`, `talent: vp-a`, `ratio: 9:16`). Values are IDs:
    hook IDs from the `ugc-ad-modes` hook library, element IDs for talent,
-   product, outfit and location, language codes, ratios.
+   product, outfit and location, language codes, market IDs (kebab-case, the
+   folder name of the market card), ratios.
 3. **Approved references for every new value**: Virtual Portrait `asset://`
    views for talent, official or authorized packshots for products, garment
    and location sheets. A missing or unapproved reference blocks only the rows
@@ -73,15 +75,20 @@ flowchart LR
    `status: draft`.
 2. **Plan.** `uv run python .agents/scripts/variant_matrix.py plan <matrix>`
    expands rows in a deterministic order (hero first, then axes in the fixed
-   order hook, talent, product, outfit, location, language, ratio) and checks
-   unique names, the variant cap and empty matrices. A warning above five
+   order hook, talent, product, outfit, location, language, market, ratio) and
+   checks unique names, unique Studio shot folders, unique localized and
+   delivery projects (`matrix.unique_projects`), the variant cap, empty
+   matrices and rows that change market and language together. A warning above five
    variants means the rows belong in more than one ad group.
 3. **Cost.** `variant_matrix.py cost <matrix> --unit-cost hook=<usd> ...`
    sums one unit cost per routed step of each row, covering that step's draft
    and final. A swap, hook, dub or reframe step costs its axis unit; a
    talent-and-location row routed to one Motion Transfer costs one
    `motion-recast` unit (`--unit-cost motion-recast=<usd>`), not two swaps.
-   It exits 1 over `budget_usd` or `max_variants`, or when a routed step has
+   A market row costs the explicit `market` unit (`--unit-cost market=<usd>`
+   or `unit_cost_usd.market`); it is an estimate, because the real cost
+   depends on the per-element levels chosen in `ad-localize`, and the output says so in
+   `market_estimate_note`. It exits 1 over `budget_usd` or `max_variants`, or when a routed step has
    no unit cost. Show the per-row and total estimate before any spend. A
    refusal here is a stop under **`ad.variant_budget_gate`**.
 4. **Approve the matrix.** In `approve_for_me` the agent may set `status:
@@ -114,6 +121,10 @@ flowchart LR
      identity.
    - **Paths** live in the variant's Studio shot folder
      `scenes/variant-<kebab-name>/` (see [Studio mapping](#studio-mapping)).
+   - **Market rows** get no command. The output lists them under `localize`
+     with the market card, the market inventory, the localized project and a
+     reminder that `ad-localize` plans, reviews and registers its own
+     operations.
 6. **Produce each row** through the route below. For every provider step:
    write the shot manifest, write the prompt with the specialist skill, freeze
    it at the printed path, run the hash command, run `prompt-review` inline
@@ -140,6 +151,7 @@ prompt. Summary:
 | `talent`, `product`, `outfit`, `location` | Object Swap on the muted hero master; keeps motion, framing, cuts and timing | `source-subject-map`, then `seedance-object-swap` | yes |
 | `talent` + `location` in one row | One Motion Transfer instead of two swaps; costs one `motion-recast` unit | `seedance-motion-recast` | yes |
 | `language` | Re-voice the locked script, then per-language captions | `audio-dubbing`, `seedance-prompt-25-dialogue`, `ad-captions` | yes (audio) |
+| `market` | Adapt the variant for one market at the per-element levels recorded in that market's `inventory.md` (captions, voice, talent, cultural or full transcreation; the card holds `level_default`) | `ad-localize` | none from the planner; `ad-localize` registers its own |
 | `ratio` | Reframe or native regeneration per placement | `ad-delivery-formats` | none for a reframe |
 
 Two swap classes in one factorial row (for example product and outfit) run as
@@ -152,7 +164,23 @@ every variant row that changes a generated axis is its own Studio shot in the
 campaign project. A ratio-only row has no Studio shot there: its `delivery`
 entry names the per-ratio project (`projects/<campaign>-<ratio>`, for example
 `-4x5`) that `ad-delivery-formats` builds, because one Studio project renders
-one canvas.
+one canvas. A market-only row (market, or market and ratio) has no Studio shot
+there either: its `localize` entry names the market card
+`projects/<campaign>/markets/<market-id>/market.json` and the localized project
+`projects/<campaign>-<market-id>` that `ad-localize` owns, and its `delivery`
+project becomes `projects/<campaign>-<market-id>-<ratio>`. A row that changes
+market and a generated axis keeps its Studio shot here; `ad-localize` adapts
+the selected take afterwards.
+
+In a full factorial, a market or ratio row that also changes a generated axis
+gets **variant-specific** project paths, so two variants never build or render
+into one project: `projects/<campaign>-<variant-key>-<market-id>` for the
+localized project and `projects/<campaign>-<variant-key>[-<market-id>]-<ratio>`
+for delivery, where `<variant-key>` joins the row's changed generated values in
+axis order (for example `projects/<campaign>-hook-a-south-4x5`). Market-only and
+ratio-only rows keep the short paths above. `plan` refuses any remaining
+duplicate path with `matrix.unique_projects`; the full table is in
+[axis routing](references/axis-routing.md#project-paths).
 
 - Shot folder: `scenes/variant-<kebab-name>/`, where `<kebab-name>` is the
   variant name lowercased with `_` turned into `-` (folders and IDs are
@@ -202,8 +230,8 @@ one canvas.
   axis in fixed order and `v{nn}`; ratios render as `9x16`. A custom pattern
   may use only `{campaign}`, `{concept}`, `{nn}` and axis placeholders, and
   must keep names unique.
-- `unit_cost_usd` may record agreed unit costs per axis and `motion-recast`;
-  `--unit-cost` overrides it.
+- `unit_cost_usd` may record agreed unit costs per axis (including `market`)
+  and `motion-recast`; `--unit-cost` overrides it.
 - Platform ad names must contain the variant name unchanged so
   `ad-performance-loop` can join results.
 
@@ -212,6 +240,18 @@ one canvas.
 - **One axis per variant (`ad.variant_one_axis`).** Each variant changes one
   axis from the hero unless the user explicitly asked for a full factorial;
   record that request in the matrix `notes`.
+- **Market owns its language.** A row that changes `market` and `language`
+  together is refused (`matrix.market_language`): the market card sets the
+  language inside `ad-localize`. Test language alone, or market alone, one
+  axis at a time.
+- **Market rows hand off, they do not generate.** The planner neither
+  chooses the localization levels nor registers their operations;
+  `ad-localize` records per-element levels in the market's `inventory.md` and
+  registers its own operations, so a market row's cost stays an estimate until
+  that plan exists.
+- **One project per variant (`matrix.unique_projects`).** No two different
+  variants share a localized or delivery project; rename a value that
+  collides.
 - **Budget gate (`ad.variant_budget_gate`).** No variant production proceeds
   after `variant_matrix.py cost` refuses the matrix for budget or variant
   count.

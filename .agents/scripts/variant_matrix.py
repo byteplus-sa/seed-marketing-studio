@@ -12,10 +12,21 @@ from typing import Any
 
 from validate_request import Finding, schema_findings
 
-AXES = ("hook", "talent", "product", "outfit", "location", "language", "ratio")
+AXES = (
+    "hook",
+    "talent",
+    "product",
+    "outfit",
+    "location",
+    "language",
+    "market",
+    "ratio",
+)
 SWAP_AXES = ("talent", "product", "outfit", "location")
 RECAST_TRIGGER = {"talent", "location"}
 RECAST_COST_KEY = "motion-recast"
+DELIVERY_ONLY_AXES = {"market", "ratio"}
+LOCALIZE_SKILL = "ad-localize"
 COST_KEYS = (*AXES, RECAST_COST_KEY)
 AD_GROUP_CREATIVES = 5
 HOOK_MIN_DURATION_S = 4
@@ -28,6 +39,7 @@ STEP_SKILLS = {
     "motion-recast": ["seedance-motion-recast"],
     "hook-opening": ["ugc-ad-modes", "seedance-prompt-25"],
     "language-dub": ["audio-dubbing", "seedance-prompt-25-dialogue", "ad-captions"],
+    "market-adapt": [LOCALIZE_SKILL],
     "ratio-reframe": ["ad-delivery-formats"],
 }
 STEP_OUTPUT_SUFFIX = {"language-dub": ".wav"}
@@ -45,6 +57,15 @@ STEP_NOTES = {
         "or registry entry"
     ),
 }
+LOCALIZE_REMINDER = (
+    "No command here: ad-localize plans, reviews and registers its own "
+    "operations for the per-element levels recorded in the market inventory"
+)
+MARKET_ESTIMATE_NOTE = (
+    "Market rows use the supplied market unit cost as an estimate; the real cost "
+    "depends on the per-element adaptation levels chosen in ad-localize, which "
+    "estimates and registers its own operations"
+)
 REGISTER_PROCEDURE = [
     "Write the variant shot manifest at studio.manifest with studio.frontmatter",
     "Write and freeze the row prompt at the --prompt path",
@@ -172,6 +193,8 @@ def plan_steps(changed: list[str]) -> list[dict[str, Any]]:
         routed.append(("hook-opening", ["hook"]))
     if "language" in changed:
         routed.append(("language-dub", ["language"]))
+    if "market" in changed:
+        routed.append(("market-adapt", ["market"]))
     if "ratio" in changed:
         routed.append(("ratio-reframe", ["ratio"]))
     steps: list[dict[str, Any]] = []
@@ -203,14 +226,90 @@ def studio_target(name: str) -> dict[str, Any]:
     }
 
 
-def delivery_target(campaign: str, values: dict[str, str]) -> dict[str, Any] | None:
-    if "ratio" not in values:
+def market_folder(campaign: str, market_id: str) -> str:
+    return f"projects/{slug(campaign)}/markets/{market_id}"
+
+
+def project_path(campaign: str, values: dict[str, str], changed: list[str]) -> str:
+    parts = [campaign]
+    if DELIVERY_ONLY_AXES & set(changed):
+        parts.extend(values[axis] for axis in changed if axis not in DELIVERY_ONLY_AXES)
+    return "projects/" + "-".join(slug(part) for part in parts)
+
+
+def localize_target(
+    campaign: str, values: dict[str, str], changed: list[str]
+) -> dict[str, Any] | None:
+    if "market" not in changed:
         return None
+    market_id = values["market"]
+    folder = market_folder(campaign, market_id)
+    generated = [axis for axis in changed if axis not in DELIVERY_ONLY_AXES]
+    variant_key = "-".join(slug(values[axis]) for axis in generated) or None
+    work = f"{folder}/{variant_key}" if variant_key else folder
+    return {
+        "skill": LOCALIZE_SKILL,
+        "market_id": market_id,
+        "variant_key": variant_key,
+        "card": f"{folder}/market.json",
+        "inventory": f"{work}/inventory.md",
+        "project": f"{project_path(campaign, values, changed)}-{market_id}",
+    }
+
+
+def delivery_target(
+    campaign: str,
+    values: dict[str, str],
+    changed: list[str],
+    localize: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    if "ratio" not in changed:
+        return None
+    base = localize["project"] if localize else project_path(campaign, values, changed)
     return {
         "skill": "ad-delivery-formats",
         "aspect": values["ratio"],
-        "project": f"projects/{slug(campaign)}-{slug(values['ratio'])}",
+        "project": f"{base}-{slug(values['ratio'])}",
     }
+
+
+def owned_projects(row: dict[str, Any]) -> list[tuple[str, str]]:
+    if not DELIVERY_ONLY_AXES & set(row["changed_axes"]):
+        return []
+    values = row["values"]
+    source = json.dumps(
+        {axis: value for axis, value in values.items() if axis != "ratio"}
+    )
+    owned = (
+        [(row["delivery"]["project"], json.dumps(values))] if row["delivery"] else []
+    )
+    if row["localize"]:
+        owned.append((row["localize"]["project"], source))
+    return owned
+
+
+def project_collisions(rows: list[dict[str, Any]]) -> list[str]:
+    owners: dict[str, set[str]] = {}
+    for row in rows:
+        for path, source in owned_projects(row):
+            owners.setdefault(path, set()).add(source)
+    return sorted(path for path, sources in owners.items() if len(sources) > 1)
+
+
+def annotate_market_step(
+    steps: list[dict[str, Any]], localize: dict[str, Any] | None
+) -> list[dict[str, Any]]:
+    if localize is None:
+        return steps
+    for step in steps:
+        if step["route"] == "market-adapt":
+            step["note"] = (
+                f"Run {LOCALIZE_SKILL} with the market card {localize['card']} "
+                "(market facts and level_default) and the per-element levels in "
+                f"{localize['inventory']}; it plans, reviews and registers its own "
+                f"paid operations and delivers into {localize['project']}"
+            )
+    return steps
 
 
 def variant_name(matrix: dict[str, Any], values: dict[str, str]) -> str:
@@ -230,6 +329,7 @@ def expand(matrix: dict[str, Any]) -> list[dict[str, Any]]:
     for index, values in enumerate(combinations(matrix)):
         changed = [axis for axis in values if values[axis] != hero[axis]]
         name = variant_name(matrix, values)
+        localize = localize_target(matrix["campaign"], values, changed)
         rows.append(
             {
                 "index": index,
@@ -237,11 +337,14 @@ def expand(matrix: dict[str, Any]) -> list[dict[str, Any]]:
                 "role": "variant" if changed else "hero",
                 "values": values,
                 "changed_axes": changed,
-                "steps": plan_steps(changed),
+                "steps": annotate_market_step(plan_steps(changed), localize),
                 "studio": studio_target(name)
-                if any(axis != "ratio" for axis in changed)
+                if any(axis not in DELIVERY_ONLY_AXES for axis in changed)
                 else None,
-                "delivery": delivery_target(matrix["campaign"], values),
+                "localize": localize,
+                "delivery": delivery_target(
+                    matrix["campaign"], values, changed, localize
+                ),
             }
         )
     return rows
@@ -267,6 +370,32 @@ def gate_findings(matrix: dict[str, Any], rows: list[dict[str, Any]]) -> list[Fi
                 "matrix.unique_shot_ids",
                 f"Variant names map to the same Studio shot folder: {', '.join(shared)}",
                 "naming",
+            )
+        )
+    clashing = project_collisions(rows)
+    if clashing:
+        findings.append(
+            Finding(
+                "matrix.unique_projects",
+                "Variant rows would build or render into the same localized or "
+                f"delivery project: {', '.join(clashing)}",
+                "axes",
+            )
+        )
+    redundant = [
+        row["name"]
+        for row in rows
+        if {"market", "language"} <= set(row["changed_axes"])
+    ]
+    if redundant:
+        findings.append(
+            Finding(
+                "matrix.market_language",
+                "Rows change market and language together: "
+                f"{', '.join(redundant)}. Language belongs inside the market "
+                f"adaptation; let {LOCALIZE_SKILL} set the market card's language, "
+                "or test language and market one axis at a time",
+                "axes",
             )
         )
     count = sum(row["role"] == "variant" for row in rows)
@@ -360,6 +489,8 @@ def apply_costs(
             "after completion"
         ),
     }
+    if any(step["route"] == "market-adapt" for row in rows for step in row["steps"]):
+        summary["market_estimate_note"] = MARKET_ESTIMATE_NOTE
     return summary, findings
 
 
@@ -577,6 +708,17 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
                 for row in rows
                 if row["role"] == "variant"
             }
+            localize = [
+                {
+                    "variant": row["name"],
+                    **row["localize"],
+                    "reminder": LOCALIZE_REMINDER,
+                }
+                for row in rows
+                if row["localize"]
+            ]
+            if localize:
+                result["localize"] = localize
     return result, findings
 
 

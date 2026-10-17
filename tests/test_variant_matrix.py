@@ -102,6 +102,31 @@ def swap_matrix(**overrides):
     return matrix
 
 
+def market_matrix(**overrides):
+    axes = {
+        "hook": ["hook-callout"],
+        "market": ["market-b", "market-c"],
+        "ratio": ["4:5"],
+    }
+    matrix = base_matrix(**{"axes": axes, **overrides})
+    matrix["hero"]["values"] = {
+        "hook": "hook-demo-first",
+        "market": "market-a",
+        "ratio": "9:16",
+    }
+    return matrix
+
+
+MARKET_COSTS = [
+    "--unit-cost",
+    "hook=3",
+    "--unit-cost",
+    "market=5",
+    "--unit-cost",
+    "ratio=0",
+]
+
+
 class VariantMatrixTests(unittest.TestCase):
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory(prefix="variant-matrix-test-")
@@ -347,7 +372,9 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertEqual(ratio_row["delivery"]["aspect"], ratio_row["values"]["ratio"])
         campaign = base_matrix()["campaign"]
         ratio = ratio_row["values"]["ratio"].replace(":", "x")
-        self.assertEqual(ratio_row["delivery"]["project"], f"projects/{campaign}-{ratio}")
+        self.assertEqual(
+            ratio_row["delivery"]["project"], f"projects/{campaign}-{ratio}"
+        )
         hook_row = next(r for r in result["rows"] if r["changed_axes"] == ["hook"])
         self.assertNotIn("aspect", hook_row["studio"]["frontmatter"])
 
@@ -634,6 +661,336 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertNotIn("matrix.unique_names", self.rule_ids(result))
         self.assertIn("matrix.unique_shot_ids", self.rule_ids(result))
+
+    def test_market_axis_expands_in_fixed_order_after_language_and_before_ratio(self):
+        self.assertEqual(variant_matrix.AXES[-3:], ("language", "market", "ratio"))
+        code, result = self.run_cli("plan", self.write(market_matrix()))
+        self.assertEqual(code, 0, result)
+        changed = [row["changed_axes"] for row in result["rows"]]
+        self.assertEqual(changed, [[], ["hook"], ["market"], ["market"], ["ratio"]])
+        self.assertEqual(
+            [
+                row["values"]["market"]
+                for row in result["rows"]
+                if row["changed_axes"] == ["market"]
+            ],
+            ["market-b", "market-c"],
+        )
+
+    def test_market_names_include_the_market_id(self):
+        _, result = self.run_cli("plan", self.write(market_matrix()))
+        names = [row["name"] for row in result["rows"]]
+        self.assertEqual(
+            names[0], "spring-launch_morning-ritual_hook-demo-first_market-a_9x16_v01"
+        )
+        self.assertIn(
+            "spring-launch_morning-ritual_hook-demo-first_market-b_9x16_v01", names
+        )
+
+    def test_market_values_must_be_kebab_case_ids(self):
+        for bad in ("Market_B", "market:b", "market.b"):
+            matrix = market_matrix()
+            matrix["axes"]["market"] = [bad]
+            code, result = self.run_cli("plan", self.write(matrix))
+            self.assertEqual(code, 1, bad)
+            self.assertIn("schema.valid", self.rule_ids(result))
+        matrix = market_matrix()
+        matrix["hero"]["values"]["market"] = "Market A"
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 1)
+        self.assertIn("schema.valid", self.rule_ids(result))
+
+    def test_market_ids_are_limited_to_48_characters(self):
+        matrix = market_matrix(axes={"market": ["m" * 48]})
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 0, result)
+        matrix = market_matrix(axes={"market": ["m" * 49]})
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 1)
+        self.assertIn("schema.valid", self.rule_ids(result))
+
+    def test_market_rows_route_to_ad_localize_without_a_provider_operation(self):
+        _, result = self.run_cli("plan", self.write(market_matrix()))
+        row = next(r for r in result["rows"] if r["changed_axes"] == ["market"])
+        [step] = row["steps"]
+        self.assertEqual(step["route"], "market-adapt")
+        self.assertEqual(step["skills"], ["ad-localize"])
+        self.assertFalse(step["provider_operation"])
+        self.assertEqual(step["cost_key"], "market")
+        self.assertIn(
+            "projects/spring-launch/markets/market-b/market.json", step["note"]
+        )
+
+    def test_market_only_rows_have_no_studio_shot_and_a_localize_entry(self):
+        _, result = self.run_cli("plan", self.write(market_matrix()))
+        row = next(r for r in result["rows"] if r["changed_axes"] == ["market"])
+        self.assertIsNone(row["studio"])
+        self.assertEqual(
+            row["localize"],
+            {
+                "skill": "ad-localize",
+                "market_id": "market-b",
+                "variant_key": None,
+                "card": "projects/spring-launch/markets/market-b/market.json",
+                "inventory": "projects/spring-launch/markets/market-b/inventory.md",
+                "project": "projects/spring-launch-market-b",
+            },
+        )
+        self.assertIsNone(row["delivery"])
+        hero = result["rows"][0]
+        self.assertIsNone(hero["localize"])
+        hook_row = next(r for r in result["rows"] if r["changed_axes"] == ["hook"])
+        self.assertIsNone(hook_row["localize"])
+        self.assertIsNone(hook_row["delivery"])
+
+    def test_market_and_ratio_row_delivers_to_a_market_ratio_project(self):
+        matrix = market_matrix(
+            strategy="full_factorial",
+            axes={
+                "market": ["market-b"],
+                "ratio": ["4:5"],
+            },
+        )
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 0, result)
+        row = next(
+            r for r in result["rows"] if r["changed_axes"] == ["market", "ratio"]
+        )
+        self.assertIsNone(row["studio"])
+        self.assertEqual(row["localize"]["project"], "projects/spring-launch-market-b")
+        self.assertEqual(
+            row["delivery"]["project"], "projects/spring-launch-market-b-4x5"
+        )
+        self.assertEqual(
+            [step["route"] for step in row["steps"]], ["market-adapt", "ratio-reframe"]
+        )
+
+    def test_market_with_a_generated_axis_keeps_a_studio_shot_and_orders_steps(self):
+        matrix = market_matrix(
+            strategy="full_factorial",
+            axes={
+                "hook": ["hook-callout"],
+                "market": ["market-b"],
+            },
+        )
+        _, result = self.run_cli("plan", self.write(matrix))
+        row = next(r for r in result["rows"] if r["changed_axes"] == ["hook", "market"])
+        self.assertIsNotNone(row["studio"])
+        self.assertEqual(row["localize"]["market_id"], "market-b")
+        self.assertEqual(
+            [step["route"] for step in row["steps"]], ["hook-opening", "market-adapt"]
+        )
+
+    def test_factorial_market_rows_with_a_generated_axis_get_variant_projects(self):
+        matrix = market_matrix(
+            strategy="full_factorial",
+            max_variants=50,
+            axes={
+                "hook": ["hook-a", "hook-b"],
+                "market": ["south"],
+                "ratio": ["9:16", "4:5"],
+            },
+        )
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 0, result)
+        self.assertNotIn("matrix.unique_projects", self.rule_ids(result))
+        by_values = {
+            (
+                row["values"]["hook"],
+                row["values"]["market"],
+                row["values"]["ratio"],
+            ): row
+            for row in result["rows"]
+        }
+        hook_a = by_values[("hook-a", "south", "9:16")]
+        self.assertEqual(
+            hook_a["localize"]["project"], "projects/spring-launch-hook-a-south"
+        )
+        self.assertIsNone(hook_a["delivery"])
+        self.assertEqual(
+            hook_a["localize"]["card"],
+            "projects/spring-launch/markets/south/market.json",
+        )
+        self.assertEqual(hook_a["localize"]["variant_key"], "hook-a")
+        self.assertEqual(
+            hook_a["localize"]["inventory"],
+            "projects/spring-launch/markets/south/hook-a/inventory.md",
+        )
+        self.assertIn(
+            "projects/spring-launch-hook-a-south", hook_a["steps"][-1]["note"]
+        )
+        hook_b = by_values[("hook-b", "south", "4:5")]
+        self.assertEqual(
+            hook_b["delivery"]["project"], "projects/spring-launch-hook-b-south-4x5"
+        )
+        market_only = by_values[("hook-demo-first", "south", "9:16")]
+        self.assertEqual(
+            market_only["localize"]["project"], "projects/spring-launch-south"
+        )
+        self.assertIsNone(market_only["delivery"])
+        market_ratio = by_values[("hook-demo-first", "south", "4:5")]
+        self.assertEqual(
+            market_ratio["delivery"]["project"], "projects/spring-launch-south-4x5"
+        )
+        self.assertEqual(
+            hook_a["localize"]["project"],
+            by_values[("hook-a", "south", "4:5")]["localize"]["project"],
+        )
+        moved = [
+            row
+            for row in result["rows"]
+            if {"market", "ratio"} & set(row["changed_axes"])
+        ]
+        delivery = [row["delivery"]["project"] for row in moved if row["delivery"]]
+        self.assertEqual(len(delivery), len(set(delivery)))
+        localized = {row["localize"]["project"] for row in moved if row["localize"]}
+        self.assertEqual(len(localized), 3)
+        for path in [*delivery, *localized]:
+            self.assertRegex(path, r"^projects/[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+    def test_factorial_ratio_rows_with_a_generated_axis_get_variant_projects(self):
+        matrix = base_matrix(
+            strategy="full_factorial",
+            axes={"hook": ["hook-a", "hook-b"], "ratio": ["4:5"]},
+        )
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 0, result)
+        delivery = {
+            (row["values"]["hook"], row["values"]["ratio"]): row["delivery"]["project"]
+            for row in result["rows"]
+            if row["delivery"]
+        }
+        self.assertEqual(
+            delivery[("hook-a", "4:5")], "projects/spring-launch-hook-a-4x5"
+        )
+        self.assertEqual(
+            delivery[("hook-b", "4:5")], "projects/spring-launch-hook-b-4x5"
+        )
+        self.assertEqual(
+            delivery[("hook-demo-first", "4:5")], "projects/spring-launch-4x5"
+        )
+        self.assertNotIn(("hook-a", "9:16"), delivery)
+
+    def test_factorial_swap_and_ratio_rows_name_every_changed_generated_value(self):
+        matrix = base_matrix(
+            strategy="full_factorial",
+            axes={"hook": ["hook-a"], "talent": ["vp.b"], "ratio": ["1:1"]},
+        )
+        _, result = self.run_cli("plan", self.write(matrix))
+        row = next(
+            r
+            for r in result["rows"]
+            if r["changed_axes"] == ["hook", "talent", "ratio"]
+        )
+        self.assertEqual(
+            row["delivery"]["project"], "projects/spring-launch-hook-a-vp-b-1x1"
+        )
+
+    def test_remaining_project_path_collisions_are_refused(self):
+        matrix = market_matrix(
+            strategy="full_factorial",
+            max_variants=50,
+            axes={"hook": ["x"], "market": ["y", "x-y"]},
+        )
+        matrix["hero"]["values"]["hook"] = "h"
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 1)
+        self.assertIn("matrix.unique_projects", self.rule_ids(result))
+        finding = next(
+            f for f in result["findings"] if f["rule_id"] == "matrix.unique_projects"
+        )
+        self.assertIn("projects/spring-launch-x-y", finding["message"])
+
+    def test_ratio_value_slug_collisions_are_refused(self):
+        matrix = base_matrix(axes={"ratio": ["4:5", "4x5"]})
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 1)
+        self.assertIn("matrix.unique_projects", self.rule_ids(result))
+
+    def test_market_steps_point_at_the_inventory_for_per_element_levels(self):
+        _, result = self.run_cli("plan", self.write(market_matrix()))
+        row = next(r for r in result["rows"] if r["changed_axes"] == ["market"])
+        self.assertIn(
+            "projects/spring-launch/markets/market-b/inventory.md",
+            row["steps"][0]["note"],
+        )
+        self.assertNotIn("level chosen there", row["steps"][0]["note"])
+
+    def test_a_row_changing_market_and_language_is_refused(self):
+        matrix = market_matrix(
+            strategy="full_factorial",
+            axes={
+                "language": ["es"],
+                "market": ["market-b"],
+            },
+        )
+        matrix["hero"]["values"]["language"] = "en"
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 1)
+        self.assertIn("matrix.market_language", self.rule_ids(result))
+        finding = next(
+            f for f in result["findings"] if f["rule_id"] == "matrix.market_language"
+        )
+        self.assertIn("ad-localize", finding["message"])
+
+    def test_separate_market_and_language_rows_are_allowed_one_axis_at_a_time(self):
+        matrix = market_matrix(axes={"language": ["es"], "market": ["market-b"]})
+        matrix["hero"]["values"]["language"] = "en"
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 0, result)
+        self.assertNotIn("matrix.market_language", self.rule_ids(result))
+
+    def test_market_rows_need_an_explicit_unit_cost(self):
+        path = self.write(market_matrix())
+        code, result = self.run_cli(
+            "cost", path, "--unit-cost", "hook=3", "--unit-cost", "ratio=0"
+        )
+        self.assertEqual(code, 1)
+        finding = next(
+            f for f in result["findings"] if f["rule_id"] == "cost.unit_missing"
+        )
+        self.assertIn("market", finding["message"])
+        code, result = self.run_cli("cost", path, *MARKET_COSTS)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["total_estimated_usd"], 3 + 5 * 2 + 0)
+        self.assertIn("ad-localize", result["market_estimate_note"])
+        self.assertIn("level", result["market_estimate_note"])
+
+    def test_market_unit_cost_may_come_from_the_matrix(self):
+        matrix = market_matrix(unit_cost_usd={"hook": 3, "market": 7, "ratio": 0})
+        code, result = self.run_cli("cost", self.write(matrix))
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["unit_cost_usd"]["market"], 7)
+
+    def test_cost_without_market_rows_has_no_market_note(self):
+        _, result = self.run_cli("cost", self.write(base_matrix()), *UNIT_COSTS)
+        self.assertNotIn("market_estimate_note", result)
+
+    def test_register_prints_no_commands_for_market_rows_but_lists_localize(self):
+        code, result = self.register(market_matrix(), *MARKET_COSTS, *VIDEO_FLAGS)
+        self.assertEqual(code, 0, result)
+        market_rows = [r for r in result["rows"] if r["changed_axes"] == ["market"]]
+        for row in market_rows:
+            self.assertEqual(result["operations"][row["name"]], [])
+        localize = {entry["variant"]: entry for entry in result["localize"]}
+        self.assertEqual(set(localize), {row["name"] for row in market_rows})
+        entry = localize[market_rows[0]["name"]]
+        self.assertEqual(entry["skill"], "ad-localize")
+        self.assertEqual(
+            entry["card"], "projects/spring-launch/markets/market-b/market.json"
+        )
+        self.assertIn("registers its own", entry["reminder"])
+
+    def test_register_for_a_market_only_matrix_needs_no_model_flags(self):
+        matrix = market_matrix(axes={"market": ["market-b"]})
+        code, result = self.register(matrix, "--unit-cost", "market=5")
+        self.assertEqual(code, 0, result)
+        self.assertEqual(sum(map(len, result["operations"].values())), 0)
+        self.assertEqual(len(result["localize"]), 1)
+
+    def test_register_without_market_rows_has_no_localize_list(self):
+        _, result = self.register(base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS)
+        self.assertNotIn("localize", result)
 
     def test_skill_cites_the_variant_rules(self):
         text = (ROOT / ".agents/skills/ad-variant-matrix/SKILL.md").read_text()

@@ -28,6 +28,15 @@
       "upstream_hash": null,
       "overlay_notes": null
     },
+    "ad-localize": {
+      "kind": "orchestrator",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null,
+      "description": "Orchestrator that adapts an approved ad to another market at the depth the user chooses, per element: L1 translated captions and re-rendered on-screen text, L2 voice (dub keeping voices or a line-scoped re-voice that keeps the source soundtrack), L3 talent replaced through authorized Virtual Portraits, L4 cultural adaptation of settings, props, wardrobe, product and soundtrack, or L5 full transcreation into a new hero ad. Keeps a market card of user-supplied facts, an inventory of every spoken line and on-screen text, a translation sheet with review statuses, market-scoped claims, a recorded native or local reviewer sign-off before final generation at L3 to L5, an honest lip-sync verdict, and a new version in its own project without touching the source. No market is built in. Use to localize, translate, dub, recast or transcreate a finished ad for another market or language. Not for writing a first ad, a caption file alone (ad-captions) or ratio cuts alone (ad-delivery-formats).",
+      "readme_summary": "Adapt an approved ad to another market at the depth chosen per element: captions/text, voice, talent, cultural adaptation or full transcreation, with native review gates."
+    },
     "ad-performance-loop": {
       "kind": "leaf",
       "description": "Import a user-exported ad-platform results CSV, join rows to ad variant names, compute hook rate (3-second views per impression), CTR, conversion rate and CPA, rank variants by the user's chosen KPI within that account, flag creative fatigue when frequency rises while CTR or hook rate falls, and draft the next variant matrix that keeps the winner and tests one new axis. Handles configurable column mapping, missing columns, zero impressions, currency symbols, thousands separators and unknown ad names, which are reported rather than dropped. Use after a variant test has run and the user supplies an export. No platform API access, no external benchmarks, no media generation.",
@@ -39,7 +48,7 @@
     },
     "ad-variant-matrix": {
       "kind": "orchestrator",
-      "description": "Orchestrator that turns one approved hero ad into a planned variant test matrix: one axis at a time by default (full factorial only on request) across hook, talent, product, outfit, location, language and ratio. Routes each axis to its specialist (new opening beat spliced in Studio, object swap, dubbing with captions, per-ratio delivery), names every variant {campaign}_{concept}_{axis-values}_v{nn}, previews cost, and refuses rows over the budget or variant cap. Every row still passes prompt-review and registry registration; nothing is submitted by the planner. Use to multiply a winning ad into testable variants. Not for writing the hero ad, separate concept tests, or reading performance results.",
+      "description": "Orchestrator that turns one approved hero ad into a planned variant test matrix: one axis at a time by default (full factorial only on request) across hook, talent, product, outfit, location, language, market and ratio. Routes each axis to its specialist (new opening beat spliced in Studio, object swap, dubbing with captions, market adaptation, per-ratio delivery), names every variant {campaign}_{concept}_{axis-values}_v{nn}, previews cost, and refuses rows over the budget or variant cap. Every row still passes prompt-review and registry registration; nothing is submitted by the planner. Use to multiply a winning ad into testable variants. Not for writing the hero ad, separate concept tests, or reading performance results.",
       "readme_summary": "Turn one approved hero ad into a one-axis-at-a-time variant matrix with routing, naming, cost and budget gates; every row still goes through prompt-review and registration.",
       "dependencies": [],
       "source_revision": "workspace",

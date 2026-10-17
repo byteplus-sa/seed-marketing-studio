@@ -130,6 +130,10 @@ class WrappingTests(unittest.TestCase):
         self.assertTrue(MODULE.is_right_to_left("ku-Arab"))
         self.assertFalse(MODULE.is_right_to_left("en"))
 
+    def test_rtl_detection_ignores_subtags_after_a_singleton(self):
+        self.assertFalse(MODULE.is_right_to_left("en-x-arab"))
+        self.assertTrue(MODULE.is_right_to_left("ar-x-test"))
+
     def test_balanced_two_line_wrap(self):
         cues, _ = build(
             [make_line("a", 0, 4, en="You knew all along and never said a word")],

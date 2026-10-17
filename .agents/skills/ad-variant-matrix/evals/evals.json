@@ -25,7 +25,8 @@
         "Reports the expanded row count from the plan (108 rows when the hero's values are among the listed values, more if they are not) and that it exceeds max_variants 20.",
         "Treats the cost command's refusal as a stop and does not drop rows silently.",
         "Proposes concrete reductions such as one axis at a time or fewer values, and asks the user to choose.",
-        "Notes that combined rows run their steps in order (talent swap, hook opening, dub, reframe), each with its own review and registry entry."
+        "Notes that combined rows run their steps in order (talent swap, hook opening, dub, reframe), each with its own review and registry entry.",
+        "States that combined rows which also change ratio deliver into variant-specific projects (projects/<campaign>-<variant-key>-<ratio>, for example a hook-and-talent row at 4:5), so no two variants share a delivery project, and that plan refuses any remaining clash with matrix.unique_projects."
       ]
     },
     {
@@ -50,6 +51,20 @@
         "Translates the locked script only and flags the added offer as a new claim needing a supported source and approval per the ad-compliance contract.",
         "Keeps on-screen text out of generated footage and lays out captions or supers in post per ratio.",
         "Does not mix a script change into a one-axis language variant without saying so."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Our approved hero ad for a reusable water bottle won in its home market (market ID market-north). Test it in two new markets we already have market cards for, market-south and market-east, and also give me a Spanish dub for market-south in the same row. Budget 30 USD, max 6 variants; we have not decided how deep each localization goes yet.",
+      "expected_output": "Adds a market axis with two one-axis rows routed to ad-localize, refuses to combine a language change with a market change in one row, requires an explicit market unit cost labelled as an estimate, and prints no provider commands for market rows.",
+      "files": [],
+      "expectations": [
+        "Records market-north as the hero's market value and adds market-south and market-east as kebab-case market IDs matching the market card folders.",
+        "Refuses or redirects the combined Spanish-dub-plus-market row, explaining that language belongs inside the market adaptation set by the market card in ad-localize.",
+        "Routes each market row to ad-localize with no Studio shot in the campaign project, citing projects/<campaign>/markets/<market-id>/market.json and the localized project projects/<campaign>-<market-id>.",
+        "Asks for or records an explicit market unit cost before running cost, and states it is an estimate because the real cost depends on the per-element levels chosen in ad-localize.",
+        "States that register prints no provider commands for market rows and that ad-localize plans, reviews and registers its own operations per element level recorded in the market inventory.md (the card holds only level_default).",
+        "Does not choose the localization levels itself."
       ]
     }
   ]

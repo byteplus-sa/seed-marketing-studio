@@ -149,7 +149,12 @@ def normalize_language(language: str) -> str:
 
 def is_right_to_left(language: str) -> bool:
     parts = language.lower().split("-")
-    return parts[0] in RTL_LANGUAGES or any(part in RTL_SCRIPTS for part in parts[1:])
+    subtags = []
+    for part in parts[1:]:
+        if len(part) == 1:
+            break
+        subtags.append(part)
+    return parts[0] in RTL_LANGUAGES or any(part in RTL_SCRIPTS for part in subtags)
 
 
 def extends_cluster(cluster: str, char: str) -> bool:

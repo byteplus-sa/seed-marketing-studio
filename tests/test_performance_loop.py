@@ -269,6 +269,28 @@ class PerformanceLoopTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("Refusing to overwrite", refused["error"])
 
+    def test_next_matrix_can_test_a_market_axis(self):
+        path, _ = self.ingest()
+        out = self.root / "market" / "matrix.json"
+        code, result = self.run_cli(
+            "next-matrix",
+            path,
+            "--matrix",
+            self.write("matrix.json", MATRIX),
+            "--kpi",
+            "ctr",
+            "--axis",
+            "market=market-north,market-south",
+            "--hero-value",
+            "market-home",
+            "--out",
+            out,
+        )
+        self.assertEqual(code, 0, result)
+        draft = json.loads(out.read_text())
+        self.assertEqual(draft["axes"], {"market": ["market-north", "market-south"]})
+        self.assertEqual(draft["hero"]["values"]["market"], "market-home")
+
     def test_next_matrix_refusals(self):
         path, _ = self.ingest()
         matrix = self.write("matrix.json", MATRIX)

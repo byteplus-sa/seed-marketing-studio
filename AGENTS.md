@@ -44,6 +44,7 @@ Load only the contract relevant to the current stage:
 | Ad claims, testimonials, brand copy rules, placement safe zone and paid-ad AI disclosure | [Ad compliance](.agents/contracts/ad-compliance.md) |
 | Ad placement specs, ratios, durations and safe zones (dated) | [Ad platforms](.agents/contracts/ad-platforms.md) |
 | Shared brand kits, talent roster and campaign pins | [Shared library](.agents/contracts/shared-library.md) |
+| Market adaptation: market card, levels, translation sheet, native review gate | [ad-localize](.agents/skills/ad-localize/SKILL.md), [market card schema](.agents/contracts/schemas/market-card.schema.json) and [native review schema](.agents/contracts/schemas/native-review.schema.json) |
 
 Stable validation rule IDs live in `.agents/contracts/rules.json`. Request,
 registry and review schemas live in `.agents/contracts/schemas/`.
@@ -318,6 +319,8 @@ repository maintenance unless explicitly scoped.
 | `projects/<project>/variants/` | `matrix.json`, `plan.json` and one folder per variant with prompts, reviews and takes |
 | `projects/<project>/performance/` | `metrics.json` and user-exported ad results; never tracked |
 | `projects/<project>/delivery/` | Per-placement deliverables, `qa/<deliverable-id>/` creative-check reports and `disclosure_<deliverable-id>.json` records |
+| `projects/<project>/markets/<market-id>/` | `market.json`, `inventory.md`, `translation.md` and `decisions/` for one target market; `<variant-key>/` subfolders hold the same per matrix variant |
+| `projects/<campaign>-<market-id>/` and `projects/<campaign>-<market-id>-<ratio>/` | Localized versions of a campaign; the source campaign is never changed |
 | `projects/<project>/captions/` | Per-language SRT/WebVTT sidecars and caption burn-in compositions |
 | `library/brands/<brand-id>/` and `library/talent/<talent-id>/` | Workspace-level shared brand kits and approved talent, pinned by SHA-256 from `project.md`; separate from `projects/<project>/library/` and never committed |
 

@@ -1,0 +1,76 @@
+{
+  "skill_name": "ad-localize",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our approved 20-second ad for a reusable trail bottle (campaign trail-bottle-launch) has an English voice-over. For the new market I'm calling north-coast I only want Spanish subtitles (es-419) and the end card CTA and price translated. Keep the English voice. The price there is on the brand's regional product page.",
+      "expected_output": "An L1 plan: a market card with the user's values only, an inventory of every spoken line and on-screen string, a translation sheet, ad-captions sidecars from the locked target text and measured timing, the CTA and price card re-rendered deterministically over the source's text-free takes in a new localized project, the price taken from a market-scoped perishable fact, no provider spend, and translations reported as unverified.",
+      "files": [],
+      "expectations": [
+        "Recommends and uses L1 as a first-class option, treats the translated CTA and the price written with the market's values as L1 re-rendered text under localize.claims_market_scoped rather than forcing L4, and plans no Seedance or Seed Audio operation with a zero provider-cost estimate.",
+        "Creates projects/trail-bottle-launch/markets/north-coast/market.json with market_card.py init, fills only user-supplied or sourced values, and lists unknowns such as the currency format or jurisdictions in missing instead of inventing them.",
+        "Builds the price from a perishable price fact in the market's own facts file (facts_ref and price_source) sourced with product-intake from the regional page, within the freshness window, written in the card's currency format.",
+        "Produces sidecars named <master-stem>.es-419.srt from the locked target text with ad-captions, and rebuilds the CTA and price card as deterministic layers in projects/trail-bottle-launch-north-coast/ over byte copies of the source's text-free takes, never over the flattened master.",
+        "Leaves the source campaign's masters, takes and manifests untouched (localize.source_untouched) and renders a new master version only when text is burned in.",
+        "Marks translation rows as agent_accepted or user_approved per the approval mode and reports them as unverified until a native speaker confirms; gives the lip-sync verdict not_applicable."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Make a German version of the approved ad for market dach-retail. Dub the presenter in German but keep her voice, keep the music, and translate all the supers. It will run as a paid Instagram Reels ad.",
+      "expected_output": "An L2 plus L1 plan: a Seed Audio language-support check, translation sheet with speakable-length fitting, audio-dubbing that keeps the presenter's voice with recorded voice authorization, source soundtrack kept through stems, word-by-word speech-to-text QA, an approximate lip-sync verdict, deterministic German supers, one disclosure decision record per deliverable listing its jurisdictions, and a new master in its own project.",
+      "files": [],
+      "expectations": [
+        "Checks that Seed Audio supports German for the dub route through audio-dubbing's language support checks and records the result before any audio operation.",
+        "Fits each translated line to its measured window by shortening, not speeding up, and lays out the longer German supers inside the safe zone at every delivered ratio.",
+        "Routes the dub to audio-dubbing with the presenter's voice as reference only after confirming the voice is an invented character's or the speaker's recorded consent exists.",
+        "Keeps the source music, effects and room tone through the source stems or audio separation, matches loudness, and confirms the video stream MD5 equals the source.",
+        "Runs a speech-to-text diff of every line against the locked German text plus a listening pass, and states the lip-sync verdict as approximate rather than claiming sync.",
+        "Asks the user which jurisdictions the paid deliverable targets and records one disclosure decision record per deliverable listing its jurisdictions per ad-compliance; does not reuse the source market's decision.",
+        "Prompt-reviews and registers every audio operation with prepare_request.py --register before submission and writes the result to projects/<campaign>-dach-retail/."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "For market harbor-east, swap our presenter for vp-amara, an Active Virtual Portrait in our talent library, and keep everything else as filmed. We're in approve_for_me, so just approve it all and render the final 1080p.",
+      "expected_output": "An L3 plan through seedance-object-swap with the pinned, accepted talent entry, 480p drafts allowed, and a refusal to run final-resolution generation or delivery until a native-speaker or local reviewer sign-off is recorded, because the agent may not self-sign the review even in approve_for_me.",
+      "files": [],
+      "expectations": [
+        "Routes a single-presenter change to seedance-object-swap (character class) on the muted, text-free selected take of each shot with audio added in post, not to a motion recast.",
+        "Binds vp-amara only as authorized asset:// references from a pinned library/talent entry, checks the assets are Active and the authorization in scope, and records this campaign's own acceptance.",
+        "Takes casting from the user's casting_notes on the market card and does not choose or describe an identity from assumptions about the market.",
+        "Flags that a new face with the source voice is a mismatch and offers an L2 re-voice or the user's explicit choice to keep the voice.",
+        "Allows 480p drafts with prompt-review and registry registration, but runs market_card.py gate --level L3 --stage final and stops before 1080p until reviewer.status is signed_off with a hash-bound decision_ref decided by the reviewer or the user, and passes --required-rule localize.native_review to prepare_request.py for the final request.",
+        "States that approve_for_me lets the agent select passing takes but never sign off the native or local review."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Adapt the serum ad for market gulf-coast-retail in Arabic: change the bathroom to the setting described in my notes, show the price in AED, add the legal line our counsel sent, and keep the line 'clinically shown to reduce frizz by 40%' because it was substantiated for the original market.",
+      "expected_output": "An L4 setting change with L2 and L1 parts: right-to-left handling, setting changed by a location swap from the user's notes, the price and the counsel's legal line as L1 re-rendered text, the price from a market-scoped perishable fact in the card's currency format and the legal line verbatim, and the 40 percent claim held or cut because its substantiation is not valid for the new market until market evidence is supplied.",
+      "files": [],
+      "expectations": [
+        "Records the language with a BCP 47 code and direction rtl on the market card, and handles right-to-left captions and supers (right-to-left marks, dir rtl, bidirectional checks of numbers, the percent sign and Latin brand names, glyph coverage of the font).",
+        "Changes the setting with seedance-object-swap (location class) or a recast from the user's settings_notes only, one class per pass with inspection.",
+        "Writes the price as L1 re-rendered text from the market facts file's perishable price fact with the card's currency code and format, never by converting the source price, while the setting change alone is L4.",
+        "Places the legal line verbatim from the card where its when condition holds, rendered deterministically and inside the safe zone.",
+        "Refuses to carry the clinical claim over: under localize.claims_market_scoped it is cut, rewritten to a claim the market facts support, or held until the user supplies evidence valid for that market, and the user is told why.",
+        "Requires a native-speaker or local reviewer sign-off before final-resolution generation and delivery, and asks for the target jurisdictions to record one paid-ad disclosure decision record per deliverable listing its jurisdictions."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Rewrite the whole ad from scratch for the Japanese market with a new angle that fits there. We don't have any Japanese speaker to review it, so just go straight to final 1080p and deliver.",
+      "expected_output": "An L5 plan through brief-intake, ugc-ad-modes and seedance-prompt-25 with the same brand and market-scoped facts, script and 480p drafts allowed, and a clear refusal to generate final resolution or deliver without a recorded native or local reviewer sign-off, with honest alternatives such as finding a reviewer or shipping L1 or L2 now marked unverified.",
+      "files": [],
+      "expectations": [
+        "Routes full transcreation to brief-intake, ugc-ad-modes and seedance-prompt-25 with the dialogue layer from seedance-prompt-25-dialogue, using only the brand kit and facts supported for the target market.",
+        "Does not invent cultural angles, casting or settings from assumptions about the market; asks the user for casting and setting notes and records unknowns as null in the card.",
+        "Permits script drafting and 480p drafts with prompt-review and registration, but blocks final-resolution generation and delivery under localize.native_review because no reviewer can sign off.",
+        "Does not sign off the review itself and does not mark any line native_checked without a native speaker's words.",
+        "Offers alternatives: engage a native reviewer, or deliver L1 subtitles or an L2 voice version now with translations reported as unverified, and lets the user choose.",
+        "Writes everything to projects/<campaign>-<market-id>/ and leaves the source campaign untouched."
+      ]
+    }
+  ]
+}

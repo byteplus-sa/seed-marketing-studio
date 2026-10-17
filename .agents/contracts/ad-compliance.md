@@ -113,6 +113,10 @@ unchecked and say so.
   disclaimer toggle in an ads manager) is recorded as a delivery instruction for
   the person uploading the ad.
 
+A localized deliverable (from `ad-localize`) is a new deliverable with its own
+target jurisdictions and its own decision record in the localized project; the
+source market's decision never carries over.
+
 Record shape (`delivery/disclosure_<deliverable-id>.json`):
 
 ```json

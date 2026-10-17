@@ -34,7 +34,7 @@ NUMERIC = (
     "frequency",
 )
 SUMMED = ("impressions", "views_3s", "clicks", "spend", "conversions", "reach")
-AXES = ("hook", "talent", "product", "outfit", "location", "language", "ratio")
+AXES = ("hook", "talent", "product", "outfit", "location", "language", "market", "ratio")
 KPIS = {
     "hook_rate": ("views_3s", "impressions", "higher"),
     "ctr": ("clicks", "impressions", "higher"),

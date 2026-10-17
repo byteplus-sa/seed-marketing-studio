@@ -24,10 +24,10 @@ The studio is a set of **agent skills** that an MCP-capable coding agent (Claude
 | Spokesperson and avatar videos | `seedance-ai-avatar`, `seedance-avatar-news`, `omnihuman-prompt-20` |
 | Key visuals, posters, product sheets | `seedream-prompt`, `seedream-prop-asset`, `html-graphic-render` |
 | Radio and audio spots, jingles, soundscapes | `seed-audio-commercial`, `seed-audio-prompt` |
-| Localized versions of a finished ad | `audio-dubbing`, `seedance-prompt-25-dialogue` |
+| Localized versions of a finished ad, from captions only to full transcreation | `ad-localize`, `ad-captions`, `audio-dubbing`, `seedance-prompt-25-dialogue` |
 | Music-led brand films | `seedance-music-video` |
 | Brand kit and product card from a URL | `brand-kit`, `product-intake` |
-| Hook, angle, talent, language and ratio test variants | `ad-variant-matrix`, `ugc-ad-modes` (hooks, settings, script formulas) |
+| Hook, angle, talent, language, market and ratio test variants | `ad-variant-matrix`, `ugc-ad-modes` (hooks, settings, script formulas) |
 | Static ad grids and marketplace product shots | `static-ad-batch`, `seedream-product-shot` |
 | Per-placement cuts, captions and pre-spend QA | `ad-delivery-formats`, `ad-captions`, `ad-creative-check` |
 | Learning from results | `ad-performance-loop` |
@@ -142,7 +142,7 @@ Put these in a gitignored `.env`; never commit them.
 
 ## Skills
 
-The workspace ships **77 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
+The workspace ships **78 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
 
 ### Orchestration and review
 
@@ -153,6 +153,7 @@ The workspace ships **77 skills**. Leaf skills are independent; declared orchest
 | **template-factory** | Reverse-engineer a reference video and soundtrack into a timed visual and audio recipe, with reviewable assets and shot takes reviewed in a synchronized Studio project. |
 | **prompt-review** | Review and fix BytePlus Seedance, Seed Audio, and Seedream prompts against the repo's best practices inline by default; use a sub-agent only when explicitly requested for a project or specific generation. |
 | **ad-variant-matrix** | Turn one approved hero ad into a one-axis-at-a-time variant matrix with routing, naming, cost and budget gates; every row still goes through prompt-review and registration. |
+| **ad-localize** | Adapt an approved ad to another market at the depth chosen per element: captions/text, voice, talent, cultural adaptation or full transcreation, with native review gates. |
 
 ### Campaign layer
 

@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "native-review.schema.json",
+  "title": "Native or local reviewer sign-off",
+  "description": "Sign-off record for an L3 to L5 market adaptation, at projects/<campaign>/markets/<market-id>/decisions/native_review.json, or for one matrix variant at projects/<campaign>/markets/<market-id>/<variant-key>/decisions/native_review.json. It is written only from the reviewer's or the user's own words and binds the reviewed files and card fields by hash; a change to any of them makes it stale.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "market_id",
+    "reviewer_role",
+    "reviewer_name",
+    "decided_by",
+    "evidence",
+    "reviewed",
+    "card_fields_sha256",
+    "decided_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "market_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 48
+    },
+    "variant": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 96,
+      "description": "Matrix variant key when this record lives at markets/<market-id>/<variant-key>/decisions/native_review.json and covers that variant's inventory and translation sheet; absent or null for the market's own record."
+    },
+    "reviewer_role": {
+      "enum": [
+        "native_speaker",
+        "local_reviewer"
+      ],
+      "description": "Must equal the card's reviewer.role."
+    },
+    "reviewer_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "decided_by": {
+      "enum": [
+        "user",
+        "reviewer"
+      ],
+      "description": "Who gave the sign-off. Never the agent, in either approval mode."
+    },
+    "evidence": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "The reviewer's or user's own words, quoted."
+    },
+    "reviewed": {
+      "description": "Every reviewed file, relative to the folder that holds decisions/ (the market folder, or the variant folder). translation.md and inventory.md are required.",
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "additionalProperties": false
+      },
+      "allOf": [
+        {
+          "contains": {
+            "properties": {
+              "path": {
+                "const": "translation.md"
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "properties": {
+              "path": {
+                "const": "inventory.md"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "card_fields_sha256": {
+      "$ref": "#/$defs/sha256",
+      "description": "market_card.py fingerprint review_fields_sha256: the canonical hash of the card's languages, casting_notes, settings_notes, props_wardrobe_notes, gestures_and_taboos, legal_lines and currency at sign-off."
+    },
+    "decided_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

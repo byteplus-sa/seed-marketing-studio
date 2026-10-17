@@ -19,6 +19,12 @@
       "skillPath": ".agents/skills/ad-delivery-formats/SKILL.md",
       "computedHash": "b1fdd9ca1352fc745a7099886de37e8df15ba79beffef79e76512aa488537eb5"
     },
+    "ad-localize": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/ad-localize/SKILL.md",
+      "computedHash": "64dc7759741be79d6b314400801222e5d20076e0880bfa872c2803da9231a187"
+    },
     "ad-performance-loop": {
       "source": "./local",
       "sourceType": "local",
@@ -29,7 +35,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-variant-matrix/SKILL.md",
-      "computedHash": "d1b3e482bd408404f05dd07bc5dada8d4e6a646fda740afa19c1f7feb174bb01"
+      "computedHash": "3db9e2c27c1d1d8daf227572dd770f53a49c0f121e3b3df140ae74a244f35352"
     },
     "ark-mcp": {
       "source": "./local",

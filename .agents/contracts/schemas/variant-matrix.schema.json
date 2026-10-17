@@ -84,6 +84,16 @@
       "propertyNames": {
         "$ref": "#/$defs/axis"
       },
+      "properties": {
+        "market": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/marketId"
+          }
+        }
+      },
       "additionalProperties": {
         "type": "array",
         "minItems": 1,
@@ -144,6 +154,7 @@
         "outfit",
         "location",
         "language",
+        "market",
         "ratio"
       ]
     },
@@ -157,6 +168,9 @@
         }
       ]
     },
+    "marketId": {
+      "$ref": "#/$defs/slug"
+    },
     "value": {
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9:._-]*$",
@@ -166,6 +180,11 @@
       "type": "object",
       "propertyNames": {
         "$ref": "#/$defs/axis"
+      },
+      "properties": {
+        "market": {
+          "$ref": "#/$defs/marketId"
+        }
       },
       "additionalProperties": {
         "$ref": "#/$defs/value"

@@ -9,7 +9,9 @@ preserve.
 - [Hook](#hook)
 - [Talent, product, outfit, location](#talent-product-outfit-location)
 - [Language](#language)
+- [Market](#market)
 - [Ratio](#ratio)
+- [Project paths](#project-paths)
 - [Rows that change several axes](#rows-that-change-several-axes)
 
 ## Shared source preparation
@@ -87,6 +89,34 @@ instead of requiring the shot-plan rules.
 - On-screen supers in another language are re-laid out in Studio, never
   generated into footage.
 
+## Market
+
+**Route:** hand the row to `ad-localize`; the planner adds no provider step.
+
+A market value is a market ID in kebab-case (at most 48 characters), the
+folder name of its market card at
+`projects/<campaign>/markets/<market-id>/market.json`.
+
+| Concern | `variant_matrix.py` | `ad-localize` |
+| --- | --- | --- |
+| Which markets to test | Expands one row per market ID, named with that ID | — |
+| Adaptation level (captions only, voice, talent, cultural, full transcreation) | Never chooses it | Records the user's per-element levels in `projects/<campaign>/markets/<market-id>/inventory.md`; the market card holds the market facts and only `level_default` |
+| Language | Refuses a row that also changes `language` (`matrix.market_language`) | Sets the market's language and script from the card |
+| Prompts, review, registry | Prints no command; lists the row under `localize` with the card, the inventory and a reminder | Plans, reviews and registers its own paid operations per element level |
+| Cost | Requires an explicit `market` unit cost and labels it an estimate | Estimates the real cost for the chosen levels |
+| Project | Names the localized project in the row's `localize` entry (see [Project paths](#project-paths)) | Builds that localized project |
+| Delivery | Names the per-ratio project in the row's `delivery` entry | Hands the localized master to `ad-delivery-formats` |
+
+- A market-only row has no Studio shot in the campaign project. A row that also
+  changes a generated axis (for example hook) produces that variant here first;
+  `ad-localize` then adapts the selected take into its own variant-specific
+  localized project.
+- Claims, offers and CTAs that differ by market are script changes with their
+  own support and approval inside `ad-localize`; the matrix never varies them.
+- Set the `market` unit cost from the level the user expects to choose. When the
+  level changes in `ad-localize`, re-run `cost` with the new figure before
+  spending against the budget.
+
 ## Ratio
 
 **Route:** `ad-delivery-formats`.
@@ -98,10 +128,41 @@ instead of requiring the shot-plan rules.
 - Supers, CTA and captions are placed per ratio inside the placement's
   published safe zone.
 
+## Project paths
+
+Every market or ratio row names the project it builds or renders into. One
+Studio project renders one canvas, so two different variants never share one.
+
+| Row changes | `localize.project` | `delivery.project` |
+| --- | --- | --- |
+| ratio only | — | `projects/<campaign>-<ratio>` |
+| market only | `projects/<campaign>-<market-id>` | — (the localized project is the deliverable at the hero ratio) |
+| market and ratio | `projects/<campaign>-<market-id>` | `projects/<campaign>-<market-id>-<ratio>` |
+| generated axes and ratio | — | `projects/<campaign>-<variant-key>-<ratio>` |
+| generated axes and market | `projects/<campaign>-<variant-key>-<market-id>` | — |
+| generated axes, market and ratio | `projects/<campaign>-<variant-key>-<market-id>` | `projects/<campaign>-<variant-key>-<market-id>-<ratio>` |
+
+- `<variant-key>` joins the row's changed generated values (hook, talent,
+  product, outfit, location, language) in axis order, each lowercased to
+  kebab-case; ratios render as `4x5`. For example `hook-a` in market `south`
+  at `4:5` delivers into `projects/<campaign>-hook-a-south-4x5`.
+- Rows that differ only by ratio share their localized project: the per-ratio
+  cuts reframe the same localized master.
+- A row that keeps the hero's ratio has no `delivery` entry: its own Studio
+  shot or localized project already renders at that ratio.
+- The market card stays keyed by market ID under the campaign. When several
+  variants are localized for one market, each keeps its own inventory,
+  translation sheet and review record under
+  `markets/<market-id>/<variant-key>/` (see `ad-localize`).
+- `plan` refuses any remaining clash, for example a slug collision between a
+  variant key and a market ID, with `matrix.unique_projects`. Rename a value
+  rather than overriding the gate.
+
 ## Rows that change several axes
 
 Only full-factorial matrices produce these. The planner orders steps as:
-swaps (or one Motion Transfer) → hook → language → ratio.
+swaps (or one Motion Transfer) → hook → language → market → ratio. Market and
+language never share a row; the planner refuses it.
 
 - **Talent and location together** become one Motion Transfer with
   `seedance-motion-recast`, because two whole-subject changes are not an
