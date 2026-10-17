@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ad Captions"
+  short_description: "Write SRT/WebVTT ad captions and a safe-zone burn-in layer"
+  default_prompt: "Use $ad-captions to write per-language captions for this ad and lay them out inside the placement safe zone."

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #F2F2F2; }
+body {
+  width: {{width}}px;
+  height: {{height}}px;
+  overflow: hidden;
+  padding: 24px;
+  color: #1A1A1A;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.title { height: 56px; font-size: 28px; line-height: 56px; }
+.grid { display: grid; grid-template-columns: repeat({{columns}}, 360px); gap: 24px; }
+.tile { width: 360px; height: 400px; display: grid; grid-template-rows: 360px 40px; background: #FFFFFF; }
+.tile img { width: 360px; height: 360px; object-fit: contain; background: #DADADA; }
+.tile figcaption { font-size: 12px; line-height: 40px; padding: 0 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+</style>
+</head>
+<body>
+<h1 class="title">{{title}}</h1>
+<section class="grid">{{tiles}}</section>
+</body>
+</html>

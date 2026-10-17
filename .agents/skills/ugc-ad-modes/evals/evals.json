@@ -155,6 +155,31 @@
         "Describes the tube and refills positively as plain with nothing printed unless a product reference is supplied.",
         "Keeps 'LINK IN BIO' out of the generated video and routes it to a finishing layer; adds no AI-generated label to the clip."
       ]
+    },
+    {
+      "id": 14,
+      "prompt": "Write a 15-second ugc-how-to Seedance prompt for a collapsible silicone lunch box using the Product Interrupt hook and the Kitchen Counter setting. Known facts: it collapses flat to 3 cm and the lid snaps on with two side clips. CTA: \"See the sizes.\"",
+      "expected_output": "One final prompt that composes the named hook and setting with the mode, stays within the two supplied facts and keeps the CTA verbatim.",
+      "files": [],
+      "expectations": [
+        "Uses the Product Interrupt hook (hook-product-interrupt) as the 0-2 s opening beat only, with a visible action at 0 s and any spoken line starting after it.",
+        "Uses the Kitchen Counter setting (setting-kitchen-counter) location and named light, keeping counter props plain with nothing printed.",
+        "Confirms both library entries list ugc-how-to as a valid mode.",
+        "Demonstrates only the supplied collapse and two-clip lid operation; invents no capacity, material safety, dishwasher or durability claims.",
+        "Keeps the CTA \"See the sizes.\" verbatim, ends it at least 0.4 s before 15 s, and leaves on-screen text to finishing."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Recreate the structure of the attached reference ad for our new desk lamp, and also open it with the Social Proof hook saying thousands of customers love it. Also put it on the Oversized Product World setting as a product-review.",
+      "expected_output": "A response that refuses to stack a library hook on a reference-ad recreation, refuses invented social proof, and flags the setting's mode mismatch.",
+      "files": [],
+      "expectations": [
+        "Explains that a hook and a reference-ad recreation are mutually exclusive and asks which one to keep, or keeps the reference's own opening as the hook.",
+        "Does not write 'thousands of customers love it' or any review count unless real, approved proof with a source is supplied; asks for it.",
+        "Notes that setting-oversized-product does not list product-review as a valid mode and proposes a valid setting or mode.",
+        "Does not invent lamp features, offers or a destination."
+      ]
     }
   ]
 }

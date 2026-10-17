@@ -17,7 +17,7 @@ The studio is a set of **agent skills** that an MCP-capable coding agent (Claude
 | UGC, demo, review, try-on and showcase ads | `ugc-ad-modes`, `ugc-motion-presets` |
 | Cinematic TVCs and brand films | `brief-intake`, `film-production`, `seedance-shot-design` |
 | Launch videos, motion graphics, product hypermotion | `seedance-motion-design`, `hyperframes` |
-| Viral effects and trend edits | `seedance-effects-studio`, `seedance-frame-break`, `byteplus-katana` |
+| Viral effects and trend edits | `seedance-effects-studio`, `seedance-frame-break`, `reference-edit-rebuild` |
 | Recreating a reference ad's grammar with your brand | `template-factory` |
 | Product, outfit, talent or location swaps in existing footage | `seedance-object-swap`, `seedance-vfx-pipeline` |
 | Market or talent variants of an approved take | `seedance-motion-recast`, `seedance-restyle` |
@@ -26,6 +26,11 @@ The studio is a set of **agent skills** that an MCP-capable coding agent (Claude
 | Radio and audio spots, jingles, soundscapes | `seed-audio-commercial`, `seed-audio-prompt` |
 | Localized versions of a finished ad | `audio-dubbing`, `seedance-prompt-25-dialogue` |
 | Music-led brand films | `seedance-music-video` |
+| Brand kit and product card from a URL | `brand-kit`, `product-intake` |
+| Hook, angle, talent, language and ratio test variants | `ad-variant-matrix`, `ugc-ad-modes` (hooks, settings, script formulas) |
+| Static ad grids and marketplace product shots | `static-ad-batch`, `seedream-product-shot` |
+| Per-placement cuts, captions and pre-spend QA | `ad-delivery-formats`, `ad-captions`, `ad-creative-check` |
+| Learning from results | `ad-performance-loop` |
 
 ---
 
@@ -48,7 +53,8 @@ Resolve current model IDs and parameters from the MCP server or Ark CLI before g
 
 ```mermaid
 flowchart LR
-  A[Brief and audience reaction] --> B[Treatment and directing axes]
+  K[Brand kit + product card] --> A[Brief and audience reaction]
+  A --> B[Treatment and directing axes]
   B --> C[Canon: product, talent, location, exact graphics]
   C --> D[Shot plan]
   D --> E[Prompt and prompt-review]
@@ -58,11 +64,23 @@ flowchart LR
   H --> I[Render and delivery QA]
 ```
 
+```mermaid
+flowchart LR
+  H[Approved hero ad] --> V[ad-variant-matrix: one axis at a time]
+  V --> D[ad-delivery-formats: per placement]
+  D --> Q[ad-creative-check + ad-compliance]
+  Q --> L[Launch, outside this repo]
+  L --> P[ad-performance-loop: exported results]
+  P -->|next matrix| V
+```
+
+- **Brand and product facts first.** `brand-kit` keeps logos, palette, fonts, voice and copy rules in a shared library; `product-intake` turns a product page into sourced facts. Only `supported` facts reach a script, super or static ad.
 - **Brief first.** `brief-intake` records the intended audience reaction, the central visual idea, the product facts and the CTA, plus any cited reference ads.
 - **Canon before shots.** Real logos and packshots are acquired from the brand, never regenerated. Exact copy, prices, CTAs and end cards are rendered with `html-graphic-render`; Seedream is for invented photography and illustration.
 - **Text stays out of generated video.** Captions, taglines, CTAs and end cards are added in post (HyperFrames or FFmpeg).
 - **Draft first.** Seedance 2.5 runs at 480p first; only the selected draft is generated at the delivery resolution.
 - **Cinematic means planned coverage.** Narrative and ad shots carry a recorded shot plan (size, angle, move, lens intent, named light source) so spots do not read as a single static take.
+- **Compliance is recorded, not assumed.** Claims, testimonials and AI disclosure for paid ads follow the [ad compliance contract](.agents/contracts/ad-compliance.md); placement specs live in the dated [ad platforms contract](.agents/contracts/ad-platforms.md).
 - **Studio is the final authority.** HyperFrames Studio holds the locked assets and renders the delivery file.
 
 ```mermaid
@@ -99,7 +117,7 @@ Put these in a gitignored `.env`; never commit them.
 ### Quick start
 
 1. Clone the repo, run `uv sync --locked`, and open it in your agent.
-2. Create `projects/<campaign>/project.md` with the brief (or ask the agent to run `brief-intake`).
+2. Build or pin a brand kit (`brand-kit`), add the product card (`product-intake`), then create `projects/<campaign>/project.md` with the brief (or ask the agent to run `brief-intake`).
 3. Run `uv run python .agents/scripts/studio_project.py init <campaign>` and `stage <campaign> start brief-development`.
 4. Build canon: acquire brand assets, render exact graphics with `html-graphic-render`, and lock Seedream sheets with `studio_project.py lock-element`.
 5. Plan shots with `seedance-shot-design`, write prompts with the `seedance-*` skills, review them with `prompt-review`, and submit through `ark-mcp`.
@@ -113,17 +131,18 @@ Put these in a gitignored `.env`; never commit them.
 | --- | --- |
 | `AGENTS.md` | Workspace contract for agents and contributors (`CLAUDE.md` links to it) |
 | `.agents/skills/` | Every skill, one folder each; `.claude/skills/` holds relative symlinks |
-| `.agents/contracts/` | Production, routing, element, naming, alignment and video-to-video contracts, rule IDs and schemas |
-| `.agents/scripts/` | Request preparation, task registry, Studio bridge (`studio_project.py`), catalog sync and validation |
+| `.agents/contracts/` | Production, routing, element, naming, alignment, video-to-video, ad compliance, ad platform and shared-library contracts, rule IDs and schemas |
+| `.agents/scripts/` | Request preparation, task registry, Studio bridge (`studio_project.py`), variant matrices (`variant_matrix.py`), the static preset gallery (`template_gallery.py`), catalog sync and validation |
 | `.agents/catalog/` | Skill catalog and bundle integrity hashes |
 | `tests/` | Registry, Studio, approval, validation and prompt-contract tests |
-| `projects/<campaign>/` | Local only, never committed: brief, elements, scenes, task registry and Studio project |
+| `projects/<campaign>/` | Local only, never committed: brief, elements, scenes, variants, performance exports, task registry and Studio project |
+| `library/` | Local only, never committed: shared brand kits (`library/brands/`) and approved talent (`library/talent/`) that campaigns pin by SHA-256 |
 
 ---
 
 ## Skills
 
-The workspace ships **68 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
+The workspace ships **77 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
 
 ### Orchestration and review
 
@@ -134,6 +153,18 @@ The workspace ships **68 skills**. Leaf skills are independent; declared orchest
 | **template-factory** | Reverse-engineer a reference video and soundtrack into a timed visual and audio recipe, with reviewable assets and shot takes reviewed in a synchronized Studio project. |
 | **prompt-review** | Review and fix BytePlus Seedance, Seed Audio, and Seedream prompts against the repo's best practices inline by default; use a sub-agent only when explicitly requested for a project or specific generation. |
 
+### Campaign layer
+
+| Skill | Summary |
+|---|---|
+| **brand-kit** | Build, validate and pin a sourced brand kit (logos, palette, fonts, voice, copy rules) in the shared library; unknown values stay null and listed, never invented. |
+| **product-intake** | Turn a product URL or images into a sourced product card: facts with verbatim quotes and statuses plus hashed acquired images; only supported claims reach copy. |
+| **ad-variant-matrix** | Turn one approved hero ad into a one-axis-at-a-time variant matrix with routing, naming, cost and budget gates; every row still goes through prompt-review and registration. |
+| **ad-delivery-formats** | Turn one approved ad master into per-placement cuts: regenerate or reframe per ratio, lay out text inside dated safe zones, and check with overlay contact sheets. |
+| **ad-captions** | Write per-language SRT/WebVTT ad captions from the locked script and measured timing, with an optional HyperFrames burn-in layer inside the placement safe zone. |
+| **ad-creative-check** | Honest pre-spend pass/fail/needs-human checklist for a finished ad cut: reveal, logo, opening, safe zone, claims, speech, loudness and disclosure; no performance prediction. |
+| **ad-performance-loop** | Rank a user-exported ad results CSV by variant (hook rate, CTR, CVR, CPA) within the account, flag fatigue, and draft the next variant matrix. |
+
 ### Ads, UGC and trend formats
 
 | Skill | Summary |
@@ -143,7 +174,7 @@ The workspace ships **68 skills**. Leaf skills are independent; declared orchest
 | **seedance-motion-design** | Write Seedance 2.5 motion-design prompts while routing exact typography and UI to deterministic post graphics and synthesized visual layers to Seedream. |
 | **seedance-effects-studio** | Orchestrator: pick one of 45 named video effects (street colossus, incline, clones, melting, world morphing, eyes in, smash and grab and more), fit your photo or clip to the effect's recipe, write the Seedance 2.5 prompt, run prompt-review and a 480p draft through ark-mcp, inspect it against the recipe's checks, and ask before any final. Twelve recipes are probed; the rest are labelled untested. |
 | **seedance-frame-break** | Write and QA Seedance 2.5 frame-break pop-out prompts where the subject is drawn over two fixed black bars, with a locked camera, staged break-outs, a product-hero variant, failure repairs and an all-frames pixel check of bar motion and overlap. |
-| **byteplus-katana** | Plans a reference edit rebuilt with your own characters, products or clothing: measured edit list, beat grid and motion inventory, varied generated shots for people-led formats or animated asset layers for product formats, a code-built type-and-effects layer, a credit budget and per-segment refinement. |
+| **reference-edit-rebuild** | Plans a reference edit rebuilt with your own characters, products or clothing: measured edit list, beat grid and motion inventory, varied generated shots for people-led formats or animated asset layers for product formats, a code-built type-and-effects layer, a credit budget and per-segment refinement. |
 
 ### Seedance video prompting
 
@@ -203,12 +234,14 @@ The workspace ships **68 skills**. Leaf skills are independent; declared orchest
 | **seedream-location-asset** | Writes structured Seedream prompts for cinematic location assets, reusable environment sheets, day and night lighting-state locks, and same-place environment plates for video restyles. |
 | **seedream-storyboard** | Create, revise, and optionally generate production-ready cinematic storyboards—from one hero panel with alternatives to a multi-panel continuity sequence—with BytePlus Seedream. Boards are planning and review artifacts, never Seedance references. |
 | **seedream-handcrafted-3d** | Writes handcrafted stylized 3D character and material-study prompts with painterly surfaces, tactile fabrics, reference roles, and visual QA. |
+| **seedream-product-shot** | Preset Seedream product shots (studio white, color pop, lifestyle, plinth, marketplace backgrounds) bound to the approved product, with label, brand-color and white-background QA. |
 | **seedream-woodblock-poster** | Writes engraved woodblock-style poster and art-series prompts with reference roles, distinct subjects, shared print treatment, and visual QA. |
 
 ### Deterministic graphics
 
 | Skill | Summary |
 |---|---|
+| **static-ad-batch** | Plan angle x layout x ratio static ad grids from supported facts and the brand kit as HTML templates, rendered deterministically with contact sheet and provenance. |
 | **html-graphic-render** | Author and render exact-size static posters, cards, product grids, UI, and transparent overlays from one project-local HTML entrypoint with CSS/SVG dependencies, exact-copy checks, and schema-valid provenance. |
 
 ### Seed Audio and localization
@@ -264,7 +297,7 @@ The workspace ships **68 skills**. Leaf skills are independent; declared orchest
 
 | Source | Type | Skills |
 |---|---|---|
-| **Project-authored** | `local` | All `seedance-*`, `seedream-*`, `seed-audio-*`, `ugc-*`, `tig-*` and `audio-*` skills, plus `brief-intake`, `film-production`, `template-factory`, `prompt-review`, `byteplus-katana`, `omnihuman-prompt-20`, `html-graphic-render`, `color-grade-palettes`, `source-subject-map`, `ffmpeg-scene-transitions`, `ffmpeg-side-by-side-comparison`, `ark-mcp`, `lark-showcase-aigc`, `showcase-html`, `media-review`, `update` |
+| **Project-authored** | `local` | All `seedance-*`, `seedream-*`, `seed-audio-*`, `ugc-*`, `ad-*`, `tig-*` and `audio-*` skills, plus `brand-kit`, `product-intake`, `static-ad-batch`, `brief-intake`, `film-production`, `template-factory`, `prompt-review`, `reference-edit-rebuild`, `omnihuman-prompt-20`, `html-graphic-render`, `color-grade-palettes`, `source-subject-map`, `ffmpeg-scene-transitions`, `ffmpeg-side-by-side-comparison`, `ark-mcp`, `lark-showcase-aigc`, `showcase-html`, `media-review`, `update` |
 | **HyperFrames (vendored)** | `github: heygen-com/hyperframes` | `hyperframes`, `hyperframes-*` and `general-video`; never installed globally or on demand |
 | **FFmpeg (vendored)** | `github: digitalsamba/claude-code-video-toolkit` | `ffmpeg` |
 

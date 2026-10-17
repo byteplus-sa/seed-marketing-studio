@@ -2,21 +2,21 @@
 name: template-factory
 description: >-
   Reverse-engineer a reference video ("pin") into reproducible AIGC output.
-  Orchestrates pin intake (prefer a public HTTPS URL seed_understand can watch;
+  Orchestrates pin intake (a public HTTPS URL seed_understand can watch first;
   download and media_upload only when unusable), video and audio breakdown,
   per-beat motion analysis, keyframes, a planning-only sketch storyboard, optional
   element sheets
-  (Seedream for invented identity; web/user download-first for authorized real
-  brands/logos/products; deterministic HTML-entrypoint graphics for exact posters, cards,
-  screens, product layouts, and overlays), and a Seedance 2.5 video —
-  generation-bound prompts through prompt-review; reviewed in a HyperFrames
-  Studio project. Explicit orchestrator composing ark-mcp (including
+  (Seedream for invented identity; download-first for authorized real
+  brands/logos/products; deterministic HTML graphics for exact
+  posters, cards, screens and overlays), and a Seedance 2.5 video —
+  generation-bound prompts through prompt-review; reviewed in HyperFrames
+  Studio. Explicit orchestrator composing ark-mcp (including
   seed_audio_understand), seedream-storyboard,
   seedance-prompt-25, prompt-review, html-graphic-render, hyperframes,
   and ffmpeg; never calls the Ark REST API. Use to
   replicate style/composition/grammar, build a reusable template, or turn a
   cited brand ad, Pinterest pin, or other reference video into elements and
-  video.
+  video, or quick-clone an ad's structure onto a product.
 ---
 
 # Template Factory
@@ -213,6 +213,15 @@ Every write to the shared registry goes through the lock in
 `.agents/scripts/operation_store.py`. See
 [multi-pin batches](references/long-pins-and-multi-clip.md#multi-pin-batches).
 
+### Quick structure clone
+
+When the user wants one ad with "the same structure as this ad, my product"
+rather than a reusable template, follow
+[quick structure clone](references/quick-structure-clone.md): beat sheet
+(hook, pacing, scene jobs, CTA flow) → mapped onto the product card → one
+Seedance prompt per beat. It skips keyframes, the storyboard and the recipe,
+never prompt-review, registration or rights checks.
+
 ### Still / poster track
 
 Reference stills (photos, key visuals) run as a parallel poster track, not as
@@ -370,6 +379,7 @@ Skill (committed):
 │   ├── template-schema.json
 │   ├── slot-mapping.md
 │   ├── long-pins-and-multi-clip.md
+│   ├── quick-structure-clone.md
 │   └── templates/
 │       ├── index.json
 │       └── <template-id>/template.md + template.json
@@ -385,6 +395,7 @@ projects/<project>/
 ├── project.md, task_ids.json, ref_cache.json
 ├── templates/<template-id>/
 │   ├── analysis.json, analysis.vNN.json, breakdown.md
+│   ├── beat-sheet.md (quick structure clone only)
 │   ├── audio-analysis.json, audio-analysis.md
 │   ├── motion-review.json, motion-review.md (only for generated-take comparison)
 │   └── keyframes/

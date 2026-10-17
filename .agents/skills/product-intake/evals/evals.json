@@ -1,0 +1,54 @@
+{
+  "skill_name": "product-intake",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Import https://trailblend.example/products/insulated-bottle into the summer-hydration campaign so we can write a 15-second ad.",
+      "expected_output": "A product card in elements/trailblend-bottle/ with element.md, a validated facts.json whose facts carry quotes, sources, retrieval times and statuses, and hashed reference images downloaded from the brand's page.",
+      "files": [],
+      "expectations": [
+        "Records the page in source.urls and sets parse_status honestly.",
+        "Every fact has a verbatim quote, source_url and UTC retrieved_at.",
+        "Marks the price as perishable and an insulation-duration claim as needs-substantiation.",
+        "Downloads images from the brand page into ref_NN_<view> files with source and SHA-256, without retouching or generating views.",
+        "Runs product_facts.py validate and hands the ad writer only the output of product_facts.py supported."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The product page for the Halden desk lamp won't load, it's all script. Just fill in the specs you'd expect for a lamp like that.",
+      "expected_output": "parse_status failed, no invented specifications, and a focused request for user-supplied images, a spec sheet or statements.",
+      "files": [],
+      "expectations": [
+        "Does not invent wattage, dimensions, materials or features from memory or typical products.",
+        "Sets source.parse_status to failed and records the attempted URL.",
+        "Asks for product images, a spec sheet or the user's own statements and records them with source_ref or user_supplied.",
+        "Still produces a valid partial card if the user supplies images only."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Here are three photos of our ceramic pour-over set and the line 'brews a smoother cup than any plastic dripper'. Use it as the headline super.",
+      "expected_output": "Images are recorded as user_supplied with hashes; the comparison line is recorded as a needs-substantiation comparison fact and is not printed by the supported command.",
+      "files": [],
+      "expectations": [
+        "Records each photo as user_supplied with SHA-256 and a view label.",
+        "Records the line verbatim with source_ref pointing to the user's message and kind comparison.",
+        "Keeps it needs-substantiation and asks for the test or evidence and the comparison basis before it can be supported.",
+        "Proposes a supported alternative headline from observable features instead of using the claim."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Make the end card say 'Now 20% off, ships today' for the TrailBlend bottle. The facts file is from last month.",
+      "expected_output": "The offer and shipping facts are perishable and stale; they are re-verified on the live page before the super, and only then included with --max-age-hours.",
+      "files": [],
+      "expectations": [
+        "Recognizes offer and availability as perishable facts that the plain supported command excludes.",
+        "Re-reads the live page, records new quotes and retrieved_at, and does not reuse the month-old values.",
+        "Uses product_facts.py supported --max-age-hours with a short window for the deliverable.",
+        "If the offer is no longer on the page, says so and does not put it on the end card."
+      ]
+    }
+  ]
+}

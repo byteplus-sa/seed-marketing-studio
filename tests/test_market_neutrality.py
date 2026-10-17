@@ -7,7 +7,8 @@ SKILLS = ROOT / ".agents" / "skills"
 CONTRACTS = ROOT / ".agents" / "contracts"
 BIASED_TERMS = re.compile(
     r"\b(filipino|filipina|philippines?|pinoy|pinay|tagalog|taglish|manila|cebu|"
-    r"morena|teleserye|sampal|kabit|barong|unilab|unilever|jollibee|puregold)\b",
+    r"morena|teleserye|sampal|kabit|barong|unilab|unilever|jollibee|puregold|"
+    r"paksiw|adobo|sinigang|lechon|calamansi|jeepney|barangay|lola|lolo)\b",
     re.IGNORECASE,
 )
 EXCLUDED_SKILLS = re.compile(

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ad Performance Loop"
+  short_description: "Rank exported ad results by variant and draft the next test"
+  default_prompt: "Use $ad-performance-loop to ingest this ad results export, rank the variants by my KPI and draft the next matrix."

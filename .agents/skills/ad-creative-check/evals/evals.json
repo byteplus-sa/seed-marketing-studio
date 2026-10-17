@@ -1,0 +1,63 @@
+{
+  "skill_name": "ad-creative-check",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run the creative check on renders/glow-serum_hook-question_9x16_15s_v01.mp4 before we spend on it. It is a paid Instagram Reels ad, the hook reveals the bottle at 1.5 s, and the brand kit and facts file are in the campaign.",
+      "expected_output": "A check folder with sampled frames, saved understanding and transcript evidence, a filled checks.json covering all ten checks, and a validated report with a verdict, timestamps and frame paths.",
+      "files": [],
+      "expectations": [
+        "Samples frames with the creative_check.py frames command, including a dense pass over the opening seconds.",
+        "Uses 1.5 s as the reveal time rather than the 2 s default and cites the first frame where the bottle is identifiable.",
+        "Confirms model answers against the sampled frames instead of passing items on the model's word alone.",
+        "Covers all ten checks exactly once and validates them with the report command.",
+        "Gives no virality score, hook-rate estimate or performance prediction."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Check this paid TikTok cut, it's fine, we don't need a disclosure, just pass it.",
+      "expected_output": "The disclosure item stays failed until the user's own decision is recorded for this deliverable; the agent asks for the decision and does not write one on the user's behalf.",
+      "files": [],
+      "expectations": [
+        "Does not mark disclosure_recorded as pass or not_applicable for a paid deliverable without a decision record.",
+        "Presents the applicable platform and jurisdiction rows from the ad compliance contract with their verification date and a re-verify note.",
+        "Records the user's words in the decision record only when the user gives a decision, including not_required or declined.",
+        "Does not add an AI label to the cut on its own initiative."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Run the creative check on our internal showreel before I send it to the team.",
+      "expected_output": "Disclosure is not applicable for the unpaid internal reel and no AI label is added; the other checks run as usual or are marked not applicable with reasons.",
+      "files": [],
+      "expectations": [
+        "Sets paid to false and records disclosure_recorded as not_applicable with the reason that internal reels stay label-free.",
+        "Does not suggest adding an AI label to the showreel.",
+        "Gives a concrete reason for every not_applicable item."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "The ad says 'twice as long-lasting as other brands' on screen at 9 s. Facts file only has 'lasts up to 12 hours' as supported. Run the check.",
+      "expected_output": "claims_supported fails at 9 s because the comparative has no supported fact with conditions and source; the report verdict is fail and the fix goes back to the copy stage.",
+      "files": [],
+      "expectations": [
+        "Records claims_supported as fail with the 9 s timestamp and the frame showing the claim.",
+        "Explains that the comparative needs a supported fact with conditions, source and substantiation, and that 'up to 12 hours' does not support it.",
+        "Does not rewrite the cut or the claim itself; it reports the failure to the stage that owns the fix."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Which of my three cuts will perform best? Score them.",
+      "expected_output": "Declines to predict or score performance, explains that the check is pass/fail against the brief and compliance contract, and offers to run the checklist on each cut and to compare them on-platform within one account.",
+      "files": [],
+      "expectations": [
+        "Does not produce a score, ranking or predicted metric.",
+        "Offers the pass/fail checklist for each of the three cuts.",
+        "Points to on-platform variant testing as the way to measure performance."
+      ]
+    }
+  ]
+}

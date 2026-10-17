@@ -15,6 +15,7 @@
 !**/library/**/*.mp3
 
 /projects
+/library
 /plans
 /docs
 

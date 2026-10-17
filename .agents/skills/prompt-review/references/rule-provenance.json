@@ -22,6 +22,8 @@
     "prompt.positive_direction", "prompt.parameters_in_request",
     "prompt.exact_counts", "prompt.hand_frame_side",
     "video.text_free", "dialogue.speech_budget",
-    "dialogue.register"
+    "dialogue.register", "ad.claims_supported",
+    "ad.no_fabricated_testimonial", "ad.disclosure_recorded",
+    "brand.copy_rules", "ad.safe_zone"
   ]
 }

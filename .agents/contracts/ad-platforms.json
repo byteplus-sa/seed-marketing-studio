@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-17",
+  "reverify_before_use": true,
+  "placements": [
+    {
+      "id": "tiktok-in-feed",
+      "platform": "TikTok",
+      "placement": "In-feed auction ad (non-Spark)",
+      "status": "partial",
+      "aspect_ratio": "9:16",
+      "accepted_aspect_ratios": ["9:16", "16:9", "1:1"],
+      "recommended_resolution": null,
+      "min_resolution": {"width": 540, "height": 960},
+      "duration": {"min_s": null, "max_s": 600, "recommended": null},
+      "safe_zone": {
+        "top": null,
+        "bottom": null,
+        "left": null,
+        "right": null,
+        "source": "Published only as downloadable template files (standard left-to-right, Arabic right-to-left, each with and without anchor); the size depends on ratio, caption length and extra formats. No fractions are published."
+      },
+      "conflicts": [
+        "The June 2026 page allows up to 10 minutes; older TikTok spec pages list 5-60 s. Use the current page and re-check before delivery."
+      ],
+      "notes": [
+        "Vertical 9:16 is recommended; 16:9 needs at least 960x540 and 1:1 at least 640x640.",
+        "File types mp4, mov, mpeg, 3gp, avi; at most 500 MB; bitrate at least 516 kbps.",
+        "Ad caption text is rendered by the platform in white with a fixed font; it is not part of the video.",
+        "No recommended resolution is published on this page; 1080x1920 is common practice, not an official value.",
+        "Use the right-to-left template for right-to-left markets."
+      ],
+      "source_url": "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?redirected=1",
+      "verified_on": "2026-10-17"
+    },
+    {
+      "id": "meta-instagram-reels",
+      "platform": "Meta",
+      "placement": "Instagram Reels",
+      "status": "verified",
+      "aspect_ratio": "9:16",
+      "accepted_aspect_ratios": ["9:16"],
+      "recommended_resolution": [1440, 2560],
+      "min_resolution": {"width": 500, "height": null},
+      "duration": {"min_s": 0, "max_s": 900, "recommended": null},
+      "safe_zone": {
+        "top": 0.14,
+        "bottom": 0.35,
+        "left": 0.06,
+        "right": 0.06,
+        "source": "Meta Ads Guide design recommendation: keep text, logos and key elements out of the top 14%, bottom 35% and 6% on each side."
+      },
+      "conflicts": [],
+      "notes": [
+        "Minimum width is 250 px for ads under 30 s and 500 px for 30 s or longer; the stricter 500 px is recorded.",
+        "Captions are optional but recommended; sound is optional but strongly recommended.",
+        "Do not use licensed music; original or royalty-free audio only.",
+        "H.264, square pixels, fixed frame rate, progressive scan, stereo AAC at 128 kbps or more; at most 4 GB.",
+        "Primary text recommendation: 44 characters (platform UI text, not video text)."
+      ],
+      "source_url": "https://www.facebook.com/business/ads-guide/update/video/instagram-reels",
+      "verified_on": "2026-10-17"
+    },
+    {
+      "id": "meta-instagram-stories",
+      "platform": "Meta",
+      "placement": "Instagram Stories",
+      "status": "verified",
+      "aspect_ratio": "9:16",
+      "accepted_aspect_ratios": ["9:16"],
+      "recommended_resolution": [1440, 2560],
+      "min_resolution": {"width": 250, "height": null},
+      "duration": {"min_s": 1, "max_s": 3600, "recommended": {"min_s": null, "max_s": 15}},
+      "safe_zone": {
+        "top": 0.14,
+        "bottom": 0.35,
+        "left": 0.06,
+        "right": 0.06,
+        "source": "Meta Ads Guide design recommendation: leave roughly 14% top, 35% bottom and 6% each side free of text, logos and key elements."
+      },
+      "conflicts": [],
+      "notes": [
+        "Videos under 16 s play in full; 16 s or longer may be split into up to three Stories cards.",
+        "Aspect ratio tolerance is 1%.",
+        "Captions are optional but recommended; sound is optional but recommended.",
+        "Primary text recommendation: 125 characters (platform UI text, not video text)."
+      ],
+      "source_url": "https://www.facebook.com/business/ads-guide/update/video/instagram-story",
+      "verified_on": "2026-10-17"
+    },
+    {
+      "id": "meta-feed",
+      "platform": "Meta",
+      "placement": "Facebook and Instagram Feed",
+      "status": "unverified",
+      "aspect_ratio": "4:5",
+      "accepted_aspect_ratios": ["4:5", "1:1"],
+      "recommended_resolution": null,
+      "min_resolution": null,
+      "duration": {"min_s": null, "max_s": null, "recommended": null},
+      "safe_zone": {
+        "top": null,
+        "bottom": null,
+        "left": null,
+        "right": null,
+        "source": "Not verified: the feed spec pages required a login on 2026-10-17."
+      },
+      "conflicts": [
+        "4:5 and 1:1 are widely cited for feed but were not confirmed on an official page on 2026-10-17."
+      ],
+      "notes": [
+        "Confirm ratio, resolution, duration and safe zone in the Meta Ads Guide before delivering a feed cut."
+      ],
+      "source_url": null,
+      "verified_on": "2026-10-17"
+    },
+    {
+      "id": "youtube-shorts",
+      "platform": "YouTube",
+      "placement": "Shorts ads",
+      "status": "partial",
+      "aspect_ratio": "9:16",
+      "accepted_aspect_ratios": ["9:16", "16:9", "1:1"],
+      "recommended_resolution": null,
+      "min_resolution": null,
+      "duration": {"min_s": null, "max_s": 180, "recommended": {"min_s": 10, "max_s": 60}},
+      "safe_zone": {
+        "top": null,
+        "bottom": null,
+        "left": null,
+        "right": null,
+        "source": "No fractions published. The page describes a right-hand panel (like, dislike, comment, share) and a mobile CTA overlay card; keep key elements away from the right edge and the lower area."
+      },
+      "conflicts": [
+        "1080x1920 is often quoted for Shorts but is not stated on the cited page on 2026-10-17."
+      ],
+      "notes": [
+        "Only the first 60 s play in the Shorts feed; an overlay appears at 50 s.",
+        "Action-oriented ads: 10-30 s vertical. Video Reach: 6-60 s; other campaign types 10-60 s.",
+        "The CTA button appears at 3 s (Performance Max, App, Demand Gen) or 10 s (Video View, Video Reach).",
+        "Horizontal assets serve with blurred top and bottom bands.",
+        "The page asks advertisers to label AI-created or AI-edited assets where regulations require it."
+      ],
+      "source_url": "https://support.google.com/google-ads/answer/16041697",
+      "verified_on": "2026-10-17"
+    },
+    {
+      "id": "youtube-skippable-in-stream",
+      "platform": "YouTube",
+      "placement": "Skippable in-stream",
+      "status": "partial",
+      "aspect_ratio": "16:9",
+      "accepted_aspect_ratios": ["16:9"],
+      "recommended_resolution": null,
+      "min_resolution": null,
+      "duration": {"min_s": null, "max_s": null, "recommended": {"min_s": null, "max_s": 180}},
+      "safe_zone": {
+        "top": null,
+        "bottom": null,
+        "left": null,
+        "right": null,
+        "source": "Not published on the format page."
+      },
+      "conflicts": [
+        "The format page does not state an aspect ratio; 16:9 is the conventional landscape player ratio. Confirm before delivery."
+      ],
+      "notes": [
+        "No maximum length; under 3 minutes is recommended.",
+        "Viewers can skip after 5 s, so the brand and hook should land before 5 s."
+      ],
+      "source_url": "https://support.google.com/google-ads/answer/2375464",
+      "verified_on": "2026-10-17"
+    },
+    {
+      "id": "youtube-bumper",
+      "platform": "YouTube",
+      "placement": "Bumper",
+      "status": "partial",
+      "aspect_ratio": "16:9",
+      "accepted_aspect_ratios": ["16:9"],
+      "recommended_resolution": null,
+      "min_resolution": null,
+      "duration": {"min_s": null, "max_s": 6, "recommended": null},
+      "safe_zone": {
+        "top": null,
+        "bottom": null,
+        "left": null,
+        "right": null,
+        "source": "Not published on the format page."
+      },
+      "conflicts": [
+        "The format table lists '6 seconds (>=5 seconds minimum)'; the minimum is ambiguous and left null.",
+        "The format page does not state an aspect ratio; 16:9 is the conventional landscape player ratio. Confirm before delivery."
+      ],
+      "notes": [
+        "Non-skippable."
+      ],
+      "source_url": "https://support.google.com/google-ads/answer/2375464",
+      "verified_on": "2026-10-17"
+    }
+  ]
+}

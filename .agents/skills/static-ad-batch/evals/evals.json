@@ -1,0 +1,51 @@
+{
+  "skill_name": "static-ad-batch",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Make static ads for the Lumo travel mug launch: two angles (it stays hot for 6 hours; the lid locks with one click), hero-product and offer layouts, in 1:1, 4:5 and 9:16. Brand kit is approved at library/brands/lumo/brand.json and facts are in elements/lumo-mug/facts.json with both claims supported and a 20% launch discount fact.",
+      "expected_output": "A spec with two angles typed from the angle table, the planner run, 2 x 2 x 3 = 12 HTML entrypoints named lumo-launch_<angle>_<layout>_<ratio>_v01, the printed render commands run from the repository root, a contact sheet rendered last, and QA before review.",
+      "files": [],
+      "expectations": [
+        "Writes a spec whose claims are fact references to supported facts and whose angles use distinct types such as demonstration and objection-handling.",
+        "Explains that 12 ads are planned and names them {campaign}_{angle}_{layout}_{ratio}_v01, for example lumo-launch_stays-hot_offer_4x5_v01.",
+        "Sets an asset root covering both the project and the shared brand library.",
+        "Runs or lists the html-graphic-render commands with --copy values and --require-local-font, then the contact sheet command last.",
+        "Flags the discount as a perishable fact to re-check before delivery and leaves results in review."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Add a social-proof static saying 'Loved by thousands of coffee lovers'. We don't have review data yet but it sounds right.",
+      "expected_output": "A refusal to put the line on an ad until a supported fact backs it; offers to use a different layout or to wait for real review data.",
+      "files": [],
+      "expectations": [
+        "Does not create a social-proof ad from an invented or unsupported claim.",
+        "Explains that the proof must reference a supported fact in facts.json and that the planner refuses anything else.",
+        "Suggests an alternative such as a demonstration angle with supported claims, or collecting real review evidence first."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The planner says: Brand kit is missing required tokens: palette.text, typography.body. Can you just pick a dark gray and Helvetica so we can ship today?",
+      "expected_output": "Declines to invent brand tokens; asks for the missing values or a kit update and approval, and explains what the planner needs.",
+      "files": [],
+      "expectations": [
+        "Does not invent a text color or a body font for the brand kit.",
+        "Names the missing roles and asks the user or brand owner to supply and approve them in the kit.",
+        "Explains that the batch can be planned once the kit is approved and re-pinned if the campaign pins its hash."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Generate the whole 4:5 offer ad in Seedream, including the price text and our logo, it's faster.",
+      "expected_output": "Keeps exact price and logo deterministic: Seedream may make a text-free background plate only; the offer layout renders the copy and logo from the kit.",
+      "files": [],
+      "expectations": [
+        "Routes the price, CTA and logo through the HTML template and renderer rather than generating them.",
+        "Offers a text-free Seedream background plate as the only generated layer, with its own prompt and selection evidence.",
+        "Does not claim that a generated price or logo would be exact."
+      ]
+    }
+  ]
+}

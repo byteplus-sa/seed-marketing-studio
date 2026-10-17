@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "brand-kit.schema.json",
+  "title": "Brand kit",
+  "description": "One machine-readable brand record shared across campaigns. Unknown values stay null and are listed in missing; extracted values are draft until approved under the project approval mode.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "brand_id",
+    "name",
+    "source",
+    "logos",
+    "palette",
+    "typography",
+    "voice",
+    "copy_rules",
+    "cta_style",
+    "imagery",
+    "disclosure",
+    "missing",
+    "status",
+    "approval"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "brand_id": {"$ref": "#/$defs/kebab"},
+    "name": {"type": ["string", "null"], "minLength": 1},
+    "source": {
+      "type": "object",
+      "required": ["method", "urls", "retrieved_at", "authorized_by"],
+      "properties": {
+        "method": {"enum": ["website", "user_files", "manual", "mixed"]},
+        "urls": {"type": "array", "items": {"$ref": "#/$defs/web_url"}, "uniqueItems": true},
+        "retrieved_at": {"$ref": "#/$defs/timestamp_or_null"},
+        "authorized_by": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "description": "User statement or agreement reference that authorizes use of this brand's identity."
+        }
+      },
+      "additionalProperties": false
+    },
+    "logos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "file", "sha256", "source"],
+        "properties": {
+          "role": {"enum": ["primary", "mark", "wordmark", "mono", "inverse"]},
+          "file": {"$ref": "#/$defs/relative_file"},
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "source": {"$ref": "#/$defs/asset_source"},
+          "min_height_px": {"type": ["integer", "null"], "minimum": 1},
+          "clear_space_ratio": {"type": ["number", "null"], "minimum": 0},
+          "allowed_backgrounds": {
+            "type": "array",
+            "items": {"enum": ["light", "dark", "photo", "brand-color"]},
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "palette": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "hex", "role"],
+        "properties": {
+          "name": {"$ref": "#/$defs/kebab"},
+          "hex": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+          "role": {"enum": ["primary", "secondary", "accent", "text", "background", "neutral"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "typography": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "family", "file", "sha256", "license"],
+        "properties": {
+          "role": {"enum": ["headline", "body", "cta", "caption", "legal"]},
+          "family": {"type": "string", "minLength": 1},
+          "weight": {"type": ["integer", "null"], "minimum": 1, "maximum": 1000},
+          "file": {"oneOf": [{"$ref": "#/$defs/relative_file"}, {"type": "null"}]},
+          "sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+          "source": {"oneOf": [{"$ref": "#/$defs/asset_source"}, {"type": "null"}]},
+          "license": {
+            "type": ["string", "null"],
+            "minLength": 1,
+            "description": "License name or agreement reference permitting use in rendered ads."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "voice": {
+      "type": "object",
+      "required": ["tone", "reading_level", "do", "dont"],
+      "properties": {
+        "tone": {"$ref": "#/$defs/string_list"},
+        "reading_level": {"type": ["string", "null"], "minLength": 1},
+        "do": {"$ref": "#/$defs/string_list"},
+        "dont": {"$ref": "#/$defs/string_list"}
+      },
+      "additionalProperties": false
+    },
+    "copy_rules": {
+      "type": "object",
+      "required": ["banned_words", "required_lines", "trademark_marks"],
+      "properties": {
+        "banned_words": {"$ref": "#/$defs/string_list"},
+        "required_lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["text", "when"],
+            "properties": {
+              "text": {"type": "string", "minLength": 1},
+              "when": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "trademark_marks": {
+          "type": "object",
+          "additionalProperties": {"enum": ["®", "™", "℠"]}
+        }
+      },
+      "additionalProperties": false
+    },
+    "cta_style": {
+      "type": "object",
+      "required": ["shape", "case", "verbs"],
+      "properties": {
+        "shape": {"enum": ["pill", "rect", "text", null]},
+        "case": {"enum": ["title", "upper", "sentence", null]},
+        "verbs": {"$ref": "#/$defs/string_list"}
+      },
+      "additionalProperties": false
+    },
+    "imagery": {
+      "type": "object",
+      "required": ["style_sentence", "avoid"],
+      "properties": {
+        "style_sentence": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "description": "One visual-style sentence for Seedream Style or Seedance visual style lines. Never names or describes the logo."
+        },
+        "avoid": {"$ref": "#/$defs/string_list"}
+      },
+      "additionalProperties": false
+    },
+    "disclosure": {
+      "type": "object",
+      "required": ["ai_label_text", "placement"],
+      "description": "Used only when a paid deliverable's recorded disclosure decision requires an AI label; never applied by default.",
+      "properties": {
+        "ai_label_text": {"type": ["string", "null"], "minLength": 1},
+        "placement": {"enum": ["end-card", "lower-third", "caption", "description", null]}
+      },
+      "additionalProperties": false
+    },
+    "missing": {
+      "type": "array",
+      "description": "Dotted paths of values that are unknown and left null or empty rather than invented.",
+      "items": {"type": "string", "pattern": "^[a-z_]+(\\.[a-z0-9_]+)*$"},
+      "uniqueItems": true
+    },
+    "status": {"enum": ["draft", "approved"]},
+    "approval": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["mode", "actor", "decision_ref", "decided_at"],
+          "properties": {
+            "mode": {"enum": ["approve_for_me", "ask_for_approval"]},
+            "actor": {"enum": ["agent", "user"]},
+            "decision_ref": {"type": "string", "minLength": 1},
+            "decided_at": {"type": "string", "format": "date-time"}
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "approved"}}, "required": ["status"]},
+      "then": {"properties": {"approval": {"type": "object"}, "name": {"type": "string"}}}
+    }
+  ],
+  "$defs": {
+    "kebab": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 64},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "web_url": {"type": "string", "pattern": "^https://[^\\s]+$"},
+    "timestamp_or_null": {"type": ["string", "null"], "format": "date-time"},
+    "relative_file": {"type": "string", "pattern": "^assets/[A-Za-z0-9._/-]+$", "not": {"pattern": "(^|/)\\.\\.(/|$)"}},
+    "asset_source": {
+      "type": "string",
+      "pattern": "^(https://[^\\s]+|user_supplied)$",
+      "description": "Brand-owned HTTPS URL the file was downloaded from, or user_supplied."
+    },
+    "string_list": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "skill_name": "ad-variant-matrix",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our approved 15-second hero ad for a reusable water bottle is s01_sh010 take t02. Make variants: three new hooks, two other presenters (we have Virtual Portraits vp-lena and vp-omar), and 4:5 plus 1:1 versions. Budget is 60 USD; a 15 s 720p swap or hook draft costs about 4 USD on our account, reframes are free.",
+      "expected_output": "A one-axis-at-a-time matrix with hero values, eight variant rows, deterministic names, a cost preview of the provider rows against the 60 USD budget, per-axis routing and the prompt-review and registration gates per row.",
+      "files": [],
+      "expectations": [
+        "Uses one_axis_at_a_time and does not silently produce a full factorial.",
+        "Asks for or records the hero's current hook, talent and ratio values and the hero take's SHA-256 before approving the matrix.",
+        "Routes hooks to a regenerated opening beat spliced in Studio, presenters to Object Swap with Virtual Portrait asset:// references, and ratios to delivery reframes with no provider step.",
+        "Runs variant_matrix.py plan and cost with explicit unit costs and reports the total against the budget before any spend.",
+        "States that each provider row needs its own frozen prompt, inline prompt-review bound to the request hash and prepare_request.py --register before submission, starting with a 480p draft."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Do every combination: 4 hooks x 3 talents x 3 languages x 3 ratios for the hero ad. Budget 50 USD, max 20 variants.",
+      "expected_output": "Plans the explicitly requested full factorial, shows that it exceeds the variant cap and budget, and refuses to proceed or trim silently, offering concrete reductions.",
+      "files": [],
+      "expectations": [
+        "Accepts full_factorial because the user explicitly asked for every combination.",
+        "Reports the expanded row count from the plan (108 rows when the hero's values are among the listed values, more if they are not) and that it exceeds max_variants 20.",
+        "Treats the cost command's refusal as a stop and does not drop rows silently.",
+        "Proposes concrete reductions such as one axis at a time or fewer values, and asks the user to choose.",
+        "Notes that combined rows run their steps in order (talent swap, hook opening, dub, reframe), each with its own review and registry entry."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I like the draft we generated yesterday, it's still in review. Spin up five hook variants from it right now and submit them.",
+      "expected_output": "Refuses to build a matrix on an unapproved hero, explains the approval step under the project approval mode, and does not submit anything.",
+      "files": [],
+      "expectations": [
+        "Identifies that a take in review is not an approved hero.",
+        "Applies the project approval_mode: in approve_for_me the agent may QA and approve the take with a hash-bound decision first; in ask_for_approval it asks the user to confirm.",
+        "Does not submit any generation before the matrix is approved and each row is reviewed and registered.",
+        "Keeps hook variants to the opening beat and preserves facts and CTA."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Make Spanish and German versions of the approved hero, and add a 'now 30% off' line in the German one because that market has a sale.",
+      "expected_output": "Plans two language rows routed to dubbing and captions, but treats the new offer line as a script change that needs a supported fact and its own approval rather than part of a language variant.",
+      "files": [],
+      "expectations": [
+        "Routes language rows to audio-dubbing and seedance-prompt-25-dialogue with ad-captions per language.",
+        "Translates the locked script only and flags the added offer as a new claim needing a supported source and approval per the ad-compliance contract.",
+        "Keeps on-screen text out of generated footage and lays out captions or supers in post per ratio.",
+        "Does not mix a script change into a one-axis language variant without saying so."
+      ]
+    }
+  ]
+}

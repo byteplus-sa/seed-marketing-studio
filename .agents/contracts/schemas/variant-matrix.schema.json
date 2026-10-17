@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ad variant matrix",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "status",
+    "campaign",
+    "concept",
+    "hero",
+    "axes",
+    "strategy",
+    "max_variants",
+    "budget_usd"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "approved"
+      ]
+    },
+    "campaign": {
+      "$ref": "#/$defs/slug"
+    },
+    "concept": {
+      "$ref": "#/$defs/slug"
+    },
+    "hero": {
+      "type": "object",
+      "required": [
+        "shot_id",
+        "take",
+        "sha256",
+        "values"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "type": "string",
+          "minLength": 1
+        },
+        "shot_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "take": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decision_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "values": {
+          "$ref": "#/$defs/axisValues"
+        }
+      }
+    },
+    "axes": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/axis"
+      },
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "$ref": "#/$defs/value"
+        }
+      }
+    },
+    "strategy": {
+      "enum": [
+        "one_axis_at_a_time",
+        "full_factorial"
+      ]
+    },
+    "max_variants": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "budget_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "unit_cost_usd": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/axis"
+      },
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99
+    },
+    "naming": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_{}-]+$"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 48
+    },
+    "axis": {
+      "enum": [
+        "hook",
+        "talent",
+        "product",
+        "outfit",
+        "location",
+        "language",
+        "ratio"
+      ]
+    },
+    "value": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9:._-]*$",
+      "maxLength": 48
+    },
+    "axisValues": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/axis"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/value"
+      }
+    }
+  }
+}

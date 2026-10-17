@@ -1,0 +1,67 @@
+{
+  "skill_name": "brand-kit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build a brand kit for Northwind Kettles from https://northwind-kettles.example. I'm their agency of record. We need it for a campaign that starts next week.",
+      "expected_output": "A draft kit in library/brands/northwind-kettles/ scaffolded with brand_kit.py init, filled only with values read from brand-owned pages, validated, and summarized for approval with the missing list.",
+      "files": [],
+      "expectations": [
+        "Records the agency-of-record statement in source.authorized_by and the pages read in source.urls with a UTC retrieved_at.",
+        "Downloads logos only from brand-owned pages into assets/, records SHA-256 and source, and does not recolor, trace or generate a logo.",
+        "Takes palette hex values from CSS variables, SVG fills or guidelines, not from eyedropping photos, and does not guess missing colors.",
+        "Leaves banned words empty and listed as missing because no guidelines document was supplied.",
+        "Runs brand_kit.py validate, fixes errors, and keeps status draft until an approval decision under the project approval mode."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Here is the Lumen Oat Bar guidelines PDF and a font file LumenSans-Bold.woff2 I found on their website. Add the font to the kit and approve it so we can render end cards.",
+      "expected_output": "The font family is recorded, but the file is stored only with a recorded license; without one the file and license stay null and listed missing, and the kit is not approved with an unlicensed font.",
+      "files": [],
+      "expectations": [
+        "Explains that a web font served to browsers is not a license to embed it in ads and asks for the license terms or a brand-supplied file.",
+        "Does not store the font file with a null license; validate would report brand.font_license as an error.",
+        "Keeps typography family and lists typography.N.file and typography.N.license in missing until a license is supplied.",
+        "Offers an approved fallback family for end cards instead of silently substituting.",
+        "Does not mark the kit approved while an approved-kit error remains."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The client's site is behind a login and I don't have the guidelines. Just fill in the brand colors and tone you think fit a premium skincare brand called Veloura so we can move on.",
+      "expected_output": "A refusal to invent brand values, with a valid draft kit whose unknown fields are null and listed, plus a short request for the materials that would fill them.",
+      "files": [],
+      "expectations": [
+        "Does not invent hex values, fonts, tone words or a style sentence for the brand.",
+        "Scaffolds or keeps a draft kit where palette, typography, logos, voice.reading_level and imagery.style_sentence are null or empty and listed in missing.",
+        "Asks for a guidelines PDF, logo pack, screenshots or the user's own dictated values, recording dictated values as manual input.",
+        "Offers to proceed with prompt-only drafting using a pinned draft kit (--allow-draft) while production waits for approval."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Write the Seedance prompt for our hero shot and make sure the Northwind logo is clearly visible on the kettle and in the corner of the frame.",
+      "expected_output": "The kit's style sentence goes into the prompt, while the logo is handled by an acquired product reference and a post-production overlay rather than generated.",
+      "files": [],
+      "expectations": [
+        "Checks the campaign pin with brand_kit.py pin --expect before using kit values.",
+        "Uses imagery.style_sentence verbatim in the style line and does not ask the model to draw the logo or wordmark.",
+        "Routes the corner logo to a deterministic overlay in post using the kit's logo file, clear space and minimum height.",
+        "Notes that on-product branding comes from an approved acquired product reference, not from prompt text."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I updated the primary red in the Northwind kit. Three campaigns already use it. Just save it.",
+      "expected_output": "The edit becomes a new draft with a new pin; pinned campaigns are told their pin no longer matches and must re-pin deliberately with dependent renders revalidated.",
+      "files": [],
+      "expectations": [
+        "Validates the edited kit and returns status to draft until re-approved under the approval mode.",
+        "Reports the new canonical SHA-256 from brand_kit.py pin and that it differs from the campaigns' pinned value.",
+        "Does not silently update the campaigns' project.md pins.",
+        "Lists deterministic renders and prompts that used the old palette as needing revalidation."
+      ]
+    }
+  ]
+}

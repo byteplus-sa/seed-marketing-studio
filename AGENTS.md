@@ -41,6 +41,9 @@ Load only the contract relevant to the current stage:
 | Requested dialogue synchronization and assembly | [Audio-video alignment](.agents/contracts/audio-video-alignment.md) |
 | Video-to-video identity references, muted source and post audio | [Video-to-video inputs](.agents/contracts/video-to-video-inputs.md) |
 | Shot plan, camera, lens, lighting, acting and other axes | [Directorial axes](.agents/contracts/seedance-reference.md) |
+| Ad claims, testimonials, brand copy rules, placement safe zone and paid-ad AI disclosure | [Ad compliance](.agents/contracts/ad-compliance.md) |
+| Ad placement specs, ratios, durations and safe zones (dated) | [Ad platforms](.agents/contracts/ad-platforms.md) |
+| Shared brand kits, talent roster and campaign pins | [Shared library](.agents/contracts/shared-library.md) |
 
 Stable validation rule IDs live in `.agents/contracts/rules.json`. Request,
 registry and review schemas live in `.agents/contracts/schemas/`.
@@ -312,6 +315,9 @@ repository maintenance unless explicitly scoped.
 | `projects/<project>/scenes/scene-NN/` | Scene manifest, keyframes and scene renders |
 | `projects/<project>/scenes/scene-NN/sNN_shNNN/` | Shot manifest, exact prompt snapshots, takes and dialogue |
 | `projects/<project>/library/` | Reusable non-shot music, SFX and ambience |
+| `projects/<project>/variants/` | `matrix.json`, `plan.json` and one folder per variant with prompts, reviews and takes |
+| `projects/<project>/performance/` | `metrics.json` and user-exported ad results; never tracked |
+| `library/brands/<brand-id>/` and `library/talent/<talent-id>/` | Workspace-level shared brand kits and approved talent, pinned by SHA-256 from `project.md`; separate from `projects/<project>/library/` and never committed |
 
 Folders and IDs use lowercase kebab-case. Scene IDs use two digits; shot/panel
 numbers use three digits with gaps of ten. Asset prefixes distinguish modality;

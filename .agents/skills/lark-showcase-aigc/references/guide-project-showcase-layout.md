@@ -56,7 +56,7 @@ cell — no provenance or process explanation:
 | Caption overlay | `Caption: “status: nag-break muna”` |
 
 Give every uploaded image a reader-facing `name` at insert time
-(`Level Up Lola – end card.jpg`), never the local filename, because the name is
+(`Level Up Grandma – end card.jpg`), never the local filename, because the name is
 shown when a reader downloads the image.
 
 ### Client-facing tone (default for this layout)

@@ -1,0 +1,51 @@
+{
+  "skill_name": "ad-performance-loop",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Here is last week's export (results.csv) for the spring-launch variants and the plan.json from the matrix. Which hook won on CPA, and what should we test next? We are thinking presenters vp-lena and vp-omar.",
+      "expected_output": "Ingests with a column mapping taken from the file's own headers, ranks by CPA within the account, reports joins and gaps, and drafts a next matrix that keeps the winning hook and tests talent.",
+      "files": [],
+      "expectations": [
+        "Builds map.json from the export's actual header names and confirms ambiguous columns instead of assuming platform defaults.",
+        "Runs ingest with --variants plan.json and reports unmatched ads, ambiguous ads and variants without data.",
+        "Ranks with --kpi cpa, lowest first, and states the impression floor and that no external benchmark is implied.",
+        "Drafts the next matrix with next-matrix --axis talent=vp-lena,vp-omar, keeping the winner's hook, and notes the hero hash must be bound to the approved winning take before planning."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "What's a good hook rate? Ours is 22%. Is that above the industry benchmark?",
+      "expected_output": "Explains hook rate, states that no official benchmark exists and vendor figures disagree, and offers a within-account comparison instead of a verdict.",
+      "files": [],
+      "expectations": [
+        "Defines hook rate as 3-second views divided by impressions.",
+        "Does not present any vendor number as an official or industry benchmark.",
+        "Offers to compare the variants against each other and the hero within the same account and dates."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The export has ad names like 'Spring promo v2 FINAL' that don't follow our naming, some cells say '--', spend is written like '1.234,50 €', and there's no reach column. Rank by CTR and tell me which ads are fatigued.",
+      "expected_output": "Sets decimal ',' in the mapping, ingests, reports every unmatched ad name without dropping it, ranks by CTR with missing values treated as missing, and reports fatigue as insufficient data without reach or frequency.",
+      "files": [],
+      "expectations": [
+        "Sets decimal to ',' in map.json and treats '--' as missing, not zero.",
+        "Lists every ad name that matches no variant and keeps its rows, ranked under the raw ad name as unmatched.",
+        "Reports fatigue status insufficient_data because neither reach nor frequency is available, instead of guessing.",
+        "Suggests re-exporting with reach or frequency and renaming future ads with the variant names."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Connect to our ads account and pull yesterday's numbers automatically, then pause the losing ads.",
+      "expected_output": "Declines platform access and account actions, asks the user to export a CSV, and offers to rank and recommend once the file is supplied.",
+      "files": [],
+      "expectations": [
+        "States that the skill has no platform API access and only reads a user-exported file.",
+        "Does not pause, edit or change any ad or account setting; leaves that to the user.",
+        "Explains which columns the export should include for the requested analysis."
+      ]
+    }
+  ]
+}

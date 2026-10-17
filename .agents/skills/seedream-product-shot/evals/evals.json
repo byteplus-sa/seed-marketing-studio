@@ -1,0 +1,67 @@
+{
+  "skill_name": "seedream-product-shot",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We have an approved prop sheet for the Lumo travel mug (elements/lumo-mug/prop_lumo-mug_sheet_v02.png) and the brand kit's primary color #2E6FD8. Give me a color-pop product shot for a 4:5 feed ad. The mug's wordmark must be readable.",
+      "expected_output": "A plate + composite plan: a Seedream I2I prompt for an empty brand-blue plate with the product slot and shadow area described, plus a deterministic composite of the authorized packshot, three samples, and QA including a target-color measurement.",
+      "files": [],
+      "expectations": [
+        "Chooses the plate + composite route because the wordmark must be legible, and does not ask Seedream to render the wordmark.",
+        "Binds the approved reference as @Image 1 and uses it only for scale and light direction in the plate prompt.",
+        "States the backdrop as a color name plus hex #2E6FD8 and does not invent other brand colors.",
+        "Uses 4:5 sizing within the Seedream pixel range and defaults to three samples.",
+        "Plans QA with white_background_check.py using --target '#2E6FD8' and a check that product colors did not shift.",
+        "Asks for an authorized alpha packshot if none exists rather than generating the label."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Make a studio-white marketplace main image for our new kettle. We don't have any photos or a prop sheet yet, just the product name.",
+      "expected_output": "A stop: no prompt is written without an approved product reference; the response asks for an authorized packshot or a prop sheet first and explains the composite route once one exists.",
+      "files": [],
+      "expectations": [
+        "Refuses to write a Text-to-Image product shot from the name alone.",
+        "Asks for an authorized packshot or an approved product reference and names the prop-sheet route as an alternative.",
+        "Notes that a clean alpha packshot on #FFFFFF can be composited deterministically without generation.",
+        "Says the target marketplace's current image rules must be re-verified before delivery and does not quote them as verified."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Here are three studio-white samples. The checker says sample t02 has matching_share 0.94 and mean_border_rgb [238, 238, 238]; t01 passes at 0.998 but the label reads 'Lumo Traval Mug'. t03 passes and the label is turned away. Which one do we pick for the marketplace?",
+      "expected_output": "t02 fails the white-background check (light gray backdrop); t01 fails label legibility because readable text differs from the reference; t03 passes with a note if the brief accepts a turned label. If the label must be readable, re-plan as a composite.",
+      "files": [],
+      "expectations": [
+        "Fails t02 on the white-background check and identifies the gray backdrop from the mean border color.",
+        "Fails t01 because readable text differs from the reference, even though the background passes.",
+        "Passes t03 only as pass-noted, conditional on the brief accepting an unreadable label.",
+        "Does not suggest re-prompting Seedream to fix the misspelled label; proposes a deterministic composite instead.",
+        "Leaves the final selection to the project approval mode rather than declaring it approved."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Write an in-use shot of our cleaning spray showing the stain completely disappearing from a white sofa in one spray.",
+      "expected_output": "An in-use prompt limited to the supported operation; the stain-removal result is treated as a claim requiring a supported fact before it is pictured.",
+      "files": [],
+      "expectations": [
+        "Asks whether a supported fact backs the one-spray stain removal result before picturing it.",
+        "Offers an in-use prompt showing the observable operation (spraying the fabric) without an unsupported before/after result.",
+        "Binds the product reference as @Image 1 and does not invent label text.",
+        "Takes the setting and any people from the brief rather than assuming a market or culture."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Run the white background check on product_lumo-mug_studio-white_t01_v01.jpg.",
+      "expected_output": "Explains that the checker reads 8-bit RGB or RGBA PNG only, asks for or converts to a PNG copy, and explains exit codes and the re-verification of marketplace rules.",
+      "files": [],
+      "expectations": [
+        "States that JPEG input is unsupported and a PNG conversion is needed before the check.",
+        "Explains the exit codes: 0 pass, 1 fail, 2 unreadable or unsupported.",
+        "Notes that the check measures only the border and visual inspection is still required."
+      ]
+    }
+  ]
+}

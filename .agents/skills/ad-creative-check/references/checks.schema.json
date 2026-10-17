@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ad-creative-checks.schema.json",
+  "title": "Ad Creative Check",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "deliverable_id",
+    "video",
+    "video_sha256",
+    "duration_s",
+    "paid",
+    "placement",
+    "checks"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "deliverable_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_.-]*$"
+    },
+    "video": {
+      "type": "string",
+      "minLength": 1
+    },
+    "video_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "duration_s": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "paid": {
+      "type": "boolean"
+    },
+    "placement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reveal_time_s": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "opening_window_s": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "loudness_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "integrated_lufs",
+        "true_peak_dbtp",
+        "tolerance_lu"
+      ],
+      "properties": {
+        "integrated_lufs": {
+          "type": "number"
+        },
+        "true_peak_dbtp": {
+          "type": "number"
+        },
+        "tolerance_lu": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/check"
+      }
+    }
+  },
+  "$defs": {
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "status",
+        "evidence"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "product_reveal",
+            "logo_legible",
+            "opening_change",
+            "cta_safe_zone",
+            "sound_off_readable",
+            "claims_supported",
+            "brand_copy",
+            "speech_intelligible",
+            "loudness_target",
+            "disclosure_recorded"
+          ]
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "fail",
+            "needs_human",
+            "not_applicable"
+          ]
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timestamps": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "frames": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "measured": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "integrated_lufs",
+            "true_peak_dbtp"
+          ],
+          "properties": {
+            "integrated_lufs": {
+              "type": "number"
+            },
+            "true_peak_dbtp": {
+              "type": "number"
+            }
+          }
+        },
+        "disclosure_record": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
