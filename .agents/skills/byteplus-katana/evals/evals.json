@@ -1,0 +1,57 @@
+{
+  "skill_name": "byteplus-katana",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Here is our own 12-second 9:16 product-launch motion-design edit with a beat-driven soundtrack we licensed. Rebuild it for our new sneaker (3 product photos) and our mascot Kiko, keeping the cuts on the beat.",
+      "expected_output": "A Rebuild Plan with a measured EDL including a per-segment motion inventory, a beat grid with per-cut millisecond offsets, a slot map, a route table that defaults to motion_layout in HyperFrames, prepared cutout layers, a kept-or-replaced audio route citing the licence, and the assembly check; no paid generation unless a recorded reason exists.",
+      "files": [],
+      "assertions": [
+        "Cut times and the beat grid come from measurement (scene detection and audio analysis), not from description alone.",
+        "Each segment lists its animated layers with property, timing and easing as a motion inventory.",
+        "Segments buildable from photos, cutouts, type and shapes are routed to motion_layout; any fresh_generation segment carries a recorded reason.",
+        "Product and mascot photos are placed as unaltered pixels with inspected cutouts, and on-screen copy is deterministic and exact.",
+        "The plan is returned to the caller, the HyperFrames source ships beside the render, and nothing is submitted."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Make this viral aura-farming TikTok with my character. Link: https://www.tiktok.com/@somecreator",
+      "expected_output": "A request for the media file itself because a profile link is not a reference, plus a rights question; with unknown rights the plan falls back to grammar-only extraction and hands off to template-factory.",
+      "files": [],
+      "assertions": [
+        "The profile URL is rejected as a reference and the user is asked for the video file or a direct media link.",
+        "Rights for the footage, music and any people in it are requested; with unknown rights the plan does not rebuild the reference itself.",
+        "Grammar-only mode de-identifies the source and drops its taglines, typography and trade dress.",
+        "No generation is planned before the reference file and rights decision exist."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The rebuild is done but the client says shot 4 shows the wrong colorway and the title in shot 7 has a typo. Fix only those.",
+      "expected_output": "A refinement plan that invalidates only the segments touched, re-renders the title graphic deterministically, regenerates shot 4 with the corrected asset, leaves other takes untouched, and re-runs the assembly check.",
+      "files": [],
+      "assertions": [
+        "The correction is restated as locked decisions, requested delta, acceptance criteria, known rejections and invalidation scope.",
+        "The title fix is a deterministic re-render with no paid generation, and shot 4 is the only regenerated take unless the asset change touches other segments that bind it.",
+        "Unchanged takes keep their hashes and status and are not resubmitted.",
+        "An estimated cost is shown for the wave and the user's credit cap is respected.",
+        "The full-edit assembly check is re-run after the new takes land."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Make an aura-farming edit of my invented character Mimi (two approved photos) in the style of a typical cinematic aura edit reel, 9:16, about 13 seconds on a phonk beat I own.",
+      "expected_output": "A people-led Rebuild Plan: a shot list of five to eight distinct generated setups of Mimi (Seedream first frames from the locked photos, Seedance image-to-video drafts without ratio), each cut into short appearances on measured beat anchors, plus a deterministic type-and-effects layer, a 480p draft budget and a question before promotion.",
+      "files": [],
+      "assertions": [
+        "The footage layer is varied generated shots of the character, not one static cutout repeated across beats.",
+        "Each setup differs in size, angle, light or action, and each is generated once at 4-5 s and cut into short appearances at the EDL times.",
+        "The first-frame image-to-video requests omit ratio.",
+        "Type uses mixed families without outlines, one word or phrase per beat, landing on the cut frame.",
+        "Drafts are 480p with an estimate, and promotion to the delivery resolution waits for the user's answer.",
+        "The generated shots under the phonk bed are planned with generate_audio false, and no grade, grain or vignette is added unless the reference shows it."
+      ]
+    }
+  ]
+}

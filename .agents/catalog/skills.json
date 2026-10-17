@@ -1,0 +1,608 @@
+{
+  "schema_version": 1,
+  "skills": {
+    "ark-mcp": {
+      "kind": "tooling",
+      "description": "Guide for using the Ark Seed Multimodal MCP server to generate or edit images, audio, video, and 3D models (including Seedance 2.5 and whitelist-only 2.5 Premium 4K, Hyper3D, Hitem3d, BytePlus VOD AI MediaKit enhancement, transcoding, subtitle burn-in/removal, and voice/background audio separation), understand images and videos through Seed 2.1, understand or reason about audio, transcribe speech to text, manage Advanced Creation Rights face and voice assets (virtual portraits, authorized real people, copyright IP referenced as asset://), reuse completed onboarding and diagnose privacy input rejections with BytePlus AK/SK, run background jobs, upload reference media, and fetch persisted artifacts. Long-running work is submitted through ark_job_capabilities, ark_job_submit, ark_job_get, and ark_job_cancel by default, because most clients cannot negotiate MCP task augmentation; clients that do negotiate it may call the tools with native task metadata instead.",
+      "readme_summary": "Uses the Ark multimodal MCP server for image, video, audio and 3D workflows, durable artifacts, and Advanced Creation Rights face/voice assets with existing authorization reuse and privacy rejection triage.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "audio-dubbing": {
+      "kind": "tooling",
+      "description": "Dubs video or audio from one language to another using Seed Audio 1.0 voice cloning (TA2A). Takes a source audio/video file and a target-language script, clones all speaker voices from the original, preserves timing and pauses, and overlays the new audio onto the original video. Use this skill whenever the user asks to dub audio/video, translate audio with voice cloning, create a language dub, replace dialogue in a video with another language while keeping the same voices, do voice-over localization, or produce a multi-language version of a video using the original actors' voices. Also trigger when the user mentions dubbing, voice cloning for translation, audio localization, or replacing spoken dialogue in a clip. Works with any language pair supported by Seed Audio cross-lingual synthesis.",
+      "readme_summary": "Dubs video or audio from one language to another using Seed Audio 1.0 voice cloning (TA2A).",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "audio-split": {
+      "kind": "tooling",
+      "description": "Splits audio at explicit boundaries, by segment count, or within a maximum encoded duration. Use for source segmentation, subtitle-aware dubbing references, and reference clip preparation; not for generation or assembly.",
+      "readme_summary": "Splits an audio file into segments for Seed Audio reference preparation.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "brief-intake": {
+      "kind": "leaf",
+      "description": "Shape a creative brief around the intended audience reaction, central visual idea, and practical constraints. Derive applicable directing choices with reasons; offer two distinct treatments during exploration or a compact proposal when direction is settled. Confirm only decisions that need a lock. When the brief cites real brand video ads or other footage for visual or motion inspiration, record that reference and hand off media acquisition plus seed_understand or template-factory \u2014 do not treat scripts or article text as the reference. Use for a new project or a scoped brief revision. Never generates media.",
+      "readme_summary": "Shape intent-led briefs and treatments; hand off brand-ad / footage inspiration for watchable-media analysis; preserve confirmed decisions.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "byteplus-katana": {
+      "kind": "leaf",
+      "description": "Plan a reference video edit rebuilt with the user's own characters, products or clothing. Measures the reference into an edit decision list (shot order, cut times, beat grid, motion inventory, text), maps up to five assets to slots, and splits the rebuild into two layers: a footage layer (varied generated shots of the character for people-led formats, animated asset layers for product and motion-graphics formats) and a deterministic HyperFrames type-and-effects layer. Keeps the cut grid in the assembly, sets a version and credit budget, and tracks per-segment refinements. Use for \"make this edit with my product\", aura-farming, fashion and product-launch formats. Planning only. Not for style recipes (template-factory), recasting one clip (seedance-motion-recast), one-element swaps (seedance-object-swap) or single shot prompts (seedance-prompt-25).",
+      "readme_summary": "Plans a reference edit rebuilt with your own characters, products or clothing: measured edit list, beat grid and motion inventory, varied generated shots for people-led formats or animated asset layers for product formats, a code-built type-and-effects layer, a credit budget and per-segment refinement.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "color-grade-palettes": {
+      "kind": "leaf",
+      "description": "Default to no grade: keep original Seedance colours in assembly. When a colour palette or film look is requested, map it to a canonical grade sentence for the Seedance 2.5 Visual Style slot or the Seedream Style: section, and/or a high-bit-depth-safe FFmpeg post look (limited-range BT.709 decode, dithered 8-bit output) applied to the untouched master. Use for colour grading, palette selection, look and grade choices, teal and orange, bleach bypass, film stocks, VHS or camcorder looks, LUT-style grades, and cinematic grades. Golden hour here means the warm grade palette; for golden-hour physical lighting (sun position and light), use seedance-lighting-presets.",
+      "readme_summary": "Defaults to no grade (original Seedance colours); when a palette or film look is requested, maps it to a canonical grade sentence for Seedance or Seedream and/or a high-bit-depth-safe FFmpeg post look on the untouched master.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "ffmpeg": {
+      "kind": "vendored",
+      "description": "Video and audio processing with FFmpeg. Use for format conversion, resizing, compression, audio extraction, and preparing assets for Remotion. Triggers include converting GIF to MP4, resizing video, extracting audio, compressing files, or any media transformation task.",
+      "readme_summary": "Video and audio processing with FFmpeg. Use for format conversion, resizing, compression, audio extraction, and preparing assets for editing and assembly. Covers converting GIF to MP4, resizing video, extracting audio, compressing files, and any media transformation task.",
+      "dependencies": [],
+      "source_revision": null,
+      "upstream_hash": "8d5161a994a722d3da88e1183d73bcc2b024291f2773c7e9036b602da2ad579e",
+      "overlay_notes": "Installed bundle includes local adapter guidance; source commit was not recorded. Compare with upstream before re-vendoring."
+    },
+    "ffmpeg-scene-transitions": {
+      "kind": "leaf",
+      "description": "Assemble multiple video clips into one film with crossfade scene transitions and correct audio/video sync using FFmpeg. Use whenever the user wants to combine multiple scenes into a single video, stitch clips with dissolves, crossfade between shots, join AI-generated video scenes into one file, or fix audio/video drift in an assembled film. Also trigger on phrases like \"assemble the scenes\", \"combine multiple clips into one video\", \"add transitions between scenes\", \"the audio is out of sync after combining\", \"crossfade the takes together\", \"compile all the locked videos into one highlight\", or \"combine all the scene videos into one film\". Handles clips of mixed durations and clips whose audio is either shorter or longer than their video. Single-clip fade in/out belongs to the base `ffmpeg` skill, not this one.",
+      "readme_summary": "Assembles multiple video clips into one film with crossfade scene transitions and correct audio/video sync. Handles clips of mixed durations and clips whose audio is shorter or longer than their video, plus fade in/out, hard cuts, boundary contact-sheet verification, and A/V drift fixes. Use to combine scenes, stitch clips with dissolves, crossfade between shots, compile locked videos into a highlight film, or fix A/V drift in an assembled film.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "ffmpeg-side-by-side-comparison": {
+      "kind": "leaf",
+      "description": "Assemble two or more videos into a single side-by-side (or N-up) comparison clip with FFmpeg \u2014 before/after, A/B, or a review grid. Handles uniform scaling, pixel-aspect alignment, duration sync, optional labels, and audio. Use whenever the user wants a before-and-after split screen, an A/B comparison of two takes or versions, a compare or review grid, a side-by-side demo, or asks to put clip X and clip Y next to each other \u2014 even if they never say \"side-by-side\". For chronological assembly with crossfades, consider `ffmpeg-scene-transitions`; this skill places clips simultaneously (or staggered one-at-a-time with a frozen second half). Complements the `ffmpeg` skill.",
+      "readme_summary": "Assembles two or more videos into a single side-by-side (or N-up) comparison clip \u2014 before/after, A/B, or a review grid. Handles uniform scaling, pixel-aspect alignment, duration sync, optional labels, and audio. Use for before-and-after split screens, A/B comparisons of takes, or compare/review grids.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "film-production": {
+      "kind": "orchestrator",
+      "description": "Orchestrate an AI-assisted film, commercial, music video, or narrative production across brief, development, canon, storyboard, audio, shot generation, review, assembly, and delivery while maintaining one HyperFrames Studio project through every stage. Use when a request spans multiple scenes or modalities, asks to create or continue a film project, requires coordination between deterministic HTML-entrypoint graphics, Seedream, Seed Audio, Seedance, HyperFrames, or FFmpeg, or needs the next safe production step rather than a single prompt. Do not use for an isolated image, audio, video, or editing request that one specialist skill can complete independently.",
+      "readme_summary": "Orchestrates multi-scene, multi-modality production one stage at a time while keeping one HyperFrames Studio project synchronized for review and handoff.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "general-video": {
+      "kind": "vendored",
+      "description": "Author or edit a custom HyperFrames composition when no specialized workflow fits, or when BRIEF.md sets flow: companion. Use for longer or multi-scene pieces, brand and sizzle reels, montages, static loops, static title cards, footage remixes, and freeform builds. Use motion-graphics instead for a short unnarrated motion-first unit, including an animated title. Route fresh creation through hyperframes before using this skill.",
+      "readme_summary": "Custom HyperFrames compositions when no specialized workflow fits \u2014 multi-scene pieces, reels, montages, footage remixes, static title cards, and freeform builds.",
+      "dependencies": [],
+      "source_revision": "v0.8.141",
+      "upstream_hash": "6e0aad276db66d31791bdb19abdd12f3650ce03b7f7329d1c2d2c9176d87214c",
+      "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. Local overlays: a Workspace overlay paragraph replaces the `npx hyperframes skills update general-video` block (skills are managed in .agents/skills/ and never installed globally), forbids running `usage`, `feedback`, `open`, `upgrade`, `publish` and `cloud*` unasked, and points to the pinned privacy environment in the production policy; the `skills update <workflow-name>` step is replaced by reading the workflow under .agents/skills/. The rest of the bundle matches upstream. The `hyperframes init ... --skill=general-video` scaffold command is replaced by `studio_project.py sync`/`init` because init installs skills globally."
+    },
+    "html-graphic-render": {
+      "kind": "leaf",
+      "description": "Author and render deterministic static graphics from one project-local HTML entrypoint with CSS/SVG dependencies into exact-size PNGs with exact typography, approved local assets, optional transparency, and hash-bound provenance. Use for posters, title or end cards, product grids, UI/screens, price and CTA treatments, lower-thirds, and static overlays when copy and layout must be exact. Use a hybrid when generated or acquired imagery needs deterministic type and composition. Do not use for invented photographic or illustrative imagery, semantic image edits, animation/video, or production review galleries.",
+      "readme_summary": "Author and render exact-size static posters, cards, product grids, UI, and transparent overlays from one project-local HTML entrypoint with CSS/SVG dependencies, exact-copy checks, and schema-valid provenance.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "hyperframes": {
+      "kind": "vendored",
+      "description": "Mandatory entry point: read this first for any request to make, create, edit, animate, or render a video, animation, or motion graphic, including a promo, explainer, captioned clip, title card, overlay, slideshow or interactive deck, Remotion port, or any HyperFrames HTML composition. Also use it to inspect, diagnose, validate, preview, publish, or batch-render an existing HyperFrames project. Inputs may be a website URL, GitHub PR, Figma design or URL, text or brief, existing footage, or music. It resumes project state, captures intent when applicable, selects and installs the owning workflow, and routes domain capabilities. HyperFrames is the default output framework unless the user explicitly chooses another framework for the deliverable or asks only to record a browser session.",
+      "readme_summary": "Mandatory HyperFrames entry point \u2014 resumes project state, selects the owning workflow (nothing is installed), and routes all video, animation, and motion-graphic capabilities.",
+      "dependencies": [],
+      "source_revision": "v0.8.141",
+      "upstream_hash": "a277e9e46b3b5b8619639a353a4af3f46f8ae4f2e622ba802d5af730d135f410",
+      "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. Local overlays: workflow skills and references/routes/ are not vendored; when the matched workflow is absent, SKILL.md section 4 asks the owner to vendor it through a reviewed change. SKILL.md drops the Remotion-port state row and the /figma domain row, replaces the route-contract read with a workspace overlay paragraph, changes the BRIEF.md row to execute a workflow only when vendored, replaces the `usage --json` requirement and the `npx hyperframes@latest upgrade` instructions with workspace overlay rules (no `usage`, no upgrade; the release is pinned), states that `publish` and the cloud commands run only on explicit user request, and points the skills-install ban at the production policy privacy environment. references/route-briefs.md and references/workflow-catalog.md point to the owner-vendoring rule instead of on-demand install. Upstream plugin-installation.md and plugin-cli.mjs are vendored because refreshed skills link them. Compare with upstream before re-vendoring. The upstream media-use skill is intentionally not installed; its pointers inside hyperframes* skills are unresolved and routing.md names the replacement route. Section 6 forbids `hyperframes open` and `catch-up` unless the user asks."
+    },
+    "hyperframes-animation": {
+      "kind": "vendored",
+      "description": "All animation knowledge for HyperFrames \u2014 atomic motion rules, multi-phase scene blueprints, scene transitions, broader motion-design techniques, AND the seven runtime adapters (GSAP default, plus Lottie, Three.js, Anime.js, CSS keyframes, Web Animations API, TypeGPU). Use for any motion or animation task: pick 2-4 rules and compose, or load a blueprint, or look up runtime-specific API (e.g. GSAP eases / Lottie player / Three.js mixer). Also covers auditing an existing composition's choreography (animation map) and 24 named text-animation effects. HyperFrames-native: single paused timeline, seek-safe, deterministic.",
+      "readme_summary": "Atomic motion rules, multi-phase scene blueprints, transitions, and the seven runtime adapters (GSAP, Lottie, Three.js, Anime.js, CSS, WAAPI, TypeGPU).",
+      "dependencies": [],
+      "source_revision": "v0.8.141",
+      "upstream_hash": "b35f1f8eff68e9ff480a5d5d343a1bf5a40ebb7d0d9be20b0b980cfdb36047f3",
+      "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. No local overlays; bundle matches upstream."
+    },
+    "hyperframes-audio": {
+      "kind": "vendored",
+      "description": "Use when audio already placed in a HyperFrames composition needs to be mixed: fade-in/fade-out, crossfade, track gain or volume, volume automation, ducking, a music bed that fights a voiceover (voiceover carve), effects on a track (EQ, compressor, limiter, gate, saturation, delay, reverb, chorus, phaser, bitcrush), automation envelopes drawn on a track's volume or any effect parameter, or one submix bus carrying a chain, a fader and an automation clock for several tracks at once (`<hf-audio-group>`). Don't use for sourcing or generating audio \u2014 finding BGM, SFX, or making a voiceover is `/media-use`. Don't use for clip timing or track layout, which is `/hyperframes-core`.",
+      "readme_summary": "Mixing audio already placed in a composition \u2014 fades, crossfades, ducking, effect chains, automation envelopes, and submix buses.",
+      "dependencies": [],
+      "source_revision": "v0.8.141",
+      "upstream_hash": "03007db5f0ea61f093c401f681e30d686c4a490f7462c6fd34949722e881b278",
+      "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. No local overlays; bundle matches upstream."
+    },
+    "hyperframes-cli": {
+      "kind": "vendored",
+      "description": "Use the HyperFrames CLI development loop: init, add, catalog, capture, lint, check, snapshot, compare, grade-compare, preview, play, present, beats, keyframes, single or batch render, publish, cloud, cloudrun, feedback, lambda, doctor, browser, info, upgrade, skills, compositions, timeline, history, clean, docs, benchmark, telemetry, transcribe, auth, tts, and remove-background. Also use when diagnosing build or render failures. validate, inspect, and layout are deprecated aliases; use check. Covers local, HeyGen-hosted cloud, AWS Lambda, and Google Cloud Run rendering.",
+      "readme_summary": "HyperFrames CLI development loop \u2014 init, add, catalog, capture, lint, check, snapshot, and render workflows, run through the pinned workspace entry.",
+      "dependencies": [],
+      "source_revision": "v0.8.141",
+      "upstream_hash": "f722ee03ba20a3a8c6d2ba200729230e0245827a3178a02ef56e8b4b92c92a4e",
+      "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. Local overlay: a Workspace overlay paragraph after the title says to run HyperFrames only through studio_project.py or the pinned privacy environment, never `npx hyperframes@latest` or `upgrade`, and not to run `feedback`, `usage`, `open`/`catch-up`, `auth`, `publish`, `cloud`, `lambda`, `cloudrun` or `skills` unless the user asks. The rest of the bundle matches upstream."
+    },
+    "hyperframes-core": {
+      "kind": "vendored",
+      "description": "The HyperFrames composition contract \u2014 build one renderable project. Use for composition structure, the `data-*` timing attributes, `class=\"clip\"`, tracks, sub-compositions, variables, framework-owned media playback, deterministic-render rules, and validation. Read before writing composition HTML.",
+      "readme_summary": "Composition contract for renderable HTML video \u2014 timing data-attributes, clips, tracks, sub-compositions, variables, determinism rules, and validation.",
+      "dependencies": [],
+      "source_revision": "v0.8.141",
+      "upstream_hash": "18ac7784765cc29af5a4d88f2a63a15deaf5395985009af188b5e3718edcfe3d",
+      "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. No local overlays; bundle matches upstream."
+    },
+    "hyperframes-creative": {
+      "kind": "vendored",
+      "description": "Non-animation creative direction for HyperFrames videos. Use for design spec (frame.md / design.md) handling, palettes, typography, narration, beat planning, audio-reactive visuals, composition patterns, and brand / style decisions. For atomic motion patterns and scene blueprints, use `hyperframes-animation`.",
+      "readme_summary": "Non-animation creative direction \u2014 design specs, palettes, typography, narration, beat planning, audio-reactive visuals, and brand style.",
+      "dependencies": [],
+      "source_revision": "v0.8.141",
+      "upstream_hash": "9da7b7ac84c8d884b54125887ecca1a645a38337013082b96af2fdc0259c945a",
+      "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. No local overlays; bundle matches upstream."
+    },
+    "hyperframes-keyframes": {
+      "kind": "vendored",
+      "description": "Use when a HyperFrames composition needs a punch-in, punch-out, zoom, reframe, Ken Burns treatment, camera move, visual match/whip handoff, or other seek-safe 2D/3D keyframes; also for GSAP, CSS keyframes, Anime.js, WAAPI, FLIP, paths, masks, SVG morph/draw, text trails, 3D depth, or `hyperframes keyframes` diagnostics. Don't use for broad scene strategy, brand design, media sourcing, captions, or general video planning.",
+      "readme_summary": "Seek-safe 2D/3D keyframes \u2014 punch-ins, camera moves, Ken Burns, match-cut handoffs, masks, SVG morph/draw, and runtime-specific APIs.",
+      "dependencies": [],
+      "source_revision": "v0.8.141",
+      "upstream_hash": "d6484e8367ed522f2a89af9ec30ae3cd86ae243b5a23c5ab00a7a682e3d1a791",
+      "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. No local overlays; bundle matches upstream."
+    },
+    "hyperframes-registry": {
+      "kind": "vendored",
+      "description": "Search, install, and wire registry blocks and components into HyperFrames compositions. Use BEFORE hand-building any named visual \u2014 whenever a brief, a user, or a storyboard names a look, effect, treatment, or transition such as CRT scanlines, glitch, chromatic aberration, film grain, a shimmer sweep, a chart, a code or terminal window, a map, or a confetti burst \u2014 because roughly 400 hosted items already cover many of them and the search ranks all of them with nothing installed, no project, and no account. Also use when running hyperframes add or hyperframes catalog, installing one item or every block matching a tag, wiring an installed item into index.html, or working with hyperframes.json. Covers discovery, install locations, block sub-composition wiring, component snippet merging, and authoring a new block or component to contribute upstream (idea \u2192 scaffold \u2192 validate \u2192 PR).",
+      "readme_summary": "Search, install, and wire hosted registry blocks and components into compositions before hand-building named visuals.",
+      "dependencies": [],
+      "source_revision": "v0.8.141",
+      "upstream_hash": "f1925b202cabd125b509658b11db593b55340b1926ecb056fc31aa4233a2b4f6",
+      "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. Local overlay: one paragraph in SKILL.md; the rest of the bundle matches upstream. Workspace overlay: `hyperframes feedback --search-miss` is replaced by a note in handoff.md because it sends a report to an external service."
+    },
+    "hyperframes-studio": {
+      "kind": "vendored",
+      "description": "Use when working with a person on a HyperFrames project in Studio: first, whether their message asks for a change at all (questions, loose ideas and \"don't change anything\" get an answer and a plan, not an edit); for a new film, the plan, storyboard and build order that the HyperFrames launch films follow; and how the timeline should be laid out so it reads well (one caption track, one element kind per track, every scene a sub-composition) and where captions and key content may sit (safe zones). Don't use for how to perform an individual edit (split, trim, retime, volume, copy, swap): that is `creator-editing-recipes.md` in `/hyperframes-core`.",
+      "readme_summary": "Working with a person in HyperFrames Studio \u2014 when a message asks for a change at all, how a new film is planned and built, and timeline layout conventions with safe zones; the final gate runs through studio_project.py check.",
+      "dependencies": [],
+      "source_revision": "v0.8.141",
+      "upstream_hash": "7449da3952155e40e7d76fc29d4415b4030ab6f7f3ff9c3b94fa1b159cad46c4",
+      "overlay_notes": "Vendored from github:heygen-com/hyperframes tag v0.8.141 (commit 4a335aa6a1daf7bea766d9bbacc0cb6d43b1ad46); previously CLI 0.8.38. upstream_hash and the lock computedHash are the sha256 of the unmodified upstream SKILL.md. Local overlay: a Workspace overlay paragraph and the Checking-your-work step use `studio_project.py check` instead of bare `hyperframes check`, route Studio feedback through storyboard comments and Ask agent / Copy to Agent read with `hyperframes preview --context --json` and `--selection --json`, and forbid `feedback`, `usage` and `open` unasked. The rest of the bundle matches upstream."
+    },
+    "media-review": {
+      "kind": "leaf",
+      "description": "Emergency CLI fallback for opening generated images or videos in macOS when Studio preview or the pre-Studio canvas is unavailable, or when the user explicitly requests an OS-native player. Never use it as production-stage review evidence: project workflows require the Studio stage-exit checks (or, for a pre-Studio canvas project with showcase.json, the showcase-html freshness check).",
+      "readme_summary": "Emergency OS-player fallback when the required HTML/browser review surface is unavailable.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "omnihuman-prompt-20": {
+      "kind": "leaf",
+      "description": "Write and refine the optional text prompt for OmniHuman 2.0 (BytePlus Vision AI), the lip-sync digital-human video model driven by one image plus one audio track. Use when a character in a photo or illustration must talk, sing or react to supplied audio and the prompt should direct camera moves, emotion arcs, ordered gestures and actions, which person speaks in a group shot, focus pulls, background events, environment interaction, or added props and effects; also for animals, mascots and stylized or pixel characters. Covers input checks (image limits, 4-300 s audio, supported prompt languages), the camera + emotion + speaking state + actions + background template, splitting long audio into stable segments, and symptom-based fixes such as a mouth that does not move, identity drift or an ignored camera move. Prompt and input preparation only; it does not sign or submit API requests. Not for Seedance video prompts, voice or music generation, or lip-syncing existing footage.",
+      "readme_summary": "Writes OmniHuman 2.0 lip-sync prompts from one image and one audio track: camera, emotion, speaking state, ordered actions, speaker choice in group shots, added effects, segmenting long audio, input checks and symptom-based fixes.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "prompt-review": {
+      "kind": "orchestrator",
+      "description": "Review BytePlus Seedance, Seedream, and Seed Audio prompts inline by default, with sub-agent review only when the user explicitly requests it for a project or specific generation. Use explicit model, operation, change contract, and request hash. Return rule findings and complete or incomplete status; fix and re-review changed prompts before generation. Use for video, VFX, multilingual dialogue, image/character/location/prop/UI/card/storyboard prompts, music, SFX, or ambience. Trigger when asked to review, QA, validate, or lint prompts, or before submitting newly authored generation prompts. Exclude manifest-only edits, generated-media review, and frozen snapshots unless re-review is explicitly requested.",
+      "readme_summary": "Review and fix BytePlus Seedance, Seed Audio, and Seedream prompts against the repo's best practices inline by default; use a sub-agent only when explicitly requested for a project or specific generation.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seed-audio-commercial": {
+      "kind": "leaf",
+      "description": "Compose dramatic, story-driven audio commercial prompts for BytePlus Seed Audio 1.0, then generate and verify them through the workspace transport. Writes full-soundscape T2A prompts (dialogue + music + SFX + ambience in one pass) with a five-act story arc, multi-character voice profiles, and commercial SFX/music patterns; the generation lifecycle (submission, verification, manifests) is a separated stage. Invoke when the user asks to create an audio commercial, radio spot, brand audio ad, dramatic story ad, voice-over commercial, or any multi-character narrative audio spot using Seed Audio.",
+      "readme_summary": "Produce dramatic, story-driven audio commercials with BytePlus Seed Audio 1.0.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seed-audio-prompt": {
+      "kind": "leaf",
+      "description": "Write structured Seed Audio 1.0 prompts for full-soundscape audio generation including dialogue, music, SFX, and ambience. Supports text-to-audio (T2A) and text-plus-audio-to-audio (TA2A) with voice cloning. Invoke when the user asks to generate Seed Audio 1.0 prompts, write audio prompts for BytePlus audio generation, create audiobook/dialogue/soundscape scripts, or design multi-character audio scenes.",
+      "readme_summary": "Write structured Seed Audio 1.0 prompts for full-soundscape audio generation including dialogue, music, SFX, and ambience.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-acting-console": {
+      "kind": "leaf",
+      "description": "Turn a directing directive into a production-grade Seedance acting block. Two layers: (1) Scene-level acting analysis \u2014 read the whole scene, find the shared direction, each character's motive, goal, obstacle, and tactic with eye-work as purposeful action. (2) Cue encoding \u2014 map the tactic's visible footprint to directly observable physical cues at three intensity levels using a six-emotion bank. Use this skill when directing the performance, acting, emotional intensity, mood of the scene, facial expression, delivering a line, or when a character reads dead, glassy, flat, or over-acted. Composes with seedance-prompt-25 and optionally with seed-audio-prompt for dialogue reinforcement. Never calls generation tools itself.",
+      "readme_summary": "Turn playable motives and tactics into observable acting cues appropriate to framing, visibility and intensity.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-ai-avatar": {
+      "kind": "orchestrator",
+      "description": "Build a reusable AI avatar (digital twin) of a consenting real presenter and generate lip-synced Seedance 2.5 talking-head takes of them saying new lines. Covers the consent and real-likeness policy gates with provenance, verified photo collection, a Seedream identity character sheet, voice-timbre clip isolation from the presenter's own video (VOD voice separation), locked 1:1 and 9:16 camera-beat talking-head prompt templates, and take QA (identity, transcript diff, lip-sync, voice resemblance). Never disguises or reroutes inputs after a provider privacy rejection. Use when the user wants an AI avatar, digital twin, or voice clone of a creator, host, founder, or spokesperson speaking a new script in Seedance. Pair with seedance-avatar-news for the full news-short edit.",
+      "readme_summary": "Authorized real-presenter AI avatar: consent gate, Seedream character sheet, isolated voice clip, sheet-only lip-synced Seedance talking-head takes and QA.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-animation-styles": {
+      "kind": "leaf",
+      "description": "Write Seedance animation prompts for claymation, needle felt, wood puppets, toy miniatures, vintage rubber hose, painterly 2D, cubist ink, stylized 3D, silicone creatures, wax crayon, and custom animation media. Use whenever the user asks for a Seedance animation style, a stylized animated short, an animated scene in a named medium, or a prompt that must preserve handcrafted texture and material-specific motion.",
+      "readme_summary": "Writes Seedance animation prompts for claymation, needle felt, wood puppets, toy miniatures, vintage rubber hose, painterly 2D, cubist ink, stylized 3D, silicone creatures, wax crayon, and custom animation media. Preserves handcrafted texture and material-specific motion.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-avatar-news": {
+      "kind": "orchestrator",
+      "description": "Produce a creator-style 9:16 tech/news explainer short hosted by an approved AI avatar: reference-format breakdown, sourced topic research, a hook-driven 20\u201330s script, a Seedance 2.5 talking-head take (built with seedance-ai-avatar), official B-roll acquisition with provenance and usage basis, and a deterministic edit built with scripts/render_short.py that is placed in Studio and rendered (split-screen, full-screen, framed-card layouts, STT-timed caption pills, source and channel badges), plus parallel topic/edit variants in the project's Studio review surface. Use to recreate a TikTok/Reels/Shorts talking-head news format with an avatar, turn a news story into an avatar short, or batch several options of the same show.",
+      "readme_summary": "Creator-style news shorts hosted by an AI avatar: sourced script, official B-roll with provenance, and a deterministic split/full/card caption edit.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-camera-presets": {
+      "kind": "leaf",
+      "description": "Turn a named camera move or preset \u2014 dolly, pan, tilt, orbit, crane, jib, tracking, handheld, FPV, aerial, bullet time, dolly zoom, crash zoom, whip pan, optical zoom, Dutch angle, one-take, or static \u2014 or a shot framing (single, two-shot, over-the-shoulder, over-the-hip, point of view, insert) \u2014 into a canonical, drop-in Camera block for the Seedance 2.5 six-part prompt formula. Use when the user asks for a camera preset, camera movement style, or a shot's camera treatment, and when a shot plan names a move to word. Bullet time here is the camera-orbit technique (freeze + orbit); speed-ramp and slow-mo timing belong to seedance-pacing-presets. One-take here is the pass-through camera path; single-shot no-cuts pacing belongs to seedance-pacing-presets. Lens and focal-length optics belong to seedance-lens-presets.",
+      "readme_summary": "Compose prompt-only camera moves and framing, including optical zoom, Dutch angle, dolly, orbit, FPV, rack focus, whip pan, and single, two-shot, over-the-shoulder, point-of-view and insert framing.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-effects-studio": {
+      "kind": "orchestrator",
+      "description": "Orchestrator. Offer a menu of 45 named video effects (street colossus, incline, clones, melting, world morphing, eyes in, bullet time, earth zoom, smash and grab and more), let the user pick one, inspect their photo or clip, write that effect's Seedance 2.5 prompt from its recipe, run prompt-review, submit a 480p draft through ark-mcp, save and QA the take, then ask before any higher resolution final. Sequences seedance-prompt-25, prompt-review, ark-mcp, seedance-restyle (video-to-video effects), the Studio project and the post tools named in each recipe. Use when the user wants a named visual effect applied to their own photo, product or clip, or asks what effects are available. Not for free-form prompts (seedance-prompt-25), whole-clip restyles that are not on the menu (seedance-restyle), or multi-scene films (film-production).",
+      "readme_summary": "Orchestrator: pick one of 45 named video effects (street colossus, incline, clones, melting, world morphing, eyes in, smash and grab and more), fit your photo or clip to the effect's recipe, write the Seedance 2.5 prompt, run prompt-review and a 480p draft through ark-mcp, inspect it against the recipe's checks, and ask before any final. Twelve recipes are probed; the rest are labelled untested.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-frame-break": {
+      "kind": "leaf",
+      "description": "Write and QA Seedance 2.5 prompts for the frame-break pop-out effect (3D billboard look): two solid black bars at the top and bottom of a 16:9 frame with the subject's nearest limbs or clothing drawn in front of the bars in full colour, so the subject bursts toward the viewer. Covers the three-layer prompt contract, four timed stages with observable End states, a fixed camera, scenic backdrops, a product-hero variant, failure repairs and a frame-based pixel check of bar thickness and overlap. Use for pop-out, frame-break, 3D billboard, a character bursting out of black bars, or a product hero ad whose product breaks the frame. Not for ordinary cinematic letterbox, general camera moves (seedance-camera-presets), the base prompt grammar (seedance-prompt-25), edits to existing footage, or task submission.",
+      "readme_summary": "Write and QA Seedance 2.5 frame-break pop-out prompts where the subject is drawn over two fixed black bars, with a locked camera, staged break-outs, a product-hero variant, failure repairs and an all-frames pixel check of bar motion and overlap.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-lens-presets": {
+      "kind": "leaf",
+      "description": "Turns a lens, focal length, aperture, focus or sensor request into a canonical visible-result phrase for Seedance 2.5 prompts or the Seedream style. Trigger words: lens, focal length, 35mm, 50mm, 85mm, wide angle, telephoto, anamorphic, fisheye, macro, aperture, f-stop, f/1.4, depth of field, bokeh, shallow DOF, deep focus, rack focus, focus pull, or a lens intent from a shot plan. Keep optical look separate from supported output parameters; preserve the selected model and send unresolved resolution needs to the caller rather than switching models automatically.",
+      "readme_summary": "Translates a lens, focal length, aperture, focus or sensor request into a canonical visible-result phrase for Seedance prompts or Seedream style, and routes unreliable focus pulls and tape looks to post.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-lighting-presets": {
+      "kind": "leaf",
+      "description": "Translate a named lighting setup into a canonical Seedream `Lighting:` recipe and a matching Seedance visual-style lighting phrase, so the same lighting intent works for images (elements, storyboards) and video, and word timed light cues inside a shot (a lamp clicking off, a flicker). Use when the user or a shot plan asks for lighting, light, rim light, backlight, golden hour, night or moonlight, soft or hard light, three-point, Rembrandt, practical lights, silhouette, contre-jour, key light direction, or a light change. Golden hour here means the physical lighting (sun position and light); for a golden-hour color grade, use color-grade-palettes.",
+      "readme_summary": "Translates a named lighting setup (rim light, backlight, golden hour, night and moonlight, soft/hard light, three-point, Rembrandt, practicals, silhouette, contre-jour) into a Seedream `Lighting:` recipe and a matching Seedance phrase, and words timed light cues inside a shot.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-motion-design": {
+      "kind": "leaf",
+      "description": "Write production-grade Seedance 2.5 motion-design and motion-graphics prompts for marketing deliverables \u2014 launch videos, motion-on-footage explainers, hypermotion product ads, 3D flythroughs, 2D explainers, editorial explainers, logo reveals, kinetic type, product motion, and data-driven explainers. Exact words, numbers, charts, logos, and UI are authored as deterministic HTML-entrypoint graphics for post-composited fidelity; Seedream supplies only synthesized image layers and Seedance supplies text-free footage or intentionally non-exact plate motion. Use whenever the user asks for motion design, motion graphics, kinetic typography, a logo reveal, product motion, an explainer video, an animated data story, or any text/graphic-driven marketing motion. Composes in prose with html-graphic-render for exact static graphics, seedance-prompt-25 for the six-part formula, seedream-prompt or seedream-storyboard for synthesized image/keyframe layers, and seed-audio-prompt for voice/music. Does not call the API itself.",
+      "readme_summary": "Write Seedance 2.5 motion-design prompts while routing exact typography and UI to deterministic post graphics and synthesized visual layers to Seedream.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-motion-recast": {
+      "kind": "leaf",
+      "description": "Write Seedance 2.5 Motion Transfer (recast) prompts that keep a source clip's body motion, pose sequence, screen positions, camera path, framing changes, cuts and timing while rebuilding cast, wardrobe, product, location and style from locked reference images. Covers the motion-only authority split, an explicit mapping or disposition for every visible source subject, bleed and extra-people guards, Virtual Portrait asset:// identity references, a muted source master with audio added in post, named look presets, and a 480p key-beat probe ladder. Consumes a subject_map.json when available or inspects the source itself. Use to recast performers, localize a take for another market, or rebuild its world around the same performance. Not for replacing one element while preserving source pixels (seedance-object-swap), redrawing the same cast in a new medium (seedance-restyle), other edits (seedance-vfx-prompt), new T2V/I2V shots, or task submission; the caller owns the generation lifecycle.",
+      "readme_summary": "Write Seedance 2.5 Motion Transfer prompts that keep a clip's motion, camera and cuts while rebuilding cast, wardrobe, product, location and style from locked references, with per-subject dispositions, Virtual Portrait identities, a muted source with post audio and a 480p probe ladder.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-music-video": {
+      "kind": "orchestrator",
+      "description": "Write Seedance 2.5 music-video prompts from a song, artist brief, or requested format. Map song sections, beat density, performer intent, camera, lyric timing, native versus supplied audio, and natural scene duration into the six-part formula. Cover rap, dance, performance, narrative, abstract, vertical, and custom formats. Use for song-driven visual direction, lyric/performance videos, or music-video revisions. This prompt-only leaf does not generate media; the caller composes only requested specialist axes and owns review and submission.",
+      "readme_summary": "Develop track-informed music-video treatments with intentional escalation, restraint, repetition or counterpoint and optional evidence-based synchronization.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-object-swap": {
+      "kind": "leaf",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null,
+      "description": "Write Seedance 2.5 Object Swap prompts that replace one named element in existing footage (a character, outfit, product, prop or object, or the location behind the subjects) and preserve everything else as filmed: performance, camera path, cuts, lighting and event order. Covers the five-part swap contract (identification, object count, Timeline Inheritance, residual-original guard, preservation), contact and occlusion windows, Virtual Portrait asset:// references for character swaps, a muted source master with audio added in post, and swap QA. Use for product placement, competitor-to-own SKU swaps, wardrobe changes, single-character replacement or location swaps on a kept take. Not for rebuilding the whole cast or world around the source motion (seedance-motion-recast), whole-frame style changes (seedance-restyle), new T2V/I2V shots, or task submission.",
+      "readme_summary": "Write Seedance 2.5 Object Swap prompts that replace one character, outfit, product, prop, object or location in existing footage and keep the rest of the shot, with the five-part swap contract, Virtual Portrait characters, a muted source with post audio and swap QA."
+    },
+    "seedance-pacing-presets": {
+      "kind": "leaf",
+      "description": "Turn a named pacing or rhythm preset \u2014 speed ramp, slow motion, slow-mo, bullet time, ramp up, flash in/out, impact moment, montage, montage pacing, cut rhythm, time-lapse, freeze frame, progressive or partial change (an outfit or material changing part by part), named cuts or transitions, timing, or speed up \u2014 into a canonical, timestamped motion, cut, and pacing block for the Seedance 2.5 prompt. Use when the user or a shot plan asks to direct a scene's rhythm, tempo, or editing energy rather than only its content. Bullet time here is the freeze/slow-mo speed ramp; the camera-orbit technique belongs to seedance-camera-presets. Single Shot here is no-cuts pacing; the one-take pass-through camera path belongs to seedance-camera-presets.",
+      "readme_summary": "Compose prompt-only rhythm, speed ramps, time-lapse, freeze frame, progressive part-by-part changes and named picture/audio transitions, including match cuts, dissolves, wipes and J/L cuts.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-prompt-20": {
+      "kind": "leaf",
+      "description": "Write and revise Seedance 2.0 video prompts, the legacy model used for 4K output and the Fast/Mini speed variants: asset preparation within the 2.0 reference limits, Define subject definitions, task-type declaration, shot-by-shot sequencing with inline reference binding, spatial continuity for chase or action blocking, native audio, and inline constraints. Use for Seedance 2.0 prompts, shot lists, 4K or Fast/Mini requests, and corrections to 2.0 generations. For Seedance 2.5 prompts, use seedance-prompt-25 instead.",
+      "readme_summary": "Legacy Seedance 2.0 prompt skill. Use when you need 4K output (unsupported by 2.5), Fast/Mini speed variants, or lower cost per generation. Provides reference-role classification, subject definitions, spatial continuity, shot sequencing, and native audio direction.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-prompt-25": {
+      "kind": "leaf",
+      "description": "Write production-grade Seedance 2.5 video prompts with the flexible six-part formula, per-shot camera, lens and light lines, 50-material multimodal referencing, variable-duration scene staging (4-30s), timestamp pacing and dialogue timing, structured video editing (subject replacement, background replacement, audio editing), forward and backward video extension, keyframe sequences, coarse and fine blockout references, one-click video, seamless transitions, audio bracket syntax, dialogue language reinforcement, emotional direction, camera language, and draft-first request packaging. Use this skill for Seedance 2.5 prompts, multi-reference asset orchestration, scene staging, video editing, extension, and corrections to generated motion or continuity. For legacy Seedance 2.0 prompts, 4K output through 2.0, or the Fast/Mini speed variants, use seedance-prompt-20; whitelist-only 2.5 Premium (4K) uses this skill.",
+      "readme_summary": "Write production-grade Seedance 2.5 video prompts with the six-part formula, per-shot camera, lens and light, multimodal referencing, 4-30 s scene staging, dialogue timing, video editing and extension, keyframes, blockouts and draft-first request packaging.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-prompt-25-dialogue": {
+      "kind": "leaf",
+      "description": "Write or revise spoken-dialogue direction for Seedance in any language: check whether the language is natively supported, preserve approved exact words, speaker identity and register, direct accent, code-switching and delivery, and handle unsupported languages through annotation, a supported spoken language with subtitles, or an explicitly requested audio-first track. Diagnose a specific heard pronunciation or delivery problem before proposing a word-scoped retake or splice. Use for ads, UGC, narrative and other video prompts with non-English or multilingual dialogue; this independent prompt-only leaf returns a dialogue layer and does not submit generation tasks. Optional market packs add language-specific depth.",
+      "readme_summary": "Direct spoken dialogue for Seedance in any language: native-language check, register and accent, code-switching, and word-scoped repairs.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-restoration": {
+      "kind": "leaf",
+      "description": "Write Seedance 2.5 video-to-video restoration prompts that remove film grain, video noise, black and white scratch lines, vertical and horizontal scratches, hairlines, streaks, dust, dirt, flicker, and compression artifacts from aged, damaged, or archival footage while preserving every person, object, action, composition, camera movement, and timing. Use whenever the user asks to restore, clean, denoise, or repair old, aged, or archival footage, remove grain or noise, erase scratch lines or film damage, or \"clean up\" damaged film through the Seedance generative-edit route. Composes the prompt and specifies the diagnosis and verification steps; the caller owns submission and the generation lifecycle.",
+      "readme_summary": "Write Seedance 2.5 video-to-video restoration prompts that remove film grain, noise, scratch lines, dust, and flicker from aged or archival footage while preserving the shot.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-restyle": {
+      "kind": "leaf",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null,
+      "description": "Write Seedance 2.5 Restyle prompts that redraw an entire existing clip in a new visual style (2D cel anime, watercolor, claymation, needle felt, toy miniature, stylized 3D, pixel art, woodblock, film noir and 20+ more, or a custom style reference image) while keeping its performance, subject positions, motion, camera path, cuts and timing. Covers the style catalog, the style-only reference role, medium-matched Virtual Portrait identity anchors, an environment-image recipe that restyles the background while keeping the same place, edit and reference routes, a muted source master with audio added in post, a 480p test ladder, and restyle QA. Use to turn live action into animation, change the medium of an animated clip, or match a house style. Not for replacing the cast or world (seedance-motion-recast), swapping one element (seedance-object-swap), grading or relighting the original look (seedance-vfx-prompt), or task submission.",
+      "readme_summary": "Write Seedance 2.5 Restyle prompts that redraw a whole clip in one of 24 visual styles or a custom style reference while keeping its content, motion, camera and cuts, with medium-matched Virtual Portrait anchors, an environment-image recipe that keeps the same place and restyles the background too, a muted source with post audio and a 480p probe ladder."
+    },
+    "seedance-shot-design": {
+      "kind": "leaf",
+      "description": "Design the shot plan for a Seedance scene before any prompt is written: shot count and duration, the job of each shot, size, framing (single, two-shot, group, over-the-shoulder, over-the-hip, point of view, insert), angle, camera move, lens intent, named light sources and key side, the contrast between neighboring shots, and a variety check (V1-V10) at a chosen energy level (restrained, standard, kinetic). Use for narrative, ad, micro-drama, music-video and showcase clips when camera and light are not already locked, when a scene reads flat or static, or when the user asks for a shot list, coverage, shot framing, or more dynamic camera work and lighting. Returns a shot plan record and the per-shot facts a Seedance 2.5 prompt carries. Not for static assets, source-preserving edits (object swap, restyle, recast), or task submission.",
+      "readme_summary": "Plan per-shot coverage for Seedance scenes: shot count and jobs, size, framing, angle, camera move, lens intent and light per shot, with variety rules and an energy level.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-vfx-pipeline": {
+      "kind": "orchestrator",
+      "description": "End-to-end pipeline for Seedance video-to-video VFX shot production. Composes seedance-vfx-prompt, seedance-object-swap, seedance-motion-recast, seedance-restyle, source-subject-map, the ark-mcp tools, ffmpeg-side-by-side-comparison, and the project's Studio review surface to take a source clip and change description through a reviewed, saved, manifested asset. Routes each shot to a VFX edit, an Object Swap (character, outfit, product, prop, object, or location swap), a Motion Transfer recast (keep source motion, rebuild cast and world), or a Restyle (redraw the clip in a new medium), and runs batch variants that turn one approved take into N market, talent, or product variants. Invoke when the user wants to run a full VFX, swap, or recast shot \u2014 write prompt, submit task, poll, download, compare, and review \u2014 rather than just write a prompt. Supports both Seedance 2.0 and 2.5; default to 2.5 (omni_reference_task_type=edit) for full-duration edits.",
+      "readme_summary": "Run a complete Seedance video-to-video VFX, Object Swap, Motion Transfer or Restyle shot, or batch variants of one take, and keep source, prompt, outputs, comparison and QA synchronized in the project manifests and Studio project.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-vfx-prompt": {
+      "kind": "leaf",
+      "description": "Write prompts for edits to existing footage: background replacement, creature or object integration, world changes, relighting, weather, dialogue, and timed camera effects. Default to Seedance 2.5 structured edit-goal grammar; retain legacy 2.0 headings and compact VFX recipes for explicitly selected supported paths. Use source inspection, ordered @Video N/@Image N bindings, a declared may-change/must-preserve contract, physical lighting, layered space, timing, audio, and face-fidelity QA. Exclude single-element swaps (seedance-object-swap), whole-frame restyles (seedance-restyle), new T2V/I2V shots, still-image creation, whole-cast motion recasts, and task submission; the caller owns the generation lifecycle.",
+      "readme_summary": "Write Seedance 2.5 video-to-video edit prompts for background replacement, object integration, relighting, weather and timed effects, with a may-change/must-preserve contract.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-virtual-portrait": {
+      "kind": "leaf",
+      "description": "Prepare authorized human face, likeness and voice references for Seedance Advanced Creation Rights. Reuse existing authorized assets without repeated onboarding, register invented characters as Virtual Portraits, bind asset:// references, and resolve Seedance privacy and guardrail flags on real-person inputs legally through the registered asset route. Covers images, video and audio; preserves documented account exceptions and authorization scope. Does not submit generation or bypass content moderation.",
+      "readme_summary": "Prepares authorized face and voice references for Seedance Advanced Creation Rights, reuses completed onboarding and active assets without repeating verification, binds asset:// references, and resolves Seedance privacy and guardrail flags on real-person inputs through the registered asset route.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedream-character-outfit": {
+      "kind": "leaf",
+      "description": "Write Seedream image-to-image prompts that change the outfit on an approved three-panel character sheet while keeping face, hair, build, layout, background and lighting identical. Always-worn accessories such as glasses, hats, jewelry and shoes are part of the outfit. Use for a new look, costume or wardrobe for an existing character, from a text description or garment photos. Not for handheld props, scene-only wearables, new identities, or face, hair or body changes.",
+      "readme_summary": "Writes Seedream image-to-image prompts that change the outfit on an approved character sheet, with always-worn accessories, a change contract, and identity-drift QA.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedream-character-sheet": {
+      "kind": "leaf",
+      "description": "Write structured Seedream prompts for three-panel character sheets and identity references. Invoke when the user asks for character sheets, model sheets, turnaround sheets, or Seedance-facing identity anchors.",
+      "readme_summary": "Writes structured Seedream prompts for three-panel character sheets and identity references. Produces the canonical character turnarounds that Seedance uses as face anchors.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedream-character-sheet-cleanup": {
+      "kind": "leaf",
+      "description": "Cleans Seedream character sheets by removing the head from the full-body panels so only the close-up panel keeps a readable face. Invoke when a Seedance-bound sheet violates the requested single-face reference policy, or when the user requests this cleanup; inspect before editing.",
+      "readme_summary": "Cleans Seedream character sheets by removing the head from the full-body panels so only the close-up panel keeps a readable face.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedream-edit": {
+      "kind": "leaf",
+      "description": "Guide for using the seedream_edit_image MCP tool for interactive image editing with Seedream 5.0 Pro. Use when the user wants to edit an existing image (replace objects, change regions, add elements at specific positions), especially when coordinate-based precision is needed via point or bounding-box selection.",
+      "readme_summary": "Guide for using the `seedream_edit_image` MCP tool for interactive image editing with Seedream 5.0 Pro. Use for point-based and bounding-box precision editing \u2014 replace objects, change regions, add elements at specific positions.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedream-handcrafted-3d": {
+      "kind": "leaf",
+      "description": "Write Seedream prompts for handcrafted stylized 3D characters, portraits, superheroes, and wardrobe material studies with expressive proportions, painterly matte surfaces, pencil hatching, and tactile fabrics. Use when this visual treatment is requested or a supplied reference shows it; not for every character sheet, photorealism, animation, or exact graphic layouts.",
+      "readme_summary": "Writes handcrafted stylized 3D character and material-study prompts with painterly surfaces, tactile fabrics, reference roles, and visual QA.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedream-location-asset": {
+      "kind": "leaf",
+      "description": "Write structured Seedream prompts for cinematic location assets, reusable environment sheets, day and night lighting-state locks, and same-place environment plates for video restyles. Invoke when the user asks to create a location, interior, exterior, set reference, night version of a location, or establishing still with Seedream.",
+      "readme_summary": "Writes structured Seedream prompts for cinematic location assets, reusable environment sheets, day and night lighting-state locks, and same-place environment plates for video restyles.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedream-prompt": {
+      "kind": "leaf",
+      "description": "Write structured Seedream 5.0 Pro/Lite image generation prompts with input reference labeling, subject definitions, style and composition control, interactive image editing (local edits, sketch rendering, layer separation, multi-image fusion, color/material replacement), high-density infographics, sequential generation, and constraints. Invoke when the user asks for a Seedream prompt, generated or edited imagery, infographics, or expressive poster/UI/brand artwork. Do not use it to reproduce exact static typography, pricing, CTA, product-grid, logo, or pixel-layout geometry that deterministic HTML-entrypoint graphics can render.",
+      "readme_summary": "Write Seedream prompts for synthesized or edited imagery while routing exact typography, pricing, CTA, product grids, logos, and pixel layouts to deterministic graphics.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedream-prop-asset": {
+      "kind": "leaf",
+      "description": "Write structured Seedream prompts for prop and product identity sheets used as Seedance or storyboard references. Applies the prop threshold and acquisition-first rule, then plans the views - front and back by default, plus a side view when the user asks or the object's profile carries its identity. Invoke when the user asks for a prop sheet, product reference, hero object, vehicle, device, tool, scene-variant wearable, or prop state variant with Seedream.",
+      "readme_summary": "Writes structured Seedream prompts for prop and product identity sheets after the prop threshold and acquisition-first check. Shows front and back views by default, adding a side view when the user asks or the object needs it. Use for held, recurring, story-critical, or scene-variant objects that Seedance must reproduce.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedream-storyboard": {
+      "kind": "leaf",
+      "description": "Create, revise, and optionally generate production-ready cinematic storyboards\u2014from one hero panel with alternatives to a multi-panel continuity sequence\u2014with BytePlus Seedream. Supports two delivery modes \u2014 single-image grid (one image containing all panels, default) and separate images (one image per panel). Boards are planning and review artifacts, never Seedance references. Use whenever the user asks for storyboards, shot boards, continuity boards, storyboard frames, visual sequences, previsualization, scene panels, or image planning for film, advertising, animation, games, or AI video.",
+      "readme_summary": "Create, revise, and optionally generate production-ready cinematic storyboards\u2014from one hero panel with alternatives to a multi-panel continuity sequence\u2014with BytePlus Seedream. Boards are planning and review artifacts, never Seedance references.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedream-woodblock-poster": {
+      "kind": "leaf",
+      "description": "Write Seedream prompts for vivid engraved woodblock-style illustrated posters and cohesive image series from a supplied visual reference or a text concept. Use for folklore, mythology, creatures, or other subjects rendered with flat ink shapes, fine contour hatching, aged paper, dramatic silhouettes, and miniature landscapes. Not for animation, collage assembly, photorealism, character turnarounds, or exact typography and graphic layouts.",
+      "readme_summary": "Writes engraved woodblock-style poster and art-series prompts with reference roles, distinct subjects, shared print treatment, and visual QA.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "showcase-html": {
+      "kind": "tooling",
+      "description": "Build and maintain a self-contained HTML canvas for generated-media projects created before HyperFrames Studio (projects with a showcase.json), and ad-hoc comparison pages (optional for Studio projects). For a pre-Studio canvas project, keep briefs, stage status, elements, prompts, references, images, audio, video takes, selections, review evidence, assemblies, and deliverables synchronized in one data-driven page throughout every production stage, and lock variants back into manifests. New production projects use a HyperFrames Studio project through studio_project.py instead. Use for pre-Studio canvas project review or lifecycle checkpoints, and whenever the user asks for an HTML gallery, before/after comparison, combined view, or local interface for comparing assets and choosing variants.",
+      "readme_summary": "Maintain the HTML production canvas of pre-Studio canvas projects and build ad-hoc comparison pages (optional for Studio projects).",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "source-subject-map": {
+      "kind": "leaf",
+      "description": "Analyze an existing source clip into an auditable subject map before recasting, swapping, or VFX-editing footage with several subjects or objects. Records source hash and probe data, cuts, subjects with observable descriptors (screen position, clothing, action), swappable objects with per-cut counts, occlusions, hand/object contact windows, speakers with speech windows, on-screen text and logos, and open ambiguities, confirmed by a per-cut keyframe spot-check. Observable descriptors only; never identifies real people. Open ambiguities block downstream prompt writing. Analysis only; excludes media generation and prompt writing.",
+      "readme_summary": "Map a source clip's cuts, subjects, objects, contacts, speakers and on-screen text into a hash-bound subject_map.json before recast, swap or VFX edits; open ambiguities block prompt writing.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "template-factory": {
+      "kind": "orchestrator",
+      "description": "Reverse-engineer a reference video (\"pin\") into reproducible AIGC output. Orchestrates pin intake (prefer a public HTTPS URL seed_understand can watch; download and media_upload only when unusable), video and audio breakdown, per-beat motion analysis, keyframes, a planning-only sketch storyboard, optional element sheets (Seedream for invented identity; web/user download-first for authorized real brands/logos/products; deterministic HTML-entrypoint graphics for exact posters, cards, screens, product layouts, and overlays), and a Seedance 2.5 video \u2014 generation-bound prompts through prompt-review; reviewed in a HyperFrames Studio project. Explicit orchestrator composing ark-mcp (including seed_audio_understand), seedream-storyboard, seedance-prompt-25, prompt-review, html-graphic-render, hyperframes, and ffmpeg; never calls the Ark REST API. Use to replicate style/composition/grammar, build a reusable template, or turn a cited brand ad, Pinterest pin, or other reference video into elements and video.",
+      "readme_summary": "Reverse-engineer a reference video and soundtrack into a timed visual and audio recipe, with reviewable assets and shot takes reviewed in a synchronized Studio project.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "tig-blocking-map": {
+      "kind": "leaf",
+      "description": "Tigran's project-agnostic method for giving Seedance character DISPOSITION via a color-coded outline schematic \u2014 a \"staging reference\" (blocking map). Use WHENEVER a user attaches a frame/still and asks for a blocking map / staging reference, whenever a video prompt needs precise multi-character staging (who is where, facing which way), whenever characters jump seats or swap places between shot sizes, when a clip with people must continue but Seedance cannot extend it, or when these terms clearly refer to cinematic staging. Do not trigger for generic software diagrams, architecture, charts, or maps. Figures are ALWAYS bound to letters A, B, C, D... in PROMPT TEXT ONLY \u2014 no letters are drawn on the map. The map is GEOMETRY ONLY \u2014 it must never bleed style, colors, wardrobe, or location into the shot.",
+      "readme_summary": "Tigran's project-agnostic method for giving Seedance character DISPOSITION via a color-coded outline schematic \u2014 a \"staging reference\" (blocking map).",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "tig-scene-engine": {
+      "kind": "leaf",
+      "description": "Write and audit screenplay scenes and sequences using a five-element dramatic engine \u2014 Goal, Obstacle, Tactic, Reversal, Value Shift \u2014 with very specific custom definitions (see the body; these are NOT textbook definitions and must be applied exactly as written). Use whenever the user wants to write a new scene, draft scene options, develop a sequence, OR audit/test/diagnose an existing scene, sequence, outline, or full script for structural strength. Trigger on phrases like \"write this scene,\" \"give me an option for,\" \"audit my scene,\" \"test this against goal/obstacle/tactic/reversal/value shift,\" \"is this scene working,\" \"what's weak here,\" \"check my sequence,\" or when a screenplay/scene is pasted or a .docx/.pdf/Fountain/FD script is given for structural feedback. Also use proactively when the user is working on dramatic structure for thriller or psychological drama. Default to this skill for any scene-craft work rather than improvising generic story advice.",
+      "readme_summary": "Writes and audits screenplay scenes and sequences using a five-element dramatic engine \u2014 Goal, Obstacle, Tactic, Reversal, Value Shift \u2014 with custom definitions. Use to write new scenes, draft options, develop sequences, or audit/test/diagnose existing scenes for structural strength. Default scene-craft skill for thriller and psychological drama.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "ugc-ad-modes": {
+      "kind": "leaf",
+      "description": "Write Seedance video ad prompts for nine UGC, demonstration, review, showcase, broadcast, experimental, and try-on modes. Ground hooks in supplied product facts, audience objections, and the requested CTA; develop distinct persuasive angles with coherent visual direction. Use for branded video prompts and scoped revisions. Does not generate media or invoke other skills.",
+      "readme_summary": "Write hooks, scripts and Seedance prompts for nine ad modes using supplied product facts, audience objections, supported claims and accurate CTAs.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "ugc-motion-presets": {
+      "kind": "leaf",
+      "description": "Turn a named UGC motion preset into a canonical Seedance 2.5 prompt block. Use when the user names one of the 45 presets (Atomic, Outfit Switch, Eating Zoom, Group Photo, Yacht, ...) or asks for preset-style UGC motion \u2014 reaction, selfie, fashion, eating, VFX spectacle, action, timelapse, or multi-shot formats. Persuasion angle, claims, and CTA belong to ugc-ad-modes; prompt grammar belongs to seedance-prompt-25. Presets with a locked-off camera block record `format_static_by_design`; multi-shot presets take a shot plan. Never generates media.",
+      "readme_summary": "Turn a named UGC motion preset (Atomic, Outfit Switch, Eating Zoom, Yacht, ...) into a canonical Seedance 2.5 prompt block with reference bindings, duration, and constraint flags.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "update": {
+      "kind": "leaf",
+      "description": "Bring this repository up to date with its remote: fetch, integrate the upstream branch (default main), resolve merge conflicts file by file while preserving local work, then re-run workspace validation and refresh the skill catalog when skills changed. Use when asked to update the repo, pull latest changes, sync with origin, or resolve conflicts after pulling. Pushes only when the user asks. Not for committing task work or rewriting history.",
+      "readme_summary": "Updates the repository from its remote, resolves merge conflicts while preserving local work, and re-runs validation and catalog refresh.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    }
+  }
+}
