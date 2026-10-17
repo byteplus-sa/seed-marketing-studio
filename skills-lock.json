@@ -5,37 +5,37 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-captions/SKILL.md",
-      "computedHash": "5e217d6e880c9d4947d1077202508ad070b6b0e69c81e305e914c29c364d37ad"
+      "computedHash": "7d927e686365bd782f6edbf24b58b88bdcfe08c4de6ba5a299d29b7e73e8f789"
     },
     "ad-creative-check": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-creative-check/SKILL.md",
-      "computedHash": "536f607401948a8c19746da09cada7c5c8ba6d045030abe5ef2431bf73fac3b0"
+      "computedHash": "f92ec640dd4e721eada29f219c96961eb4794c34f0128c9e993e410526c5dd5a"
     },
     "ad-delivery-formats": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-delivery-formats/SKILL.md",
-      "computedHash": "b1fdd9ca1352fc745a7099886de37e8df15ba79beffef79e76512aa488537eb5"
+      "computedHash": "afdb524d5b352a59c5477364b78948ada77a7ec873bdaaab2e2ac8d94ee8c498"
     },
     "ad-localize": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-localize/SKILL.md",
-      "computedHash": "64dc7759741be79d6b314400801222e5d20076e0880bfa872c2803da9231a187"
+      "computedHash": "43808639fdcc7f76b40a24254f07ab0a3b57282317626c9031809a4ffb634f28"
     },
     "ad-performance-loop": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-performance-loop/SKILL.md",
-      "computedHash": "2bd650e6faf155b13548b0c8cdf8c5cc526b0eebb02bbd9853543d0cc716e23a"
+      "computedHash": "5d9cbf78e3996019d4c6052f1bf06046465289d6724b0e4cd6531276ff078e71"
     },
     "ad-variant-matrix": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-variant-matrix/SKILL.md",
-      "computedHash": "3db9e2c27c1d1d8daf227572dd770f53a49c0f121e3b3df140ae74a244f35352"
+      "computedHash": "6cd3a3912a325d83239fa010e6aeede600d08129e7754755eeb45797dbf27ddf"
     },
     "ark-mcp": {
       "source": "./local",
@@ -59,7 +59,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/brand-kit/SKILL.md",
-      "computedHash": "caf8e10ba5dcda782e7dd1cdda9d6d3f01045470a06a07827e42b4e64b78a92d"
+      "computedHash": "2c9ac6b1fa8ad9b95afbb4e9ebbc01413206521076cd3e870f763c9364df8c7b"
     },
     "brief-intake": {
       "source": "./local",
@@ -185,7 +185,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/product-intake/SKILL.md",
-      "computedHash": "cb939562035e8b3b4d5e8bd3701867d68d24dee48891e3947371d6a48db670fd"
+      "computedHash": "563eb339f691c0136cd38bfc810e5e0d818e5b4b0f8ed196c561545e39fe4fa0"
     },
     "prompt-review": {
       "source": "./local",
@@ -431,7 +431,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/static-ad-batch/SKILL.md",
-      "computedHash": "3ef02534986253173fa7303a5bac1edd32b8eace9ead49cb13593794487de598"
+      "computedHash": "9f4698eee612917137ac79d94cfdc1c7e72605a3311b5bc83dcfd77e5b337903"
     },
     "template-factory": {
       "source": "./local",

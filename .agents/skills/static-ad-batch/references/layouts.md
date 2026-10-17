@@ -7,8 +7,8 @@ adding a layout. Read [the entrypoint](../SKILL.md) first.
 
 Templates live in `assets/templates/`. The planner fills `{{placeholders}}`;
 every value is HTML-escaped except the few blocks the planner builds itself
-(`plate`, `claims`, `rows`, `terms`), whose text is escaped while building. An
-unknown placeholder stops the plan.
+(`plate`, `claims`, `rows`, `terms`, `legal`), whose text is escaped while
+building. An unknown placeholder stops the plan.
 
 | Placeholder | Source |
 | --- | --- |
@@ -20,6 +20,7 @@ unknown placeholder stops the plan.
 | `claims` | `<li class="claim" data-copy-key="claim_N">` items |
 | `ours_label`, `alternative_label`, `rows` | Comparison table header and rows (`row_N_attribute`, `row_N_ours`, `row_N_alternative`) |
 | `terms` | `<p class="terms" data-copy-key="terms">` or nothing |
+| `legal` | `<p class="legal" data-copy-key="legal_N">` per applicable brand required line, or nothing |
 
 Rules for editing:
 
@@ -34,6 +35,40 @@ Rules for editing:
   `brand-cta`), not the kit family names.
 - Sizes scale from `--unit` (1% of the shorter canvas side), so one template
   serves every ratio.
+- Every layout template keeps a `{{legal}}` slot in its footer. A custom
+  template without it is refused whenever a brand required line applies.
+
+## Brand copy rules
+
+The planner applies the pinned kit's `copy_rules` to deterministic copy, as
+the brand-kit consumer contract requires.
+
+**Required lines.** Each `required_lines[]` entry whose `when` condition maps
+to the ad's layout is rendered verbatim in the `{{legal}}` slot as
+`legal_N` and passed to the renderer as exact copy. A line identical to the
+offer `terms` is not repeated. Matching ignores case, repeated spaces and a
+trailing period:
+
+| `when` | Layouts |
+| --- | --- |
+| `always` | every layout |
+| `offer shown`, `price shown`, `discount shown`, `promotion shown` | `offer` |
+| `comparison shown` | `comparison` |
+| `review shown`, `rating shown`, `testimonial shown` | `social-proof` |
+
+Any other condition is not guessed: the plan adds one warning per line, and
+the agent decides whether it applies and finishes it in post or as offer
+terms. A malformed entry (missing or multi-line `text` or `when`) stops the
+plan. Add a condition to `REQUIRED_LINE_CONDITIONS` in the script, with a
+test, only when its meaning is unambiguous for a layout.
+
+**Trademark marks.** For each `trademark_marks` name, the planner appends the
+mark (`®`, `™` or `℠`) to the first whole-word, case-sensitive mention in the
+ad's copy, read in the order headline, other copy, then CTA and terms. A
+mention that already carries a mark is left alone, and later mentions stay
+plain. Each job records what changed in `trademark_marks_applied`; the
+`claims` entries keep the fact text unchanged. Any other mark value stops the
+plan. Required lines stay verbatim and are never marked.
 
 ## Layouts
 

@@ -253,6 +253,16 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(result["status"], "fail")
         self.assertEqual(result["violations"], ["logo"])
 
+    def test_check_without_a_size_is_refused_instead_of_assuming_one(self):
+        arguments = [
+            "check", "--placement", "meta-instagram-reels", "--box", "cta=100,1000,800,200"
+        ]
+        stderr = io.StringIO()
+        with contextlib.redirect_stderr(stderr), self.assertRaises(SystemExit) as raised:
+            MODULE.main(arguments)
+        self.assertEqual(raised.exception.code, MODULE.EXIT_INVALID)
+        self.assertIn("--size", stderr.getvalue())
+
     def test_check_without_boxes_is_an_error(self):
         code, _, stderr = run_cli(
             "check", "--placement", "meta-instagram-reels", "--size", "1080x1920"

@@ -67,7 +67,7 @@ is the [brand-kit schema](../../contracts/schemas/brand-kit.schema.json).
    ```
 
    The scaffold is a valid draft with every unknown already listed in
-   `missing`.
+   `missing`, plus empty `assets/` and `decisions/` folders.
 4. **Extract** following [extraction](references/extraction.md): read the
    brand's own pages and supplied files, download logos and fonts only from
    brand-owned or user-supplied sources into `assets/`, and record each file's
@@ -89,7 +89,23 @@ is the [brand-kit schema](../../contracts/schemas/brand-kit.schema.json).
    summary (`brand_kit.py show`) and the `missing` list, and wait for the
    user's words in chat. Then set `status: approved` and fill `approval` (mode,
    actor, decision_ref, decided_at). Approval of creative values never grants
-   trademark or font rights by inference.
+   trademark or font rights by inference. `validate` refuses an approved kit
+   unless all of these hold:
+
+   - `source.authorized_by` holds the user's authorization statement
+     (`brand.approval_authorized`).
+   - `approval.decision_ref` names an existing regular file under the kit's
+     `decisions/` folder, not a symlink and not escaping it
+     (`brand.approval_record`).
+   - `missing` lists, and the kit leaves unknown, only these optional paths
+     (`brand.approval_missing`): `source.retrieved_at`,
+     `logos.N.min_height_px`, `logos.N.clear_space_ratio`, `typography` (no
+     fonts known), `typography.N.weight`, `typography.N.file`,
+     `typography.N.sha256`, `typography.N.source`, `voice.reading_level`,
+     `cta_style.shape`, `cta_style.case`, `imagery.style_sentence`,
+     `disclosure.ai_label_text` and `disclosure.placement`. `name`, at least
+     one logo and at least one palette color are always required, and a named
+     font still needs its license (`brand.font_license`).
 8. **Pin** in the campaign:
 
    ```bash
@@ -106,15 +122,18 @@ is the [brand-kit schema](../../contracts/schemas/brand-kit.schema.json).
 
 | Command | Purpose | Exit 1 when |
 | --- | --- | --- |
-| `init <library-root> <brand-id> [--name N]` | Scaffold `brand.json` draft and `assets/` | Invalid id or the kit already exists |
-| `validate <brand.json>` | Schema, file existence, SHA-256 match, hex format, font license, missing list | Any `error` finding |
+| `init <library-root> <brand-id> [--name N]` | Scaffold `brand.json` draft, `assets/` and `decisions/` | Invalid id or the kit already exists |
+| `validate <brand.json>` | Schema, file existence, SHA-256 match, hex format, font license, missing list, timestamps, approval readiness | Any `error` finding |
 | `pin <brand.json> [--expect SHA] [--allow-draft]` | Print the canonical SHA-256 (sorted-key compact UTF-8 JSON) | Invalid kit, unapproved kit, or pin mismatch |
 | `show <brand.json>` | Consumer view: palette, fonts, logos, copy rules, style sentence, disclosure, missing | Invalid kit |
 
 Finding rule IDs: `brand.schema`, `brand.hex`, `brand.missing_listed`,
 `brand.file_contained`, `brand.file_exists`, `brand.file_hash`,
 `brand.font_license`, `brand.id_matches_directory`, `brand.palette_unique`,
-`brand.logo_primary`. A stored font file without a license is always an error;
+`brand.logo_primary`, `brand.timestamp` (`source.retrieved_at` or
+`approval.decided_at` is not an ISO-8601 date-time with a UTC offset),
+`brand.approval_authorized`, `brand.approval_record` and
+`brand.approval_missing`. A stored font file without a license is always an error;
 a family named without a file and license is a warning in a draft and an
 error once approved.
 

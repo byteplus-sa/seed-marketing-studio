@@ -48,6 +48,7 @@ class BrandKitTestCase(unittest.TestCase):
         (kit_dir / "assets/fonts").mkdir(parents=True)
         (kit_dir / "assets/logo_primary.svg").write_bytes(LOGO_BYTES)
         (kit_dir / "assets/fonts/acmesans-bold.woff2").write_bytes(FONT_BYTES)
+        (kit_dir / "decisions/approve_v01.md").write_text("Approved after visible inspection.\n")
         kit = json.loads((kit_dir / "brand.json").read_text())
         kit.update(
             {
@@ -127,6 +128,7 @@ class InitTests(BrandKitTestCase):
         self.assertEqual(code, 0)
         kit_path = Path(result["kit"])
         self.assertTrue((kit_path.parent / "assets").is_dir())
+        self.assertTrue((kit_path.parent / "decisions").is_dir())
         kit = json.loads(kit_path.read_text())
         self.assertEqual(kit["status"], "draft")
         self.assertIn("name", kit["missing"])
@@ -277,6 +279,147 @@ class ValidateTests(BrandKitTestCase):
         path = self.approved_kit()
         self.edit(path, logos={"role": "primary"}, missing="name", palette=[1, 2])
         self.assertIn("brand.schema", self.rules(path))
+
+
+class ApprovalTests(BrandKitTestCase):
+    def test_approved_kit_without_authorization_logos_palette_or_decision_record_is_refused(self) -> None:
+        path = self.approved_kit()
+        kit = json.loads(path.read_text())
+        kit["source"]["authorized_by"] = None
+        kit["logos"] = []
+        kit["palette"] = []
+        kit["missing"] = sorted({*kit["missing"], "source.authorized_by", "logos", "palette"})
+        kit["approval"]["decision_ref"] = "decisions/never_written.md"
+        self.write(kit, path)
+        rules = self.rules(path)
+        self.assertIn("brand.approval_authorized", rules)
+        self.assertIn("brand.approval_missing", rules)
+        self.assertIn("brand.approval_record", rules)
+        code, result = run("pin", str(path))
+        self.assertEqual(code, 1)
+        self.assertNotIn("sha256", result)
+
+    def test_unlisted_null_authorization_is_refused_when_approved(self) -> None:
+        path = self.approved_kit()
+        kit = json.loads(path.read_text())
+        kit["source"]["authorized_by"] = None
+        self.write(kit, path)
+        self.assertIn("brand.approval_authorized", self.rules(path))
+
+    def test_blank_authorization_statement_is_refused_when_approved(self) -> None:
+        path = self.approved_kit()
+        kit = json.loads(path.read_text())
+        kit["source"]["authorized_by"] = "   "
+        self.write(kit, path)
+        self.assertIn("brand.approval_authorized", self.rules(path))
+
+    def test_draft_kit_may_leave_authorization_and_identity_unknown(self) -> None:
+        code, result = run("init", str(self.library), "acme-home")
+        self.assertEqual(code, 0)
+        self.assertEqual(self.rules(Path(result["kit"])), [])
+
+    def test_each_required_identity_field_blocks_approval_when_missing(self) -> None:
+        for field in ("name", "logos", "palette"):
+            with self.subTest(field=field):
+                path = self.approved_kit()
+                kit = json.loads(path.read_text())
+                kit[field] = None if field == "name" else []
+                kit["missing"] = sorted({*kit["missing"], field})
+                self.write(kit, path)
+                findings = run("validate", str(path))[1]["findings"]
+                self.assertIn(
+                    ("brand.approval_missing", field),
+                    [(finding["rule_id"], finding["path"]) for finding in findings],
+                )
+                for child in sorted(path.parent.rglob("*"), reverse=True):
+                    child.rmdir() if child.is_dir() else child.unlink()
+                path.parent.rmdir()
+
+    def test_listed_missing_value_that_is_required_blocks_approval_even_when_present(self) -> None:
+        path = self.approved_kit()
+        kit = json.loads(path.read_text())
+        kit["missing"].append("palette")
+        self.write(kit, path)
+        self.assertIn("brand.approval_missing", self.rules(path))
+
+    def test_optional_fields_may_stay_missing_in_an_approved_kit(self) -> None:
+        path = self.approved_kit()
+        kit = json.loads(path.read_text())
+        kit["source"]["retrieved_at"] = None
+        kit["logos"][0].update({"min_height_px": None, "clear_space_ratio": None})
+        kit["typography"][0].update({"file": None, "sha256": None, "source": None, "weight": None})
+        kit["voice"]["reading_level"] = None
+        kit["cta_style"].update({"shape": None, "case": None})
+        kit["imagery"]["style_sentence"] = None
+        kit["missing"] = sorted(MODULE.unknown_paths(kit))
+        self.write(kit, path)
+        self.assertEqual(self.rules(path), [])
+        kit["typography"] = []
+        kit["missing"] = sorted(MODULE.unknown_paths(kit))
+        self.write(kit, path)
+        self.assertEqual(self.rules(path), [])
+
+    def test_decision_record_must_be_a_regular_file_inside_the_decisions_folder(self) -> None:
+        path = self.approved_kit()
+        outside = self.library.parent / "outside.md"
+        outside.write_text("forged")
+        (path.parent / "decisions/folder.md").mkdir()
+        (path.parent / "decisions/escape.md").symlink_to(outside)
+        (path.parent / "decisions/inner.md").symlink_to(path.parent / "decisions/approve_v01.md")
+        for reference in (
+            "../outside.md",
+            "decisions/../../outside.md",
+            str(outside),
+            "decisions/escape.md",
+            "decisions/inner.md",
+            "decisions/folder.md",
+            "assets/logo_primary.svg",
+            "brand.json",
+        ):
+            with self.subTest(reference=reference):
+                kit = json.loads(path.read_text())
+                kit["approval"]["decision_ref"] = reference
+                self.write(kit, path)
+                self.assertIn("brand.approval_record", self.rules(path))
+
+    def test_symlinked_decisions_folder_cannot_hold_the_record(self) -> None:
+        path = self.approved_kit()
+        outside = self.library.parent / "elsewhere"
+        outside.mkdir()
+        (outside / "approve_v01.md").write_text("forged")
+        decisions = path.parent / "decisions"
+        (decisions / "approve_v01.md").unlink()
+        decisions.rmdir()
+        decisions.symlink_to(outside, target_is_directory=True)
+        self.assertIn("brand.approval_record", self.rules(path))
+
+
+class TimestampTests(BrandKitTestCase):
+    def test_unparseable_or_offsetless_timestamps_are_rejected(self) -> None:
+        path = self.approved_kit()
+        for bad in ("yesterday", "not a date", "2026-10-17", "2026-10-17T09:00:00", "2026-13-40T09:00:00Z"):
+            for field in ("source.retrieved_at", "approval.decided_at"):
+                with self.subTest(value=bad, field=field):
+                    kit = json.loads(path.read_text())
+                    section, key = field.split(".")
+                    original = kit[section][key]
+                    kit[section][key] = bad
+                    self.write(kit, path)
+                    findings = run("validate", str(path))[1]["findings"]
+                    self.assertIn(
+                        ("brand.timestamp", field),
+                        [(finding["rule_id"], finding["path"]) for finding in findings],
+                    )
+                    kit[section][key] = original
+                    self.write(kit, path)
+
+    def test_timestamps_with_any_utc_offset_pass(self) -> None:
+        path = self.approved_kit()
+        kit = json.loads(path.read_text())
+        kit["source"]["retrieved_at"] = "2026-10-17T17:00:00+08:00"
+        kit["approval"]["decided_at"] = "2026-10-17T10:00:00.250+00:00"
+        self.write(kit, path)
+        self.assertEqual(self.rules(path), [])
 
 
 class PinAndShowTests(BrandKitTestCase):

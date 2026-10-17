@@ -36,9 +36,10 @@ full factorial.** One change per row is what makes a result attributable.
 
 ## Inputs and preconditions
 
-1. **An approved hero take.** Its shot ID, take, SHA-256 and the decision
-   record that approved it under the project's `approval_mode`. A candidate in
-   `review` is not a hero.
+1. **An approved hero take.** Its shot ID, take, SHA-256, the take file
+   (`hero.take_file`) and the decision record that approved it under the
+   project's `approval_mode` (`hero.decision_ref`), both as paths inside the
+   campaign project. A candidate in `review` is not a hero.
 2. **The hero's current value for every axis** that will vary (for example
    `hook: hook-demo-first`, `talent: vp-a`, `ratio: 9:16`). Values are IDs:
    hook IDs from the `ugc-ad-modes` hook library, element IDs for talent,
@@ -49,7 +50,9 @@ full factorial.** One change per row is what makes a result attributable.
    and location sheets. A missing or unapproved reference blocks only the rows
    that need it.
 4. **Unit cost per axis** in USD from current pricing for the route and
-   resolution, or the user's stated figure. Never guess a price; ask.
+   resolution, or the user's stated figure. Never guess a price; ask. Only
+   `ratio` has a default: 0, because a Studio reframe is not a provider
+   operation.
 5. **Budget and cap**: `budget_usd` and `max_variants`. Ask when either is
    missing; do not default to "no limit".
 
@@ -78,19 +81,25 @@ flowchart LR
    order hook, talent, product, outfit, location, language, market, ratio) and
    checks unique names, unique Studio shot folders, unique localized and
    delivery projects (`matrix.unique_projects`), the variant cap, empty
-   matrices and rows that change market and language together. A warning above five
+   matrices and rows that change market and language together. A
+   `full_factorial` matrix without `notes` recording the user's request is
+   refused (`matrix.factorial_request`). A warning above five
    variants means the rows belong in more than one ad group.
 3. **Cost.** `variant_matrix.py cost <matrix> --unit-cost hook=<usd> ...`
-   sums one unit cost per routed step of each row, covering that step's draft
-   and final. A swap, hook, dub or reframe step costs its axis unit; a
-   talent-and-location row routed to one Motion Transfer costs one
-   `motion-recast` unit (`--unit-cost motion-recast=<usd>`), not two swaps.
-   A market row costs the explicit `market` unit (`--unit-cost market=<usd>`
-   or `unit_cost_usd.market`); it is an estimate, because the real cost
-   depends on the per-element levels chosen in `ad-localize`, and the output says so in
-   `market_estimate_note`. It exits 1 over `budget_usd` or `max_variants`, or when a routed step has
-   no unit cost. Show the per-row and total estimate before any spend. A
-   refusal here is a stop under **`ad.variant_budget_gate`**.
+   charges one unit per **unique operation** (see
+   [Shared operations](#shared-operations)), covering its draft and final:
+   a swap, hook or dub its axis unit; a talent-and-location Motion Transfer
+   one `motion-recast` unit, not two swaps; a market adaptation the explicit
+   `market` unit once per localized project, labelled an estimate in
+   `market_estimate_note` because `ad-localize` chooses the real per-element
+   levels; a reframe the `ratio` unit once per delivery project, **0 by
+   default** (`ratio_cost_note`), set only to budget native regeneration.
+   Each row's `estimated_cost_usd` counts the operations it owns;
+   `operations_estimate` lists each unique operation with its owner and
+   `used_by` rows; the total and the budget gate use these deduplicated
+   costs. It exits 1 over `budget_usd` or `max_variants`, or when a routed
+   step has no unit cost. Show the per-row and total estimate before any
+   spend. A refusal here is a stop under **`ad.variant_budget_gate`**.
 4. **Approve the matrix.** In `approve_for_me` the agent may set `status:
    approved` once the plan and cost pass and the hero hash is bound. In
    `ask_for_approval` show the rows, names and total, and wait for the user's
@@ -101,8 +110,12 @@ flowchart LR
    <op> --capabilities <evidence.json>` (plus `--audio-model` and
    `--audio-operation` when language rows exist) refuses a draft matrix, an
    unbound hero, or unresolved model, operation or capability values, and
-   prints per provider step the `prepare_request.py` hash command and
+   prints per owned provider step the `prepare_request.py` hash command and
    register command. It is a dry plan: it writes nothing and submits nothing.
+   - **Hero check.** `hero.decision_ref` and `hero.take_file` must each be a
+     regular file inside `--project` (no absolute path, `..` or symlink
+     escape; `matrix.hero_decision`, `matrix.hero_take`), and the take file
+     must still hash to `hero.sha256` (`matrix.hero_hash_mismatch`).
    - **Draft first.** The default `--stage draft` adds `--param
      resolution=480p` to both commands; hook steps also get
      `--param duration=4`.
@@ -116,15 +129,15 @@ flowchart LR
      exemption and dub steps the no-video-shot exemption in
      `shot_rule_exemption`; the reviewer cites that exemption.
    - **Asset IDs** are `<name>_<take>_draft`, `<name>_<take>_final` or
-     `<name>_<take>_audio` (multi-step rows insert the step axes after the
-     name), so drafts, finals and retakes each get a distinct registry
-     identity.
+     `<name>_<take>_audio`, so drafts, finals and retakes each get a distinct
+     registry identity. A row registers at most its own last step; `after`
+     names the variant whose selected take that step starts from.
    - **Paths** live in the variant's Studio shot folder
      `scenes/variant-<kebab-name>/` (see [Studio mapping](#studio-mapping)).
-   - **Market rows** get no command. The output lists them under `localize`
-     with the market card, the market inventory, the localized project and a
-     reminder that `ad-localize` plans, reviews and registers its own
-     operations.
+   - **Market rows** get no command. The output lists each localized project
+     once under `localize` (the row that owns it) with the market card, the
+     market inventory, the localized project and a reminder that
+     `ad-localize` plans, reviews and registers its own operations.
 6. **Produce each row** through the route below. For every provider step:
    write the shot manifest, write the prompt with the specialist skill, freeze
    it at the printed path, run the hash command, run `prompt-review` inline
@@ -157,30 +170,32 @@ prompt. Summary:
 Two swap classes in one factorial row (for example product and outfit) run as
 **sequential** swaps with inspection between them, never one combined edit.
 
+## Shared operations
+
+In a full factorial the planner keys every step on its lineage (its route and
+changed values plus every earlier step in the row). The first row with a
+lineage **owns** that operation; later rows reuse it (`steps[].owner`,
+`base_variant`) and never register or pay for it again, so one talent swap
+serves its market and ratio rows. Read
+[shared operations](references/axis-routing.md#shared-operations) before
+producing a factorial.
+
 ## Studio mapping
 
 Studio discovers only `scenes/scene-*/*/shot.md` and `scenes/*/shot.md`, so
-every variant row that changes a generated axis is its own Studio shot in the
-campaign project. A ratio-only row has no Studio shot there: its `delivery`
-entry names the per-ratio project (`projects/<campaign>-<ratio>`, for example
-`-4x5`) that `ad-delivery-formats` builds, because one Studio project renders
-one canvas. A market-only row (market, or market and ratio) has no Studio shot
-there either: its `localize` entry names the market card
-`projects/<campaign>/markets/<market-id>/market.json` and the localized project
-`projects/<campaign>-<market-id>` that `ad-localize` owns, and its `delivery`
-project becomes `projects/<campaign>-<market-id>-<ratio>`. A row that changes
-market and a generated axis keeps its Studio shot here; `ad-localize` adapts
-the selected take afterwards.
-
-In a full factorial, a market or ratio row that also changes a generated axis
-gets **variant-specific** project paths, so two variants never build or render
-into one project: `projects/<campaign>-<variant-key>-<market-id>` for the
-localized project and `projects/<campaign>-<variant-key>[-<market-id>]-<ratio>`
-for delivery, where `<variant-key>` joins the row's changed generated values in
-axis order (for example `projects/<campaign>-hook-a-south-4x5`). Market-only and
-ratio-only rows keep the short paths above. `plan` refuses any remaining
-duplicate path with `matrix.unique_projects`; the full table is in
-[axis routing](references/axis-routing.md#project-paths).
+every variant row that owns a generated step (hook, swap, recast or dub) is
+its own Studio shot in the campaign project. A row that only reuses another
+row's generated work has no Studio shot; its `base_variant` names the shot
+whose selected take it starts from. Market and ratio rows build into their own
+projects because one Studio project renders one canvas: the `localize` entry
+names the market card `projects/<campaign>/markets/<market-id>/market.json`
+and the localized project `projects/<campaign>[-<variant-key>]-<market-id>`
+that `ad-localize` owns, and the `delivery` entry names the per-ratio project
+`projects/<campaign>[-<variant-key>][-<market-id>]-<ratio>` (ratios render as
+`4x5`) that `ad-delivery-formats` builds. `<variant-key>` joins the row's
+changed generated values in axis order, so two variants never share a
+project; `plan` refuses any remaining clash with `matrix.unique_projects`. The
+full table is in [axis routing](references/axis-routing.md#project-paths).
 
 - Shot folder: `scenes/variant-<kebab-name>/`, where `<kebab-name>` is the
   variant name lowercased with `_` turned into `-` (folders and IDs are
@@ -209,6 +224,7 @@ duplicate path with `matrix.unique_projects`; the full table is in
     "take": "t03",
     "sha256": "<64-hex of the approved hero take>",
     "decision_ref": "decisions/s01_sh010_t03.json",
+    "take_file": "scenes/s01_sh010/s01_sh010_t03_final.mp4",
     "values": {"hook": "hook-demo-first", "talent": "vp-a", "language": "en", "ratio": "9:16"}
   },
   "axes": {
@@ -239,7 +255,8 @@ duplicate path with `matrix.unique_projects`; the full table is in
 
 - **One axis per variant (`ad.variant_one_axis`).** Each variant changes one
   axis from the hero unless the user explicitly asked for a full factorial;
-  record that request in the matrix `notes`.
+  record that request in the matrix `notes`. `plan` refuses a
+  `full_factorial` matrix with empty `notes` (`matrix.factorial_request`).
 - **Market owns its language.** A row that changes `market` and `language`
   together is refused (`matrix.market_language`): the market card sets the
   language inside `ad-localize`. Test language alone, or market alone, one
@@ -255,8 +272,9 @@ duplicate path with `matrix.unique_projects`; the full table is in
 - **Budget gate (`ad.variant_budget_gate`).** No variant production proceeds
   after `variant_matrix.py cost` refuses the matrix for budget or variant
   count.
-- **No hero, no matrix.** A hero that is not approved, or whose file hash no
-  longer matches `hero.sha256`, stops the matrix.
+- **No hero, no matrix.** A hero that is not approved, has no decision record
+  inside the project, or whose take file no longer hashes to `hero.sha256`
+  stops the matrix; `register` checks all three.
 - **Budget and cap refuse, they do not trim.** When `cost` exits 1, propose
   which axis or values to drop, or ask for a higher budget. Never silently
   drop rows.

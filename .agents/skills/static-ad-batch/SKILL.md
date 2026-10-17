@@ -46,6 +46,14 @@ not instructions to load those skills.
 Missing inputs stop the plan with a clear error; the planner never invents a
 color, font, claim or logo.
 
+**Brand copy rules apply automatically.** Each kit `required_lines` entry
+whose `when` condition maps to the layout (for example `offer shown` on the
+`offer` layout, `always` everywhere) is rendered verbatim in the template's
+legal slot; an unmapped condition is a plan warning for the agent to resolve.
+Each `trademark_marks` name gets its mark on its first mention in the ad's
+copy, recorded per job in `trademark_marks_applied`. The condition table and
+matching rules are in [layouts](references/layouts.md#brand-copy-rules).
+
 ## Procedure
 
 1. **Gather approved inputs.** Brand kit, facts, packshot, optional plate. A
@@ -69,8 +77,10 @@ color, font, claim or logo.
    or undated perishable offers, missing brand tokens, a draft, unpinned or
    re-pinned kit, a font or logo without a matching recorded SHA-256, a font
    without a license, banned words from the kit (and their simple plurals),
-   unknown layouts or ratios, paths outside the root, and existing outputs
-   (raise `version` or pass `--overwrite` for a repair).
+   malformed required lines or trademark marks, an applicable required line
+   with no `{{legal}}` slot in the template, unknown layouts or ratios, paths
+   outside the root, and existing outputs (raise `version` or pass
+   `--overwrite` for a repair).
 5. **Render.** Run each printed command from the repository root. Each passes
    the exact copy as `--copy KEY=TEXT` and the headline face as
    `--require-local-font brand-headline`, so the renderer fails on copy drift
@@ -113,8 +123,9 @@ In the spec's `output_dir`:
 - `batch_{campaign}_v{NN}.json`, the manifest: input hashes (kit, facts,
   packshot, plate, logo, fonts, templates, stylesheet), the freshness window
   and check time, per-job copy, claim sources and statuses, sizes and render
-  commands, plus warnings such as perishable offers or a CTA outside the kit's
-  verbs.
+  commands, the required lines placed and trademark marks applied per job,
+  plus warnings such as perishable offers, a CTA outside the kit's verbs, or a
+  required-line condition the planner cannot map.
 
 Record the batch as `source: deterministic_render`, `generation:
 deterministic_html`. A plate keeps its own prompt, review, task and selection
@@ -133,4 +144,6 @@ Before selection, check each rendered ad:
 4. Copy and CTA sit inside the placement's safe zone; 9:16 uses the stricter
    layout in [layouts](references/layouts.md).
 5. The plate carries no text and does not fight the copy for contrast.
-6. Disclosure or legal lines the brief or kit requires are present.
+6. Disclosure or legal lines the brief or kit requires are present: every
+   job's `required_lines` matches the kit, each unmapped-condition warning is
+   resolved, and trademark marks render in the brand font without fallback.

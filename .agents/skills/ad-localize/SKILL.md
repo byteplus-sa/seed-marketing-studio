@@ -163,7 +163,9 @@ records each element's level and lets one element sit below the default.
    `prepare_request.py --register` and drafted at 480p first. Run
    `market_card.py gate --level <L> [--element <id>] --stage final` before any
    final-resolution request; the gate uses the stricter of `--level` and the
-   card's `level_default` unless the element has its own row in `inventory.md`.
+   card's `level_default` unless the element has its own row in `inventory.md`,
+   and without `--element` it also takes the highest level `inventory.md`
+   records.
    L3 to L5 stop there until the reviewer signs off. **Every L3 to L5
    final-resolution request passes `--required-rule localize.native_review` to
    `prepare_request.py`**, and that review check is `pass` only with the passing

@@ -686,7 +686,7 @@
         "preflight"
       ],
       "owner_path": ".agents/skills/product-intake/SKILL.md",
-      "summary": "A claim keeps qualifiers its quote carries (up to, as low as, from + number, starting at, may, approximately).",
+      "summary": "A claim keeps qualifiers its quote carries (up to, as low as, from + number, starting at, may, approximately); product_facts.py validate warns, supported withholds the claim under blocked, and static-ad-batch refuses it.",
       "exceptions": []
     },
     {

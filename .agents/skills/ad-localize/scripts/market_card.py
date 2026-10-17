@@ -5,6 +5,7 @@ import hashlib
 import json
 import re
 from dataclasses import asdict, dataclass
+from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -168,6 +169,26 @@ def missing_findings(card: dict[str, Any]) -> list[Finding]:
         for path in sorted(listed - unknown)
     )
     return findings
+
+
+def parse_timestamp(value: str) -> datetime | None:
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo is not None else None
+
+
+def timestamp_message(value: Any) -> str | None:
+    if not isinstance(value, str) or parse_timestamp(value) is not None:
+        return None
+    return f"{value!r} is not an ISO-8601 date-time with a UTC offset, such as 2026-10-17T09:00:00Z"
+
+
+def timestamp_findings(card: dict[str, Any]) -> list[Finding]:
+    approval = card.get("approval")
+    message = timestamp_message(approval.get("decided_at")) if isinstance(approval, dict) else None
+    return [] if message is None else [Finding("market.timestamp", "approval.decided_at", message)]
 
 
 def directory_findings(card: dict[str, Any], card_dir: Path) -> list[Finding]:
@@ -424,6 +445,7 @@ def validate_card(card: Any, card_dir: Path, placements: set[str] | None = None)
     findings.extend(reviewer_findings(card))
     findings.extend(price_findings(card, card_dir))
     findings.extend(approval_findings(card, card_dir))
+    findings.extend(timestamp_findings(card))
     return findings
 
 
@@ -538,6 +560,9 @@ def review_record_blockers(
     errors = [schema_message(error) for error in validator.iter_errors(record)]
     if isinstance(record, dict) and record.get("decided_by") == "agent":
         errors.append("decided_by is agent; the agent never signs off, only the user or the reviewer")
+    decided = timestamp_message(record.get("decided_at")) if isinstance(record, dict) else None
+    if decided is not None:
+        errors.append(f"Sign-off record decided_at: {decided}")
     if errors:
         return blockers(errors)
     return blockers(record_blockers(card, review_dir, record, variant))
@@ -629,12 +654,16 @@ def review_dir_blockers(review_dir: Path, variant: str | None) -> list[Finding]:
 
 def effective_level(review_dir: Path, card: dict[str, Any], requested: str, element: str | None) -> tuple[str, list[Finding]]:
     default = stricter(requested, card["level_default"])
-    if element is None:
+    inventory = review_dir / INVENTORY_NAME
+    if element is None and not inventory.exists() and not inventory.is_symlink():
         return default, []
     try:
-        levels = inventory_levels(read_regular_text(review_dir / INVENTORY_NAME))
+        levels = inventory_levels(read_regular_text(inventory))
     except MarketCardError as error:
         return default, [Finding("market.level_override", INVENTORY_NAME, str(error))]
+    if element is None:
+        highest = max(levels.values(), key=LEVELS.index, default=None)
+        return stricter(default, highest), []
     if element not in levels:
         return default, [
             Finding(

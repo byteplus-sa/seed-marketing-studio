@@ -76,7 +76,9 @@ platform's own downloadable template or preview instead.
 
 - **Safe-zone math:** `uv run python .agents/skills/ad-delivery-formats/scripts/safe_zones.py zones --placement <id> --size WxH`
   prints the title-safe rectangle in pixels. Margins round inward so the
-  rectangle never exceeds the published zone.
+  rectangle never exceeds the published zone. `check` and `overlay` require
+  `--size` (the cut's real frame size); only `zones` falls back to the
+  placement's recommended resolution.
 - **Several placements, one cut:** pass `--placement` more than once; the
   result is the intersection, and the ratios must match.
 - **Ratio tolerance:** a `--size` whose ratio differs from the placement by

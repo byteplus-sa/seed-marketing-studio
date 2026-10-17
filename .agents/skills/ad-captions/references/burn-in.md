@@ -29,7 +29,9 @@ A size whose ratio differs from the placement by more than 1% is rejected.
 - **Contrast:** white text on a 70% black box by default; brand colors may
   replace them when contrast stays high on every frame the cue covers.
 - **Typeface:** the brand caption face from the brand kit, loaded from a
-  project-local file via `--font-src`, with a sans-serif fallback. Check that
+  project-local file via `--font-src` (relative to the Studio project; the
+  file must exist, or the script refuses rather than silently falling back),
+  with a sans-serif fallback for missing glyphs. Check that
   the face covers every script shipped (CJK, Arabic, Devanagari); otherwise use
   a covering fallback face for that language.
 - **Position:** bottom of the safe rectangle by default. Use `--anchor top`

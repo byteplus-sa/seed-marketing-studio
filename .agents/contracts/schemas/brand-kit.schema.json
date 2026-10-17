@@ -165,7 +165,7 @@
     },
     "missing": {
       "type": "array",
-      "description": "Dotted paths of values that are unknown and left null or empty rather than invented.",
+      "description": "Dotted paths of values that are unknown and left null or empty rather than invented. An approved kit may list only the optional paths brand_kit.py documents (APPROVAL_OPTIONAL); name, logos, palette and source.authorized_by are always required once approved.",
       "items": {"type": "string", "pattern": "^[a-z_]+(\\.[a-z0-9_]+)*$"},
       "uniqueItems": true
     },
@@ -179,8 +179,16 @@
           "properties": {
             "mode": {"enum": ["approve_for_me", "ask_for_approval"]},
             "actor": {"enum": ["agent", "user"]},
-            "decision_ref": {"type": "string", "minLength": 1},
-            "decided_at": {"type": "string", "format": "date-time"}
+            "decision_ref": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Path, relative to the kit directory, of an existing regular decision record under decisions/. brand_kit.py validate checks it exists and stays inside the kit."
+            },
+            "decided_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "ISO-8601 date-time with a UTC offset; brand_kit.py validate parses it because the format keyword alone is not enforced."
+            }
           },
           "additionalProperties": false
         }
@@ -198,7 +206,11 @@
     "kebab": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 64},
     "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "web_url": {"type": "string", "pattern": "^https://[^\\s]+$"},
-    "timestamp_or_null": {"type": ["string", "null"], "format": "date-time"},
+    "timestamp_or_null": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "ISO-8601 date-time with a UTC offset, or null; brand_kit.py validate parses it."
+    },
     "relative_file": {"type": "string", "pattern": "^assets/[A-Za-z0-9._/-]+$", "not": {"pattern": "(^|/)\\.\\.(/|$)"}},
     "asset_source": {
       "type": "string",

@@ -57,6 +57,19 @@ CONTACT_ROWS_PER_PAGE = 12
 CONTACT_TILE = 360
 CONTACT_GAP = 24
 DEFAULT_PERISHABLE_MAX_AGE_HOURS = 24
+TRADEMARK_MARKS = ("®", "™", "℠")
+REQUIRED_LINE_CONDITIONS: dict[str, tuple[str, ...]] = {
+    "always": LAYOUTS,
+    "offer shown": ("offer",),
+    "price shown": ("offer",),
+    "discount shown": ("offer",),
+    "promotion shown": ("offer",),
+    "comparison shown": ("comparison",),
+    "review shown": ("social-proof",),
+    "rating shown": ("social-proof",),
+    "testimonial shown": ("social-proof",),
+}
+WHITESPACE = re.compile(r"\s+")
 CLOCK_SKEW = timedelta(minutes=5)
 
 
@@ -158,6 +171,38 @@ def entries_by_role(entries: Any, label: str) -> dict[str, dict[str, Any]]:
     return result
 
 
+def condition_key(when: str) -> str:
+    return WHITESPACE.sub(" ", when).strip().rstrip(".").lower()
+
+
+def required_lines(value: Any) -> list[dict[str, str]]:
+    if not isinstance(value, list):
+        raise TypeError("Brand kit copy_rules.required_lines must be a list")
+    lines: list[dict[str, str]] = []
+    for index, entry in enumerate(value, 1):
+        if not isinstance(entry, dict):
+            raise TypeError(f"Brand kit required line {index} must be an object")
+        text = require_text(entry.get("text"), f"Brand kit required line {index} text")
+        when = require_text(entry.get("when"), f"Brand kit required line {index} when")
+        lines.append({"text": text, "when": when})
+    return lines
+
+
+def trademark_marks(value: Any) -> dict[str, str]:
+    if not isinstance(value, dict):
+        raise TypeError("Brand kit copy_rules.trademark_marks must be an object")
+    marks: dict[str, str] = {}
+    for name, mark in value.items():
+        require_text(name, "Brand kit trademark name")
+        if mark not in TRADEMARK_MARKS:
+            raise ValueError(
+                f"Brand kit trademark mark for {name!r} must be one of "
+                f"{', '.join(TRADEMARK_MARKS)}: {mark!r}"
+            )
+        marks[name] = mark
+    return marks
+
+
 def load_brand(root: Path, spec: dict[str, Any]) -> dict[str, Any]:
     path = contained_file(root, root, spec.get("brand_kit"), "Brand kit", {".json"})
     kit = load_json(path, "Brand kit")
@@ -233,6 +278,8 @@ def load_brand(root: Path, spec: dict[str, Any]) -> dict[str, Any]:
         "cta_verbs": [
             verb for verb in cta_style.get("verbs", []) if isinstance(verb, str)
         ],
+        "required_lines": required_lines(copy_rules.get("required_lines", [])),
+        "trademark_marks": trademark_marks(copy_rules.get("trademark_marks", {})),
     }
 
 
@@ -277,6 +324,29 @@ def check_fresh(fact: dict[str, Any], reference: str, freshness: Freshness) -> N
         )
 
 
+QUALIFIERS = (
+    ("up to", re.compile(r"\bup to\b", re.IGNORECASE)),
+    ("as low as", re.compile(r"\bas low as\b", re.IGNORECASE)),
+    ("from", re.compile(r"\bfrom\s+[^\w\s]?\d", re.IGNORECASE)),
+    ("starting at", re.compile(r"\bstarting at\b", re.IGNORECASE)),
+    ("may", re.compile(r"\bmay\b", re.IGNORECASE)),
+    ("approximately", re.compile(r"\bapproximately\b", re.IGNORECASE)),
+)
+
+
+def check_qualifiers(fact: dict[str, Any], reference: str) -> None:
+    claim = fact.get("claim")
+    quote = fact.get("quote")
+    if not isinstance(claim, str) or not isinstance(quote, str):
+        return
+    for label, pattern in QUALIFIERS:
+        if pattern.search(quote) and not pattern.search(claim):
+            raise ValueError(
+                f"Claim {reference!r} drops {label!r} from its quote; "
+                "keep the qualifier in the claim (facts.claim_qualifier)"
+            )
+
+
 def resolve_claim(
     reference: Any,
     facts: list[dict[str, Any]],
@@ -295,6 +365,7 @@ def resolve_claim(
                     f"Claim {reference!r} has status {status!r}; "
                     f"only supported claims may appear in an ad{exception}"
                 )
+            check_qualifiers(fact, reference)
             return {
                 "ref": reference,
                 "claim": require_text(fact.get("claim"), f"Claim {reference!r}"),
@@ -314,27 +385,56 @@ def resolve_claims(angle: dict[str, Any], facts: list[dict[str, Any]]) -> list[d
     return [resolve_claim(reference, facts) for reference in references]
 
 
-def claim_items(claims: list[dict[str, Any]]) -> str:
-    return "".join(
-        f'<li class="claim" data-copy-key="claim_{index}">'
-        f"{html.escape(claim['claim'], quote=True)}</li>"
-        for index, claim in enumerate(claims, 1)
+def numbered_keys(copy: Mapping[str, str], prefix: str, suffix: str = "") -> list[str]:
+    pattern = re.compile(rf"{prefix}_(\d+){suffix}")
+    numbered = [
+        (int(match.group(1)), key) for key in copy if (match := pattern.fullmatch(key))
+    ]
+    return [key for _, key in sorted(numbered)]
+
+
+def copy_node(tag: str, css_class: str | None, key: str, copy: Mapping[str, str]) -> str:
+    attribute = f' class="{css_class}"' if css_class else ""
+    return (
+        f'<{tag}{attribute} data-copy-key="{key}">'
+        f"{html.escape(copy[key], quote=True)}</{tag}>"
     )
+
+
+def copy_markup(copy: Mapping[str, str]) -> dict[str, str]:
+    rows = []
+    for key in numbered_keys(copy, "row", "_attribute"):
+        index = key.split("_")[1]
+        rows.append(
+            "<tr>"
+            + copy_node("th", None, f"row_{index}_attribute", copy)
+            + copy_node("td", "ours", f"row_{index}_ours", copy)
+            + copy_node("td", None, f"row_{index}_alternative", copy)
+            + "</tr>"
+        )
+    return {
+        "claims": "".join(
+            copy_node("li", "claim", key, copy) for key in numbered_keys(copy, "claim")
+        ),
+        "rows": "".join(rows),
+        "terms": copy_node("p", "terms", "terms", copy) if "terms" in copy else "",
+        "legal": "".join(
+            copy_node("p", "legal", key, copy) for key in numbered_keys(copy, "legal")
+        ),
+    }
 
 
 def layout_content(
     layout: str, angle: dict[str, Any], facts: list[dict[str, Any]], freshness: Freshness
-) -> tuple[dict[str, str], dict[str, str], list[dict[str, Any]]]:
+) -> tuple[dict[str, str], list[dict[str, Any]]]:
     label = f"Angle {angle['id']!r}"
     copy = {
         "headline": require_text(angle.get("headline"), f"{label} headline"),
         "cta": require_text(angle.get("cta"), f"{label} cta"),
     }
-    raw: dict[str, str] = {}
     claims: list[dict[str, Any]] = []
     if layout in ("hero-product", "problem-solution"):
         claims = resolve_claims(angle, facts)
-        raw["claims"] = claim_items(claims)
         copy.update({f"claim_{i}": c["claim"] for i, c in enumerate(claims, 1)})
         if layout == "problem-solution":
             copy["problem"] = require_text(angle.get("problem"), f"{label} problem")
@@ -349,7 +449,6 @@ def layout_content(
         copy["alternative_label"] = require_text(
             comparison.get("alternative_label"), f"{label} alternative_label"
         )
-        cells: list[str] = []
         for index, row in enumerate(rows, 1):
             if not isinstance(row, dict):
                 raise TypeError(f"{label} comparison row {index} must be an object")
@@ -360,16 +459,6 @@ def layout_content(
             copy[f"row_{index}_attribute"] = attribute
             copy[f"row_{index}_ours"] = ours["claim"]
             copy[f"row_{index}_alternative"] = alternative["claim"]
-            cells.append(
-                "<tr>"
-                f'<th data-copy-key="row_{index}_attribute">{html.escape(attribute)}</th>'
-                f'<td class="ours" data-copy-key="row_{index}_ours">'
-                f"{html.escape(ours['claim'])}</td>"
-                f'<td data-copy-key="row_{index}_alternative">'
-                f"{html.escape(alternative['claim'])}</td>"
-                "</tr>"
-            )
-        raw["rows"] = "".join(cells)
     elif layout == "social-proof":
         proof = resolve_claim(angle.get("proof"), facts)
         claims.append(proof)
@@ -379,13 +468,62 @@ def layout_content(
         claims.append(offer)
         copy["offer"] = offer["claim"]
         terms = angle.get("terms")
-        raw["terms"] = ""
         if terms is not None:
             copy["terms"] = require_text(terms, f"{label} terms")
-            raw["terms"] = (
-                f'<p class="terms" data-copy-key="terms">{html.escape(terms)}</p>'
-            )
-    return copy, raw, claims
+    return copy, claims
+
+
+def mark_order(copy: Mapping[str, str]) -> list[str]:
+    trailing = ("cta", "terms")
+    middle = [key for key in copy if key != "headline" and key not in trailing]
+    return [key for key in ("headline", *middle, *trailing) if key in copy]
+
+
+def apply_trademarks(
+    copy: dict[str, str], marks: Mapping[str, str]
+) -> list[dict[str, str]]:
+    applied: list[dict[str, str]] = []
+    for name in sorted(marks, key=lambda item: (-len(item), item)):
+        mark = marks[name]
+        pattern = re.compile(rf"(?<!\w){re.escape(name)}(?!\w)")
+        for key in mark_order(copy):
+            match = pattern.search(copy[key])
+            if match is None:
+                continue
+            text = copy[key]
+            if not text[match.end() :].startswith(TRADEMARK_MARKS):
+                copy[key] = text[: match.end()] + mark + text[match.end() :]
+                applied.append({"key": key, "name": name, "mark": mark})
+            break
+    return applied
+
+
+def unmapped_conditions(lines: list[dict[str, str]]) -> list[str]:
+    return [
+        f"Required line {line['text']!r} has condition {line['when']!r} that the planner "
+        "cannot map to a layout; decide whether it applies and add it in post or as "
+        "offer terms"
+        for line in lines
+        if condition_key(line["when"]) not in REQUIRED_LINE_CONDITIONS
+    ]
+
+
+def add_required_lines(
+    copy: dict[str, str], lines: list[dict[str, str]], layout: str
+) -> list[dict[str, str]]:
+    placed: list[dict[str, str]] = []
+    for line in lines:
+        if layout not in REQUIRED_LINE_CONDITIONS.get(condition_key(line["when"]), ()):
+            continue
+        if copy.get("terms") == line["text"]:
+            placed.append({"key": "terms", **line})
+            continue
+        if any(entry["text"] == line["text"] for entry in placed):
+            continue
+        key = f"legal_{len(numbered_keys(copy, 'legal')) + 1}"
+        copy[key] = line["text"]
+        placed.append({"key": key, **line})
+    return placed
 
 
 def check_banned_words(copy: Mapping[str, str], banned: list[str], name: str) -> None:
@@ -524,20 +662,28 @@ def build_jobs(
     ratios = unique_list(spec.get("ratios"), tuple(RATIOS), "Spec ratios")
     css_name = f"static_{campaign}_v{version:02d}.css"
     jobs: list[dict[str, Any]] = []
-    warnings: list[str] = []
+    warnings = unmapped_conditions(brand["required_lines"])
     for angle in validate_angles(spec):
         for layout in angle_layouts(angle, layouts):
-            copy, raw, claims = layout_content(layout, angle, facts["facts"], freshness)
+            copy, claims = layout_content(layout, angle, facts["facts"], freshness)
             label = f"Angle {angle['id']!r} {layout}"
             check_banned_words(copy, brand["banned_words"], label)
             if brand["cta_verbs"] and copy["cta"] not in brand["cta_verbs"]:
                 warnings.append(f"{label}: CTA {copy['cta']!r} is not a brand kit CTA verb")
+            marks = apply_trademarks(copy, brand["trademark_marks"])
+            placed = add_required_lines(copy, brand["required_lines"], layout)
             if layout == "offer":
                 warnings.append(
                     f"{label}: offer facts are perishable; re-check price and "
                     "availability before delivery"
                 )
             template = (TEMPLATES / f"{layout}.html").read_text(encoding="utf-8")
+            if numbered_keys(copy, "legal") and "{{legal}}" not in template:
+                raise ValueError(
+                    f"{label}: the template has no {{{{legal}}}} slot for required "
+                    "brand lines; add the slot or render the lines another way"
+                )
+            raw = copy_markup(copy)
             for ratio in ratios:
                 token, width, height = RATIOS[ratio]
                 name = f"{campaign}_{angle['id']}_{layout}_{token}_v{version:02d}"
@@ -580,6 +726,8 @@ def build_jobs(
                         .as_posix(),
                         "copy": copy,
                         "claims": claims,
+                        "trademark_marks_applied": marks,
+                        "required_lines": placed,
                         "document": document,
                         "command": render_command(
                             html_path,

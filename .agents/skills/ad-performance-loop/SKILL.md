@@ -57,14 +57,22 @@ run with `uv run python`. Every command prints JSON with `ok`.
 
 1. **Ingest.** `performance_loop.py ingest <export.csv> --map map.json
    --variants projects/<campaign>/variants/plan.json --out
-   projects/<campaign>/performance/metrics.json`. Read the summary: mapped
-   columns that are missing from the export, unreadable values (`issues`),
-   skipped rows, ads whose names match no variant, ads whose names match more
-   than one, and variants with no data. **Report every one of these to the
-   user**; never drop them silently.
+   projects/<campaign>/performance/metrics.json`. The printed summary lists
+   mapped columns missing from the export, `unmatched_ads`, `ambiguous_ads`
+   (ad name to the variants it matched), `variants_without_data` and
+   `skipped_rows`, with a `counts` object for each plus records and unreadable
+   values (`issues`, detailed in the metrics file). **Report every one of
+   these to the user**; never drop them silently.
 2. **Rank.** `performance_loop.py rank metrics.json --kpi <kpi>
-   [--min-impressions N]`. Entities are variants (or raw ad names when
-   unmatched). An entity is not ranked when an input column is missing, its
+   [--min-impressions N] [--across-groups]`. Entities are variants (or raw ad
+   names when unmatched). **Ranking is within comparable groups by default:**
+   variants with the same `market` and `ratio` plan values (a missing value is
+   `-`) rank against each other, because different markets and placements
+   reach different audiences. Unmatched ads form their own `unmatched` group.
+   Each ranked entity carries `group` and its `rank` inside that group, and
+   `groups` lists each group's leader. `--across-groups` ranks everything
+   together in one `all` group; use it only when the user asks and say that
+   audiences differ. An entity is not ranked when an input column is missing, its
    denominator is zero (no impressions, clicks or conversions) or it is below
    the impression floor; the reason is printed. **The floor defaults to 1000
    impressions** so a handful of impressions cannot win; an export without an
@@ -83,9 +91,15 @@ run with `uv run python`. Every command prints JSON with `ok`.
    draft keeps the winner's values for every axis already tested, varies one
    new axis, bumps `version`, carries the source matrix's `naming` and
    `unit_cost_usd`, and is `status: draft` with an empty hero hash. It uses
-   the same 1000-impression default floor, prints `warnings` when the winner
-   is low volume, refuses a custom `naming` that lacks the new axis
-   placeholder, and refuses to overwrite an existing file.
+   the same 1000-impression default floor and comparable groups as `rank`:
+   when matched variants span more than one market or ratio group it refuses
+   until `--group "market=<m>,ratio=<r>"` (as printed by `rank`) or
+   `--across-groups` is passed. It reports `winner_fatigue` from the same rule
+   as `fatigue` (`--window-days`, default 7) and prints `warnings` when the
+   winner is low volume, is flagged fatigued, or was chosen across groups. It
+   refuses a custom `naming` that lacks the new axis placeholder and refuses
+   to overwrite an existing file. **Surface every warning before handing
+   off**; a fatigued winner needs the user's decision to build on it.
 5. **Hand off.** Bind the draft's hero to the approved winning take (shot,
    take, SHA-256, decision), then plan and cost it with `ad-variant-matrix`.
 
@@ -96,8 +110,10 @@ ranking. In short:
 
 - Present the KPI, its direction, the impression floor, and how many rows and
   days each variant has. Small differences on small volumes are not winners.
-- Show `unmatched_ads`, `ambiguous_ads` and `variants_without_data` beside
-  the ranking.
+- Show `unmatched_ads`, `ambiguous_ads`, `variants_without_data` and
+  `skipped_rows` beside the ranking.
+- Present each comparable group's ranking separately; never call a variant
+  the overall winner across markets or ratios from a default ranking.
 - Hook rate counts 3-second views over impressions; it is only meaningful for
   video ads and only when the export's 3-second view column is mapped.
 - Do not call a result statistically significant; this skill computes no

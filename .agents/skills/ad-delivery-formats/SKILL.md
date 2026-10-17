@@ -105,10 +105,12 @@ layout fix in the overlay composition, not a crop of the master.
 | Command | Output | Exit |
 | --- | --- | --- |
 | `zones --placement ID [--placement ID] [--size WxH]` | Margins in fractions and pixels and the title-safe `safe_rect` | 0 published, 3 unpublished |
-| `check --placement ID --box [LABEL=]X,Y,W,H ...` | Per-box `inside`, `overflow_px`, `outside_frame` and the `violations` list | 0 pass, 1 violation, 3 unpublished |
+| `check --placement ID --size WxH --box [LABEL=]X,Y,W,H ...` | Per-box `inside`, `overflow_px`, `outside_frame` and the `violations` list | 0 pass, 1 violation, 3 unpublished |
 | `overlay --placement ID --size WxH --out FILE.svg [--box ...] [--overwrite]` | An SVG with the unsafe area tinted, the safe rectangle dashed and boxes outlined | 0 written, 3 unpublished (no file) |
 
-Margins round inward. A size whose ratio differs from the placement by more than
+`check` and `overlay` require `--size` set to the cut's actual pixel size, so box
+coordinates are never measured against an assumed frame; only `zones` falls back
+to the placement's `recommended_resolution`. Margins round inward. A size whose ratio differs from the placement by more than
 1%, mixed ratios across placements, unknown ids, malformed boxes and a
 `--platforms` file that does not match
 [the ad-platforms schema](../../contracts/schemas/ad-platforms.schema.json)

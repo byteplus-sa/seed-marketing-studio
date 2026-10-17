@@ -741,15 +741,38 @@ def resolve_layout(
     return Layout(width, height, x, y, rect_width, rect_height)
 
 
-def resolve_typography(arguments: argparse.Namespace, layout: Layout) -> Typography:
+def composition_folder(text: str) -> Path:
+    folder = Path(text)
+    if not folder.is_dir():
+        raise CaptionError(
+            f"composition dir {text} does not exist; run the Studio init or sync first"
+        )
+    return folder
+
+
+def check_font_file(studio: Path, source: str) -> None:
+    path = studio / source
+    if path.is_symlink():
+        raise CaptionError(f"font source {source} must be a regular file, not a symlink")
+    if not path.exists():
+        raise CaptionError(f"font file not found: {source} under the Studio project {studio}")
+    if not path.is_file():
+        raise CaptionError(f"font source {source} must be a regular file")
+    if not path.resolve().is_relative_to(studio.resolve()):
+        raise CaptionError(f"font source {source} escapes the Studio project {studio}")
+
+
+def resolve_typography(
+    arguments: argparse.Namespace, layout: Layout, studio: Path
+) -> Typography:
     if not FONT_FAMILY_PATTERN.match(arguments.font_family):
         raise CaptionError(f"invalid font family {arguments.font_family!r}")
-    if arguments.font_src is not None and not FONT_SRC_PATTERN.match(
-        arguments.font_src
-    ):
-        raise CaptionError(
-            "font source must be a relative woff2, woff, ttf or otf path inside the Studio project"
-        )
+    if arguments.font_src is not None:
+        if not FONT_SRC_PATTERN.match(arguments.font_src):
+            raise CaptionError(
+                "font source must be a relative woff2, woff, ttf or otf path inside the Studio project"
+            )
+        check_font_file(studio, arguments.font_src)
     for color in (arguments.text_color, arguments.box_color):
         if not COLOR_PATTERN.match(color):
             raise CaptionError(f"color must be #RRGGBB or #RRGGBBAA, got {color!r}")
@@ -926,15 +949,18 @@ def generate(arguments: argparse.Namespace) -> dict[str, Any]:
         else seconds_to_ms(arguments.master_duration_s, "master duration")
     )
     burn_in = arguments.composition_dir is not None
+    if not burn_in and arguments.font_src is not None:
+        raise CaptionError("--font-src needs --composition-dir (burn-in only)")
     layout = typography = None
     if burn_in:
+        compositions = composition_folder(arguments.composition_dir)
         layout = resolve_layout(
             arguments.size,
             arguments.placement,
             arguments.safe_rect,
             Path(arguments.platforms),
         )
-        typography = resolve_typography(arguments, layout)
+        typography = resolve_typography(arguments, layout, compositions.parent)
     planned, warnings = plan_outputs(arguments, lines, master_ms)
     formats = FORMATS if arguments.format == "both" else (arguments.format,)
     outputs: list[tuple[Path, str, str, str, int]] = []

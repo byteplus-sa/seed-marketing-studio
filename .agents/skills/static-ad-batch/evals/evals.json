@@ -47,6 +47,18 @@
         "Offers a text-free Seedream background plate as the only generated layer, with its own prompt and selection evidence.",
         "Does not claim that a generated price or logo would be exact."
       ]
+    },
+    {
+      "id": 5,
+      "prompt": "The Lumo brand kit now lists required_lines [{\"text\": \"Terms apply.\", \"when\": \"offer shown\"}, {\"text\": \"Recycle the sleeve.\", \"when\": \"packaging shown\"}] and trademark_marks {\"Lumo\": \"®\"}. Re-plan the hero-product and offer statics and tell me what changed.",
+      "expected_output": "A re-planned batch at a new version where offer ads carry 'Terms apply.' in the legal slot, the first Lumo mention on each ad carries ®, and the unmapped 'packaging shown' line is raised as a warning for a decision rather than silently dropped or guessed.",
+      "files": [],
+      "expectations": [
+        "Raises the spec version or uses --overwrite deliberately and re-pins the changed brand kit before planning.",
+        "Reports that 'Terms apply.' renders verbatim on offer-layout ads only, as legal copy passed to the renderer.",
+        "Reports that the first Lumo mention per ad gains ® and that trademark_marks_applied records it per job.",
+        "Surfaces the 'packaging shown' warning and asks whether it applies instead of guessing a layout."
+      ]
     }
   ]
 }

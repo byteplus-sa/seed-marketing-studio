@@ -112,15 +112,17 @@ field-by-field examples and status rules are in
 
 | Command | Prints | Exit 1 when |
 | --- | --- | --- |
-| `validate <facts.json>` | `{"ok", "findings"}`; warnings such as a dropped qualifier do not fail | Schema error, missing source, price/availability/offer not perishable, supported performance or comparison claim without substantiation, future or offset-less retrieval time, duplicate IDs, image missing, outside the card, or hash mismatch, product_id not matching its directory |
-| `supported <facts.json> [--max-age-hours H]` | Claims usable in copy, with quote, conditions and source | The file is invalid (no claims are printed from an invalid record) |
+| `validate <facts.json>` | `{"ok", "findings"}`; warnings such as a dropped qualifier do not fail | Schema error, missing source, price/availability/offer not perishable, supported performance or comparison claim without substantiation, a fact or image retrieval time that is unparseable, offset-less or in the future, duplicate IDs, image missing, outside the card, or hash mismatch, product_id not matching its directory |
+| `supported <facts.json> [--max-age-hours H]` | `claims` usable in copy, with quote, conditions and source, and `blocked`: otherwise usable facts withheld because the claim drops a qualifier its quote carries, each with `fact_id`, `rule_id` and `reason` | The file is invalid (no claims are printed from an invalid record) |
 
 Rule IDs: `facts.schema`, `facts.source`, `facts.perishable`,
 `facts.substantiation`, `facts.retrieved_at`, `facts.unique`,
 `facts.image_contained`, `facts.image_exists`, `facts.image_hash`,
 `facts.product_directory`, and the warning `facts.claim_qualifier` (the claim
 drops "up to", "as low as", "from" before a number, "starting at", "may" or
-"approximately" that its quote carries).
+"approximately" that its quote carries). `validate` only warns about a dropped
+qualifier, but `supported` never prints such a claim: it lists it under
+`blocked` until the claim keeps the qualifier.
 
 ## Failure handling
 

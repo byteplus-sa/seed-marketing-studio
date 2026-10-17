@@ -70,7 +70,17 @@
           ]
         },
         "decision_ref": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "take_file": {
+          "type": [
+            "string",
+            "null"
+          ],
           "minLength": 1
         },
         "values": {

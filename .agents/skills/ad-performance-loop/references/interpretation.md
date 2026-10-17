@@ -27,6 +27,23 @@ impression-weighted mean of an exported frequency column.
 - Compare variants against each other and against the hero in the same
   account, audience, placement and dates.
 
+## Comparable groups
+
+- `rank` and `next-matrix` group variants by their plan's `market` and
+  `ratio` values before ranking. A market change usually means a different
+  audience and often a different language; a ratio change usually means a
+  different placement. Hook or talent variants are only compared with
+  variants that share both.
+- A group label reads `market=<value>,ratio=<value>`, with `-` when the plan
+  has no value for that axis, so a campaign that never varied market or ratio
+  has a single group. Ads that match no variant rank in `unmatched`.
+- Other axes (for example `language`) are not grouped automatically. When the
+  export mixes audiences the plan does not record, say so and filter the
+  export before ingesting.
+- `--across-groups` puts everything in one `all` group. Use it only on an
+  explicit request, and present the result as indicative, not as a winner for
+  each market or placement.
+
 ## Fatigue
 
 - TikTok's
@@ -39,6 +56,9 @@ impression-weighted mean of an exported frequency column.
   as "possible fatigue" with the two windows' numbers.
 - One noisy window can flip the flag. When volumes are small, widen
   `--window-days` and say so.
+- `next-matrix` repeats the fatigue check for the winner. A fatigued winner
+  ranks on totals that include its better early windows; show both windows and
+  ask whether to build the next round on it or refresh it first.
 
 ## Choosing the next test
 
@@ -57,7 +77,7 @@ impression-weighted mean of an exported frequency column.
 
 - Data: file name, date range, rows ingested, rows skipped, issues.
 - Joins: matched variants, unmatched ads, ambiguous ads, variants without data.
-- Ranking: KPI, direction, impression floor, then rank, variant, impressions,
-  KPI value and the supporting counts.
+- Ranking: KPI, direction, impression floor, then per comparable group: rank,
+  variant, impressions, KPI value and the supporting counts.
 - Fatigue: flagged variants with their two windows.
 - Next: the drafted matrix path, the kept values and the new axis.

@@ -20,7 +20,7 @@ The studio is a set of **agent skills** that an MCP-capable coding agent (Claude
 | Viral effects and trend edits | `seedance-effects-studio`, `seedance-frame-break`, `reference-edit-rebuild` |
 | Recreating a reference ad's grammar with your brand | `template-factory` |
 | Product, outfit, talent or location swaps in existing footage | `seedance-object-swap`, `seedance-vfx-pipeline` |
-| Market or talent variants of an approved take | `seedance-motion-recast`, `seedance-restyle` |
+| Talent, cast or style variants of an approved take | `seedance-motion-recast`, `seedance-restyle` |
 | Spokesperson and avatar videos | `seedance-ai-avatar`, `seedance-avatar-news`, `omnihuman-prompt-20` |
 | Key visuals, posters, product sheets | `seedream-prompt`, `seedream-prop-asset`, `html-graphic-render` |
 | Radio and audio spots, jingles, soundscapes | `seed-audio-commercial`, `seed-audio-prompt` |
@@ -134,7 +134,7 @@ Put these in a gitignored `.env`; never commit them.
 | `.agents/contracts/` | Production, routing, element, naming, alignment, video-to-video, ad compliance, ad platform and shared-library contracts, rule IDs and schemas |
 | `.agents/scripts/` | Request preparation, task registry, Studio bridge (`studio_project.py`), variant matrices (`variant_matrix.py`), the static preset gallery (`template_gallery.py`), catalog sync and validation |
 | `.agents/catalog/` | Skill catalog and bundle integrity hashes |
-| `tests/` | Registry, Studio, approval, validation and prompt-contract tests |
+| `tests/` | Registry, Studio, approval, validation, prompt-contract and campaign-layer script tests |
 | `projects/<campaign>/` | Local only, never committed: brief, elements, scenes, variants, performance exports, task registry and Studio project |
 | `library/` | Local only, never committed: shared brand kits (`library/brands/`) and approved talent (`library/talent/`) that campaigns pin by SHA-256 |
 
@@ -313,7 +313,7 @@ The workspace ships **78 skills**. Leaf skills are independent; declared orchest
 - **Cost:** lowest suitable resolution first (480p Seedance drafts), three Seedream samples per selection set, final resolution only for the selected draft.
 - **Reproducibility:** every element, scene and shot has a manifest with the prompt snapshot, references, model, parameters, task IDs, hashes and cost.
 - **Rights:** real people, voices, brands and logos need authorization; creative approval never implies it.
-- **Local-first:** `projects/`, `docs/`, `plans/` and `specs/` stay local and are never committed.
+- **Local-first:** `projects/`, `library/`, `docs/`, `plans/` and `specs/` stay local and are never committed.
 
 ---
 

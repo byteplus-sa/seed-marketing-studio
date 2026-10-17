@@ -26,7 +26,8 @@ room temperature"). Copy that uses a claim keeps its conditions.
 A claim keeps every qualifier its quote carries: "up to", "as low as", "from"
 before a price, "starting at", "may", "approximately". "Up to 24 hours" never
 becomes "24 hours". `validate` warns (`facts.claim_qualifier`) when a claim
-drops one.
+drops one, and `supported` withholds that claim under `blocked` with the reason
+until the claim is corrected.
 
 ## Freshness window
 

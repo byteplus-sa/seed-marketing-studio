@@ -51,6 +51,10 @@ GROUPED = {
     ",": re.compile(r"^-?\d{1,3}(?:\.\d{3})+(?:,\d+)?(?:[eE][+-]?\d+)?$"),
 }
 DEFAULT_MIN_IMPRESSIONS = 1000.0
+DEFAULT_WINDOW_DAYS = 7
+GROUP_AXES = ("market", "ratio")
+ALL_GROUP = "all"
+UNMATCHED_GROUP = "unmatched"
 BENCHMARK_NOTE = (
     "Ranked within this account export only. No external or platform benchmark "
     "is implied; vendor benchmarks are not official."
@@ -350,9 +354,24 @@ def ineligible_reason(
     return None
 
 
+def comparable_group(
+    key: str, matched: bool, variants: dict[str, Any], across_groups: bool
+) -> str:
+    if across_groups:
+        return ALL_GROUP
+    if not matched:
+        return UNMATCHED_GROUP
+    values = variants.get(key) or {}
+    return ",".join(f"{axis}={values.get(axis) or '-'}" for axis in GROUP_AXES)
+
+
 def rank(
-    metrics_document: dict[str, Any], kpi: str, min_impressions: float
+    metrics_document: dict[str, Any],
+    kpi: str,
+    min_impressions: float,
+    across_groups: bool = False,
 ) -> dict[str, Any]:
+    variants = metrics_document.get("variants") or {}
     entities: list[dict[str, Any]] = []
     for (key, matched), records in group(metrics_document["records"]).items():
         metrics = aggregate(records)
@@ -360,6 +379,7 @@ def rank(
             {
                 "key": key,
                 "matched": matched,
+                "group": comparable_group(key, matched, variants, across_groups),
                 "rows": len(records),
                 **metrics,
                 "reason": ineligible_reason(metrics, kpi, min_impressions),
@@ -369,12 +389,16 @@ def rank(
     eligible = [entity for entity in entities if entity["reason"] is None]
     eligible.sort(
         key=lambda entity: (
+            entity["group"],
             -entity[kpi] if direction == "higher" else entity[kpi],
             entity["key"],
         )
     )
-    for position, entity in enumerate(eligible, start=1):
-        entity["rank"] = position
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for entity in eligible:
+        members = groups.setdefault(entity["group"], [])
+        members.append(entity)
+        entity["rank"] = len(members)
         entity["low_volume"] = (entity["impressions"] or 0) < DEFAULT_MIN_IMPRESSIONS
         del entity["reason"]
     return {
@@ -384,6 +408,11 @@ def rank(
         "low_volume_below": DEFAULT_MIN_IMPRESSIONS,
         "currency": metrics_document.get("currency", ""),
         "note": BENCHMARK_NOTE,
+        "group_by": [] if across_groups else list(GROUP_AXES),
+        "groups": [
+            {"group": name, "ranked": len(members), "leader": members[0]["key"]}
+            for name, members in groups.items()
+        ],
         "ranked": eligible,
         "not_ranked": sorted(
             (entity for entity in entities if entity.get("reason")),
@@ -480,15 +509,79 @@ def parse_axis(text: str) -> tuple[str, list[str]]:
     return axis, values
 
 
+def matched_winners(ranking: dict[str, Any], chosen: str | None) -> list[dict[str, Any]]:
+    winners = [entity for entity in ranking["ranked"] if entity["matched"]]
+    if not winners:
+        raise InputError("No matched variant has enough data to choose a winner")
+    names = sorted({entity["group"] for entity in winners})
+    if chosen is not None:
+        if chosen not in names:
+            raise InputError(
+                f"Group {chosen} has no ranked matched variant; choose one of: "
+                + "; ".join(names)
+            )
+        return [entity for entity in winners if entity["group"] == chosen]
+    if len(names) > 1:
+        raise InputError(
+            "Matched variants run in different markets or ratios and are ranked "
+            "separately; pass --group with one of: "
+            + "; ".join(names)
+            + " (or --across-groups to compare them anyway)"
+        )
+    return winners
+
+
+def winner_fatigue(
+    metrics_document: dict[str, Any], winner: str, days: int
+) -> dict[str, str]:
+    report = fatigue(metrics_document, days)
+    for entity in report["entities"]:
+        if entity["key"] == winner:
+            return {"status": entity["status"], "reason": entity["reason"]}
+    return {"status": "insufficient_data", "reason": "no dated rows for the winner"}
+
+
+def next_matrix_warnings(
+    leader: dict[str, Any], fatigue_state: dict[str, str], across_groups: bool
+) -> list[str]:
+    winner = leader["key"]
+    warnings: list[str] = [
+        (
+            "Fill hero.decision_ref, hero.take_file, hero.take and hero.sha256 from "
+            "the approved winner before variant_matrix.py register"
+        )
+    ]
+    if leader["low_volume"]:
+        warnings.append(
+            f"{winner} won on low volume ({leader['impressions'] or 0:g} "
+            f"impressions, below {DEFAULT_MIN_IMPRESSIONS:g}); let the test run "
+            "longer before treating it as the winner"
+        )
+    if fatigue_state["status"] == "fatigued":
+        warnings.append(
+            f"{winner} is fatigued ({fatigue_state['reason']}); its totals may "
+            "overstate current performance, so confirm the latest window or refresh "
+            "the creative before building the next round on it"
+        )
+    if across_groups:
+        warnings.append(
+            "Ranked across markets and ratios; audiences and placements differ, so "
+            "the winner may not carry over to the other groups"
+        )
+    return warnings
+
+
 def next_matrix(args: argparse.Namespace) -> dict[str, Any]:
+    if args.window_days < 1:
+        raise InputError("--window-days must be at least 1")
+    if args.group is not None and args.across_groups:
+        raise InputError("Pass either --group or --across-groups, not both")
     metrics_document = read_json(args.metrics)
     matrix = read_json(args.matrix)
     if not isinstance(matrix, dict) or not isinstance(matrix.get("hero"), dict):
         raise InputError("Matrix file is not a variant matrix")
-    ranking = rank(metrics_document, args.kpi, args.min_impressions)
-    winners = [entity for entity in ranking["ranked"] if entity["matched"]]
-    if not winners:
-        raise InputError("No matched variant has enough data to choose a winner")
+    ranking = rank(metrics_document, args.kpi, args.min_impressions, args.across_groups)
+    winners = matched_winners(ranking, args.group)
     winner = winners[0]["key"]
     values = dict(metrics_document.get("variants", {}).get(winner) or {})
     if not values:
@@ -516,7 +609,9 @@ def next_matrix(args: argparse.Namespace) -> dict[str, Any]:
             "variant": winner,
             "shot_id": None,
             "take": None,
+            "take_file": None,
             "sha256": None,
+            "decision_ref": None,
             "values": values,
         },
         "axes": {axis: levels},
@@ -526,7 +621,7 @@ def next_matrix(args: argparse.Namespace) -> dict[str, Any]:
         "version": min(int(matrix.get("version", 1)) + 1, 99),
         "notes": (
             f"Draft from the performance loop: {winner} ranked first by {args.kpi} within "
-            f"this account. Kept axes: {', '.join(tested) or 'none'}. Testing: {axis}. "
+            f"this account, comparison group {winners[0]['group']}. Kept axes: {', '.join(tested) or 'none'}. Testing: {axis}. "
             "Bind hero to the approved winning take before planning."
         ),
     }
@@ -539,23 +634,15 @@ def next_matrix(args: argparse.Namespace) -> dict[str, Any]:
     target.parent.mkdir(parents=True, exist_ok=True)
     with target.open("x", encoding="utf-8") as handle:
         handle.write(json.dumps(draft, indent=2, ensure_ascii=False) + "\n")
-    warnings = (
-        [
-            (
-                f"{winner} won on low volume ({winners[0]['impressions'] or 0:g} "
-                f"impressions, below {DEFAULT_MIN_IMPRESSIONS:g}); let the test run "
-                "longer before treating it as the winner"
-            )
-        ]
-        if winners[0]["low_volume"]
-        else []
-    )
+    fatigue_state = winner_fatigue(metrics_document, winner, args.window_days)
     return {
         "winner": winner,
+        "group": winners[0]["group"],
         "kpi": args.kpi,
         "kpi_value": winners[0][args.kpi],
         "min_impressions": args.min_impressions,
-        "warnings": warnings,
+        "winner_fatigue": fatigue_state,
+        "warnings": next_matrix_warnings(winners[0], fatigue_state, args.across_groups),
         "draft": str(target),
         "matrix": draft,
     }
@@ -570,12 +657,18 @@ def write_or_print(document: dict[str, Any], out: Path | None) -> dict[str, Any]
     out.write_text(
         json.dumps(document, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
+    listed = ("unmatched_ads", "ambiguous_ads", "variants_without_data", "skipped_rows")
     return {
         "written": str(out),
         "records": len(document["records"]),
-        "unmatched_ads": document["unmatched_ads"],
         "missing_columns": document["missing_columns"],
         "issues": len(document["issues"]),
+        **{key: document[key] for key in listed},
+        "counts": {
+            "records": len(document["records"]),
+            **{key: len(document[key]) for key in listed},
+            "issues": len(document["issues"]),
+        },
     }
 
 
@@ -595,9 +688,10 @@ def parser() -> argparse.ArgumentParser:
     rank_cli.add_argument(
         "--min-impressions", type=float, default=DEFAULT_MIN_IMPRESSIONS
     )
+    rank_cli.add_argument("--across-groups", action="store_true")
     fatigue_cli = commands.add_parser("fatigue")
     fatigue_cli.add_argument("metrics", type=Path)
-    fatigue_cli.add_argument("--window-days", type=int, default=7)
+    fatigue_cli.add_argument("--window-days", type=int, default=DEFAULT_WINDOW_DAYS)
     next_cli = commands.add_parser("next-matrix")
     next_cli.add_argument("metrics", type=Path)
     next_cli.add_argument("--matrix", type=Path, required=True)
@@ -608,6 +702,9 @@ def parser() -> argparse.ArgumentParser:
         "--min-impressions", type=float, default=DEFAULT_MIN_IMPRESSIONS
     )
     next_cli.add_argument("--out", type=Path, required=True)
+    next_cli.add_argument("--group")
+    next_cli.add_argument("--across-groups", action="store_true")
+    next_cli.add_argument("--window-days", type=int, default=DEFAULT_WINDOW_DAYS)
     return cli
 
 
@@ -622,7 +719,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     ):
         raise InputError("Metrics file must come from the ingest command")
     if args.command == "rank":
-        return rank(metrics_document, args.kpi, args.min_impressions)
+        return rank(
+            metrics_document, args.kpi, args.min_impressions, args.across_groups
+        )
     if args.window_days < 1:
         raise InputError("--window-days must be at least 1")
     return fatigue(metrics_document, args.window_days)

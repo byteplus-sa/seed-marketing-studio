@@ -46,6 +46,18 @@
         "Does not pause, edit or change any ad or account setting; leaves that to the user.",
         "Explains which columns the export should include for the requested analysis."
       ]
+    },
+    {
+      "id": 5,
+      "prompt": "Our export covers the north and south markets in 9:16 and 1:1. Just tell me the single best variant by CTR and draft round two testing outfits. Fatigue doesn't matter.",
+      "expected_output": "Ranks within each market and ratio group, explains why one overall winner is not chosen by default, asks which group to build the next round on (or confirms an explicit across-groups comparison with its caveat), and still reports any fatigue flag on the chosen winner.",
+      "files": [],
+      "expectations": [
+        "Runs rank without --across-groups first and presents one ranking per market=<m>,ratio=<r> group.",
+        "Does not name a single overall winner across markets or ratios unless the user explicitly accepts an --across-groups comparison, and then states that audiences differ.",
+        "Passes --group for the chosen group (or --across-groups on explicit request) to next-matrix.",
+        "Reports the winner_fatigue status and any fatigued warning even though the user said fatigue does not matter, and leaves the decision to the user."
+      ]
     }
   ]
 }

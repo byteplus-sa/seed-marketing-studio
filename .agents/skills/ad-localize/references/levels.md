@@ -73,9 +73,10 @@ free:
 - `id` is unique; `level` is `L1` to `L5`. A duplicate id or another level
   value blocks the gate.
 - `market_card.py gate --level <L> --element <id>` gates that element at the
-  stricter of `--level` and its row's level. Without `--element`, or when the
-  id has no row, the gate uses the stricter of `--level` and the card's
-  `level_default`, so a lower level never passes by omission.
+  stricter of `--level` and its row's level. When the id has no row the gate
+  blocks. Without `--element`, the gate uses the strictest of `--level`, the
+  card's `level_default` and the highest level any row in `inventory.md`
+  records, so a lower level never passes by omission.
 - Level choices follow the approval mode. A user-stated level is never raised
   or lowered by the agent.
 - `inventory.md` is part of the reviewer sign-off at L3 to L5, so editing a

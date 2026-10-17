@@ -21,6 +21,10 @@ parseable by tools.
 | Shot take | `<scene>_sh<NNN>_t<NN>_v<NN>.<ext>` | `s01_sh010_t01_v01.mp4` |
 | Shot final | `<scene>_sh<NNN>_final_v<NN>.<ext>` | `s01_sh010_final_v01.mp4` |
 | Scene render | `<scene>_render_v<NN>.<ext>` | `s01_render_v01.mp4` |
+| Ad variant name (`ad-variant-matrix`) | `<campaign>_<concept>_<axis-values>_v<NN>` (or the matrix `naming`) | `spring-launch_demo_hook-a_vp-a_9x16_v01` |
+| Variant operation asset id | `<variant-name>[_<axes>]_t<NN>_draft\|final\|audio` | `spring-launch_demo_hook-a_vp-a_9x16_v01_t01_draft` |
+| Deliverable id | `<variant-name>_<placement-id>` | `spring-launch_demo_hook-a_vp-a_9x16_v01_meta-instagram-reels` |
+| Caption sidecar (`ad-captions`) | `<master-stem>.<language-code>.srt` / `.vtt` | `spring-launch_render_v02.es-MX.srt` |
 
 ## Image
 
@@ -39,8 +43,8 @@ parseable by tools.
 | Product shot plate (empty) | `plate_<product-id>_<preset>_t<NN>_v<NN>.png` | `plate_lumo-mug_color-pop_t02_v01.png` |
 | Reference (seed) | `ref_<NN>_<descriptor>.<ext>` | `ref_01_front.png` |
 | Product-intake card image | `elements/<product-id>/ref_<NN>_<view>.<ext>` beside `facts.json` | `elements/lumo-mug/ref_01_front.png` |
-| Acquired brand/product source copy (no product card) | `elements/<id>/refs/ref_<descriptor>.<ext>` | `elements/spicy-sardine-can/refs/ref_primary_packshot.jpg` |
-| Brand/product provenance | `elements/<id>/PROVENANCE.md` | `elements/brand-555/PROVENANCE.md` |
+| Acquired brand/product source copy (no product card) | `elements/<id>/refs/ref_<descriptor>.<ext>` | `elements/citrus-soda-can/refs/ref_primary_packshot.jpg` |
+| Brand/product provenance | `elements/<id>/PROVENANCE.md` | `elements/acme-home/PROVENANCE.md` |
 
 ### Deterministic static graphic sources
 

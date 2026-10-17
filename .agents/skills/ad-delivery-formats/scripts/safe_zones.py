@@ -390,7 +390,7 @@ def build_parser() -> argparse.ArgumentParser:
     for name in ("zones", "check", "overlay"):
         command = commands.add_parser(name)
         command.add_argument("--placement", action="append", required=True)
-        command.add_argument("--size", required=name == "overlay")
+        command.add_argument("--size", required=name != "zones")
         if name != "zones":
             command.add_argument(
                 "--box", action="append", default=[], metavar="[LABEL=]X,Y,W,H"

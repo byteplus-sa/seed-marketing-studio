@@ -11,7 +11,7 @@
         "Samples frames with the creative_check.py frames command, including a dense pass over the opening seconds.",
         "Uses 1.5 s as the reveal time rather than the 2 s default and cites the first frame where the bottle is identifiable.",
         "Confirms model answers against the sampled frames instead of passing items on the model's word alone.",
-        "Covers all ten checks exactly once and validates them with the report command.",
+        "Covers all ten checks exactly once and validates them with the report command and --project projects/glow-serum, with video set to the ratio-project render and video_sha256 matching that file.",
         "Gives no virality score, hook-rate estimate or performance prediction."
       ]
     },

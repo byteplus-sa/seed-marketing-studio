@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import copy
+import hashlib
 import importlib.util
 import io
 import json
@@ -24,6 +25,11 @@ SPEC.loader.exec_module(MODULE)
 FFMPEG_AVAILABLE = bool(shutil.which("ffmpeg"))
 DELIVERABLE = "glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels"
 FRAME = "frames/frame_00002.png"
+CAMPAIGN = "glow-serum"
+VIDEO = "glow-serum-9x16/studio/renders/cut.mp4"
+VIDEO_BYTES = b"synthetic cut bytes"
+VIDEO_SHA256 = hashlib.sha256(VIDEO_BYTES).hexdigest()
+RECORD = f"delivery/disclosure_{DELIVERABLE}.json"
 
 
 def passing_checks() -> list[dict[str, Any]]:
@@ -47,7 +53,7 @@ def passing_checks() -> list[dict[str, Any]]:
             "id": "disclosure_recorded",
             "status": "pass",
             "evidence": "User chose end-card disclosure.",
-            "disclosure_record": "disclosure.json",
+            "disclosure_record": RECORD,
         },
     ]
 
@@ -56,8 +62,8 @@ def checklist(**overrides: Any) -> dict[str, Any]:
     document: dict[str, Any] = {
         "schema_version": 1,
         "deliverable_id": DELIVERABLE,
-        "video": "renders/cut.mp4",
-        "video_sha256": "a" * 64,
+        "video": VIDEO,
+        "video_sha256": VIDEO_SHA256,
         "duration_s": 15.0,
         "paid": True,
         "placement": "meta-instagram-reels",
@@ -92,15 +98,21 @@ class ReportTests(unittest.TestCase):
     def setUp(self) -> None:
         self.directory = tempfile.TemporaryDirectory(prefix="creative-check-test-")
         self.addCleanup(self.directory.cleanup)
-        self.root = Path(self.directory.name)
-        (self.root / "frames").mkdir()
+        self.projects = Path(self.directory.name)
+        self.project = self.projects / CAMPAIGN
+        self.root = self.project / "delivery" / "qa" / DELIVERABLE
+        (self.root / "frames").mkdir(parents=True)
         (self.root / FRAME).write_bytes(b"\x89PNG\r\n\x1a\n")
-        (self.root / "disclosure.json").write_text(json.dumps(decision()))
+        self.record = self.project / RECORD
+        self.record.write_text(json.dumps(decision()))
+        self.video = self.projects / VIDEO
+        self.video.parent.mkdir(parents=True)
+        self.video.write_bytes(VIDEO_BYTES)
 
     def run_report(self, document: Any) -> tuple[int, dict[str, Any]]:
         path = self.root / "checks.json"
         path.write_text(json.dumps(document))
-        return MODULE.report(path)
+        return MODULE.report(path, self.project)
 
     def assert_invalid(self, document: Any, fragment: str) -> None:
         code, result = self.run_report(document)
@@ -214,19 +226,77 @@ class ReportTests(unittest.TestCase):
         self.assertEqual((code, result["verdict"]), (1, "fail"))
 
     def test_disclosure_record_must_be_the_users_decision_for_this_deliverable(self) -> None:
-        (self.root / "disclosure.json").write_text(json.dumps(decision(decided_by="agent")))
+        self.record.write_text(json.dumps(decision(decided_by="agent")))
         self.assert_invalid(checklist(), "decision must be the user's")
-        (self.root / "disclosure.json").write_text(json.dumps(decision(deliverable_id="other-ad_v01")))
+        self.record.write_text(json.dumps(decision(deliverable_id="other-ad_v01")))
         self.assert_invalid(checklist(), "record is for another deliverable")
-        (self.root / "disclosure.json").write_text(json.dumps(decision(decision="maybe")))
+        self.record.write_text(json.dumps(decision(decision="maybe")))
         self.assert_invalid(checklist(), "decision must be disclose")
-        missing = replace_check(checklist(), "disclosure_recorded", disclosure_record="absent.json")
-        self.assert_invalid(missing, "unreadable record")
+        self.record.unlink()
+        self.assert_invalid(checklist(), "record not found")
+
+    def test_disclosure_record_is_read_from_the_campaign_delivery_folder_only(self) -> None:
+        (self.root / "disclosure.json").write_text(json.dumps(decision()))
+        in_check_folder = replace_check(checklist(), "disclosure_recorded", disclosure_record="disclosure.json")
+        self.assert_invalid(in_check_folder, f"disclosure_record must be {RECORD}")
+        escaping = replace_check(checklist(), "disclosure_recorded", disclosure_record="../outside.json")
+        self.assert_invalid(escaping, f"disclosure_record must be {RECORD}")
+
+    def test_symlinked_disclosure_record_is_refused(self) -> None:
+        target = self.projects / "elsewhere.json"
+        target.write_text(json.dumps(decision()))
+        self.record.unlink()
+        self.record.symlink_to(target)
+        self.assert_invalid(checklist(), "regular file")
+
+    def test_video_must_exist(self) -> None:
+        self.video.unlink()
+        self.assert_invalid(checklist(), "video not found")
+
+    def test_video_hash_must_match_the_file(self) -> None:
+        self.assert_invalid(checklist(video_sha256="0" * 64), "video_sha256 does not match")
+
+    def test_video_in_the_campaign_project_itself_is_accepted(self) -> None:
+        local = self.project / "studio/renders/cut.mp4"
+        local.parent.mkdir(parents=True)
+        local.write_bytes(VIDEO_BYTES)
+        code, result = self.run_report(checklist(video=f"{CAMPAIGN}/studio/renders/cut.mp4"))
+        self.assertEqual(code, 0, result)
+
+    def test_video_outside_the_campaign_projects_is_refused(self) -> None:
+        other = self.projects / "other-brand/studio/renders/cut.mp4"
+        other.parent.mkdir(parents=True)
+        other.write_bytes(VIDEO_BYTES)
+        for video in ("other-brand/studio/renders/cut.mp4", "../cut.mp4", "/tmp/cut.mp4", "glow-serumx/cut.mp4"):
+            self.assert_invalid(checklist(video=video), "video must")
+
+    def test_symlinked_video_is_refused(self) -> None:
+        link = self.project / "studio/renders/link.mp4"
+        link.parent.mkdir(parents=True)
+        link.symlink_to(self.video)
+        self.assert_invalid(checklist(video=f"{CAMPAIGN}/studio/renders/link.mp4"), "regular file")
+
+    def test_checklist_must_sit_in_its_deliverable_qa_folder(self) -> None:
+        stray = self.project / "delivery/qa/another-deliverable"
+        (stray / "frames").mkdir(parents=True)
+        (stray / FRAME).write_bytes(b"png")
+        path = stray / "checks.json"
+        path.write_text(json.dumps(checklist()))
+        code, result = MODULE.report(path, self.project)
+        self.assertEqual(code, 2)
+        self.assertTrue(any("delivery/qa/" in error for error in result["errors"]), result)
+
+    def test_missing_project_folder_is_invalid(self) -> None:
+        path = self.root / "checks.json"
+        path.write_text(json.dumps(checklist()))
+        code, result = MODULE.report(path, self.projects / "absent")
+        self.assertEqual(code, 2)
+        self.assertIn("project", result["errors"][0])
 
     def test_unreadable_checklist_is_invalid(self) -> None:
         path = self.root / "checks.json"
         path.write_text("{not json")
-        code, result = MODULE.report(path)
+        code, result = MODULE.report(path, self.project)
         self.assertEqual(code, 2)
         self.assertIn("cannot read", result["errors"][0])
 
@@ -235,15 +305,31 @@ class ReportTests(unittest.TestCase):
         path.write_text(json.dumps(checklist()))
         out = self.root / "report.json"
         with contextlib.redirect_stdout(io.StringIO()):
-            code = MODULE.main(["report", str(path), "--out", str(out)])
+            code = MODULE.main(["report", str(path), "--project", str(self.project), "--out", str(out)])
         self.assertEqual(code, 0)
         self.assertEqual(json.loads(out.read_text())["verdict"], "pass")
         out.unlink()
         path.write_text(json.dumps(checklist(schema_version=2)))
         with contextlib.redirect_stdout(io.StringIO()):
-            code = MODULE.main(["report", str(path), "--out", str(out)])
+            code = MODULE.main(["report", str(path), "--project", str(self.project), "--out", str(out)])
         self.assertEqual(code, 2)
         self.assertFalse(out.exists())
+
+    def test_cli_report_refuses_an_out_path_outside_the_check_folder(self) -> None:
+        path = self.root / "checks.json"
+        path.write_text(json.dumps(checklist()))
+        out = self.project / "report.json"
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            code = MODULE.main(["report", str(path), "--project", str(self.project), "--out", str(out)])
+        self.assertEqual(code, 2)
+        self.assertFalse(out.exists())
+
+    def test_cli_report_requires_the_project(self) -> None:
+        path = self.root / "checks.json"
+        path.write_text(json.dumps(checklist()))
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as raised:
+            MODULE.main(["report", str(path)])
+        self.assertEqual(raised.exception.code, 2)
 
 
 class FrameCommandTests(unittest.TestCase):

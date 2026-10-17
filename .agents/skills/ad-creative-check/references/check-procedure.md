@@ -1,9 +1,9 @@
 # Check Procedure
 
-Detailed criteria, model questions and commands for each check. Paths are
-relative to the campaign folder; the check folder is
-`delivery/qa/<deliverable-id>/`, shared with the cut's safe-zone contact
-sheet. Deliverable ids are `{campaign}_{concept}_{axis-values}_v{nn}_<placement>`.
+Detailed criteria, model questions and commands for each check. The check
+folder is `projects/<campaign>/delivery/qa/<deliverable-id>/`, shared with the
+cut's safe-zone contact sheet. Deliverable ids are
+`{campaign}_{concept}_{axis-values}_v{nn}_<placement>`.
 
 ## Video understanding questions
 
@@ -123,11 +123,14 @@ value; a delivery record may set its own.
 
 ### disclosure_recorded
 
-- Paid deliverable: `pass` needs `disclosure_record` pointing at the decision
-  record, copied or linked into the check folder, for the same
-  `deliverable_id`, with `decided_by: user`, the user's quoted words and a
-  decision of `disclose`, `not_required` or `declined`. When the decision is
-  `disclose`, also confirm the label appears as decided.
+- Paid deliverable: `pass` needs `disclosure_record` set to
+  `delivery/disclosure_<deliverable-id>.json`. The report reads that record in
+  place from the campaign project given with `--project`; it is never copied
+  or linked into the check folder, and a symlinked record is refused. The
+  record must be for the same `deliverable_id`, with `decided_by: user`, the
+  user's quoted words and a decision of `disclose`, `not_required` or
+  `declined`. When the decision is `disclose`, also confirm the label appears
+  as decided.
 - Unpaid or internal deliverable (showreel, review cut, pitch reel):
   `not_applicable`, and the cut carries no AI label.
 
@@ -137,7 +140,7 @@ value; a delivery record may set its own.
 {
   "schema_version": 1,
   "deliverable_id": "glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels",
-  "video": "projects/glow-serum-9x16/studio/renders/glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels.mp4",
+  "video": "glow-serum-9x16/studio/renders/glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels.mp4",
   "video_sha256": "<64 hex characters>",
   "duration_s": 15.0,
   "paid": true,
@@ -161,10 +164,11 @@ value; a delivery record may set its own.
       "id": "disclosure_recorded",
       "status": "pass",
       "evidence": "User chose end-card disclosure and platform labels.",
-      "disclosure_record": "disclosure_glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels.json"
+      "disclosure_record": "delivery/disclosure_glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels.json"
     }
   ]
 }
 ```
 
-The real checklist lists all ten checks exactly once.
+The real checklist lists all ten checks exactly once. `video` is relative to
+the `projects/` folder and `video_sha256` is the hash of that exact file.

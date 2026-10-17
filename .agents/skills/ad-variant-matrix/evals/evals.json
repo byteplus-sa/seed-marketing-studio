@@ -18,14 +18,14 @@
     {
       "id": 2,
       "prompt": "Do every combination: 4 hooks x 3 talents x 3 languages x 3 ratios for the hero ad. Budget 50 USD, max 20 variants.",
-      "expected_output": "Plans the explicitly requested full factorial, shows that it exceeds the variant cap and budget, and refuses to proceed or trim silently, offering concrete reductions.",
+      "expected_output": "Plans the explicitly requested full factorial with the request recorded in notes, shows that it exceeds the variant cap and the deduplicated budget, and refuses to proceed or trim silently, offering concrete reductions.",
       "files": [],
       "expectations": [
-        "Accepts full_factorial because the user explicitly asked for every combination.",
+        "Accepts full_factorial because the user explicitly asked for every combination and records that request in the matrix notes, since plan refuses a full factorial with empty notes.",
         "Reports the expanded row count from the plan (108 rows when the hero's values are among the listed values, more if they are not) and that it exceeds max_variants 20.",
         "Treats the cost command's refusal as a stop and does not drop rows silently.",
         "Proposes concrete reductions such as one axis at a time or fewer values, and asks the user to choose.",
-        "Notes that combined rows run their steps in order (talent swap, hook opening, dub, reframe), each with its own review and registry entry.",
+        "Explains that combined rows reuse the operations of the rows they build on (for example one talent swap serves every ratio row with that talent, and a 4:5 reframe costs 0 by default), so each unique swap, hook opening and dub is reviewed, registered and charged once and the total uses the deduplicated cost.",
         "States that combined rows which also change ratio deliver into variant-specific projects (projects/<campaign>-<variant-key>-<ratio>, for example a hook-and-talent row at 4:5), so no two variants share a delivery project, and that plan refuses any remaining clash with matrix.unique_projects."
       ]
     },
@@ -37,6 +37,7 @@
       "expectations": [
         "Identifies that a take in review is not an approved hero.",
         "Applies the project approval_mode: in approve_for_me the agent may QA and approve the take with a hash-bound decision first; in ask_for_approval it asks the user to confirm.",
+        "States that register refuses unless hero.decision_ref and hero.take_file are regular files inside the project and the take file still hashes to hero.sha256.",
         "Does not submit any generation before the matrix is approved and each row is reviewed and registered.",
         "Keeps hook variants to the opening beat and preserves facts and CTA."
       ]

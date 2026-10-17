@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import itertools
 import json
 import math
@@ -26,6 +27,8 @@ SWAP_AXES = ("talent", "product", "outfit", "location")
 RECAST_TRIGGER = {"talent", "location"}
 RECAST_COST_KEY = "motion-recast"
 DELIVERY_ONLY_AXES = {"market", "ratio"}
+DELIVERY_ROUTES = {"market-adapt", "ratio-reframe"}
+DEFAULT_UNIT_COSTS = {"ratio": 0.0}
 LOCALIZE_SKILL = "ad-localize"
 COST_KEYS = (*AXES, RECAST_COST_KEY)
 AD_GROUP_CREATIVES = 5
@@ -66,12 +69,21 @@ MARKET_ESTIMATE_NOTE = (
     "depends on the per-element adaptation levels chosen in ad-localize, which "
     "estimates and registers its own operations"
 )
+RATIO_COST_NOTE = (
+    "Ratio rows default to 0 USD because a Studio reframe is not a provider "
+    "operation; set a ratio unit cost only to budget native per-ratio regeneration"
+)
 REGISTER_PROCEDURE = [
     "Write the variant shot manifest at studio.manifest with studio.frontmatter",
     "Write and freeze the row prompt at the --prompt path",
     "Run hash_command and bind prompt-review to the printed request_sha256",
     "Resolve CRITICAL and MAJOR findings, then run register_command",
     "Submit only a registered operation, in 'after' order, under the project approval mode",
+    (
+        "A row with base_variant starts from that variant's selected take; an "
+        "operation with 'after' uses the selected take of the named variant as "
+        "its source, and a step owned by another row is never registered again"
+    ),
     (
         "Select a passing 480p draft with a hash-bound decision before running "
         "register --stage final; a retake uses a new --take"
@@ -150,6 +162,15 @@ def semantic_findings(matrix: dict[str, Any]) -> list[Finding]:
                 "naming",
             )
         )
+    if matrix["strategy"] == "full_factorial" and not matrix.get("notes", "").strip():
+        findings.append(
+            Finding(
+                "matrix.factorial_request",
+                "full_factorial needs notes recording the user's explicit request "
+                "for every combination (ad.variant_one_axis)",
+                "notes",
+            )
+        )
     return findings
 
 
@@ -182,7 +203,7 @@ def step_cost_key(route: str, axes: list[str]) -> str:
     return RECAST_COST_KEY if route == "motion-recast" else axes[0]
 
 
-def plan_steps(changed: list[str]) -> list[dict[str, Any]]:
+def plan_steps(values: dict[str, str], changed: list[str]) -> list[dict[str, Any]]:
     swaps = [axis for axis in SWAP_AXES if axis in changed]
     routed: list[tuple[str, list[str]]] = []
     if RECAST_TRIGGER <= set(swaps):
@@ -198,13 +219,18 @@ def plan_steps(changed: list[str]) -> list[dict[str, Any]]:
     if "ratio" in changed:
         routed.append(("ratio-reframe", ["ratio"]))
     steps: list[dict[str, Any]] = []
+    lineage: list[str] = []
     for route, axes in routed:
+        lineage.append(
+            f"{route}:" + "+".join(f"{axis}={values[axis]}" for axis in axes)
+        )
         step: dict[str, Any] = {
             "route": route,
             "axes": axes,
             "skills": STEP_SKILLS[route],
             "provider_operation": route in PROVIDER_ROUTES,
             "cost_key": step_cost_key(route, axes),
+            "operation_key": ">".join(lineage),
         }
         if route == "hook-opening":
             step["generate_duration_s"] = HOOK_MIN_DURATION_S
@@ -296,13 +322,26 @@ def project_collisions(rows: list[dict[str, Any]]) -> list[str]:
     return sorted(path for path, sources in owners.items() if len(sources) > 1)
 
 
+def owned_steps(row: dict[str, Any]) -> list[dict[str, Any]]:
+    return [step for step in row["steps"] if step["owner"] == row["name"]]
+
+
+def owns_route(row: dict[str, Any], route: str) -> bool:
+    return any(step["route"] == route for step in owned_steps(row))
+
+
+def base_variant(name: str, steps: list[dict[str, Any]], hero: str) -> str:
+    reused = [step["owner"] for step in steps if step["owner"] != name]
+    return reused[-1] if reused else hero
+
+
 def annotate_market_step(
-    steps: list[dict[str, Any]], localize: dict[str, Any] | None
+    name: str, steps: list[dict[str, Any]], localize: dict[str, Any] | None
 ) -> list[dict[str, Any]]:
     if localize is None:
         return steps
     for step in steps:
-        if step["route"] == "market-adapt":
+        if step["route"] == "market-adapt" and step["owner"] == name:
             step["note"] = (
                 f"Run {LOCALIZE_SKILL} with the market card {localize['card']} "
                 "(market facts and level_default) and the per-element levels in "
@@ -325,10 +364,19 @@ def variant_name(matrix: dict[str, Any], values: dict[str, str]) -> str:
 
 def expand(matrix: dict[str, Any]) -> list[dict[str, Any]]:
     hero = {axis: matrix["hero"]["values"][axis] for axis in named_axes(matrix)}
+    hero_name = variant_name(matrix, hero)
+    owners: dict[str, str] = {}
     rows: list[dict[str, Any]] = []
     for index, values in enumerate(combinations(matrix)):
         changed = [axis for axis in values if values[axis] != hero[axis]]
         name = variant_name(matrix, values)
+        steps = plan_steps(values, changed)
+        for step in steps:
+            step["owner"] = owners.setdefault(step["operation_key"], name)
+        generated = any(
+            step["owner"] == name and step["route"] not in DELIVERY_ROUTES
+            for step in steps
+        )
         localize = localize_target(matrix["campaign"], values, changed)
         rows.append(
             {
@@ -337,10 +385,11 @@ def expand(matrix: dict[str, Any]) -> list[dict[str, Any]]:
                 "role": "variant" if changed else "hero",
                 "values": values,
                 "changed_axes": changed,
-                "steps": annotate_market_step(plan_steps(changed), localize),
-                "studio": studio_target(name)
-                if any(axis not in DELIVERY_ONLY_AXES for axis in changed)
+                "base_variant": base_variant(name, steps, hero_name)
+                if changed
                 else None,
+                "steps": annotate_market_step(name, steps, localize),
+                "studio": studio_target(name) if generated else None,
                 "localize": localize,
                 "delivery": delivery_target(
                     matrix["campaign"], values, changed, localize
@@ -439,10 +488,32 @@ def parse_unit_costs(items: list[str]) -> dict[str, float]:
     return costs
 
 
+def unique_operations(
+    rows: list[dict[str, Any]], units: dict[str, float]
+) -> list[dict[str, Any]]:
+    operations: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        for step in row["steps"]:
+            operation = operations.setdefault(
+                step["operation_key"],
+                {
+                    "operation_key": step["operation_key"],
+                    "owner": step["owner"],
+                    "route": step["route"],
+                    "axes": step["axes"],
+                    "cost_key": step["cost_key"],
+                    "unit_cost_usd": units[step["cost_key"]],
+                    "used_by": [],
+                },
+            )
+            operation["used_by"].append(row["name"])
+    return list(operations.values())
+
+
 def apply_costs(
     matrix: dict[str, Any], rows: list[dict[str, Any]], overrides: dict[str, float]
 ) -> tuple[dict[str, Any], list[Finding]]:
-    units = {**matrix.get("unit_cost_usd", {}), **overrides}
+    units = {**DEFAULT_UNIT_COSTS, **matrix.get("unit_cost_usd", {}), **overrides}
     findings: list[Finding] = []
     missing = sorted(
         {
@@ -462,13 +533,12 @@ def apply_costs(
             )
         )
         return {}, findings
-    total = 0.0
+    operations = unique_operations(rows, units)
     for row in rows:
         row["estimated_cost_usd"] = round(
-            sum(units[step["cost_key"]] for step in row["steps"]), 2
+            sum(units[step["cost_key"]] for step in owned_steps(row)), 2
         )
-        total += row["estimated_cost_usd"]
-    total = round(total, 2)
+    total = round(sum(operation["unit_cost_usd"] for operation in operations), 2)
     if total > matrix["budget_usd"]:
         findings.append(
             Finding(
@@ -477,20 +547,27 @@ def apply_costs(
                 "budget_usd",
             )
         )
-    summary = {
+    routes = {operation["route"] for operation in operations}
+    summary: dict[str, Any] = {
         "unit_cost_usd": {key: units[key] for key in COST_KEYS if key in units},
         "total_estimated_usd": total,
         "budget_usd": matrix["budget_usd"],
         "currency": "USD",
         "estimate_note": (
-            "Estimate from supplied unit costs, one unit per routed step (a combined "
-            "talent and location Motion Transfer costs one motion-recast unit) "
-            "covering its draft and final; confirmed cost is recorded per operation "
-            "after completion"
+            "Estimate from supplied unit costs, one unit per unique operation (a "
+            "combined talent and location Motion Transfer costs one motion-recast "
+            "unit) covering its draft and final. A row that reuses another row's "
+            "operation adds nothing for it: each row's estimated_cost_usd counts "
+            "only the operations it owns, and operations_estimate lists every "
+            "unique operation with the rows that use it. Confirmed cost is recorded "
+            "per operation after completion"
         ),
+        "operations_estimate": operations,
     }
-    if any(step["route"] == "market-adapt" for row in rows for step in row["steps"]):
+    if "market-adapt" in routes:
         summary["market_estimate_note"] = MARKET_ESTIMATE_NOTE
+    if "ratio-reframe" in routes:
+        summary["ratio_cost_note"] = RATIO_COST_NOTE
     return summary, findings
 
 
@@ -529,31 +606,33 @@ def flag_pairs(flag: str, values: list[str]) -> list[str]:
     return [item for value in values for item in (flag, value)]
 
 
+def staged(step: dict[str, Any], stage: str) -> bool:
+    return step["provider_operation"] and (
+        stage == "draft" or step["route"] not in AUDIO_ROUTES
+    )
+
+
 def staged_steps(row: dict[str, Any], stage: str) -> list[dict[str, Any]]:
-    return [
-        step
-        for step in row["steps"]
-        if step["provider_operation"]
-        and (stage == "draft" or step["route"] not in AUDIO_ROUTES)
-    ]
+    return [step for step in owned_steps(row) if staged(step, stage)]
 
 
 def operation_commands(
     project: str, row: dict[str, Any], options: argparse.Namespace
 ) -> list[dict[str, Any]]:
-    paid = [step for step in row["steps"] if step["provider_operation"]]
-    if not paid or row["studio"] is None:
+    if row["studio"] is None:
         return []
     folder = row["studio"]["directory"]
     operations: list[dict[str, Any]] = []
     previous: str | None = None
-    for step in staged_steps(row, options.stage):
+    for step in row["steps"]:
+        if not staged(step, options.stage):
+            continue
+        if step["owner"] != row["name"]:
+            previous = step["owner"]
+            continue
         route = step["route"]
         audio = route in AUDIO_ROUTES
-        stem = (
-            row["name"] if len(paid) == 1 else f"{row['name']}_{'-'.join(step['axes'])}"
-        )
-        asset = f"{stem}_{options.take}_{'audio' if audio else options.stage}"
+        asset = f"{row['name']}_{options.take}_{'audio' if audio else options.stage}"
         params = step_params(route, options)
         exemption = shot_rule_exemption(route, options.static_by_design)
         rules = step_rules(route, exemption)
@@ -601,11 +680,62 @@ def operation_commands(
                 "references_note": "Add --ref path:role:manifest for every approved reference the reviewed prompt binds",
             }
         )
-        previous = asset
+        previous = row["name"]
     return operations
 
 
-def register_findings(matrix: dict[str, Any]) -> list[Finding]:
+def project_file(project: Path, relative: str | None) -> Path | None:
+    if not relative or Path(relative).is_absolute():
+        return None
+    root = project.resolve()
+    path = (root / relative).resolve()
+    if not path.is_relative_to(root) or not path.is_file():
+        return None
+    return path
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def hero_findings(hero: dict[str, Any], project: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    if project_file(project, hero.get("decision_ref")) is None:
+        findings.append(
+            Finding(
+                "matrix.hero_decision",
+                "hero.decision_ref must name the approval decision record as a "
+                "regular file inside --project",
+                "hero.decision_ref",
+            )
+        )
+    take = project_file(project, hero.get("take_file"))
+    if take is None:
+        findings.append(
+            Finding(
+                "matrix.hero_take",
+                "hero.take_file must name the approved hero take as a regular file "
+                "inside --project",
+                "hero.take_file",
+            )
+        )
+    elif hero["sha256"] and file_sha256(take) != hero["sha256"]:
+        findings.append(
+            Finding(
+                "matrix.hero_hash_mismatch",
+                "The hero take no longer matches hero.sha256; re-approve the hero "
+                "before planning variants",
+                "hero.sha256",
+            )
+        )
+    return findings
+
+
+def register_findings(matrix: dict[str, Any], project: Path) -> list[Finding]:
     findings: list[Finding] = []
     if matrix["status"] != "approved":
         findings.append(
@@ -623,6 +753,7 @@ def register_findings(matrix: dict[str, Any]) -> list[Finding]:
                 "hero.sha256",
             )
         )
+    findings.extend(hero_findings(matrix["hero"], project))
     return findings
 
 
@@ -696,7 +827,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
     if args.command == "register":
         if not TAKE.fullmatch(args.take):
             raise ValueError(f"--take must look like t01: {args.take}")
-        findings.extend(register_findings(matrix))
+        findings.extend(register_findings(matrix, args.project))
         findings.extend(option_findings(rows, args))
         if not blocking(findings):
             result["dry_run"] = True
@@ -715,7 +846,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
                     "reminder": LOCALIZE_REMINDER,
                 }
                 for row in rows
-                if row["localize"]
+                if row["localize"] and owns_route(row, "market-adapt")
             ]
             if localize:
                 result["localize"] = localize

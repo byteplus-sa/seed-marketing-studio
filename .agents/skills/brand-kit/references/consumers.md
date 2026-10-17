@@ -13,7 +13,7 @@ used below.
 
 | Consumer | Reads | Never |
 | --- | --- | --- |
-| Deterministic graphics (`html-graphic-render`) | `palette`, `typography` files and families, `logos` files with `min_height_px`, `clear_space_ratio`, `allowed_backgrounds`; `cta_style`; `copy_rules.trademark_marks` | Recolor or redraw a logo; substitute an unlicensed font file |
+| Deterministic graphics (`html-graphic-render`, `static-ad-batch`) | `palette`, `typography` files and families, `logos` files with `min_height_px`, `clear_space_ratio`, `allowed_backgrounds`; `cta_style`; `copy_rules.trademark_marks` and `copy_rules.required_lines` (static-ad-batch applies both) | Recolor or redraw a logo; substitute an unlicensed font file |
 | HyperFrames supers, lower-thirds, end cards | Same as deterministic graphics; brand fonts load from `assets/fonts/` by local path | Burn brand text into generated footage |
 | Seedream and Seedance prompts | `imagery.style_sentence` in the style or visual-style line; `imagery.avoid` as observable positive direction; on-product marks only as carried by a bound acquired product reference | Name the brand, ask for a free-standing, corner or end-card logo, or describe a mark or label text the bound reference does not carry |
 | Script and caption writing | `voice`, `cta_style.verbs`, `copy_rules` | Exceed the supported product facts; voice never licenses a claim |

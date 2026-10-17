@@ -118,6 +118,44 @@ def confined(base: Path, relative: str, label: str) -> Path:
     return resolved
 
 
+def regular_file(path: Path, label: str) -> Path:
+    if path.is_symlink():
+        raise ValueError(f"{label} must be a regular file, not a symlink: {path}")
+    if not path.exists():
+        raise ValueError(f"{label} not found: {path}")
+    if not path.is_file():
+        raise ValueError(f"{label} must be a regular file: {path}")
+    return path
+
+
+def video_errors(document: dict[str, Any], project: Path) -> list[str]:
+    text = document["video"]
+    pure = PurePosixPath(text)
+    if pure.is_absolute() or Path(text).is_absolute() or ".." in pure.parts or len(pure.parts) < 2:
+        return [f"video must be a path relative to the projects folder, such as <project>/studio/renders/<cut>.mp4: {text}"]
+    owner = pure.parts[0]
+    if owner != project.name and not owner.startswith(f"{project.name}-"):
+        return [f"video must sit in the {project.name} project or a {project.name}-<suffix> project: {text}"]
+    path = project.parent / text
+    try:
+        regular_file(path, "video")
+        if not path.resolve().is_relative_to((project.parent / owner).resolve()):
+            return [f"video must stay inside {owner}: {text}"]
+        actual = sha256(path)
+    except (OSError, ValueError) as error:
+        return [str(error)]
+    if actual != document["video_sha256"]:
+        return [f"video_sha256 does not match {text}: the file hashes to {actual}"]
+    return []
+
+
+def location_errors(checks: Path, document: dict[str, Any], project: Path) -> list[str]:
+    folder = PurePosixPath("delivery", "qa", document["deliverable_id"])
+    if checks.resolve().parent == (project / folder).resolve():
+        return []
+    return [f"checks.json must sit in {folder}/ of the project {project}"]
+
+
 def schema_errors(document: Any) -> list[str]:
     validator = Draft202012Validator(json.loads(SCHEMA_PATH.read_text()))
     return [
@@ -177,7 +215,7 @@ def loudness_errors(check: dict[str, Any], target: dict[str, float]) -> list[str
 
 
 def disclosure_errors(
-    check: dict[str, Any], document: dict[str, Any], base: Path
+    check: dict[str, Any], document: dict[str, Any], project: Path
 ) -> list[str]:
     status = check["status"]
     if not document["paid"]:
@@ -189,10 +227,19 @@ def disclosure_errors(
     if status != "pass":
         return []
     reference = check.get("disclosure_record")
+    expected = f"delivery/disclosure_{document['deliverable_id']}.json"
     if not reference:
-        return ["disclosure_recorded: pass needs disclosure_record"]
+        return [f"disclosure_recorded: pass needs disclosure_record {expected}"]
+    if reference != expected:
+        return [f"disclosure_recorded: disclosure_record must be {expected}, read from the project, got {reference}"]
+    path = project / expected
     try:
-        path = confined(base, reference, "disclosure_record")
+        regular_file(path, "disclosure_recorded: record")
+        if not path.resolve().is_relative_to(project):
+            return [f"disclosure_recorded: record escapes the project: {expected}"]
+    except (OSError, ValueError) as error:
+        return [str(error)]
+    try:
         record = json.loads(path.read_text())
     except (OSError, ValueError) as error:
         return [f"disclosure_recorded: unreadable record: {error}"]
@@ -208,7 +255,9 @@ def disclosure_errors(
     return errors
 
 
-def check_errors(check: dict[str, Any], document: dict[str, Any], base: Path) -> list[str]:
+def check_errors(
+    check: dict[str, Any], document: dict[str, Any], base: Path, project: Path
+) -> list[str]:
     name, status = check["id"], check["status"]
     errors = evidence_errors(check, document["duration_s"], base)
     if status == "not_applicable" and name not in MAY_NOT_APPLY | {"disclosure_recorded"}:
@@ -220,17 +269,19 @@ def check_errors(check: dict[str, Any], document: dict[str, Any], base: Path) ->
     if name == "loudness_target":
         errors += loudness_errors(check, document.get("loudness_target", DEFAULT_LOUDNESS))
     if name == "disclosure_recorded":
-        errors += disclosure_errors(check, document, base)
+        errors += disclosure_errors(check, document, project)
     return errors
 
 
-def validate(document: Any, base: Path) -> list[str]:
+def validate(document: Any, checks: Path, project: Path) -> list[str]:
     errors = schema_errors(document)
     if errors:
         return errors
-    errors = coverage_errors(document["checks"])
+    errors = location_errors(checks, document, project)
+    errors += video_errors(document, project)
+    errors += coverage_errors(document["checks"])
     for check in document["checks"]:
-        errors += check_errors(check, document, base)
+        errors += check_errors(check, document, checks.parent, project)
     return errors
 
 
@@ -272,12 +323,15 @@ def summarize(document: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def report(path: Path) -> tuple[int, dict[str, Any]]:
+def report(path: Path, project: Path) -> tuple[int, dict[str, Any]]:
+    if not project.is_dir():
+        return 2, {"valid": False, "errors": [f"project folder not found: {project}"]}
+    project = project.resolve()
     try:
         document = json.loads(path.read_text())
     except (OSError, ValueError) as error:
         return 2, {"valid": False, "errors": [f"cannot read {path}: {error}"]}
-    errors = validate(document, path.parent)
+    errors = validate(document, path, project)
     if errors:
         return 2, {"valid": False, "errors": errors}
     summary = {"valid": True, **summarize(document)}
@@ -296,6 +350,7 @@ def build_parser() -> argparse.ArgumentParser:
     frames.add_argument("--until", type=float)
     summary = commands.add_parser("report", help="Validate and summarize a filled checklist")
     summary.add_argument("checks", type=Path)
+    summary.add_argument("--project", type=Path, required=True)
     summary.add_argument("--out", type=Path)
     return parser
 
@@ -303,7 +358,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     arguments = build_parser().parse_args(argv)
     if arguments.command == "report":
-        code, result = report(arguments.checks)
+        folder = arguments.checks.resolve().parent
+        if arguments.out is not None and not arguments.out.resolve().is_relative_to(folder):
+            print(json.dumps({"error": f"--out must stay inside the check folder {folder}"}), file=sys.stderr)
+            return 2
+        code, result = report(arguments.checks, arguments.project)
         text = json.dumps(result, indent=2)
         if arguments.out is not None and result.get("valid"):
             arguments.out.write_text(text + "\n")

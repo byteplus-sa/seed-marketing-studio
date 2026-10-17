@@ -145,6 +145,31 @@ class ValidateTests(ProductFactsTestCase):
         self.with_fact(0, retrieved_at="2026-10-17T09:00:00")
         self.assertIn("facts.retrieved_at", self.rules())
 
+    def test_unparseable_fact_retrieval_time_is_rejected(self) -> None:
+        for bad in ("yesterday", "not a date", "2026-10-17", "2026-02-30T09:00:00Z"):
+            with self.subTest(value=bad):
+                self.with_fact(0, retrieved_at=bad)
+                self.assertIn("facts.retrieved_at", self.rules())
+
+    def test_image_retrieval_time_must_parse_with_an_offset_and_not_be_in_the_future(self) -> None:
+        for bad in ("yesterday", "not a date", "2026-10-17", "2026-10-17T09:31:00", "2026-10-18T09:00:00Z"):
+            with self.subTest(value=bad):
+                document = self.document()
+                document["images"][0]["retrieved_at"] = bad
+                self.write(document)
+                code, result = run("validate", str(self.path))
+                self.assertEqual(code, 1, result)
+                self.assertIn(
+                    ("facts.retrieved_at", "images.0.retrieved_at"),
+                    [(finding["rule_id"], finding["path"]) for finding in result["findings"]],
+                )
+
+    def test_image_retrieval_time_with_any_offset_passes(self) -> None:
+        document = self.document()
+        document["images"][0]["retrieved_at"] = "2026-10-17T17:31:00+08:00"
+        self.write(document)
+        self.assertEqual(self.rules(), [])
+
     def test_duplicate_fact_ids_are_rejected(self) -> None:
         self.with_fact(1, fact_id="f01")
         self.assertIn("facts.unique", self.rules())
@@ -271,6 +296,44 @@ class SupportedTests(ProductFactsTestCase):
 
     def test_needs_substantiation_is_never_printed(self) -> None:
         self.assertNotIn("f02", self.claims("--max-age-hours", "100000"))
+
+    def test_claim_dropping_a_quoted_qualifier_is_withheld_with_a_reason(self) -> None:
+        self.with_fact(
+            0,
+            quote="Keeps drinks cold for up to 24 hours.",
+            claim="Keeps drinks cold for 24 hours",
+        )
+        code, result = run("supported", str(self.path))
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["claims"], [])
+        self.assertEqual(len(result["blocked"]), 1)
+        blocked = result["blocked"][0]
+        self.assertEqual(blocked["fact_id"], "f01")
+        self.assertEqual(blocked["rule_id"], "facts.claim_qualifier")
+        self.assertIn("up to", blocked["reason"])
+
+    def test_perishable_price_dropping_from_is_withheld_inside_the_window(self) -> None:
+        self.with_fact(2, quote="Prices from 32.00 per bottle", claim="Priced at 32.00")
+        code, result = run("supported", str(self.path), "--max-age-hours", "24")
+        self.assertEqual(code, 0, result)
+        self.assertEqual([claim["fact_id"] for claim in result["claims"]], ["f01"])
+        self.assertEqual([entry["fact_id"] for entry in result["blocked"]], ["f03"])
+
+    def test_claim_keeping_its_qualifier_is_printed_and_nothing_is_blocked(self) -> None:
+        self.with_fact(
+            0,
+            quote="Keeps drinks cold for up to 24 hours.",
+            claim="Keeps drinks cold for up to 24 hours",
+        )
+        code, result = run("supported", str(self.path))
+        self.assertEqual(code, 0, result)
+        self.assertEqual([claim["fact_id"] for claim in result["claims"]], ["f01"])
+        self.assertEqual(result["blocked"], [])
+
+    def test_unusable_status_with_a_dropped_qualifier_is_not_reported_as_blocked(self) -> None:
+        self.with_fact(1, quote="Results may vary", claim="Results vary")
+        _, result = run("supported", str(self.path))
+        self.assertEqual(result["blocked"], [])
 
     def test_invalid_record_prints_no_claims(self) -> None:
         self.with_fact(2, status="supported")

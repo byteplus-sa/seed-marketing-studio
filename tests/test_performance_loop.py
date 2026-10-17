@@ -20,6 +20,8 @@ import variant_matrix
 HERO = "acme_launch_hook-demo_vp-a_9x16_v01"
 CALLOUT = "acme_launch_hook-callout_vp-a_9x16_v01"
 TALENT = "acme_launch_hook-demo_vp-b_9x16_v01"
+SOUTH = "acme_launch_hook-demo_vp-a_south_9x16_v01"
+SQUARE = "acme_launch_hook-demo_vp-a_1x1_v01"
 PLAN = {
     "rows": [
         {
@@ -245,6 +247,11 @@ class PerformanceLoopTests(unittest.TestCase):
         self.assertEqual(draft["axes"], {"outfit": ["outfit-b", "outfit-c"]})
         self.assertEqual(draft["hero"]["values"]["hook"], "hook-callout")
         self.assertIsNone(draft["hero"]["sha256"])
+        self.assertIsNone(draft["hero"]["decision_ref"])
+        self.assertIsNone(draft["hero"]["take_file"])
+        self.assertTrue(
+            any("hero.decision_ref" in warning for warning in result["warnings"])
+        )
         self.assertEqual(draft["version"], 2)
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
@@ -520,6 +527,183 @@ class PerformanceLoopTests(unittest.TestCase):
         )
         self.assertEqual(code, 1)
         self.assertIn("{outfit}", result["error"])
+
+    def next_matrix_cli(self, metrics, *extra):
+        return self.run_cli(
+            "next-matrix",
+            metrics,
+            "--matrix",
+            self.write("matrix.json", MATRIX),
+            "--kpi",
+            "ctr",
+            "--axis",
+            "outfit=outfit-b",
+            "--hero-value",
+            "outfit-a",
+            "--out",
+            self.root / f"draft-{len(list(self.root.iterdir()))}.json",
+            *extra,
+        )
+
+    def test_ingest_summary_lists_ambiguous_unmatched_missing_and_skipped(self):
+        export = EXPORT + (
+            f"{HERO} vs {CALLOUT},2026-10-01,100,90,10,1,$1,0\n"
+            ",2026-10-01,5,5,5,5,$5,5\n"
+        )
+        code, summary = self.run_cli(
+            "ingest",
+            self.write("export.csv", export),
+            "--map",
+            self.write("map.json", MAPPING),
+            "--variants",
+            self.write("plan.json", PLAN),
+            "--out",
+            self.root / "metrics.json",
+        )
+        self.assertEqual(code, 0, summary)
+        self.assertEqual(summary["unmatched_ads"], ["Mystery ad"])
+        self.assertEqual(
+            summary["ambiguous_ads"], {f"{HERO} vs {CALLOUT}": sorted([HERO, CALLOUT])}
+        )
+        self.assertEqual(summary["variants_without_data"], [TALENT])
+        self.assertEqual(
+            summary["skipped_rows"], [{"line": 8, "reason": "empty ad name"}]
+        )
+        self.assertEqual(
+            summary["counts"],
+            {
+                "records": 6,
+                "unmatched_ads": 1,
+                "ambiguous_ads": 1,
+                "variants_without_data": 1,
+                "skipped_rows": 1,
+                "issues": 0,
+            },
+        )
+
+    def test_ingest_summary_has_empty_lists_when_everything_matches(self):
+        export = HEADER + f"{HERO},2026-10-01,100,90,10,1,$1,0\n"
+        plan = {"rows": PLAN["rows"][:1]}
+        code, summary = self.run_cli(
+            "ingest",
+            self.write("export.csv", export),
+            "--map",
+            self.write("map.json", MAPPING),
+            "--variants",
+            self.write("plan.json", plan),
+            "--out",
+            self.root / "metrics.json",
+        )
+        self.assertEqual(code, 0, summary)
+        for key in ("unmatched_ads", "variants_without_data", "skipped_rows"):
+            self.assertEqual(summary[key], [], key)
+        self.assertEqual(summary["ambiguous_ads"], {})
+        self.assertEqual(summary["counts"]["records"], 1)
+
+    def test_next_matrix_warns_when_the_winner_is_fatigued(self):
+        export = HEADER + (
+            f"{HERO},2026-10-01,10000,8000,2500,300,$150.00,6\n"
+            f"{HERO},2026-10-08,10000,5000,2000,250,$150.00,3\n"
+            f"{CALLOUT},2026-10-01,9000,8000,3600,90,$140.00,7\n"
+            f"{CALLOUT},2026-10-08,9000,8000,3700,95,$140.00,8\n"
+        )
+        path, _ = self.ingest(export=export)
+        code, result = self.next_matrix_cli(path)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["winner"], HERO)
+        self.assertEqual(result["winner_fatigue"]["status"], "fatigued")
+        fatigued = [w for w in result["warnings"] if "fatigued" in w]
+        self.assertEqual(len(fatigued), 1)
+        self.assertIn(HERO, fatigued[0])
+
+    def test_next_matrix_has_no_fatigue_warning_for_a_stable_winner(self):
+        path, _ = self.ingest()
+        code, result = self.next_matrix_cli(path)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["winner"], CALLOUT)
+        self.assertEqual(result["winner_fatigue"]["status"], "stable")
+        self.assertFalse(any("fatigued" in w for w in result["warnings"]))
+
+    def test_next_matrix_rejects_a_window_shorter_than_one_day(self):
+        path, _ = self.ingest()
+        code, result = self.next_matrix_cli(path, "--window-days", 0)
+        self.assertEqual(code, 1)
+        self.assertIn("--window-days", result["error"])
+
+    def market_export(self):
+        plan = {
+            "rows": [
+                {"name": HERO, "values": {"hook": "hook-demo", "market": "north", "ratio": "9:16"}},
+                {"name": CALLOUT, "values": {"hook": "hook-callout", "market": "north", "ratio": "9:16"}},
+                {"name": SOUTH, "values": {"hook": "hook-demo", "market": "south", "ratio": "9:16"}},
+                {"name": SQUARE, "values": {"hook": "hook-demo", "market": "north", "ratio": "1:1"}},
+            ]
+        }
+        export = HEADER + (
+            f"{HERO},2026-10-01,10000,8000,2000,100,$100,5\n"
+            f"{CALLOUT},2026-10-01,10000,8000,2000,200,$100,5\n"
+            f"{SOUTH},2026-10-01,10000,8000,2000,900,$100,5\n"
+            f"{SQUARE},2026-10-01,10000,8000,2000,50,$100,5\n"
+        )
+        return self.ingest(export=export, plan=plan)[0]
+
+    def test_rank_compares_only_ads_with_the_same_market_and_ratio(self):
+        path = self.market_export()
+        code, ranking = self.run_cli("rank", path, "--kpi", "ctr")
+        self.assertEqual(code, 0, ranking)
+        self.assertEqual(ranking["group_by"], ["market", "ratio"])
+        placed = {e["key"]: (e["group"], e["rank"]) for e in ranking["ranked"]}
+        self.assertEqual(placed[CALLOUT], ("market=north,ratio=9:16", 1))
+        self.assertEqual(placed[HERO], ("market=north,ratio=9:16", 2))
+        self.assertEqual(placed[SOUTH], ("market=south,ratio=9:16", 1))
+        self.assertEqual(placed[SQUARE], ("market=north,ratio=1:1", 1))
+        self.assertEqual(
+            {g["group"]: g["leader"] for g in ranking["groups"]},
+            {
+                "market=north,ratio=1:1": SQUARE,
+                "market=north,ratio=9:16": CALLOUT,
+                "market=south,ratio=9:16": SOUTH,
+            },
+        )
+
+    def test_rank_across_groups_ranks_every_ad_together_when_asked(self):
+        path = self.market_export()
+        _, ranking = self.run_cli("rank", path, "--kpi", "ctr", "--across-groups")
+        self.assertEqual(ranking["group_by"], [])
+        self.assertEqual(
+            [(e["key"], e["rank"]) for e in ranking["ranked"]],
+            [(SOUTH, 1), (CALLOUT, 2), (HERO, 3), (SQUARE, 4)],
+        )
+        self.assertEqual({e["group"] for e in ranking["ranked"]}, {"all"})
+
+    def test_unmatched_ads_rank_in_their_own_group(self):
+        export = HEADER + (
+            f"{HERO},2026-10-01,10000,8000,2000,100,$100,5\n"
+            "Mystery ad,2026-10-01,10000,8000,2000,900,$100,5\n"
+        )
+        path, _ = self.ingest(export=export)
+        _, ranking = self.run_cli("rank", path, "--kpi", "ctr")
+        placed = {e["key"]: (e["group"], e["rank"]) for e in ranking["ranked"]}
+        self.assertEqual(placed["Mystery ad"], ("unmatched", 1))
+        self.assertEqual(placed[HERO], ("market=-,ratio=9:16", 1))
+
+    def test_next_matrix_needs_a_group_choice_when_groups_differ(self):
+        path = self.market_export()
+        code, result = self.next_matrix_cli(path)
+        self.assertEqual(code, 1)
+        self.assertIn("--group", result["error"])
+        self.assertIn("market=south,ratio=9:16", result["error"])
+        code, result = self.next_matrix_cli(path, "--group", "market=north,ratio=9:16")
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["winner"], CALLOUT)
+        self.assertEqual(result["group"], "market=north,ratio=9:16")
+        code, result = self.next_matrix_cli(path, "--across-groups")
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["winner"], SOUTH)
+        self.assertTrue(any("across" in w for w in result["warnings"]))
+        code, result = self.next_matrix_cli(path, "--group", "market=west,ratio=9:16")
+        self.assertEqual(code, 1)
+        self.assertIn("market=west,ratio=9:16", result["error"])
 
     def variant_cli(self, *argv):
         output = io.StringIO()

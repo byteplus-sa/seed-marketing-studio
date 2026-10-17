@@ -5,6 +5,7 @@ import hashlib
 import json
 import re
 from dataclasses import asdict, dataclass
+from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -16,6 +17,27 @@ SCHEMA_PATH = (
 BRAND_ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LISTABLE_EMPTY = ("logos", "palette", "typography")
 KIT_NAME = "brand.json"
+DECISIONS_DIR = "decisions"
+TIMESTAMP_FIELDS = (("source", "retrieved_at"), ("approval", "decided_at"))
+INDEX_SEGMENT = re.compile(r"\.\d+(?=\.|$)")
+APPROVAL_OPTIONAL = frozenset(
+    {
+        "source.retrieved_at",
+        "logos.*.min_height_px",
+        "logos.*.clear_space_ratio",
+        "typography",
+        "typography.*.weight",
+        "typography.*.file",
+        "typography.*.sha256",
+        "typography.*.source",
+        "voice.reading_level",
+        "cta_style.shape",
+        "cta_style.case",
+        "imagery.style_sentence",
+        "disclosure.ai_label_text",
+        "disclosure.placement",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -120,6 +142,86 @@ def missing_findings(kit: dict[str, Any]) -> list[Finding]:
     return findings
 
 
+def parse_timestamp(value: str) -> datetime | None:
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo is not None else None
+
+
+def timestamp_findings(kit: dict[str, Any]) -> list[Finding]:
+    findings = []
+    for section, key in TIMESTAMP_FIELDS:
+        container = kit.get(section)
+        value = container.get(key) if isinstance(container, dict) else None
+        if isinstance(value, str) and parse_timestamp(value) is None:
+            findings.append(
+                Finding(
+                    "brand.timestamp",
+                    f"{section}.{key}",
+                    f"{value!r} is not an ISO-8601 date-time with a UTC offset, such as 2026-10-17T09:00:00Z",
+                )
+            )
+    return findings
+
+
+def approval_optional(path: str) -> bool:
+    return INDEX_SEGMENT.sub(".*", path) in APPROVAL_OPTIONAL
+
+
+def decision_findings(kit_dir: Path, approval: Any) -> list[Finding]:
+    if not isinstance(approval, dict) or not isinstance(approval.get("decision_ref"), str):
+        return []
+    reference = approval["decision_ref"]
+    pure = PurePosixPath(reference)
+    decisions = kit_dir / DECISIONS_DIR
+    message = None
+    if pure.is_absolute() or ".." in pure.parts or pure.parts[:1] != (DECISIONS_DIR,) or len(pure.parts) < 2:
+        message = f"{reference} must be a record inside the kit's {DECISIONS_DIR}/ folder"
+    elif decisions.is_symlink() or (kit_dir / reference).is_symlink():
+        message = f"{reference} must not be or sit under a symlink"
+    elif not (kit_dir / reference).resolve().is_relative_to(decisions.resolve()):
+        message = f"{reference} escapes the kit's {DECISIONS_DIR}/ folder"
+    elif not (kit_dir / reference).is_file():
+        message = f"The approval decision record {reference} does not exist as a regular file"
+    return [] if message is None else [Finding("brand.approval_record", "approval.decision_ref", message)]
+
+
+def approval_findings(kit: dict[str, Any], kit_dir: Path) -> list[Finding]:
+    if kit.get("status") != "approved":
+        return []
+    findings = []
+    source = kit.get("source")
+    authorized = source.get("authorized_by") if isinstance(source, dict) else None
+    if not isinstance(authorized, str) or not authorized.strip():
+        findings.append(
+            Finding(
+                "brand.approval_authorized",
+                "source.authorized_by",
+                "An approved kit needs the user's statement authorizing use of this brand's identity; never infer it",
+            )
+        )
+    raw = kit.get("missing")
+    listed = {path for path in raw if isinstance(path, str)} if isinstance(raw, list) else set()
+    required = sorted(
+        path
+        for path in listed | set(unknown_paths(kit))
+        if path != "source.authorized_by" and not approval_optional(path)
+    )
+    findings.extend(
+        Finding(
+            "brand.approval_missing",
+            path,
+            f"{path} is unknown; an approved kit may leave only these fields missing: "
+            + ", ".join(sorted(APPROVAL_OPTIONAL)),
+        )
+        for path in required
+    )
+    findings.extend(decision_findings(kit_dir, kit.get("approval")))
+    return findings
+
+
 def contained_file(kit_dir: Path, relative: str) -> Path:
     pure = PurePosixPath(relative)
     if pure.is_absolute() or ".." in pure.parts:
@@ -220,6 +322,8 @@ def validate_kit(kit: Any, kit_dir: Path) -> list[Finding]:
     findings.extend(missing_findings(kit))
     findings.extend(asset_findings(kit, kit_dir))
     findings.extend(consistency_findings(kit, kit_dir))
+    findings.extend(timestamp_findings(kit))
+    findings.extend(approval_findings(kit, kit_dir))
     return findings
 
 
@@ -265,6 +369,7 @@ def init_kit(library_root: Path, brand_id: str, name: str | None) -> Path:
     if kit_dir.exists():
         raise BrandKitError(f"{kit_dir} already exists; edit the existing kit instead")
     (kit_dir / "assets").mkdir(parents=True)
+    (kit_dir / DECISIONS_DIR).mkdir()
     kit_path = kit_dir / KIT_NAME
     kit_path.write_text(json.dumps(scaffold(brand_id, name), indent=2, ensure_ascii=False) + "\n")
     return kit_path

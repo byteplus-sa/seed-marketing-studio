@@ -41,10 +41,12 @@ regenerate media, approve a variant, decide a disclosure or upload an ad.
 | Product facts | `elements/<product-id>/facts.json` | `claims_supported` fails for any claim |
 | Locked script and supers | the script or copy plan | `speech_intelligible` compares against what was heard only, and says so |
 | Loudness target | the delivery record; default from the [audio contract](../../contracts/audio-video-alignment.md): -16 LUFS integrated, peaks at or below -1.5 dBFS, checked here as true peak at or below -1.5 dBTP (stricter, so it also meets the contract); the ±1 LU integrated tolerance is a workspace heuristic, not part of the contract | use the default and say so |
-| Paid flag and disclosure record | `delivery/disclosure_<deliverable-id>.json` | a paid deliverable fails `disclosure_recorded` |
+| Paid flag and disclosure record | `projects/<campaign>/delivery/disclosure_<deliverable-id>.json`, read in place (never copied into the check folder) | a paid deliverable fails `disclosure_recorded` |
 
 Check the cut's SHA-256 against the render record before starting. A check
-belongs to one exact file; a re-render needs a new check.
+belongs to one exact file; a re-render needs a new check. The `report` command
+re-hashes the cut named in `checks.json` and refuses a checklist whose
+`video_sha256` does not match it.
 
 ## The checks
 
@@ -70,14 +72,20 @@ first check.
 
 ## Procedure
 
+Commands run from the repository root; `projects/<campaign>` is the campaign
+project that owns the deliverable (a localized deliverable's own project).
+
 1. **Set up the check folder** in the campaign:
-   `delivery/qa/<deliverable-id>/`, the same folder as the cut's safe-zone
-   contact sheet. The deliverable id is the variant name plus the placement,
-   `{campaign}_{concept}_{axis-values}_v{nn}_<placement>`. Everything the
-   report cites lives inside it.
+   `projects/<campaign>/delivery/qa/<deliverable-id>/`, the same folder as the
+   cut's safe-zone contact sheet, even when the cut renders in a
+   `projects/<campaign>-<ratio>/` project. The deliverable id is the variant
+   name plus the placement,
+   `{campaign}_{concept}_{axis-values}_v{nn}_<placement>`. The frames and
+   evidence the report cites live inside it; the cut and the disclosure record
+   stay where they are.
 2. **Sample frames.** Run
-   `uv run python .agents/skills/ad-creative-check/scripts/creative_check.py frames <cut> --out delivery/qa/<deliverable-id>/frames --every 0.5`
-   and a dense opening pass with `--every 0.25 --until 3 --out delivery/qa/<deliverable-id>/opening`.
+   `uv run python .agents/skills/ad-creative-check/scripts/creative_check.py frames <cut> --out projects/<campaign>/delivery/qa/<deliverable-id>/frames --every 0.5`
+   and a dense opening pass with `--every 0.25 --until 3 --out projects/<campaign>/delivery/qa/<deliverable-id>/opening`.
    The command prints each frame's path and time. Look at the frames yourself.
 3. **Ask the video model.** Run `seed_understand` (through `ark-mcp`) on the
    cut with the questions in the check procedure. Upload the cut with
@@ -93,14 +101,20 @@ first check.
    the check fails and you ask the user for the decision; never write one on
    their behalf.
 8. **Fill `checks.json`** (schema:
-   [checks.schema.json](references/checks.schema.json)) with one entry per
-   check, timestamps in seconds from the start of the cut and frame paths
-   relative to the check folder.
+   [checks.schema.json](references/checks.schema.json)) in the check folder
+   with one entry per check, timestamps in seconds from the start of the cut
+   and frame paths relative to the check folder. `video` is relative to the
+   `projects/` folder (`<campaign>-9x16/studio/renders/<cut>.mp4` or
+   `<campaign>/studio/renders/<cut>.mp4`) and must sit in the campaign project
+   or a `<campaign>-<suffix>` project; `disclosure_record` is
+   `delivery/disclosure_<deliverable-id>.json`, relative to the campaign.
 9. **Validate and summarize:**
-   `uv run python .agents/skills/ad-creative-check/scripts/creative_check.py report delivery/qa/<deliverable-id>/checks.json --out delivery/qa/<deliverable-id>/report.json`.
+   `uv run python .agents/skills/ad-creative-check/scripts/creative_check.py report projects/<campaign>/delivery/qa/<deliverable-id>/checks.json --project projects/<campaign> --out projects/<campaign>/delivery/qa/<deliverable-id>/report.json`.
    Exit 0 means every check passed or does not apply, 1 means a `fail` or
    `needs_human` remains, and 2 means the checklist is invalid (the errors
-   are listed). Fix the checklist, not the evidence.
+   are listed): a checklist outside its deliverable's check folder, a missing
+   or symlinked cut or record, a hash that does not match the cut, or an
+   `--out` outside the check folder. Fix the checklist, not the evidence.
 
 ## Judging honestly
 

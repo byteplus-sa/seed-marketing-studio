@@ -32,7 +32,7 @@ counsel rather than deciding it. The
 | --- | --- | --- |
 | Product facts | `elements/<product-id>/facts.json` in the campaign | `.agents/contracts/schemas/product-facts.schema.json` |
 | Brand kit | the campaign's pinned brand kit (`brand.json`) | `.agents/contracts/schemas/brand-kit.schema.json` |
-| Disclosure decision | `delivery/disclosure_<deliverable-id>.json` in the campaign | [Shape below](#disclosure-decision-per-paid-deliverable) |
+| Disclosure decision | `delivery/disclosure_<deliverable-id>.json` in the campaign project, read there in place by `ad-creative-check` (never copied into a QA folder) | [Shape below](#disclosure-decision-per-paid-deliverable) |
 | Placement specs and safe zones | [Ad platforms](ad-platforms.md) | `.agents/contracts/schemas/ad-platforms.schema.json` |
 
 A missing input is a gap to report, never a value to invent. Without a facts
@@ -104,7 +104,10 @@ unchecked and say so.
   other internal or non-paid deliverables carry no AI label, and this contract
   never adds one. Record nothing for them; if one later becomes a paid ad, it
   becomes a new paid deliverable that needs its own decision.
-- **One decision per deliverable.** A change of platform, placement,
+- **One decision per deliverable.** `<deliverable-id>` is the variant name
+  plus the placement, as in `ad-delivery-formats`; placements that share one
+  cut still get one record each, because `ad-creative-check` matches
+  `deliverable_id` exactly. A change of platform, placement,
   jurisdiction, performer or AI-generated content invalidates the decision.
   Reusing a decision across deliverables requires each deliverable to list it.
 - **Label text and placement** come from the brand kit `disclosure` block when
@@ -122,15 +125,14 @@ Record shape (`delivery/disclosure_<deliverable-id>.json`):
 ```json
 {
   "schema_version": 1,
-  "deliverable_id": "glow-serum_hook-question_9x16_15s_v01",
+  "deliverable_id": "glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels",
   "paid": true,
-  "platforms": ["tiktok-in-feed", "meta-instagram-reels"],
+  "platforms": ["meta-instagram-reels"],
   "jurisdictions": ["US-NY"],
   "synthetic_performer": true,
   "significantly_ai_generated": true,
   "applicable_rules": [
     {"rule": "us-ny-gbl-396-b", "applies": true, "verified_on": "2026-10-17"},
-    {"rule": "tiktok-aigc-disclaimer", "applies": true, "verified_on": "2026-10-17"},
     {"rule": "meta-ai-info", "applies": true, "verified_on": "2026-10-17"}
   ],
   "decision": "disclose",

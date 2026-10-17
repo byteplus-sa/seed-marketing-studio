@@ -94,9 +94,12 @@ This plans 2 x 3 + 1 x 3 = 9 ads and one contact-sheet page.
 ## Errors
 
 The planner exits 2 with one message and writes nothing when it refuses. Typical
-messages: `Claim 'x' has status 'needs-substantiation'`, `Perishable claim 'f03'
+messages: `Claim 'x' has status 'needs-substantiation'`, `Claim 'f01' drops
+'up to' from its quote`, `Perishable claim 'f03'
 is stale`, `Spec brand_kit_sha256 is required`, `Brand kit SHA-256 differs from
 the campaign pin`, `Font headline has no recorded SHA-256`, `Font body has no
 recorded license`, `Brand kit is missing required tokens: palette.text,
 logos.primary`, `Brand kit status must be approved`, `uses the banned word`,
+`Brand kit required line 1 text must be a non-empty string`, `Brand kit
+trademark mark for 'X' must be one of`, `the template has no {{legal}} slot`,
 `escapes the asset root`, `Refusing to overwrite existing files`.

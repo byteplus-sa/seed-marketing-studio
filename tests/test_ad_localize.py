@@ -625,6 +625,66 @@ class LevelTests(MarketCardTestCase):
                     child.rmdir() if child.is_dir() else child.unlink()
                 path.parent.rmdir()
 
+    def test_gate_without_element_uses_the_highest_inventory_level(self) -> None:
+        path = self.complete_card(level_default="L1", reviewer=PENDING_REVIEWER)
+        self.write_inventory(path, [("super-01", "L1"), ("presenter", "L3")])
+        self.approve(path)
+        code, document = self.gate(path, "L1")
+        self.assertEqual(code, 1, document)
+        self.assertEqual(document["level"], "L3")
+        self.assertIn("localize.native_review", rule_ids(document, "blockers"))
+
+    def test_gate_without_element_passes_once_the_highest_inventory_level_is_signed_off(self) -> None:
+        path = self.complete_card(level_default="L1", reviewer=PENDING_REVIEWER)
+        self.write_inventory(path, [("super-01", "L1"), ("presenter", "L3")])
+        self.approve(path)
+        self.sign_off(path)
+        code, document = self.gate(path, "L1")
+        self.assertEqual(code, 0, document)
+        self.assertEqual(document["level"], "L3")
+
+    def test_inventory_level_raises_a_card_without_a_default(self) -> None:
+        path = self.complete_card(level_default=None, missing=["level_default"])
+        self.write_inventory(path, [("presenter", "L4")])
+        code, document = self.gate(path, "L1", "draft")
+        self.assertEqual(code, 0, document)
+        self.assertEqual(document["level"], "L4", document)
+
+    def test_card_default_above_every_inventory_row_still_wins_without_element(self) -> None:
+        path = self.complete_card(level_default="L3", reviewer=PENDING_REVIEWER)
+        self.write_inventory(path, [("super-01", "L1")])
+        self.approve(path)
+        code, document = self.gate(path, "L1")
+        self.assertEqual(code, 1, document)
+        self.assertEqual(document["level"], "L3")
+
+    def test_gate_without_element_or_inventory_uses_the_card_default(self) -> None:
+        path = self.complete_card(level_default="L1")
+        self.approve(path)
+        code, document = self.gate(path, "L1")
+        self.assertEqual(code, 0, document)
+        self.assertEqual(document["level"], "L1")
+
+    def test_malformed_inventory_blocks_a_gate_without_element(self) -> None:
+        path = self.complete_card(level_default="L1")
+        self.write_inventory(path, [("super-01", "L9")])
+        self.approve(path)
+        code, document = self.gate(path, "L1")
+        self.assertEqual(code, 1, document)
+        self.assertIn("market.level_override", rule_ids(document, "blockers"))
+
+    def test_variant_gate_without_element_uses_the_variant_inventory(self) -> None:
+        path = self.complete_card(level_default="L1", reviewer=PENDING_REVIEWER)
+        self.approve(path)
+        variant_dir = path.parent / "hook-a"
+        variant_dir.mkdir()
+        (variant_dir / "inventory.md").write_text("| id | level |\n| --- | --- |\n| presenter | L3 |\n")
+        code, document = self.gate(path, "L1", "final", "--variant", "hook-a")
+        self.assertEqual(code, 1, document)
+        self.assertEqual(document["level"], "L3")
+        code, document = self.gate(path, "L1")
+        self.assertEqual(code, 0, document)
+
     def test_inventory_table_parser_reads_id_and_level_columns(self) -> None:
         text = "Intro\n\n| `id` | kind | `level` |\n|---|---|---|\n| super-01 | super | L1 |\n| s01_sh010_l02 | spoken | l2 |\n"
         self.assertEqual(MODULE.inventory_levels(text), {"super-01": "L1", "s01_sh010_l02": "L2"})
@@ -786,6 +846,56 @@ def captions_constant(name: str) -> Any:
                 return ast.literal_eval(node.value.args[0])
             return ast.literal_eval(node.value)
     raise AssertionError(name)
+
+
+class TimestampTests(MarketCardTestCase):
+    BAD_TIMESTAMPS = ("yesterday", "not a date", "2026-10-17", "2026-10-17T10:00:00", "2026-02-30T10:00:00Z")
+
+    def test_card_approval_time_must_parse_with_an_offset(self) -> None:
+        for bad in self.BAD_TIMESTAMPS:
+            with self.subTest(value=bad):
+                path = self.complete_card()
+                self.approve(path)
+                card = json.loads(path.read_text())
+                card["approval"]["decided_at"] = bad
+                path.write_text(json.dumps(card))
+                code, document = run("validate", str(path))
+                self.assertEqual(code, 1, document)
+                self.assertIn(
+                    ("market.timestamp", "approval.decided_at"),
+                    [(finding["rule_id"], finding["path"]) for finding in document["findings"]],
+                )
+                for child in sorted(path.parent.rglob("*"), reverse=True):
+                    child.rmdir() if child.is_dir() else child.unlink()
+                path.parent.rmdir()
+
+    def test_card_approval_time_with_an_offset_passes(self) -> None:
+        path = self.complete_card()
+        self.approve(path)
+        card = json.loads(path.read_text())
+        card["approval"]["decided_at"] = "2026-10-17T18:00:00+08:00"
+        path.write_text(json.dumps(card))
+        code, document = run("validate", str(path))
+        self.assertEqual(code, 0, document)
+
+    def test_sign_off_record_time_must_parse_with_an_offset(self) -> None:
+        for bad in self.BAD_TIMESTAMPS:
+            with self.subTest(value=bad):
+                path = self.complete_card(level_default="L3", reviewer=PENDING_REVIEWER)
+                self.approve(path)
+                self.sign_off(path, decided_at=bad)
+                code, document = self.gate(path, "L3")
+                self.assertEqual(code, 1, document)
+                self.assertTrue(
+                    any(
+                        blocker["rule_id"] == "localize.native_review" and "decided_at" in blocker["message"]
+                        for blocker in document["blockers"]
+                    ),
+                    document,
+                )
+                for child in sorted(path.parent.rglob("*"), reverse=True):
+                    child.rmdir() if child.is_dir() else child.unlink()
+                path.parent.rmdir()
 
 
 class LanguageTagTests(MarketCardTestCase):

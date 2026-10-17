@@ -417,6 +417,12 @@ class CommandLineTests(unittest.TestCase):
             code = MODULE.main(arguments)
         return code, stdout.getvalue(), stderr.getvalue()
 
+    def test_font_src_without_composition_dir_is_refused(self):
+        code, _, stderr = self.run_cli("--language", "en", "--font-src", "fonts/x.woff2")
+        self.assertEqual(code, 2)
+        self.assertIn("--composition-dir", stderr)
+        self.assertFalse(self.out.exists())
+
     def test_round_trip_writes_named_sidecars_with_matching_hashes(self):
         code, stdout, _ = self.run_cli(
             "--language", "en", "ar", "zh", "--format", "both", "--offset-s", "2"
@@ -555,6 +561,7 @@ class BurnInTests(unittest.TestCase):
         )
         self.out = self.directory / "out"
         self.compositions = self.directory / "studio" / "compositions"
+        self.compositions.mkdir(parents=True)
 
     def run_cli(self, *extra, languages=("en",)):
         arguments = [
@@ -699,9 +706,12 @@ class BurnInTests(unittest.TestCase):
             )
             self.assertEqual(code, 2, value)
             self.assertIn(message, stderr)
-        self.assertFalse(self.compositions.exists())
+        self.assertEqual(list(self.compositions.iterdir()), [])
 
     def test_brand_font_is_loaded_from_a_project_local_file(self):
+        font = self.directory / "studio/assets/fonts/brand-sans.woff2"
+        font.parent.mkdir(parents=True)
+        font.write_bytes(b"wOF2")
         code, _, _ = self.run_cli(
             "--size",
             "1080x1920",
@@ -721,6 +731,62 @@ class BurnInTests(unittest.TestCase):
             layer,
         )
         self.assertIn("color: #FFEE00;", layer)
+
+    def test_missing_font_file_is_refused_and_nothing_is_written(self):
+        code, stdout, stderr = self.run_cli(
+            "--size",
+            "1080x1920",
+            "--placement",
+            "vertical-published",
+            "--font-src",
+            "assets/fonts/absent.woff2",
+        )
+        self.assertEqual(code, 2)
+        self.assertEqual(stdout, "")
+        self.assertIn("font file not found", stderr)
+        self.assertIn("assets/fonts/absent.woff2", stderr)
+        self.assertFalse(self.out.exists())
+        self.assertEqual(list(self.compositions.iterdir()), [])
+
+    def test_symlinked_or_directory_font_source_is_refused(self):
+        outside = self.directory / "outside.woff2"
+        outside.write_bytes(b"wOF2")
+        fonts = self.directory / "studio/assets/fonts"
+        fonts.mkdir(parents=True)
+        (fonts / "linked.woff2").symlink_to(outside)
+        (fonts / "folder.woff2").mkdir()
+        for source in ("assets/fonts/linked.woff2", "assets/fonts/folder.woff2"):
+            code, _, stderr = self.run_cli(
+                "--size",
+                "1080x1920",
+                "--placement",
+                "vertical-published",
+                "--font-src",
+                source,
+            )
+            self.assertEqual(code, 2, source)
+            self.assertIn("regular file", stderr)
+        self.assertEqual(list(self.compositions.iterdir()), [])
+
+    def test_missing_composition_dir_is_refused_and_nothing_is_written(self):
+        self.compositions.rmdir()
+        code, stdout, stderr = self.run_cli(
+            "--size", "1080x1920", "--placement", "vertical-published"
+        )
+        self.assertEqual(code, 2)
+        self.assertEqual(stdout, "")
+        self.assertIn("composition dir", stderr)
+        self.assertFalse(self.compositions.exists())
+        self.assertFalse(self.out.exists())
+
+    def test_composition_dir_that_is_a_file_is_refused(self):
+        self.compositions.rmdir()
+        self.compositions.write_text("not a folder", encoding="utf-8")
+        code, _, stderr = self.run_cli(
+            "--size", "1080x1920", "--placement", "vertical-published"
+        )
+        self.assertEqual(code, 2)
+        self.assertIn("composition dir", stderr)
 
     def test_line_wider_than_the_safe_width_is_warned(self):
         code, stdout, _ = self.run_cli(
@@ -746,7 +812,7 @@ class BurnInTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertIn("no fr text", stderr)
         self.assertFalse(self.out.exists())
-        self.assertFalse(self.compositions.exists())
+        self.assertEqual(list(self.compositions.iterdir()), [])
 
     def test_existing_layer_is_not_overwritten_without_the_flag(self):
         arguments = ("--size", "1080x1920", "--placement", "vertical-published")

@@ -112,14 +112,17 @@ uv run python .agents/skills/ad-captions/scripts/make_captions.py \
 `--max-lines`, `--min-duration-s`, `--max-duration-s`, `--max-cps`,
 `--min-gap-s`, `--max-chars-for LANG=N`, `--max-cps-for LANG=N`,
 `--overlap trim|error`, `--rtl-marks auto|on|off`, `--overwrite`. Burn-in
-flags: `--composition-dir` (turns burn-in on), `--composition-prefix`,
+flags: `--composition-dir` (turns burn-in on; must be an existing Studio
+`compositions/` folder), `--composition-prefix`,
 `--size WxH`, `--placement ID` or `--safe-rect X,Y,W,H`, `--platforms`,
-`--font-family`, `--font-src` (relative path inside the Studio project),
+`--font-family`, `--font-src` (an existing regular font file, given relative to
+the Studio project, the parent of `--composition-dir`),
 `--font-size`, `--text-color`, `--box-color` (`#RRGGBB` or `#RRGGBBAA`),
 `--anchor bottom|top`. It exits 2 with a one-line error and writes nothing for
 invalid input, missing or blank language text, a line id repeated across
 inputs, a line too short to give each cue any time, a cue past the master duration,
-an unpublished safe zone without `--safe-rect`, or an existing target.
+an unpublished safe zone without `--safe-rect`, a missing composition folder, a
+missing, symlinked or out-of-project font file, or an existing target.
 
 ## Boundaries
 

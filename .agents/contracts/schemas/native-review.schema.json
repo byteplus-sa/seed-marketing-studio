@@ -108,7 +108,8 @@
     },
     "decided_at": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "description": "ISO-8601 date-time with a UTC offset; market_card.py gate parses it because the format keyword alone is not enforced."
     }
   },
   "additionalProperties": false,

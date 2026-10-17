@@ -74,6 +74,7 @@ class CampaignLayerIntegrationTests(unittest.TestCase):
         (kit_dir / "assets/logo.svg").write_bytes(logo)
         (kit_dir / "assets/head.woff2").write_bytes(head)
         (kit_dir / "assets/body.woff2").write_bytes(body)
+        (kit_dir / "decisions/approve_v01.md").write_text("Approved after visible inspection.\n")
         kit = json.loads(kit_path.read_text())
         kit.update(
             {
@@ -273,6 +274,14 @@ class CampaignLayerIntegrationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "stale"):
             STATIC_BATCH.plan(self.spec(["f01"], "offer"), self.root, False, now=later)
 
+
+    def test_static_batch_and_product_facts_share_the_qualifier_list(self) -> None:
+        def labels_and_patterns(module: ModuleType) -> list[tuple[str, str]]:
+            return [(label, pattern.pattern) for label, pattern in module.QUALIFIERS]
+
+        self.assertEqual(
+            labels_and_patterns(STATIC_BATCH), labels_and_patterns(PRODUCT_FACTS)
+        )
 
 if __name__ == "__main__":
     unittest.main()

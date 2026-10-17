@@ -73,21 +73,41 @@ def entries(document: dict[str, Any], key: str) -> list[tuple[int, dict[str, Any
     return [(index, entry) for index, entry in enumerate(value) if isinstance(entry, dict)]
 
 
-def qualifier_findings(fact: dict[str, Any], path: str) -> list[Finding]:
+def dropped_qualifiers(fact: dict[str, Any]) -> list[str]:
     claim = fact.get("claim")
     quote = fact.get("quote")
     if not isinstance(claim, str) or not isinstance(quote, str):
         return []
     return [
-        Finding(
-            "facts.claim_qualifier",
-            f"{path}.claim",
-            f"The quote says {label!r} but the claim drops it; keep the qualifier in the claim",
-            "warning",
-        )
+        label
         for label, pattern in QUALIFIERS
         if pattern.search(quote) and not pattern.search(claim)
     ]
+
+
+def qualifier_message(label: str) -> str:
+    return f"The quote says {label!r} but the claim drops it; keep the qualifier in the claim"
+
+
+def qualifier_findings(fact: dict[str, Any], path: str) -> list[Finding]:
+    return [
+        Finding(
+            "facts.claim_qualifier",
+            f"{path}.claim",
+            f"{qualifier_message(label)}; supported withholds the claim until then",
+            "warning",
+        )
+        for label in dropped_qualifiers(fact)
+    ]
+
+
+def retrieval_findings(value: Any, path: str, now: datetime) -> list[Finding]:
+    retrieved = parse_time(value)
+    if retrieved is None:
+        return [Finding("facts.retrieved_at", path, "Use an ISO-8601 time with a UTC offset")]
+    if retrieved > now + timedelta(minutes=5):
+        return [Finding("facts.retrieved_at", path, "Retrieval time is in the future")]
+    return []
 
 
 def fact_findings(fact: dict[str, Any], path: str, now: datetime) -> list[Finding]:
@@ -114,15 +134,7 @@ def fact_findings(fact: dict[str, Any], path: str, now: datetime) -> list[Findin
                 f"A supported {kind} claim needs a substantiation reference beyond marketing copy",
             )
         )
-    retrieved = parse_time(fact.get("retrieved_at"))
-    if retrieved is None:
-        findings.append(
-            Finding("facts.retrieved_at", f"{path}.retrieved_at", "Use an ISO-8601 time with a UTC offset")
-        )
-    elif retrieved > now + timedelta(minutes=5):
-        findings.append(
-            Finding("facts.retrieved_at", f"{path}.retrieved_at", "Retrieval time is in the future")
-        )
+    findings.extend(retrieval_findings(fact.get("retrieved_at"), f"{path}.retrieved_at", now))
     return findings
 
 
@@ -169,6 +181,7 @@ def validate_facts(document: Any, card_dir: Path, now: datetime) -> list[Finding
         findings.append(Finding("facts.unique", "images", f"Duplicate image file {name}"))
     for index, image in images:
         findings.extend(image_findings(image, f"images.{index}", card_dir))
+        findings.extend(retrieval_findings(image.get("retrieved_at"), f"images.{index}.retrieved_at", now))
     return findings
 
 
@@ -181,38 +194,54 @@ def read_facts(path: Path) -> Any:
         raise FactsError(f"{path} is not valid JSON: {error}") from error
 
 
+def usable_status(fact: dict[str, Any], now: datetime, max_age_hours: float | None) -> bool:
+    status = fact.get("status")
+    if status == "supported":
+        return True
+    if status != "perishable" or max_age_hours is None:
+        return False
+    retrieved = parse_time(fact.get("retrieved_at"))
+    return retrieved is not None and now - retrieved <= timedelta(hours=max_age_hours)
+
+
+def claim_view(fact: dict[str, Any]) -> dict[str, Any]:
+    return {
+        str(key): fact[key]
+        for key in (
+            "fact_id",
+            "kind",
+            "claim",
+            "quote",
+            "conditions",
+            "source_url",
+            "source_ref",
+            "retrieved_at",
+            "status",
+        )
+        if key in fact
+    }
+
+
 def usable_claims(
     document: dict[str, Any], now: datetime, max_age_hours: float | None
-) -> list[dict[str, Any]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     usable: list[dict[str, Any]] = []
+    blocked: list[dict[str, Any]] = []
     for _, fact in entries(document, "facts"):
-        status = fact.get("status")
-        if status == "perishable":
-            retrieved = parse_time(fact.get("retrieved_at"))
-            if max_age_hours is None or retrieved is None:
-                continue
-            if now - retrieved > timedelta(hours=max_age_hours):
-                continue
-        elif status != "supported":
+        if not usable_status(fact, now, max_age_hours):
             continue
-        usable.append(
-            {
-                str(key): fact[key]
-                for key in (
-                    "fact_id",
-                    "kind",
-                    "claim",
-                    "quote",
-                    "conditions",
-                    "source_url",
-                    "source_ref",
-                    "retrieved_at",
-                    "status",
-                )
-                if key in fact
-            }
-        )
-    return usable
+        dropped = dropped_qualifiers(fact)
+        if dropped:
+            blocked.append(
+                {
+                    "fact_id": fact.get("fact_id"),
+                    "rule_id": "facts.claim_qualifier",
+                    "reason": "; ".join(qualifier_message(label) for label in dropped),
+                }
+            )
+            continue
+        usable.append(claim_view(fact))
+    return usable, blocked
 
 
 def emit(document: dict[str, Any]) -> None:
@@ -243,11 +272,13 @@ def command_supported(args: argparse.Namespace, now: datetime) -> int:
     if errors:
         emit({"ok": False, "findings": [asdict(finding) for finding in errors]})
         return 1
+    claims, blocked = usable_claims(document, now, args.max_age_hours)
     emit(
         {
             "ok": True,
             "product_id": document["product_id"],
-            "claims": usable_claims(document, now, args.max_age_hours),
+            "claims": claims,
+            "blocked": blocked,
         }
     )
     return 0

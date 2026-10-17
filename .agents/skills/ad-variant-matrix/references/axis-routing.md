@@ -13,12 +13,15 @@ preserve.
 - [Ratio](#ratio)
 - [Project paths](#project-paths)
 - [Rows that change several axes](#rows-that-change-several-axes)
+- [Shared operations](#shared-operations)
 
 ## Shared source preparation
 
 Do this once per hero, before any row prompt:
 
-1. Confirm the hero file still hashes to `hero.sha256`.
+1. Confirm the hero file still hashes to `hero.sha256`; `register` refuses
+   when `hero.take_file` or `hero.decision_ref` is missing from the project or
+   the hash no longer matches.
 2. Inspect it per the
    [video-to-video inputs contract](../../../contracts/video-to-video-inputs.md):
    duration, frame rate, ratio, audio streams, cuts and a recorded rights
@@ -121,10 +124,13 @@ folder name of its market card at
 
 **Route:** `ad-delivery-formats`.
 
-- A reframe in Studio is not a provider step and has no registry entry; give
-  it a unit cost of `0` unless native regeneration is chosen.
+- A reframe in Studio is not a provider step and has no registry entry. The
+  `ratio` unit cost defaults to `0` and `cost` prints a `ratio_cost_note`
+  saying so; set `--unit-cost ratio=<usd>` only to budget native
+  regeneration. It is charged once per delivery project.
 - Native regeneration per ratio is a new generation for composition-critical
-  hero shots; record it as its own row step and cost it.
+  hero shots; the planner prints no command for it, so prepare, review and
+  register it like any other generation and cost it with the `ratio` unit.
 - Supers, CTA and captions are placed per ratio inside the placement's
   published safe zone.
 
@@ -170,5 +176,44 @@ language never share a row; the planner refuses it.
   location units added together, because it is one provider operation.
 - **Two other swap classes** (for example product and outfit) run as
   sequential swaps, the second using the inspected output of the first as its
-  master. Each step has its own asset ID, prompt, review and registry entry.
-- A step that fails QA stops the later steps of that row; other rows continue.
+  master. The first swap is the single-swap row's operation (see
+  [Shared operations](#shared-operations)); the combined row registers only
+  the second.
+- A step that fails QA stops the later steps of that row and of every row that
+  reuses it; other rows continue.
+
+## Shared operations
+
+A full factorial repeats work: the talent row, the talent-and-ratio row, the
+talent-and-market row and the talent-market-ratio row all need the same
+talent swap. The planner registers and charges that work once.
+
+- **Lineage key.** Each step's `operation_key` joins the route and changed
+  values of that step and every earlier step in the row, for example
+  `object-swap:product=sku-b>object-swap:outfit=outfit-b`. Market and ratio
+  values enter the key only at their own step, so generated work is keyed on
+  the generated values alone.
+- **Owner.** The first row in plan order with a key owns it
+  (`steps[].owner`). That is always the row that changes exactly the key's
+  axes, so every variant row owns exactly its last step.
+- **Reuse.** A row's `base_variant` names the row whose selected take it
+  starts from (the hero when nothing is reused). Only rows that own a
+  generated step (hook, swap, recast, dub) get a Studio shot; `register`
+  prints commands only for owned provider steps, and an operation's `after`
+  names the variant whose selected take is its source.
+
+| Row changes | Owns | Reuses (`base_variant`) |
+| --- | --- | --- |
+| talent | talent swap, Studio shot | hero |
+| talent and ratio | reframe into its delivery project | talent row |
+| talent and market | market adaptation into its localized project | talent row |
+| talent, market and ratio | reframe into its delivery project | talent-and-market row |
+| product and outfit | outfit swap, Studio shot | product row (`after`) |
+
+- **Cost.** One unit per unique operation: a market adaptation once per
+  localized project, a reframe once per delivery project. A row's
+  `estimated_cost_usd` counts only what it owns; `operations_estimate` lists
+  every unique operation with its owner, unit cost and `used_by` rows; the
+  total and the budget gate use these deduplicated figures.
+- **Localize hand-off.** `register` lists each localized project once, under
+  its owning row; rows that reuse it only reframe the localized master.

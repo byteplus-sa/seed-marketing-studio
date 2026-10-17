@@ -11,6 +11,7 @@ import unittest
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -242,6 +243,12 @@ class StaticAdBatchTests(unittest.TestCase):
             self.run_plan()
         self.assertFalse((self.root / "statics").exists())
 
+    def test_claim_that_drops_a_qualifier_from_its_quote_is_refused(self) -> None:
+        self.facts["facts"][0]["quote"] = "Keeps drinks hot for up to 6 hours"
+        with self.assertRaisesRegex(ValueError, "up to"):
+            self.run_plan()
+        self.assertFalse((self.root / "statics").exists())
+
     def test_unknown_claim_is_refused(self) -> None:
         self.spec["angles"][0]["claims"] = ["Best mug ever"]
         with self.assertRaisesRegex(ValueError, "not in the product facts"):
@@ -426,6 +433,128 @@ class StaticAdBatchTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, message):
                     self.run_plan()
                 self.spec[key] = original
+
+    def jobs_by_layout(self, result: dict[str, Any], layout: str) -> list[dict[str, Any]]:
+        return [job for job in result["jobs"] if job["layout"] == layout]
+
+    def test_required_line_for_a_shown_offer_is_rendered_on_offer_ads_only(self) -> None:
+        line = "Terms apply. See site for details."
+        self.brand["copy_rules"]["required_lines"] = [{"text": line, "when": "Offer shown"}]
+        result = self.run_plan()
+        for job in self.jobs_by_layout(result, "offer"):
+            self.assertEqual(job["copy"]["legal_1"], line)
+            self.assertIn(f"legal_1={line}", job["command"])
+            self.assertEqual(
+                job["required_lines"], [{"key": "legal_1", "text": line, "when": "Offer shown"}]
+            )
+            document = (self.root / job["html"]).read_text(encoding="utf-8")
+            self.assertIn(f'<p class="legal" data-copy-key="legal_1">{line}</p>', document)
+        for job in self.jobs_by_layout(result, "hero-product"):
+            self.assertNotIn("legal_1", job["copy"])
+            self.assertEqual(job["required_lines"], [])
+            document = (self.root / job["html"]).read_text(encoding="utf-8")
+            self.assertNotIn("legal", document)
+
+    def test_price_and_always_conditions_map_to_their_layouts(self) -> None:
+        self.brand["copy_rules"]["required_lines"] = [
+            {"text": "Prices include tax.", "when": "price shown"},
+            {"text": "Lumo is a registered brand.", "when": "always"},
+        ]
+        self.spec["layouts"] = ["hero-product", "comparison", "social-proof", "offer"]
+        result = self.run_plan()
+        for job in result["jobs"]:
+            expected = ["Lumo is a registered brand."]
+            if job["layout"] == "offer":
+                expected = ["Prices include tax.", "Lumo is a registered brand."]
+            with self.subTest(job=job["name"]):
+                self.assertEqual([line["text"] for line in job["required_lines"]], expected)
+
+    def test_required_line_equal_to_the_terms_is_not_rendered_twice(self) -> None:
+        self.offer_only()
+        self.brand["copy_rules"]["required_lines"] = [{"text": "Ends Sunday.", "when": "offer shown"}]
+        job = self.run_plan()["jobs"][0]
+        self.assertNotIn("legal_1", job["copy"])
+        self.assertEqual(
+            job["required_lines"], [{"key": "terms", "text": "Ends Sunday.", "when": "offer shown"}]
+        )
+
+    def test_unmapped_required_line_condition_is_warned_and_not_rendered(self) -> None:
+        self.brand["copy_rules"]["required_lines"] = [
+            {"text": "Recycle the sleeve.", "when": "packaging shown"}
+        ]
+        result = self.run_plan()
+        unmapped = [warning for warning in result["warnings"] if "packaging shown" in warning]
+        self.assertEqual(len(unmapped), 1)
+        self.assertIn("cannot map", unmapped[0])
+        self.assertTrue(all(job["required_lines"] == [] for job in result["jobs"]))
+
+    def test_required_line_without_a_legal_slot_in_the_template_is_refused(self) -> None:
+        self.brand["copy_rules"]["required_lines"] = [{"text": "Terms apply.", "when": "always"}]
+        with tempfile.TemporaryDirectory(prefix="static-ad-templates-") as name:
+            templates = Path(name)
+            for source in MODULE.TEMPLATES.iterdir():
+                text = source.read_text(encoding="utf-8").replace("{{legal}}", "")
+                (templates / source.name).write_text(text, encoding="utf-8")
+            with (
+                mock.patch.object(MODULE, "TEMPLATES", templates),
+                self.assertRaisesRegex(ValueError, "no \\{\\{legal\\}\\} slot"),
+            ):
+                self.run_plan()
+        self.assertFalse((self.root / "statics").exists())
+
+    def test_malformed_required_line_is_refused(self) -> None:
+        cases = [
+            [{"text": "", "when": "always"}],
+            [{"text": "Terms apply.", "when": ""}],
+            [{"text": "Line one\nLine two", "when": "always"}],
+            ["Terms apply."],
+        ]
+        for lines in cases:
+            with self.subTest(lines=lines):
+                self.brand["copy_rules"]["required_lines"] = lines
+                with self.assertRaisesRegex((TypeError, ValueError), "required line"):
+                    self.run_plan(overwrite=True)
+
+    def test_trademark_mark_is_added_to_the_first_mention_and_noted(self) -> None:
+        self.brand["copy_rules"]["trademark_marks"] = {"Lumo": "®"}
+        self.facts["facts"][1]["claim"] = "Lumo lid locks with one click"
+        self.spec["angles"][0]["headline"] = "Lumo stays hot at hour six"
+        self.spec["layouts"] = ["hero-product"]
+        job = self.run_plan()["jobs"][0]
+        self.assertEqual(job["copy"]["headline"], "Lumo® stays hot at hour six")
+        self.assertEqual(job["copy"]["claim_2"], "Lumo lid locks with one click")
+        self.assertEqual(
+            job["trademark_marks_applied"], [{"key": "headline", "name": "Lumo", "mark": "®"}]
+        )
+        self.assertIn("headline=Lumo® stays hot at hour six", job["command"])
+        self.assertEqual(job["claims"][1]["claim"], "Lumo lid locks with one click")
+
+    def test_trademark_mark_reaches_a_claim_when_the_headline_lacks_the_name(self) -> None:
+        self.brand["copy_rules"]["trademark_marks"] = {"Lumo": "™"}
+        self.facts["facts"][1]["claim"] = "Lumo lid locks with one click"
+        self.spec["layouts"] = ["hero-product"]
+        job = self.run_plan()["jobs"][0]
+        self.assertEqual(job["copy"]["claim_2"], "Lumo™ lid locks with one click")
+        document = (self.root / job["html"]).read_text(encoding="utf-8")
+        self.assertIn('data-copy-key="claim_2">Lumo™ lid locks with one click</li>', document)
+        self.assertEqual(
+            job["trademark_marks_applied"], [{"key": "claim_2", "name": "Lumo", "mark": "™"}]
+        )
+
+    def test_trademark_already_marked_or_inside_a_longer_word_is_left_alone(self) -> None:
+        self.brand["copy_rules"]["trademark_marks"] = {"Lumo": "®"}
+        self.spec["layouts"] = ["hero-product"]
+        for headline in ("Lumo® stays hot", "Lumos stay hot"):
+            with self.subTest(headline=headline):
+                self.spec["angles"][0]["headline"] = headline
+                job = self.run_plan(overwrite=True)["jobs"][0]
+                self.assertEqual(job["copy"]["headline"], headline)
+                self.assertEqual(job["trademark_marks_applied"], [])
+
+    def test_unsupported_trademark_mark_is_refused(self) -> None:
+        self.brand["copy_rules"]["trademark_marks"] = {"Lumo": "(R)"}
+        with self.assertRaisesRegex(ValueError, "trademark mark"):
+            self.run_plan()
 
     def test_command_line_reports_errors_with_exit_code_two(self) -> None:
         self.spec["angles"][0]["type"] = "you-need-this"

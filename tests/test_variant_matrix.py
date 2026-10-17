@@ -1,4 +1,5 @@
 import contextlib
+import hashlib
 import io
 import json
 import sys
@@ -11,10 +12,16 @@ sys.path.insert(0, str(ROOT / ".agents/scripts"))
 import studio_project
 import variant_matrix
 
-HERO_HASH = "a" * 64
+HERO_BYTES = b"approved hero take"
+HERO_HASH = hashlib.sha256(HERO_BYTES).hexdigest()
+HERO_DECISION = "decisions/s01_sh010_t03.json"
+HERO_TAKE_FILE = "scenes/s01_sh010/s01_sh010_t03_final.mp4"
+FACTORIAL_NOTE = "User asked for every combination of the listed values."
 
 
 def base_matrix(**overrides):
+    if overrides.get("strategy") == "full_factorial":
+        overrides.setdefault("notes", FACTORIAL_NOTE)
     matrix = {
         "schema_version": 1,
         "status": "approved",
@@ -24,6 +31,8 @@ def base_matrix(**overrides):
             "shot_id": "s01_sh010",
             "take": "t03",
             "sha256": HERO_HASH,
+            "decision_ref": HERO_DECISION,
+            "take_file": HERO_TAKE_FILE,
             "values": {"hook": "hook-demo-first", "talent": "vp-a", "ratio": "9:16"},
         },
         "axes": {
@@ -132,6 +141,16 @@ class VariantMatrixTests(unittest.TestCase):
         self.directory = tempfile.TemporaryDirectory(prefix="variant-matrix-test-")
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
+        self.project = self.root / "project"
+        decision = self.project / HERO_DECISION
+        decision.parent.mkdir(parents=True)
+        decision.write_text('{"decision": "approved"}')
+        take = self.project / HERO_TAKE_FILE
+        take.parent.mkdir(parents=True)
+        take.write_bytes(HERO_BYTES)
+
+    def project_files(self):
+        return sorted(path for path in self.project.rglob("*"))
 
     def write(self, matrix):
         path = self.root / "matrix.json"
@@ -328,12 +347,20 @@ class VariantMatrixTests(unittest.TestCase):
         )
         self.assertEqual(code, 0, result)
         by_change = {tuple(row["changed_axes"]): row for row in result["rows"]}
-        self.assertEqual(by_change[("talent", "location")]["estimated_cost_usd"], 9)
-        self.assertEqual(
-            by_change[("talent", "location", "language")]["estimated_cost_usd"], 11
-        )
-        self.assertEqual(by_change[("product", "outfit")]["estimated_cost_usd"], 12)
+        recast = by_change[("talent", "location")]
+        self.assertEqual(recast["estimated_cost_usd"], 9)
+        dubbed = by_change[("talent", "location", "language")]
+        self.assertEqual(dubbed["estimated_cost_usd"], 2)
+        self.assertEqual(dubbed["base_variant"], recast["name"])
+        self.assertEqual(by_change[("product", "outfit")]["estimated_cost_usd"], 6)
         self.assertEqual(by_change[("talent",)]["estimated_cost_usd"], 6)
+        recasts = [
+            operation
+            for operation in result["operations_estimate"]
+            if operation["axes"] == ["talent", "location"]
+        ]
+        self.assertEqual(len(recasts), 1)
+        self.assertIn(dubbed["name"], recasts[0]["used_by"])
 
     def test_matrix_may_record_a_recast_unit_cost_but_no_unknown_key(self):
         costs = {"talent": 1, "location": 1, "product": 1, "outfit": 1}
@@ -379,18 +406,18 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertNotIn("aspect", hook_row["studio"]["frontmatter"])
 
     def test_register_prints_prepare_request_commands_and_writes_nothing(self):
-        project = self.root / "project"
+        before = self.project_files()
         code, result = self.run_cli(
             "register",
             self.write(base_matrix()),
             "--project",
-            project,
+            self.project,
             *UNIT_COSTS,
             *VIDEO_FLAGS,
         )
-        self.assertEqual(code, 0)
+        self.assertEqual(code, 0, result)
         self.assertTrue(result["dry_run"])
-        self.assertFalse(project.exists())
+        self.assertEqual(self.project_files(), before)
         operations = result["operations"]
         self.assertNotIn(result["rows"][0]["name"], operations)
         hook_row = next(
@@ -405,52 +432,39 @@ class VariantMatrixTests(unittest.TestCase):
         )
         self.assertEqual(operations[ratio_row["name"]], [])
 
-    def test_register_chains_sequential_operations_in_one_row(self):
+    def test_sequential_swap_row_builds_on_the_single_swap_row(self):
         matrix = base_matrix(
             strategy="full_factorial",
             axes={"product": ["sku-b"], "outfit": ["outfit-b"]},
         )
         matrix["hero"]["values"] = {"product": "sku-a", "outfit": "outfit-a"}
-        _, result = self.run_cli(
-            "register",
-            self.write(matrix),
-            "--project",
-            self.root / "project",
-            "--unit-cost",
-            "product=5",
-            "--unit-cost",
-            "outfit=5",
-            *VIDEO_FLAGS,
+        code, result = self.register(
+            matrix, "--unit-cost", "product=5", "--unit-cost", "outfit=5", *VIDEO_FLAGS
         )
-        both = next(row for row in result["rows"] if len(row["changed_axes"]) == 2)
-        first, second = result["operations"][both["name"]]
-        self.assertIsNone(first["after"])
-        self.assertEqual(second["after"], first["asset"])
-        self.assertNotEqual(first["asset"], second["asset"])
+        self.assertEqual(code, 0, result)
+        by_change = {tuple(row["changed_axes"]): row for row in result["rows"]}
+        product = by_change[("product",)]
+        both = by_change[("product", "outfit")]
+        [product_swap] = result["operations"][product["name"]]
+        [outfit_swap] = result["operations"][both["name"]]
+        self.assertIsNone(product_swap["after"])
+        self.assertEqual(outfit_swap["after"], product["name"])
+        self.assertEqual(both["base_variant"], product["name"])
+        self.assertEqual(outfit_swap["asset"], f"{both['name']}_t01_draft")
+        self.assertEqual(result["total_estimated_usd"], 5 * 3)
+        self.assertEqual(both["estimated_cost_usd"], 5)
 
     def test_register_refuses_draft_or_unbound_hero(self):
         matrix = base_matrix(status="draft")
         matrix["hero"]["sha256"] = None
-        code, result = self.run_cli(
-            "register",
-            self.write(matrix),
-            "--project",
-            self.root,
-            *UNIT_COSTS,
-            *VIDEO_FLAGS,
-        )
+        code, result = self.register(matrix, *UNIT_COSTS, *VIDEO_FLAGS)
         self.assertEqual(code, 1)
         self.assertNotIn("operations", result)
         self.assertTrue({"matrix.status", "matrix.hero_hash"} <= self.rule_ids(result))
 
     def test_register_refuses_over_budget(self):
-        code, result = self.run_cli(
-            "register",
-            self.write(base_matrix(budget_usd=1)),
-            "--project",
-            self.root,
-            *UNIT_COSTS,
-            *VIDEO_FLAGS,
+        code, result = self.register(
+            base_matrix(budget_usd=1), *UNIT_COSTS, *VIDEO_FLAGS
         )
         self.assertEqual(code, 1)
         self.assertNotIn("operations", result)
@@ -469,7 +483,7 @@ class VariantMatrixTests(unittest.TestCase):
             "register",
             self.write(matrix),
             "--project",
-            self.root / "project",
+            self.project,
             *extra,
         )
 
@@ -764,8 +778,13 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertEqual(
             [step["route"] for step in row["steps"]], ["market-adapt", "ratio-reframe"]
         )
+        market_row = next(r for r in result["rows"] if r["changed_axes"] == ["market"])
+        self.assertEqual(row["base_variant"], market_row["name"])
+        self.assertEqual(
+            [step["owner"] for step in row["steps"]], [market_row["name"], row["name"]]
+        )
 
-    def test_market_with_a_generated_axis_keeps_a_studio_shot_and_orders_steps(self):
+    def test_market_with_a_generated_axis_reuses_the_generated_variant_shot(self):
         matrix = market_matrix(
             strategy="full_factorial",
             axes={
@@ -774,12 +793,16 @@ class VariantMatrixTests(unittest.TestCase):
             },
         )
         _, result = self.run_cli("plan", self.write(matrix))
+        hook_row = next(r for r in result["rows"] if r["changed_axes"] == ["hook"])
         row = next(r for r in result["rows"] if r["changed_axes"] == ["hook", "market"])
-        self.assertIsNotNone(row["studio"])
+        self.assertIsNone(row["studio"])
+        self.assertIsNotNone(hook_row["studio"])
+        self.assertEqual(row["base_variant"], hook_row["name"])
         self.assertEqual(row["localize"]["market_id"], "market-b")
         self.assertEqual(
             [step["route"] for step in row["steps"]], ["hook-opening", "market-adapt"]
         )
+        self.assertEqual(row["steps"][0]["owner"], hook_row["name"])
 
     def test_factorial_market_rows_with_a_generated_axis_get_variant_projects(self):
         matrix = market_matrix(
@@ -991,6 +1014,189 @@ class VariantMatrixTests(unittest.TestCase):
     def test_register_without_market_rows_has_no_localize_list(self):
         _, result = self.register(base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS)
         self.assertNotIn("localize", result)
+
+    def reuse_matrix(self):
+        matrix = market_matrix(
+            strategy="full_factorial",
+            axes={"talent": ["vp-b"], "market": ["market-b"], "ratio": ["4:5"]},
+        )
+        matrix["hero"]["values"] = {
+            "talent": "vp-a",
+            "market": "market-a",
+            "ratio": "9:16",
+        }
+        return matrix
+
+    def test_factorial_registers_one_talent_swap_for_its_market_and_ratio_rows(self):
+        code, result = self.register(
+            self.reuse_matrix(),
+            "--unit-cost",
+            "talent=6",
+            "--unit-cost",
+            "market=5",
+            *VIDEO_FLAGS,
+        )
+        self.assertEqual(code, 0, result)
+        rows = {tuple(row["changed_axes"]): row for row in result["rows"]}
+        talent = rows[("talent",)]
+        shots = [row["studio"]["shot_id"] for row in result["rows"] if row["studio"]]
+        self.assertEqual(shots, [talent["studio"]["shot_id"]])
+        swaps = [op for ops in result["operations"].values() for op in ops]
+        self.assertEqual([op["asset"] for op in swaps], [f"{talent['name']}_t01_draft"])
+        for change in (("talent", "ratio"), ("talent", "market")):
+            self.assertEqual(rows[change]["base_variant"], talent["name"])
+            self.assertEqual(result["operations"][rows[change]["name"]], [])
+        self.assertEqual(
+            rows[("talent", "market", "ratio")]["base_variant"],
+            rows[("talent", "market")]["name"],
+        )
+        self.assertEqual(result["total_estimated_usd"], 6 + 5 * 2)
+        self.assertEqual(rows[("talent", "ratio")]["estimated_cost_usd"], 0)
+        self.assertEqual(rows[("talent", "market")]["estimated_cost_usd"], 5)
+        self.assertEqual(
+            {entry["variant"] for entry in result["localize"]},
+            {rows[("market",)]["name"], rows[("talent", "market")]["name"]},
+        )
+
+    def test_unique_operation_breakdown_counts_each_paid_step_once(self):
+        code, result = self.run_cli(
+            "cost",
+            self.write(self.reuse_matrix()),
+            "--unit-cost",
+            "talent=6",
+            "--unit-cost",
+            "market=5",
+        )
+        self.assertEqual(code, 0, result)
+        operations = result["operations_estimate"]
+        self.assertEqual(len(operations), result["variant_count"])
+        self.assertEqual(
+            len({op["operation_key"] for op in operations}), len(operations)
+        )
+        self.assertEqual(
+            round(sum(op["unit_cost_usd"] for op in operations), 2),
+            result["total_estimated_usd"],
+        )
+        self.assertEqual(
+            round(sum(row["estimated_cost_usd"] for row in result["rows"]), 2),
+            result["total_estimated_usd"],
+        )
+        [swap] = [op for op in operations if op["route"] == "object-swap"]
+        self.assertEqual(len(swap["used_by"]), 4)
+        markets = [op for op in operations if op["route"] == "market-adapt"]
+        self.assertEqual(len(markets), 2)
+
+    def test_budget_gate_uses_the_deduplicated_total(self):
+        matrix = self.reuse_matrix()
+        matrix["budget_usd"] = 16
+        code, result = self.run_cli(
+            "cost",
+            self.write(matrix),
+            "--unit-cost",
+            "talent=6",
+            "--unit-cost",
+            "market=5",
+        )
+        self.assertEqual(code, 0, result)
+        matrix["budget_usd"] = 15.99
+        code, result = self.run_cli(
+            "cost",
+            self.write(matrix),
+            "--unit-cost",
+            "talent=6",
+            "--unit-cost",
+            "market=5",
+        )
+        self.assertEqual(code, 1)
+        self.assertIn("matrix.budget", self.rule_ids(result))
+
+    def test_every_variant_row_adds_exactly_one_new_operation(self):
+        matrix = swap_matrix()
+        matrix["axes"]["hook"] = ["hook-a"]
+        matrix["hero"]["values"]["hook"] = "hook-demo-first"
+        matrix["max_variants"] = 100
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 0, result)
+        for row in result["rows"][1:]:
+            owned = [s for s in row["steps"] if s["owner"] == row["name"]]
+            self.assertEqual(owned, row["steps"][-1:], row["name"])
+
+    def test_ratio_rows_cost_zero_by_default_with_a_note(self):
+        costs = ["--unit-cost", "hook=3", "--unit-cost", "talent=6"]
+        code, result = self.run_cli("cost", self.write(base_matrix()), *costs)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["unit_cost_usd"]["ratio"], 0)
+        self.assertEqual(result["total_estimated_usd"], 3 * 2 + 6)
+        self.assertIn("not a provider operation", result["ratio_cost_note"])
+        code, result = self.run_cli(
+            "cost", self.write(base_matrix()), *costs, "--unit-cost", "ratio=2"
+        )
+        self.assertEqual(result["total_estimated_usd"], 3 * 2 + 6 + 2 * 2)
+        matrix = base_matrix(axes={"hook": ["hook-callout"]})
+        _, result = self.run_cli("cost", self.write(matrix), *costs)
+        self.assertNotIn("ratio_cost_note", result)
+
+    def test_full_factorial_requires_notes_recording_the_request(self):
+        for notes in (None, "", "   "):
+            matrix = base_matrix(strategy="full_factorial", max_variants=20)
+            if notes is None:
+                matrix.pop("notes")
+            else:
+                matrix["notes"] = notes
+            code, result = self.run_cli("plan", self.write(matrix))
+            self.assertEqual(code, 1, notes)
+            self.assertIn("matrix.factorial_request", self.rule_ids(result))
+        code, result = self.run_cli(
+            "plan", self.write(base_matrix(strategy="full_factorial", max_variants=20))
+        )
+        self.assertEqual(code, 0, result)
+        code, result = self.run_cli("plan", self.write(base_matrix()))
+        self.assertNotIn("matrix.factorial_request", self.rule_ids(result))
+
+    def test_register_requires_the_hero_decision_record_in_the_project(self):
+        matrix = base_matrix()
+        del matrix["hero"]["decision_ref"]
+        code, result = self.register(matrix, *UNIT_COSTS, *VIDEO_FLAGS)
+        self.assertEqual(code, 1)
+        self.assertIn("matrix.hero_decision", self.rule_ids(result))
+        self.assertNotIn("operations", result)
+        code, result = self.run_cli("plan", self.write(matrix))
+        self.assertEqual(code, 0, result)
+        outside = self.root / "outside.json"
+        outside.write_text("{}")
+        (self.project / "decisions" / "link.json").symlink_to(outside)
+        (self.project / "decisions" / "folder").mkdir()
+        for ref in (
+            "decisions/missing.json",
+            "../outside.json",
+            str(outside),
+            "decisions/link.json",
+            "decisions/folder",
+        ):
+            matrix["hero"]["decision_ref"] = ref
+            code, result = self.register(matrix, *UNIT_COSTS, *VIDEO_FLAGS)
+            self.assertEqual(code, 1, ref)
+            self.assertIn("matrix.hero_decision", self.rule_ids(result), ref)
+
+    def test_register_hashes_the_hero_take_against_the_bound_sha256(self):
+        matrix = base_matrix()
+        del matrix["hero"]["take_file"]
+        code, result = self.register(matrix, *UNIT_COSTS, *VIDEO_FLAGS)
+        self.assertEqual(code, 1)
+        self.assertIn("matrix.hero_take", self.rule_ids(result))
+        matrix["hero"]["take_file"] = "../escape.mp4"
+        (self.root / "escape.mp4").write_bytes(HERO_BYTES)
+        code, result = self.register(matrix, *UNIT_COSTS, *VIDEO_FLAGS)
+        self.assertIn("matrix.hero_take", self.rule_ids(result))
+        matrix["hero"]["take_file"] = HERO_TAKE_FILE
+        (self.project / HERO_TAKE_FILE).write_bytes(b"re-exported hero take")
+        code, result = self.register(matrix, *UNIT_COSTS, *VIDEO_FLAGS)
+        self.assertEqual(code, 1)
+        self.assertIn("matrix.hero_hash_mismatch", self.rule_ids(result))
+        self.assertNotIn("operations", result)
+        (self.project / HERO_TAKE_FILE).write_bytes(HERO_BYTES)
+        code, result = self.register(matrix, *UNIT_COSTS, *VIDEO_FLAGS)
+        self.assertEqual(code, 0, result)
 
     def test_skill_cites_the_variant_rules(self):
         text = (ROOT / ".agents/skills/ad-variant-matrix/SKILL.md").read_text()
