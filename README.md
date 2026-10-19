@@ -148,9 +148,9 @@ The workspace ships **78 skills**. Leaf skills are independent; declared orchest
 
 | Skill | Summary |
 |---|---|
-| **brief-intake** | Shape intent-led briefs and treatments; hand off brand-ad / footage inspiration for watchable-media analysis; preserve confirmed decisions. |
+| **brief-intake** | Shape intent-led briefs; hand off footage for native-first, capability-checked analysis while preserving confirmed decisions. |
 | **film-production** | Orchestrates multi-scene, multi-modality production one stage at a time while keeping one HyperFrames Studio project synchronized for review and handoff. |
-| **template-factory** | Reverse-engineer a reference video and soundtrack into a timed visual and audio recipe, with reviewable assets and shot takes reviewed in a synchronized Studio project. |
+| **template-factory** | Native-first ad reference analysis and quick structure clones mapped to sourced product facts, preserving campaign rights and review gates. |
 | **prompt-review** | Review and fix BytePlus Seedance, Seed Audio, and Seedream prompts against the repo's best practices inline by default; use a sub-agent only when explicitly requested for a project or specific generation. |
 | **ad-variant-matrix** | Turn one approved hero ad into a one-axis-at-a-time variant matrix with routing, naming, cost and budget gates; every row still goes through prompt-review and registration. |
 | **ad-localize** | Adapt an approved ad to another market at the depth chosen per element: captions/text, voice, talent, cultural adaptation or full transcreation, with native review gates. |

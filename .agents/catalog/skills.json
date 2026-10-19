@@ -93,12 +93,12 @@
     },
     "brief-intake": {
       "kind": "leaf",
-      "description": "Shape a creative brief around the intended audience reaction, central visual idea, and practical constraints. Derive applicable directing choices with reasons; offer two distinct treatments during exploration or a compact proposal when direction is settled. Confirm only decisions that need a lock. When the brief cites real brand video ads or other footage for visual or motion inspiration, record that reference and hand off media acquisition plus seed_understand or template-factory \u2014 do not treat scripts or article text as the reference. Use for a new project or a scoped brief revision. Never generates media.",
-      "readme_summary": "Shape intent-led briefs and treatments; hand off brand-ad / footage inspiration for watchable-media analysis; preserve confirmed decisions.",
+      "description": "Shape a creative brief around the intended audience reaction, central visual idea, and practical constraints. Derive applicable directing choices with reasons; offer two distinct treatments during exploration or a compact proposal when direction is settled. Confirm only decisions that need a lock. When the brief cites real brand video ads or other footage for visual or motion inspiration, record that reference and hand off local media acquisition plus native host-agent inspection or template-factory \u2014 do not treat scripts or article text as the reference. Use for a new project or a scoped brief revision. Never generates media.",
+      "readme_summary": "Shape intent-led briefs; hand off footage for native-first, capability-checked analysis while preserving confirmed decisions.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": null
+      "overlay_notes": "Selective native-analysis port from byteplus-sa/ark-director PR #47 at 391d5c67718c9c8b0606368ee4ad552fea79678b. Preserve quick structure clone, campaign pins, supported facts, exact CTA, disclosure and native-review decisions, and capability-checked draft promotion."
     },
     "color-grade-palettes": {
       "kind": "leaf",
@@ -143,7 +143,7 @@
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": null
+      "overlay_notes": "Selective native-analysis port from byteplus-sa/ark-director PR #47 at 391d5c67718c9c8b0606368ee4ad552fea79678b. Preserve quick structure clone, campaign pins, supported facts, exact CTA, disclosure and native-review decisions, and capability-checked draft promotion."
     },
     "general-video": {
       "kind": "vendored",
@@ -651,12 +651,12 @@
     },
     "template-factory": {
       "kind": "orchestrator",
-      "description": "Reverse-engineer a reference video (\"pin\") into reproducible AIGC output. Orchestrates pin intake (a public HTTPS URL seed_understand can watch first; download and media_upload only when unusable), video and audio breakdown, per-beat motion analysis, keyframes, a planning-only sketch storyboard, optional element sheets (Seedream for invented identity; download-first for authorized real brands/logos/products; deterministic HTML graphics for exact posters, cards, screens and overlays), and a Seedance 2.5 video \u2014 generation-bound prompts through prompt-review; reviewed in HyperFrames Studio. Explicit orchestrator composing ark-mcp (including seed_audio_understand), seedream-storyboard, seedance-prompt-25, prompt-review, html-graphic-render, hyperframes, and ffmpeg; never calls the Ark REST API. Use to replicate style/composition/grammar, build a reusable template, or turn a cited brand ad, Pinterest pin, or other reference video into elements and video, or quick-clone an ad's structure onto a product.",
-      "readme_summary": "Reverse-engineer a reference video and soundtrack into a timed visual and audio recipe, with reviewable assets and shot takes reviewed in a synchronized Studio project.",
+      "description": "Reverse-engineer ad references with native-first analysis and permitted tool fallbacks. Use for reusable motion recipes or quick structure clones mapped to product facts. Orchestrates only authorized production.",
+      "readme_summary": "Native-first ad reference analysis and quick structure clones mapped to sourced product facts, preserving campaign rights and review gates.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": null
+      "overlay_notes": "Selective native-analysis port from byteplus-sa/ark-director PR #47 at 391d5c67718c9c8b0606368ee4ad552fea79678b. Preserve quick structure clone, campaign pins, supported facts, exact CTA, disclosure and native-review decisions, and capability-checked draft promotion."
     },
     "tig-blocking-map": {
       "kind": "leaf",

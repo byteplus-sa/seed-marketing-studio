@@ -65,7 +65,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/brief-intake/SKILL.md",
-      "computedHash": "6623adfcc4c254a9ecb34efd529b662548010ec52c36ec62350265ebdf1938f5"
+      "computedHash": "4bfc14879899852bff1eb375f164da9a18b3a0c032601d7d441ab08561fe2934"
     },
     "color-grade-palettes": {
       "source": "./local",
@@ -95,7 +95,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/film-production/SKILL.md",
-      "computedHash": "83620235f31fbc9e26eb4b2d6038a9449caa4b9734fe9f87f9dd1f18b8636d21"
+      "computedHash": "d840a37e6e14ebf94787605a350f89262c9d78670919e306bc52a2a214b54a3e"
     },
     "general-video": {
       "source": "heygen-com/hyperframes",
@@ -437,7 +437,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/template-factory/SKILL.md",
-      "computedHash": "034cf2d66f5f36ab8ebbb864b8638171ac6657f318ebb1fee45f5618f1f80a3c"
+      "computedHash": "392e41ca870973279ffe43b1432654a06ef95fb95d7c69491161e993911df46b"
     },
     "tig-blocking-map": {
       "source": "./local",

@@ -171,13 +171,15 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   usable real asset exists or a stylized substitute is requested. See
   [Element identification](.agents/contracts/element-identification.md).
 - When the user cites real brand video ads or other footage for visual or motion
-  inspiration, obtain media the provider can actually watch before borrowing
-  grammar. Prefer a public HTTPS URL that `seed_understand` already accepts;
-  download locally and `media_upload` only when the link is a page/platform URL,
-  auth-gated, or otherwise unusable as a video input. Transcripts, scripts, and
-  article write-ups are not a substitute for the video. Route full reverse-
-  engineering through `template-factory`; lighter analysis may use
-  `ark-mcp` (`seed_understand`) alone. See
+  inspiration, obtain decodable local media and prefer capable native inspection
+  with timestamped evidence and local timing measurements. Use permitted MCP
+  understanding tools when capabilities are insufficient; no upload is required
+  when native inspection suffices. Audio requires actual native/tool perception
+  or documented human listening, not just ASR or a waveform. Honor privacy,
+  budget and explicit offline constraints. Transcripts and article write-ups
+  are not visual evidence. Route full reverse-engineering or quick ad structure
+  clones through `template-factory`; preserve product facts, campaign pins and
+  disclosure decisions. See
   [Routing](.agents/contracts/routing.md).
 - Elements define identity; derivative boards require current source hashes and
   explicit selection before video use. Control-only diagrams stay analysis-only
