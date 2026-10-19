@@ -7,6 +7,7 @@ import json
 import math
 import re
 import sys
+from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -185,6 +186,13 @@ def load_matrix(path: Path) -> tuple[dict[str, Any], list[Finding]]:
 def levels(matrix: dict[str, Any], axis: str) -> list[str]:
     hero = matrix["hero"]["values"][axis]
     return [hero, *(value for value in matrix["axes"][axis] if value != hero)]
+
+
+def variant_count(matrix: dict[str, Any]) -> int:
+    counts = [len(levels(matrix, axis)) for axis in active_axes(matrix)]
+    if matrix["strategy"] == "full_factorial":
+        return math.prod(counts) - 1
+    return sum(count - 1 for count in counts)
 
 
 def combinations(matrix: dict[str, Any]) -> list[dict[str, str]]:
@@ -402,7 +410,7 @@ def expand(matrix: dict[str, Any]) -> list[dict[str, Any]]:
 def gate_findings(matrix: dict[str, Any], rows: list[dict[str, Any]]) -> list[Finding]:
     findings: list[Finding] = []
     names = [row["name"] for row in rows]
-    duplicates = sorted({name for name in names if names.count(name) > 1})
+    duplicates = sorted(name for name, count in Counter(names).items() if count > 1)
     if duplicates:
         findings.append(
             Finding(
@@ -412,7 +420,7 @@ def gate_findings(matrix: dict[str, Any], rows: list[dict[str, Any]]) -> list[Fi
             )
         )
     shot_ids = [row["studio"]["shot_id"] for row in rows if row["studio"]]
-    shared = sorted({shot for shot in shot_ids if shot_ids.count(shot) > 1})
+    shared = sorted(shot for shot, count in Counter(shot_ids).items() if count > 1)
     if shared and not duplicates:
         findings.append(
             Finding(
@@ -451,14 +459,6 @@ def gate_findings(matrix: dict[str, Any], rows: list[dict[str, Any]]) -> list[Fi
     if count == 0:
         findings.append(
             Finding("matrix.empty", "No axis value differs from the hero", "axes")
-        )
-    if count > matrix["max_variants"]:
-        findings.append(
-            Finding(
-                "matrix.max_variants",
-                f"{count} variants exceed max_variants {matrix['max_variants']}",
-                "max_variants",
-            )
         )
     if count > AD_GROUP_CREATIVES:
         findings.append(
@@ -808,15 +808,24 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
     matrix, findings = load_matrix(args.matrix)
     if findings:
         return {}, findings
-    rows = expand(matrix)
-    findings = gate_findings(matrix, rows)
+    count = variant_count(matrix)
     result: dict[str, Any] = {
         "campaign": matrix["campaign"],
         "concept": matrix["concept"],
         "strategy": matrix["strategy"],
-        "variant_count": sum(row["role"] == "variant" for row in rows),
+        "variant_count": count,
         "max_variants": matrix["max_variants"],
     }
+    if count > matrix["max_variants"]:
+        return {**result, "rows": []}, [
+            Finding(
+                "matrix.max_variants",
+                f"{count} variants exceed max_variants {matrix['max_variants']}",
+                "max_variants",
+            )
+        ]
+    rows = expand(matrix)
+    findings = gate_findings(matrix, rows)
     if args.command != "plan":
         summary, cost_findings = apply_costs(
             matrix, rows, parse_unit_costs(args.unit_cost)

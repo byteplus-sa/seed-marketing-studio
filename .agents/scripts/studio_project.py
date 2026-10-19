@@ -20,6 +20,7 @@ from typing import Any
 from urllib.parse import quote
 
 from validate_request import (
+    approval_decision_findings,
     contained_path,
     parse_frontmatter,
     project_mode_snapshot,
@@ -1502,6 +1503,10 @@ def lock_failures(
             record = json.loads(read_text(project / delivery_record))
             if lock["artifact_path"] != record["output"]["path"]:
                 failures.append("the final master lock is not for the delivery render")
+        if kind == "picture":
+            problem = lock_subject_problem(project, kind, lock["artifact_path"])
+            if problem:
+                failures.append(f"picture lock is stale: {problem}")
     return failures
 
 
@@ -1682,6 +1687,10 @@ def lock_subject_problem(project: Path, kind: str, subject: str) -> str | None:
             return "the lock subject was not made by studio_project.py render"
         if kind == "final_master" and quality not in DELIVERY_QUALITIES:
             return "a final master lock needs a standard-or-higher render"
+        if kind == "picture" and record["inputs"]["studio_sha256"] != tree_digest(
+            project
+        ):
+            return "the Studio project changed since the picture render; render and review again"
         return None
     return "the lock subject is not a recorded render"
 
@@ -1837,7 +1846,41 @@ def approved_elements(project: Path) -> list[tuple[str, dict[str, Any], Path]]:
             or not source.is_file()
             or source.suffix.lower() not in ELEMENT_IMAGE_SUFFIXES
         ):
-            continue
+            raise StudioError(f"{element_id}: approved source is missing or invalid")
+        evidence = document.get("selection_evidence")
+        required = (
+            "decision_id",
+            "decision_path",
+            "decision_sha256",
+            "review_path",
+            "review_sha256",
+            "selected_sha256",
+        )
+        if not isinstance(evidence, dict) or any(
+            not isinstance(evidence.get(key), str) for key in required
+        ):
+            raise StudioError(
+                f"{element_id}: approved selection needs hash-bound evidence"
+            )
+        source = contained_path(project, source.relative_to(project).as_posix())
+        findings = approval_decision_findings(
+            project,
+            {
+                "path": source.relative_to(project).as_posix(),
+                "sha256": sha256_file(source),
+                "approval_evidence": {
+                    **{key: evidence[key] for key in required},
+                    "manifest": manifest.relative_to(project).as_posix(),
+                    "field": "selected_variant",
+                },
+            },
+            source,
+        )
+        if findings:
+            raise StudioError(
+                f"{element_id}: stale approval: "
+                + "; ".join(finding.message for finding in findings)
+            )
         found.append((element_id, document, source))
     return found
 

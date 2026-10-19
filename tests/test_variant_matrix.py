@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / ".agents/scripts"))
@@ -281,6 +282,51 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertEqual((plan_code, cost_code), (1, 1))
         self.assertIn("matrix.max_variants", self.rule_ids(plan))
         self.assertIn("matrix.max_variants", self.rule_ids(cost))
+
+    def test_large_factorial_is_rejected_before_expansion_for_every_command(self):
+        matrix = base_matrix(
+            strategy="full_factorial",
+            axes={
+                axis: ["base", *(f"value-{number}" for number in range(9))]
+                for axis in variant_matrix.AXES
+            },
+        )
+        matrix["hero"]["values"] = {axis: "base" for axis in variant_matrix.AXES}
+        path = self.write(matrix)
+        for command in ("plan", "cost", "register"):
+            with self.subTest(command=command):
+                flags = (
+                    ["--project", str(self.project)] if command == "register" else []
+                )
+                with mock.patch.object(
+                    variant_matrix, "expand", side_effect=AssertionError("expanded")
+                ) as expand:
+                    code, result = self.run_cli(command, path, *flags)
+                expand.assert_not_called()
+                self.assertEqual(code, 1)
+                self.assertEqual(result["variant_count"], 99_999_999)
+                self.assertEqual(result["rows"], [])
+                self.assertEqual(self.rule_ids(result), {"matrix.max_variants"})
+                self.assertNotIn("operations", result)
+
+    def test_one_axis_limit_is_checked_before_expansion(self):
+        with mock.patch.object(
+            variant_matrix, "expand", side_effect=AssertionError("expanded")
+        ):
+            code, result = self.run_cli("plan", self.write(base_matrix(max_variants=4)))
+        self.assertEqual(code, 1)
+        self.assertEqual(result["variant_count"], 5)
+
+    def test_variant_cap_excludes_the_hero_and_allows_exact_boundary(self):
+        for strategy, count in (("one_axis_at_a_time", 5), ("full_factorial", 17)):
+            with self.subTest(strategy=strategy):
+                code, result = self.run_cli(
+                    "plan",
+                    self.write(base_matrix(strategy=strategy, max_variants=count)),
+                )
+                self.assertEqual(code, 0)
+                self.assertEqual(result["variant_count"], count)
+                self.assertEqual(len(result["rows"]), count + 1)
 
     def test_missing_unit_cost_is_refused_rather_than_assumed_zero(self):
         code, result = self.run_cli(
