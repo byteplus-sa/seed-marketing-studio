@@ -5,9 +5,12 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
+import subprocess
 import sys
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from itertools import pairwise
 from pathlib import Path
 
@@ -747,6 +750,119 @@ class BurnInTests(unittest.TestCase):
         self.assertIn("assets/fonts/absent.woff2", stderr)
         self.assertFalse(self.out.exists())
         self.assertEqual(list(self.compositions.iterdir()), [])
+
+    def test_unicode_font_family_and_local_path_are_preserved_safely(self):
+        font_source = "assets/字体/خط (1)' #%.woff2"
+        font = self.compositions.parent / font_source
+        font.parent.mkdir(parents=True)
+        font.write_bytes(b"wOF2")
+        for family in ("思源黑体", "خَط عربي", "Cafe\u0301 Display", "字_体-1"):
+            with self.subTest(family=family):
+                code, _, stderr = self.run_cli(
+                    "--size", "1080x1920", "--safe-rect", "0,0,1080,1920",
+                    "--font-family", family, "--font-src", font_source, "--overwrite",
+                    languages=("ar",),
+                )
+                self.assertEqual(code, 0, stderr)
+                layer = (self.compositions / "captions-ar.html").read_text(encoding="utf-8")
+                self.assertIn(f'font-family: "{family}"', layer)
+                self.assertIn("%E5%AD%97", layer)
+                self.assertIn("%27", layer)
+                self.assertIn("%23%25", layer)
+                self.assertNotIn(font_source, layer)
+                self.assertIn('lang="ar" dir="rtl"', layer)
+
+    def test_font_css_payloads_and_invalid_paths_write_nothing(self):
+        for flag, value in (
+            ("--font-family", '字"; } </style><script>alert(1)</script>'),
+            ("--font-family", "字\\22"),
+            ("--font-family", "字\n体"),
+            ("--font-family", "字" * 241),
+            ("--font-family", " "),
+            ("--font-src", "assets/../字体.ttf"),
+            ("--font-src", "https://invalid.example/字体.ttf"),
+            ("--font-src", "assets\\字体.ttf"),
+            ("--font-src", "assets/字体.ttf\n"),
+        ):
+            with self.subTest(value=value):
+                code, _, _ = self.run_cli(
+                    "--size", "1080x1920", "--safe-rect", "0,0,1080,1920", flag, value
+                )
+                self.assertEqual(code, 2)
+                self.assertFalse(self.out.exists())
+                self.assertEqual(list(self.compositions.iterdir()), [])
+
+    def test_unicode_font_parent_symlink_escape_is_refused(self):
+        outside = self.directory / "字体"
+        outside.mkdir()
+        (outside / "خط.ttf").write_bytes(b"font")
+        (self.compositions.parent / "fonts").symlink_to(outside, target_is_directory=True)
+        code, _, stderr = self.run_cli(
+            "--size", "1080x1920", "--safe-rect", "0,0,1080,1920",
+            "--font-src", "fonts/خط.ttf",
+        )
+        self.assertEqual(code, 2)
+        self.assertIn("escapes the Studio project", stderr)
+        self.assertFalse(self.out.exists())
+
+    def test_composition_escapes_css_strings_even_without_cli_validation(self):
+        family = '字"; } </style><script>bad()</script>'
+        typography = MODULE.Typography(family, 'fonts/字");color:red.ttf', 40, "#FFFFFF", "#000000", "bottom")
+        layer = MODULE.render_composition(
+            [MODULE.Cue(0, 1000, ("Text",))], "en", "captions-en",
+            MODULE.Layout(640, 360, 0, 0, 640, 360), typography,
+        )
+        self.assertNotIn(family, layer)
+        self.assertNotIn("<script>bad()", layer)
+        self.assertIn("\\22 ", layer)
+        self.assertIn("%22%29%3Bcolor%3Ared.ttf", layer)
+
+    @unittest.skipUnless(os.environ.get("PORTABILITY_FONT"), "set PORTABILITY_FONT for local render")
+    def test_unicode_caption_font_browser_smoke(self):
+        font_source = "assets/字体 (1)' #%.ttf"
+        font = self.compositions.parent / font_source
+        font.parent.mkdir(parents=True)
+        font.write_bytes(Path(os.environ["PORTABILITY_FONT"]).read_bytes())
+        document = json.loads(self.source.read_text())
+        document["lines"] = [document["lines"][0]]
+        self.source.write_text(json.dumps(document), encoding="utf-8")
+        result = subprocess.run(
+            [
+                sys.executable, str(SCRIPT), "--input", str(self.source),
+                "--master-stem", "synthetic", "--out-dir", str(self.out),
+                "--language", "ar", "--composition-dir", str(self.compositions),
+                "--size", "640x360", "--safe-rect", "0,0,640,360",
+                "--font-family", "خط عربي", "--font-src", font_source,
+            ],
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        layer_text = (self.compositions / "captions-ar.html").read_text(encoding="utf-8")
+        layer = ET.fromstring(layer_text.removeprefix("<!doctype html>"))
+        template = layer.find(".//template")
+        snapshot = ET.Element("html")
+        head = ET.SubElement(snapshot, "head")
+        ET.SubElement(head, "meta", charset="utf-8")
+        head.append(template.find("style"))
+        body = ET.SubElement(snapshot, "body")
+        body.append(template.find("div"))
+        span = body.find(".//span")
+        span.set("data-copy-key", "caption")
+        source = self.compositions.parent / "snapshot.html"
+        source.write_text(ET.tostring(snapshot, encoding="unicode", method="html"), encoding="utf-8")
+        renderer = ROOT / ".agents/skills/html-graphic-render/scripts/render_html.py"
+        rendered = subprocess.run(
+            [
+                sys.executable, str(renderer), str(source), str(source.with_suffix(".png")),
+                "--asset-root", str(source.parent), "--width", "640", "--height", "360",
+                "--require-local-font", "خط عربي", "--copy", f"caption={span.text}",
+            ],
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(rendered.returncode, 0, rendered.stderr)
+        record = json.loads((source.parent / "render_snapshot.json").read_text())
+        self.assertEqual(record["renderer"]["font_policy"], "project_local_required")
+        self.assertGreater(source.with_suffix(".png").stat().st_size, 1000)
 
     def test_symlinked_or_directory_font_source_is_refused(self):
         outside = self.directory / "outside.woff2"

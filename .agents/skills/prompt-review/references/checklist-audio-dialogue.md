@@ -22,9 +22,10 @@ non-English, multilingual or code-switched dialogue, or an accent request.
    their register, code-switching, honorifics and politeness. Newly drafted
    lines follow the language and register the brief sets; when the brief asks
    for code-switching, the dialogue-language line names the dominant language
-   and the switching pattern, and switched words stay few and common. Dense
-   secondary-language passages in a new draft are MINOR unless the brief or
-   character calls for them. Do not impose contractions, honorifics or a fixed
+   and switching pattern only as specified. Ask when a missing register or
+   code-switch preference materially affects the draft; do not assume a mix.
+   Dense secondary-language passages are not a defect by themselves. Preserve
+   requested monolingual text. Do not impose contractions, honorifics or a fixed
    sentence length on every speaker.
 3a. **Accent is not code-switching (`dialogue.register`).** "English
    with a <region> accent" keeps every spoken word English inside the braces

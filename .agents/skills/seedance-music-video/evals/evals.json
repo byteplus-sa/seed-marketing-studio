@@ -70,7 +70,7 @@
       "expected_output": "An audio-first music-video prompt that binds the track as the timing authority and matches the performer's mouth to the voice.",
       "files": [],
       "expectations": [
-        "The prompt uses the audio-first contract: the track is bound as @Audio N and stated as the exact soundtrack and timing authority.",
+        "The prompt selects a currently supported timing reference, using @Audio N when supported and leaving unverified binding details unresolved rather than forcing a black-sync carrier.",
         "The prompt directs the performer's visible mouth to match only their voice in the referenced audio.",
         "The exact sung lines are kept in {curly braces} and are not paraphrased.",
         "The prompt does not ask the model to add its own music on top of the reference.",
@@ -185,14 +185,49 @@
     {
       "id": 16,
       "prompt": "Write the Seedance plan for a 30-second trap chorus: hard cuts on every kick and snare at 140 BPM, a quiet ambient intro with only rain and no music, and the final cut must sit under my own master.",
-      "expected_output": "A plan that splits the chorus into several generations with shots of at least about 1 s, assigns sub-0.8 s beat cuts to the edit, keeps generated audio off for the ambient intro and the master, and gives a lossless exact-length assembly recipe.",
+      "expected_output": "A song-driven marketing cut plan using supported natural-duration generations and precise beat cuts in post, with authorized master fidelity and a separately directed rain intro.",
       "files": [],
       "expectations": [
-        "States that shots shorter than about 0.8 s merge inside one generation, so kick/snare cuts at 140 BPM are built in assembly from separately generated clips.",
-        "Builds the 30 s section from roughly six 5 s generations of two or three shots, each with lens intent, camera move and a named light source.",
-        "Sets generate_audio false for the rain intro and for clips under the supplied master, adding rain from Seed Audio in post and noting the bed is not frame-synced, instead of relying on a 'no music' line.",
-        "Describes exact whole-frame lossless intermediates, audio padded or trimmed to picture, the concat demuxer, setsar=1 for the concat filter, video-stream durations and one final encode with the master muxed over the cut.",
+        "Assigns frame-exact rapid cuts to assembly without claiming a universal 0.8-second shot floor or prescribing six 5-second generations.",
+        "Plans shot size, lens intent, camera and motivated light from the song and intended campaign effect.",
+        "Keeps the supplied master for exact delivery and offers silent picture plus rain in post; native rain is an inspectable alternative, not declared impossible.",
+        "Distinguishes requested frame-synced events from a general bed and checks final sync by listening and playback.",
         "Does not bind a storyboard grid as a Seedance reference."
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Draft a performance-video prompt for our licensed campaign song. Music and performer permissions are recorded. The current model supports direct reference_audio but not video carriers with audio. Keep our supplied master exact in delivery; don't generate a replacement song.",
+      "expected_output": "A direct supported audio-timing binding, with the authorized master retained for post and no black-sync conversion.",
+      "files": [],
+      "expectations": [
+        "Uses the supported direct audio reference as timing authority; does not force or fabricate a black-sync video.",
+        "Reuses the recorded permissions within their scope without claiming ownership or demanding a new original track.",
+        "Preserves the supplied master for deterministic post assembly and treats generated audio and mouth timing as candidates requiring inspection.",
+        "Preserves exact supplied lyrics; missing lyrics or measured timings remain unresolved."
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Our supplied original track needs lip-sync, but the current tool's audio reference support is unverified. An old production used a black video carrying the song. Can you write the treatment without submitting anything?",
+      "expected_output": "A provisional treatment with reference support unresolved, not an assumed carrier workaround.",
+      "files": [],
+      "expectations": [
+        "Continues untimed creative direction while identifying the missing current capability evidence.",
+        "Does not promote the old black-sync workflow to a mandatory or supported route.",
+        "Allows a carrier only when currently supported and chosen for this request; does not bind one automatically.",
+        "Keeps the original master, current-song rights and post-sync review in the handoff; submits nothing."
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "The generated song transcript has every lyric, but the singer's mouth misses the final phrase. Can we just mux my authorized master and call it fixed?",
+      "expected_output": "A distinction between soundtrack fidelity and mouth-timing repair.",
+      "files": [],
+      "expectations": [
+        "Explains that replacing audio alone does not fix visible lip-sync.",
+        "Requires listening plus visual review of the final phrase, not ASR alone.",
+        "Proposes a scoped timing repair or reviewed retake while preserving the original master and other approved decisions."
       ]
     }
   ]

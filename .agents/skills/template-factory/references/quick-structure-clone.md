@@ -20,8 +20,10 @@ top of it.
 
 ## Inputs
 
-- **Reference ad:** watchable media resolved exactly as pipeline step 1 (pin
-  intake), with source URL, SHA-256 and storage scope in `ref_cache.json`.
+- **Reference ad:** decodable local media resolved as pipeline step 1 (pin
+  intake), with local path, SHA-256 and nonsensitive source provenance. Native
+  inspection needs no upload; selected provider operations retain their own
+  privacy, cost and transport contracts.
 - **Product card:** the product manifest and its supported facts. When a
   `product-intake` card exists (`element.md` plus `facts.json`), only claims with
   `status: supported` may reach a prompt or a super. Without a card, use only
@@ -39,18 +41,24 @@ top of it.
    taglines, typography, trade dress, music or recognizable talent, and give
    original talent distinct wardrobe and colours.
 2. **Measure.** Probe picture duration and detect hard cuts with `ffmpeg`.
-3. **Beat sheet.** One `seed_understand` call on the reference returns, per
+3. **Beat sheet.** Inspect the reference through capable native video/image
+   tools, using timestamped frames and local measurements. Use permitted visual
+   understanding tools when native perception is insufficient. Record, per
    beat: start and end seconds, the beat's job (hook, problem, demonstration,
    proof, payoff, CTA or another plain label), shot size and camera, pace (cuts
    inside the beat), the role of on-screen text (never its words) and the audio
-   role (speech, music, effect, silence). Correct the boundaries against the
-   measured cuts and write `templates/<pin-id>/beat-sheet.md` with a table:
+   role (speech, music, effect, silence). Describe audio only after verified
+   native/tool perception or documented human listening; a transcript or
+   waveform alone is insufficient. Mark unavailable audio evidence unresolved.
+   Correct boundaries against inspected cuts and write
+   `templates/<pin-id>/beat-sheet.md` with a table:
 
    ```markdown
    | Beat | Start–end (s) | Job | Shot and camera | Pace | Text role | Audio role | Product mapping |
    ```
 
-   Record the reference SHA-256 at the top. The beat sheet is this mode's
+   Record the reference SHA-256, reviewer/tool, inspected ranges and uncertainty
+   at the top. The beat sheet is this mode's
    `scene-breakdown` evidence; it is not a `VideoBreakdown` and does not go
    through `validate_breakdown.py`.
 4. **Map onto the product card.** Fill the "Product mapping" column for every
@@ -58,6 +66,9 @@ top of it.
    evidence the card does not have (a testimonial, a number, a comparison)
    becomes a neutral demonstration or is flagged unresolved; never invent the
    evidence. The CTA beat uses the brief's CTA verbatim.
+   For an analysis-only request, stop at the requested beat sheet and mapping.
+   For prompt-only work, write the requested prompts without creating production
+   state. Neither mode authorizes submission or requires Studio stage locks.
 5. **Shot plan and shot manifests.** Group the beats into natural-duration
    clips (one beat, or a run of adjacent short beats), then write one shot
    manifest per clip at `scenes/scene-NN/sNN_shNNN/shot.md` so

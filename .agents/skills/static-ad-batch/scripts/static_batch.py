@@ -46,7 +46,6 @@ FONT_FORMATS = {".woff2": "woff2", ".woff": "woff", ".ttf": "truetype", ".otf": 
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".svg"}
 KEBAB = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 HEX_COLOR = re.compile(r"#[0-9A-Fa-f]{6}")
-FONT_FAMILY = re.compile(r"[A-Za-z0-9][A-Za-z0-9 \-]{0,63}")
 LANGUAGE_TAG = re.compile(r"[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*")
 PLACEHOLDER = re.compile(r"\{\{([a-z_]+)\}\}")
 CONTROL_CHARACTERS = re.compile(r"[\x00-\x1f\x7f]")
@@ -235,9 +234,7 @@ def load_brand(root: Path, spec: dict[str, Any]) -> dict[str, Any]:
             if role in REQUIRED_TYPOGRAPHY_ROLES:
                 missing.append(f"typography.{role}")
             continue
-        family = entry["family"]
-        if not isinstance(family, str) or not FONT_FAMILY.fullmatch(family):
-            raise ValueError(f"Unsupported font family name for {role}: {family!r}")
+        family = require_text(entry["family"], f"Font family for {role}")
         font_path = contained_file(
             root, path.parent, entry["file"], f"Font for {role}", set(FONT_FORMATS)
         )
@@ -536,7 +533,7 @@ def check_banned_words(copy: Mapping[str, str], banned: list[str], name: str) ->
 
 def relative_url(target: Path, directory: Path) -> str:
     relative = Path(os.path.relpath(target, directory)).as_posix()
-    if any(character in relative for character in "'\"()\\"):
+    if "\\" in relative or CONTROL_CHARACTERS.search(relative):
         raise ValueError(f"Unsupported character in asset path: {relative}")
     return quote(relative, safe="/")
 

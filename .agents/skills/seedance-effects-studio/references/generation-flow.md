@@ -26,52 +26,39 @@ observations, limitations, recommendation), a decision record and a manifest
 with `selection_evidence`. `prepare_request.py --ref path:role:manifest`
 rejects an unapproved reference.
 
-## Provider rules observed
+## Provider rules
 
-Found in the 2026-10-08 full run (see [evidence status](evidence-status.md));
-recheck the tool schema before relying on them.
+Verify current model and operation capabilities against the live tool schema
+and authoritative provider documentation. Preserve documented unsupported
+flags; unknown support is not permission to submit. Recipe validation is
+separate from capability support (see [evidence status](evidence-status.md)).
 
-- **Person crops are rejected as `reference_image`.** A face close-up and a clean
-  full-body crop of a person were refused before any cost
-  (`InputImageSensitiveContentDetected.PrivacyInformation`). Seedream accepted
-  the same crops as identity references for a start frame. Effects that relied on
-  person references (`infinite-clones`, `lacewalker`, `superstar`,
-  `mighty-fighter`) ran through a Seedream first-frame still that already shows
-  the person; each recipe's Route carries the fallback wording. After one
-  rejection switch routes; do not retry the same references.
-- **Last-frame-only is rejected.** `last_frame` without `first_frame` fails with
-  "last frame image content cannot be mixed with first frame or reference image
-  content", at no cost. `earth-zoom` and `lidar` use a generated first frame plus
-  the photo as the last frame. The same file as first and last frame is accepted
-  (`cutout`).
-- **Ratio.** A first frame locks the ratio; start frames generated at 1152x2048
-  gave 9:16 clips, so omit `ratio`. A route with no first frame must set `ratio`.
-- **Native audio leaks.** With the audio sentence present, music or singing still
-  appeared in 7 of 45 drafts (`moonwalk`, `lacewalker`, `superstar`, `cutout`,
-  `cyclope`, `agamemnon`, `fairytale-castle`) and stray human sounds in three more
-  (`bullet-time`, `act-natural`, `fallen-angel`); one restyle take was rejected for
-  its output audio (`OutputAudioSensitiveContentDetected.PolicyViolation`). The
-  sentence stays in every template, but the review must analyse the track, and a
-  clean track needs `generate_audio: false` plus a Seed Audio bed in post.
+- **Person-reference restrictions.** Person face and body crops are subject to
+  provider privacy restrictions (`InputImageSensitiveContentDetected.PrivacyInformation`).
+  Keep the error and diagnose a rejection before any further submission.
+  First-frame alternatives in the recipes require their own capability and
+  rights checks; do not change roles to bypass a restriction.
+- **Last-frame-only is rejected.** Require `first_frame` with `last_frame`;
+  `earth-zoom` and `lidar` include a generated first frame plus the photo as the
+  last frame. Verify identical first/last image support for `cutout`.
+- **Ratio.** A first frame locks the ratio, so omit `ratio`. A route with no
+  first frame must set `ratio`.
+- **Audio review.** Review the current track against the requested sound design.
+  Respect output-audio moderation (`OutputAudioSensitiveContentDetected.PolicyViolation`);
+  a rejection is not permission for an automatic retry. Use native audio off
+  and a separate post bed when that is the selected audio workflow.
 - **Video-to-video.** Restyle, edit and extend inputs that show a realistic
   person, generated or real, are rejected with `PrivacyInformation` unless each
-  person is bound as an `asset://` Virtual Portrait or authorized asset; the run
-  used a person-free source clip, and the asset path is untested here. Edit-route draft mode is unproven, so those
-  requests used `resolution: 480p` without `draft`. Of the four restyle effects
-  only `comic` produced a usable take.
-- **Invented lettering.** Generated ticket, UI, screen and panel surfaces invent
-  lettering and digits even when told to be blank (`boarding-pass` ticket prices
-  and digits, `desktop-glitch` title bars and terminal panels, `particles`
-  outline boxes). Name plain smooth single-colour surfaces with nothing printed
-  and avoid naming parts that normally carry text (header band, barcode, title
-  bar, dialog); keep readable overlays for post.
-- **Counts drift.** Fish and jellyfish, sheep, fireworks, panels (4 and 6 for 5
-  and 7), clones (7 to 8 for 7; 20 to 25 for 20) came out approximate. Request
-  counts at every timestamp, then count on a full-size frame and report the
-  number found.
-- **Fast cuts merge.** Cuts under about 0.8 s apart merge, and prompted cut times
-  drifted (`tracking` cut at about 1.4 s and 2.7 s; `comic` changed about every
-  second, not every 0.3 s). Finish rapid cuts and stepped cadence in post.
+  person is bound as an `asset://` Virtual Portrait or authorized asset.
+  Verify current asset and operation support. Do not use edit-route `draft`
+  without explicit capability support; use supported resolution parameters for
+  an authorized current-input test.
+- **Lettering review.** Check generated surfaces for unwanted lettering; exact
+  readable overlays remain a post-production requirement.
+- **Count review.** Preserve requested counts at every timestamp and count on
+  full-size frames of the current take; report the numbers found.
+- **Timing review.** Compare current cut timing and cadence with the recipe.
+  Use deterministic post steps when exact timing is required.
 
 ## Hash, review, register
 
@@ -203,8 +190,7 @@ forbade them.
   `draft_task_id`, `resolution`, `watermark`, so a timeout can be reconciled. Its
   prompt review may reuse the unchanged prompt findings, but its complete final
   request hash, parameters, references and current capability evidence need a
-  fresh request review; inspect and select the final output again. This path is not yet exercised
-  in the probe project, so check the registry accepts the shape on first use.
+  fresh request review; inspect and select the final output again. Check the registry accepts the current operation shape before submission.
   Check the draft's audio track first (the promotion reuses its audio setting),
   then check the final's track again: final audio is not byte-identical to the
   draft's.
@@ -217,7 +203,7 @@ forbade them.
 | --- | --- |
 | HUD, labels, UI text, city names, captions | Author with `html-graphic-render` (static) or HyperFrames (timed), composite with FFmpeg; text is never prompted into the clip |
 | Split-screen stack (painting effects) | `ffmpeg -i person.mp4 -loop 1 -i painting.png -filter_complex "[0]scale=W:W[a];[1]scale=W:W[b];[a][b]vstack" -t D out.mp4`; the painting is a public-domain scan with source URL and SHA-256 recorded. From a 9:16 clip: crop a 9:8 band (`crop=iw:iw*8/9:0:Y`, Y chosen so the head stays in), scale it to 720x640, stack it over a 720x640 painting panel for a 720x1280 result |
-| Fisheye (animal ride) | Verified on a 9:16 clip: scale to 720x1280, pad to a 1280 square, `v360=input=flat:output=fisheye:ih_fov=90:iv_fov=90:h_fov=90:v_fov=90:w=1280:h=1280`, black mask outside a circle of radius 630, crop the centre 720x1280. FOV 110 and 140 magnified the centre too much; the circle is wider than the frame, so black arcs show only at top and bottom |
+| Fisheye (animal ride) | Recipe for a 9:16 clip: scale to 720x1280, pad to a 1280 square, `v360=input=flat:output=fisheye:ih_fov=90:iv_fov=90:h_fov=90:v_fov=90:w=1280:h=1280`, black mask outside a circle of radius 630, crop the centre 720x1280. Review the chosen FOV and centre magnification on the current composite; the circle is wider than the frame, so black arcs show only at top and bottom |
 | Stepped 10 to 12 fps cadence (restyle looks) | Drop to the stepped rate then hold-frame back to 24 fps (`fps=12,fps=24`) |
 | Ambience or sound effects bed | `seed_audio_generate`, "no voices, no music" last in the prompt, loudness-normalise, mux over the stream-copied picture; the bed is not frame-synced |
 | Chained second clip (eyes-in destination) | A separate draft whose first frame is the destination image, joined in FFmpeg |
@@ -228,9 +214,9 @@ forbade them.
 | --- | --- |
 | Photo does not fit the recipe | Say what is wrong; rebuild the start frame or ask for a better asset |
 | Moderation rejection | Keep the original error as evidence; revise only with a recorded, authorized delta |
-| Count or position drift | Revise through Locked / Delta / Acceptance; recipes note which counts run approximate |
-| Reference image rejected (privacy detection) | Keep the error as evidence; switch to a first-frame still that shows the person, as the recipe's Route describes |
-| Last-frame-only rejected | Add a generated first frame; the same file as first and last frame is accepted |
+| Count or position drift | Revise through Locked / Delta / Acceptance using the current take's observed discrepancy |
+| Reference image rejected (privacy detection) | Keep and diagnose the error; any alternative needs current capability and rights checks, never a restriction bypass |
+| Last-frame-only rejected | Add a generated first frame; verify support before using the same file as first and last frame |
 | Output audio rejected | Keep the error as evidence; retake with a recorded audio-sentence change or `generate_audio: false` |
 | Native audio contains speech or music | Regenerate with audio off or add a post bed; do not claim the take is clean |
 | Provider task failed | Evidence to review, not an automatic resubmission |

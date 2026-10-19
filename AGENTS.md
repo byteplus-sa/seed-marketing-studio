@@ -154,6 +154,14 @@ Keep skill metadata concise and valid YAML. Move substantial conditional modes
 and examples into focused same-skill references with explicit loading guidance.
 A reference file must ship with the bundle or be a declared workspace adapter.
 
+Shared skills must work without prior local campaigns or personal context.
+Keep real local client/project names, private links, personal paths and one-run
+results out of reusable instructions; use clearly fictional, varied examples
+and parameterized paths. Examples never become default brands, claims, prices,
+currencies, cast or markets. Reuse only assets and facts explicitly selected
+for the current campaign. A market-specific pack is opt-in for the requested
+market, not a default inferred from the operator or installed skills.
+
 When a skill is added, renamed, removed or its description changes, update the
 README skill entry and catalog together. Each skill appears once. Preserve
 source-specific lock hash semantics; bundle integrity also covers scripts,
@@ -171,13 +179,15 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   usable real asset exists or a stylized substitute is requested. See
   [Element identification](.agents/contracts/element-identification.md).
 - When the user cites real brand video ads or other footage for visual or motion
-  inspiration, obtain media the provider can actually watch before borrowing
-  grammar. Prefer a public HTTPS URL that `seed_understand` already accepts;
-  download locally and `media_upload` only when the link is a page/platform URL,
-  auth-gated, or otherwise unusable as a video input. Transcripts, scripts, and
-  article write-ups are not a substitute for the video. Route full reverse-
-  engineering through `template-factory`; lighter analysis may use
-  `ark-mcp` (`seed_understand`) alone. See
+  inspiration, obtain decodable local media and prefer capable native inspection
+  with timestamped evidence and local timing measurements. Use permitted MCP
+  understanding tools when capabilities are insufficient; no upload is required
+  when native inspection suffices. Audio requires actual native/tool perception
+  or documented human listening, not just ASR or a waveform. Honor privacy,
+  budget and explicit offline constraints. Transcripts and article write-ups
+  are not visual evidence. Route full reverse-engineering or quick ad structure
+  clones through `template-factory`; preserve product facts, campaign pins and
+  disclosure decisions. See
   [Routing](.agents/contracts/routing.md).
 - Elements define identity; derivative boards require current source hashes and
   explicit selection before video use. Control-only diagrams stay analysis-only

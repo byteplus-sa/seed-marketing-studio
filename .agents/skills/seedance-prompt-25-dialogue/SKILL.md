@@ -54,8 +54,10 @@ direction.
    hypothesis, not an observed failure.
 5. **Make the smallest repair.** Prefer delivery direction for delivery
    problems and a targeted note for a verified pronunciation issue. After a take
-   exists, fix only the wrong word: retake with a cue or splice that word,
-   never re-voice the whole clip. See [repairs](references/repairs.md).
+   exists, prefer a word-scoped repair: retake with a cue or splice that word.
+   Broader re-voicing needs authorization. Judge continuity by listening against
+   the agreed target, not a universal percentage or splice count. See
+   [repairs](references/repairs.md).
 6. **Keep spoken words separate from guidance.** Copy dialogue inside
    `{curly braces}`. Put accent, pronunciation and acting notes outside braces
    unless the user asks to change the spoken text.

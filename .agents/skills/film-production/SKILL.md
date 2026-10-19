@@ -69,7 +69,7 @@ between modalities.
 | Production need | Primary skill |
 | --- | --- |
 | Brief intake, directorial defaults, audio route, look intent | `brief-intake` |
-| Brand-ad / reference-video inspiration | `template-factory` for reverse-engineering; `ark-mcp` (`seed_understand`) for lighter analysis |
+| Brand-ad / reference-video inspiration | `template-factory` for native-first reverse-engineering or its quick structure-clone mode; native/local inspection with permitted MCP fallbacks for lighter analysis. Preserve product facts, campaign pins, rights and disclosure decisions |
 | Character identity asset | `seedream-character-sheet` |
 | Character sheet cleanup | `seedream-character-sheet-cleanup` |
 | Authorized face or voice asset (`asset://` Virtual Portrait) | `seedance-virtual-portrait` |

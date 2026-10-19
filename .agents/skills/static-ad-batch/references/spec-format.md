@@ -5,6 +5,15 @@ first. Paths in the spec are relative to the asset root (the spec's folder by
 default, or `--asset-root`). Font and logo paths inside the brand kit are
 relative to the kit file.
 
+Font family names are Unicode metadata, not CSS identifiers. The planner keeps
+the original family in the manifest and uses fixed `brand-headline`,
+`brand-body` and `brand-cta` CSS aliases. Family names must be nonblank,
+single-line strings of at most 240 characters. Local filenames may contain
+non-Latin characters, spaces and punctuation; URLs are percent-encoded after
+path containment checks. Font SHA-256, license and campaign pin checks remain
+required. A localized name alone does not establish glyph coverage; inspect
+the rendered copy with the selected font.
+
 ## Fields
 
 | Field | Required | Rule |

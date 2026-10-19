@@ -17,7 +17,7 @@ against current tool or model evidence before a paid submission.
 | Language is on the list | Native audio with delivery direction. No annotation needed |
 | Language is on the list, accent or variety matters | Name the variety and register; treat accent as a request to verify by listening |
 | Language is not on the list (for example Hindi, Bengali, Swahili) | Pick one: pronunciation annotation in the prompt; a supported spoken language with subtitles in the target language; or, only if the user requests lip-synced audio, an audio-first track |
-| Code-switching between a supported and an unsupported language | Keep the unsupported words short, mid-sentence and at normal volume; subtitle the rest |
+| Code-switching between a supported and an unsupported language | Preserve approved words and switching pattern; flag support uncertainty and agree on a route without silently moving, shortening or replacing words |
 | A market pack exists for the language | Compose with it for language-specific lessons |
 
 Record the chosen route in the shot notes so reviewers know a language

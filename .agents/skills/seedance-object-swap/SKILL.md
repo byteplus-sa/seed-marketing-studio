@@ -86,9 +86,11 @@ parameters, the post-audio route, and the test-ladder rung.
    Several views of one target state that the output contains only one.
 5. **No baked text.** A label printed on a product is part of the product;
    captions, taglines, CTAs and end cards are added in post.
-6. **Test ladder**: a 480p probe of the hardest contact window, then the full
-   clip at 480p, then the final resolution. Each rung is a separate reviewed
-   request.
+6. **Test ladder**: follow the workspace draft policy with currently supported
+   parameters. Propose a contact-window probe for a difficulty in the current
+   source or result, with user approval for its selected span. Use native Draft
+   and promotion only when the live schema supports the route; otherwise use a
+   new reviewed request. Re-check final audio and picture. Prior runs are not gates.
 
 ## Route and parameters
 
@@ -101,17 +103,26 @@ Seedance 2.5 edit, through `seedance_2_5_create_task`:
 - `omni_reference_task_type`: `edit`. Seedance 2.5 does not accept
   `edit_video`. Confirm the accepted value from current capability evidence for
   the case at hand.
-- Omit `ratio` and `duration`; both lock to the source. Use an 8n+1 frame input
-  (for example 121 at 24 fps) so the output keeps the source frame count.
+- Preserve source ratio and duration; omit those parameters when the current
+  edit schema locks them to the source.
 - `generate_audio: false`, `watermark: false`, `resolution` per ladder rung.
 
 Resolve the live tool schema and model ID before writing parameters.
 
+Preserve the original source and its full timeline. Do not impose an 8n+1 trim,
+whole-second rounding, padding or retiming without current capability evidence
+and user approval for that specific adaptation. Explain any required change before
+submission. Keep an approved adaptation as a separate derivative with source
+span, source and derivative hashes, and timing/audio consequences recorded;
+derive the muted picture and saved audio from the same span. Measure returned
+media rather than treating a frame-count recipe as a guarantee.
+
 ## Procedure
 
 1. **Route check.** One element class changes; everything else is kept.
-2. **Source intake.** Inspect, record rights, write the muted master and save the
-   audio ([video-to-video inputs](../../contracts/video-to-video-inputs.md)).
+2. **Source intake.** Inspect, record rights, and specify the muted derivative
+   and saved audio without altering the original source
+   ([video-to-video inputs](../../contracts/video-to-video-inputs.md)).
 3. **Facts.** Copy descriptors, counts and contact windows from the subject map,
    or inspect the source and record them. Uncertain facts stay open questions.
 4. **Target.** Confirm the approved element and hash. For a character, register
@@ -145,6 +156,8 @@ retry.
 
 - [ ] One element class changes; recast and restyle requests routed elsewhere
 - [ ] Source inspected and hashed; rights decision recorded
+- [ ] Original source preserved; any timing adaptation has current capability
+      evidence, user approval and a separate derivative record
 - [ ] Muted master bound as `@Video 1`; source audio saved; `generate_audio: false`
 - [ ] Original identified by observable descriptors and first appearance;
       hands named by anatomy and frame side ("her right hand, frame-left")

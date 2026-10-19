@@ -4,17 +4,18 @@
     {
       "id": 1,
       "prompt": "Turn our 10-second office comedy clip into 2D anime. Same two coworkers, same gags, same camera. We own the footage.",
-      "expected_output": "A restyle package with the cel-anime-2d fragment, a content inventory for both coworkers by observable descriptors, an environment image of the same office drawn in the style and bound as the environment reference, the muted master as @Video 1 trimmed to an 8n+1 frame count with generate_audio false and an original-audio post route, and a 480p probe of the hardest beat first.",
+      "expected_output": "A same-office cel-anime-2d restyle package preserving both coworkers, layout and source timing, with a muted derivative, original-audio post route and a reviewed draft. An environment image is conditional, not required.",
       "files": [],
       "assertions": [
         "The edit scope redraws every person, object and surface in the style and states exactly two people.",
         "Each coworker keeps identity cues (hair shape, wardrobe colours) described from the source, not by name.",
         "@Video 1 is the muted master, generate_audio is false and the saved source audio is the recorded post-audio route.",
-        "An environment image of the same office, drawn in the style, is generated from a text description and bound with an Environment Reference Role; the prompt names no different location and does not rely on 'same layout' wording to restyle the background.",
-        "The package checks that the environment image reads as the same office as the source and holds no stray objects, and states that the background must stay the same place.",
-        "The source is trimmed to an 8n+1 frame count (for example 241 frames at 24 fps for 10 s) before the edit.",
+        "The prompt explicitly applies the medium to the office background as well as the people without requiring an environment image.",
+        "Any proposed environment image is justified by this input, request or an observed failure, requires approval, and preserves the source place and geometry.",
+        "The original is preserved; no 8n+1 trim or whole-second rounding is imposed without current capability evidence and approval.",
         "No studio, artist or franchise is named.",
-        "The first request is a 480p probe."
+        "Follows the workspace draft policy with currently supported parameters; does not require a short probe when no actual difficulty is identified in the current input or result.",
+        "Any proposed short 480p probe targets the hardest window of that identified difficulty and requires user approval for its selected span before preparation or submission; without approval, preserves the full timeline and leaves the probe pending."
       ]
     },
     {
@@ -43,13 +44,36 @@
     {
       "id": 4,
       "prompt": "Restyle my 5-second city-street clip as watercolor, but just with a prompt. I don't want to upload any images.",
-      "expected_output": "An honest scoping answer: a same-place background restyle from prompt words alone is not reliable (the street tends to stay photographic or the place changes), so the skill offers an environment image it generates from a text description of the same street, which needs no user upload, or a subject-only restyle; it never names a different location, and the first request is a 480p probe.",
+      "expected_output": "A words-only whole-frame watercolor prompt preserving the same street, layout, content and timing, with uncertainty about output quality stated without declaring the route incapable.",
       "files": [],
       "assertions": [
-        "The response states that a words-only same-place background restyle is unreliable before writing a prompt.",
-        "It offers a text-generated environment image of the same street, noting that the user does not have to upload anything, or a subject-only restyle.",
+        "The response honors the no-image request and writes a whole-frame watercolor prompt, including the background.",
+        "It does not generate or bind an environment image, narrow the edit to the subject, or claim words cannot restyle backgrounds.",
         "No different location is named in any prompt.",
-        "The watercolor medium on this route is flagged as untested, and the first request is a 480p probe."
+        "It proposes review of actual medium coverage on a supported draft without importing a previous production's result."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Our approved restyle draft left the warehouse rafters photographic. We now authorize a same-place environment image to fix that, but keep the moving camera, product positions and original 237-frame source intact.",
+      "expected_output": "An evidence-scoped repair with an approved same-place image role, source-owned geometry and timing, and no automatic frame adaptation.",
+      "files": [],
+      "assertions": [
+        "Limits the diagnosis to the observed rafters and proposes one controlled change.",
+        "Uses the environment image only for the same warehouse in the target medium, not its people, extra props or a new layout.",
+        "Preserves moving-camera parallax, source positions and the 237-frame source; does not trim to 233 or pad to 241 by default.",
+        "Records the image approval and hashes before caller submission; does not promise exact returned frame count."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Current endpoint evidence requires an 8n+1 input for our selected edit route. The original is 240 frames; I have not approved dropping frames. Can you prepare the prompt?",
+      "expected_output": "A useful prompt draft plus an unresolved adaptation decision, preserving the source.",
+      "files": [],
+      "assertions": [
+        "Does not trim, pad, retime or overwrite the original merely because the endpoint requirement is known.",
+        "Explains adaptation choices and requests approval for a separate derivative with timing and audio consequences recorded.",
+        "Keeps the prompt draft available while marking submission blocked on the input decision."
       ]
     }
   ]

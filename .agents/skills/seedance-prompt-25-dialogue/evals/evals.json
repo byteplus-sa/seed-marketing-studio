@@ -33,8 +33,8 @@
       "expectations": [
         "Verifies with a transcript diff and listening.",
         "Proposes a retake with one cue or a word-only splice.",
-        "Refuses to re-voice the whole clip.",
-        "Mentions the roughly 10 percent tempo and pitch limit for splices."
+        "Keeps the repair word-scoped unless the user authorizes a broader change.",
+        "Judges continuity by actual listening against the agreed voice and delivery target, not a universal percentage or splice count."
       ]
     },
     {
@@ -46,6 +46,30 @@
         "Preserves the locked line as the selected text.",
         "Shows any proposed alternative separately as a draft.",
         "Offers delivery or annotation changes first."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "We have four proposed word splices for this authorized spokesperson ad. A pitch report says one is 12 percent higher and another is 8 percent higher. No one has listened yet. Can we accept them?",
+      "expected_output": "An unresolved listening review, not automatic acceptance or rejection based on count or percentages.",
+      "files": [],
+      "expectations": [
+        "Does not accept or reject a splice solely because there are four or because a pitch difference is above or below 10 percent.",
+        "Requests or performs actual listening at normal speed in context against the agreed speaker and delivery target.",
+        "Checks pronunciation, timbre, cadence, splice boundaries and visible mouth timing; measurements are supporting evidence.",
+        "Leaves approval unresolved without perceptual evidence."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Our native reviewer heard the wrong vowel in the final product name. The ASR transcript is correct. Keep the approved words and regional accent. We have not authorized a new voice or a full-line replacement.",
+      "expected_output": "An evidence-backed pronunciation repair preserving the approved text, accent and repair scope.",
+      "files": [],
+      "expectations": [
+        "Uses the listening report rather than treating the matching transcript as proof of correct pronunciation.",
+        "Keeps the product name and regional accent locked, with any pronunciation cue outside braces.",
+        "Proposes a word-scoped repair and verifies its tail and continuity rather than imposing a fixed silence duration.",
+        "Does not replace the line or voice without authorization."
       ]
     }
   ]

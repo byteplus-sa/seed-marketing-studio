@@ -1,3 +1,4 @@
+import ast
 import hashlib
 import re
 import unittest
@@ -90,10 +91,27 @@ def offenders(pattern, allowed_dirs=(), allowed_files=frozenset()):
     for path in generic_files():
         if path in allowed_files or any(directory in path.parents for directory in allowed_dirs):
             continue
+        language_lines = set()
+        if path == SKILLS / "showcase-html" / "scripts" / "portfolio.py":
+            language_lines = language_label_lines(path.read_text())
         for number, line in enumerate(path.read_text(errors="ignore").splitlines(), 1):
+            if pattern is BIASED_TERMS and number in language_lines:
+                continue
             if pattern.search(line):
                 found.append(f"{path.relative_to(ROOT)}:{number}")
     return found
+
+
+def language_label_lines(text):
+    for node in ast.parse(text).body:
+        if (
+            isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "LANGUAGE_LABELS"
+                    for target in node.targets)
+            and isinstance(node.value, ast.Dict)
+        ):
+            return set(range(node.lineno, (node.end_lineno or node.lineno) + 1))
+    return set()
 
 
 @cache
@@ -128,6 +146,12 @@ def restricted_offenders():
 
 
 class MarketNeutralityTests(unittest.TestCase):
+    def test_language_label_exception_is_limited_to_the_dictionary(self):
+        text = 'LANGUAGE_LABELS = {"tl": "Filipino"}\ndefault_market = "Filipino"\n'
+        self.assertEqual(language_label_lines(text), {1})
+        self.assertEqual(language_label_lines('LANGUAGE_LABELS = choose_market()\n'), set())
+        self.assertEqual(language_label_lines('OTHER_LABELS = {"tl": "Filipino"}\n'), set())
+
     def test_skills_and_contracts_do_not_assume_a_market(self):
         self.assertEqual(offenders(BIASED_TERMS, EXAMPLE_SERIES, LANGUAGE_DATA), [])
 

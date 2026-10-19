@@ -49,11 +49,10 @@ inputs stay unresolved rather than invented.
 - Music-video craft and beat-sync practice — format taxonomy, song-section
   energy mapping, and section-relative cut density (sources below).
 - Genre conventions — per-genre visual recipes, vertical-vs-landscape norms.
-- **Field-tested learnings from local productions (2026-08 to 2026-10):** the
-  timestamped lyric timeline (section 3b), native audio re-performance (3a),
-  hybrid audio mode (3) and ASR lyric verification (3c) came from takes where
-  large `{...}` blocks dropped lyrics; the native-audio leak, shot-merge and
-  assembly rules came from later ambient and multi-shot runs.
+
+Treat recipes as creative guidance, not model capability evidence. Verify audio
+reference roles, parameter combinations and duration limits for the current
+request. Keep take-specific observations in the owning campaign's review record.
 
 Key third-party sources (accessed 2026-08-20):
 [AI music-video production workflows](https://www.creativeainews.com/articles/how-to-make-ai-music-video-2026/),
@@ -150,7 +149,9 @@ API rules or requirements for every song. Preserve a requested continuous take.
 
 ### 3. Set the audio contract
 
-Choose one of three audio modes; state it explicitly.
+Choose the audio intent from the current request, then verify the selected
+tool/model supports its reference roles and parameter combination. State the
+chosen mode and any unresolved capability requirement explicitly.
 
 **Native audio (default).** Seedance co-generates audio and video in one pass.
 Use the bracket syntax in the Audio slot and inside `{...}` for sung or spoken
@@ -171,19 +172,26 @@ Keep only the singer's voice and the room ambience.
 No audio at all.
 ```
 
-A "no music" or "ambience only" line does **not** reliably hold: native audio
-has added score, chants and stray speech to most ambient-only clips. When a
-clip must sit under an existing master, or a section is ambient-only or
-score-driven, set `generate_audio: false` (or leave the provider master
-untouched) and build the bed or score in post with Seed Audio or the supplied
-master. Say in the package that a post bed is not frame-synced. On a draft that
-is promoted to a final, re-check the final's audio; it is not byte-identical to
-the draft's.
+Inspect native audio for unwanted music, speech or missing ambience; wording is
+direction, not a guarantee. For exact supplied-master delivery, prefer silent
+picture when supported and add the authorized master in post. Native ambience
+or a separately created bed are alternatives chosen from the brief and actual
+review, not rejected because of another production's takes. State whether a bed
+is general ambience or needs event-level sync. Re-check final audio and picture
+even when a draft passed.
 
-**Audio-first (only when the user requests lip-synced vocals).** Generate the
-original music and vocal track with Seed Audio first, verify
-`audio_duration ≤ video_duration`, then pass it as a reference and bind it as
-the timing authority:
+**Supplied-master timing.** When the user asks to follow an existing authorized
+song or requests lip-synced vocals, reuse that master. Creating a separate vocal
+track needs explicit scope; do not replace an existing master by default. Check
+the selected segment's duration and phrase timing against the planned picture.
+Use direct `reference_audio` / `@Audio N` when current capability evidence
+supports it. A black-sync video carrier is an optional alternative only when
+its audio-conditioning role is supported and selected for this request; it is
+not required by an older take. For edits, keep the source scene as `@Video 1`,
+not a timing carrier. If the needed binding or mixed roles are unverified, return
+the treatment with that requirement unresolved.
+
+Example for a verified direct audio binding:
 
 ```
 @Audio 1 is the exact soundtrack and timing authority. Preserve its music,
@@ -193,39 +201,36 @@ Follow the spoken and musical beats in @Audio 1.
 Match <performer>'s visible mouth only to <performer>'s voice in @Audio 1.
 ```
 
-The exact sung lines must appear in the Seed Audio prompt and in the Seedance
-prompt inside `{...}` — no paraphrasing, no reordering. If one changes, both
-change. `@Audio N` conditions the timing and lip-sync; the generated file may
-not carry the master as a usable track, so re-mux the original master onto the
-approved video in assembly.
+Keep approved sung lines verbatim in `{...}`. When a separate vocal track is
+authorized, its prompt and the video prompt use the same words. Missing lyrics
+stay unresolved. A timing reference does not guarantee copied audio or exact
+lip-sync; preserve the original master and mux it onto reviewed picture for
+exact soundtrack fidelity.
 
-**Hybrid audio (reference + native generation).** When you need both lip-sync
-to a specific track AND a native audio output, combine the two: pass the
-audio master as `reference_audio` (`@Audio 1`) and set `generate_audio: true`.
-The model uses the reference for timing and lip-sync, then generates a native
-audio track that follows (but does not copy) the reference. Lip-sync timing
-is good; audio fidelity is approximate; lyric coverage may drop (use the
-timestamped lyric timeline in section 3b to mitigate). For exact audio
-fidelity, use `generate_audio: false` and re-mux the master.
+**Hybrid audio (reference + native generation).** Use a timing reference with
+`generate_audio: true` only when that combination is supported and requested.
+Review both the generated soundtrack and visible performance against the
+master; do not promise lyric coverage, timing or fidelity. For exact delivery,
+retain the authorized master for post.
 
-### 3a. Native audio caveat: re-performance, not reproduction
+### 3a. Generated audio is a candidate
 
-When `generate_audio` is enabled with a reference audio, the model
-**re-performs** the track — it does not copy the reference bit-for-bit.
-Treat the generated soundtrack as a candidate to inspect, not an exact copy.
-Retain the supplied master for deterministic assembly when exact fidelity matters.
-These observations are historical local evidence, not a capability guarantee.
+Do not infer audio fidelity from the prompt, a reference binding or provider
+success. Inspect the returned streams and listen. Keep the supplied master
+unchanged for deterministic assembly when exact fidelity matters; replacing the
+soundtrack does not by itself repair visible mouth timing.
 
 ### 3b. Timestamped lyric timeline (for performance videos with lip-sync)
 
-When the performer must lip-sync the full verse and complete lyric coverage
-is critical, **do NOT** group all lyrics into one or two large `{...}` blocks.
-Instead, bind each lyric line to its own timestamped slot:
+When complete lyric coverage and timed performance are requested, per-line cues
+can make the intended timing explicit. Use verified intervals from the current
+audio, or label an untimed draft. This hypothetical format example is not a
+measured performance or a guarantee against dropped lyrics:
 
 ```
-[2-4 seconds] { I used to pray before I went to bed, }
-[5-7 seconds] { back when I was like eleven or ten. }
-[7-8 seconds] { I don't remember the facts, }
+[2-4 seconds] { We fold the daylight into gold, }
+[5-7 seconds] { and let the quiet story unfold. }
+[7-8 seconds] { The morning starts again. }
 ```
 
 Add an explicit mandate:
@@ -236,7 +241,7 @@ No line may be skipped, shortened, mumbled, or reordered.
 ```
 
 **When to use this technique:**
-- Rap or fast-paced vocal delivery (high dropout risk)
+- Rap or fast-paced vocal delivery where individual phrases need timing cues
 - Any performance video where complete lyric coverage is a hard requirement
 - When the audio reference has dense, continuous vocals with no long pauses
 
@@ -262,49 +267,50 @@ No line may be skipped, shortened, mumbled, or reordered.
    `[X-Ys] { line }` slots. Untimed drafts may use ordered lyric cues; do not invent
    measured timings without the audio.
 
-Example ASR-to-timeline conversion:
+Hypothetical ASR-to-timeline conversion:
 
 ```
 # ASR returns word-level timestamps:
-"ever" start=17170ms  "really" start=17530ms  "took" start=17810ms
-"charge" start=18170ms  "like" start=18530ms  "a" start=18690ms
-"wiring" start=18890ms  "fee" start=19450ms end=19730ms
+"we" start=17170ms  "carry" start=17530ms  "the" start=17810ms
+"morning" start=18170ms  "home" start=18890ms end=19730ms
 
 # Verified phrase interval: 17.170–19.730s; retain as evidence.
 # Separate simplified prompt window:
-[17-20 seconds] { ever really took charge like a wiring fee, }
+[17-20 seconds] { we carry the morning home, }
 ```
 
 ### 3c. Post-generation lyric verification (for audio-first / native audio)
 
-After generation, verify that the output audio contains all expected lyrics:
+The caller verifies actual audio and visible performance after generation:
 
-1. Extract the audio track from the generated video (`ffmpeg -vn`)
-2. Run speech recognition (ASR) on the extracted audio
-3. Compare the transcription against the expected lyrics
-4. Flag any missing, reordered, or garbled lines
-5. If lines are missing: use the timestamped lyric timeline technique
-   (section 3b) and regenerate, OR re-mux the original master if exact
-   fidelity is needed
+1. Inspect returned streams; extract audio when present (`ffmpeg -vn`). A
+   requested silent output has no generated lyric track to transcribe.
+2. Use ASR as a transcript aid and compare it against approved lyrics.
+3. Listen to verify the words, delivery and musical continuity. ASR alone
+   cannot certify these or lip-sync.
+4. Review visible mouth timing against the intended master during every
+   designated performance phrase, including the end.
+5. If lyrics or timing fail, record the affected phrase and propose a scoped
+   repair. Master muxing restores soundtrack fidelity only; a mouth mismatch
+   needs timing repair or a reviewed retake within authorization.
 
 This step is especially important for:
 - Rap and fast vocal delivery
-- Long verses (10+ lines)
-- Native audio generation (re-performance risk)
+- Long verses
+- Native audio generation
 
 ### 3d. Rap and fast vocal delivery
 
-Rap is the highest-risk vocal mode for lyric dropout:
-- Dense, continuous delivery with few pauses
-- The model can skip bars without creating obvious silence
-- ASR verification (section 3c) is essential after generation
+Dense delivery can make missing words or timing drift harder to notice. Review
+the actual phrases; do not rank risk or prescribe repairs from genre alone.
 
 Specific guidance for rap:
 - Use per-line timing when complete timed coverage is requested and audio evidence
   exists; otherwise supply ordered lyric cues and mark timing unresolved
 - Set the "no line may be skipped, shortened, mumbled, or reordered" mandate
-- Run ASR on the output to verify coverage
-- Consider splitting very long verses (>15 lines) into multiple clips
+- Compare ASR with listening and visual mouth timing to verify coverage
+- Split a verse only when its measured duration, performance or a reviewed
+  failure calls for separate clips; preserve an approved continuous take
 - Include a delivery cue: "jaw opening fully on vowels, lips stay in frame
   throughout"
 
@@ -314,15 +320,12 @@ The beat grid gives the timing; emotion and story decide what lands on it.
 Timestamps are a **time budget, not frame-accurate** — direct the beats in the
 prompt, then snap the final cut to the audio master in post.
 
-**Cut density has a floor inside one generation.** Seedance merges shots
-shorter than about 0.8 s, so a kick-and-snare staccato, blink cuts, intercuts
-and vision flashes are built in the edit from separately generated clips, not
-requested inside one prompt. Inside a generation keep each shot at least about
-1 s with one action. A flat clip usually has one setup and no stated camera
-move; the cinematic bar is a 30 s section built from about six 5 s generations
-of two or three shots each, every shot with a lens intent, a camera move, a
-motivated named light source, depth layers and one striking image. A single
-30 s pass with nine or more beats reads as stock footage.
+Build frame-exact rapid cuts in post from sufficient coverage. In-prompt shot
+timing is approximate; do not infer a universal minimum shot length, generation
+count or quality ceiling from earlier takes. Choose coverage and clip durations
+from the current song, requested continuous takes, campaign placement and
+supported limits. Give each shot a readable action, lens intent and motivated
+light; camera movement or stillness should serve the intended effect.
 
 In-prompt, name each audio event, the visual event it triggers, and their
 relationship (simultaneous, leads, or trails):
@@ -344,27 +347,25 @@ remain valid. Re-check mouth timing for any lip-synced performance.
 
 ### 5. Right-size the scenes
 
-Generate per section at its natural duration (4–30s), not per 30-second block.
+Plan each section at its natural duration within current supported limits,
+not a fixed generation block size.
 One song section, one primary event, one visible end state per generation.
-Chain approved sections via `return_last_frame` / `first_frame` with a shared
-reference bundle and assemble in post. Reserve a 30s single-pass for a genuine
-continuous take (one unbroken performance) where seamless motion across section
-boundaries matters more than per-scene iteration. Native extension rejects a
-source clip that shows a realistic performer unless that performer is an
-`asset://` Virtual Portrait or authorized asset; otherwise continue with a new
-generation from the same element references.
+Chain approved sections through supported frame/reference modes with a shared
+reference bundle, or assemble in post. Choose a continuous take when requested
+or justified by performance continuity. Verify extension and identity-asset
+requirements before proposing that route; retain rights and consent records.
 
 When the user asks for a lyric video, keep the imagery simple, text-free and
 legible, with a stated calm zone (for example the lower third or a dim sky)
 where type will sit. The words, their pops on the beat and the kinetic timing
 are built in post from ASR word times; nothing is lettered by the model.
 
-**Assembly handoff.** Cut the section clips to exact whole-frame lengths at the
-delivery frame rate as lossless intermediates, pad or trim each clip's audio to
-its picture, join with the concat demuxer, and encode once at the end with the
-master muxed over the full cut. The concat filter needs `setsar=1` on every
-input. Measure durations from the video stream, not the container. Keep the
-original Seedance colours unless a grade is requested.
+**Assembly handoff.** Preserve original picture and audio masters. Use derived
+clips at the delivery frame rate for approved cuts; record their source spans
+and any authorized padding, trim or retiming. Measure video and audio stream
+durations, check sync against audible events, and mux the authorized master
+over the reviewed cut. Choose compatible intermediates and an assembly method
+for the actual streams. Keep the approved colours unless a grade is requested.
 
 ### 6. Direct the performer
 
@@ -419,14 +420,16 @@ Do not stack a second grade or camera treatment on top of a genre recipe.
 
 ## Rights and safety
 
-- Use **original music only**. Never reproduce a real artist's copyrighted song
-  in a prompt or as a reference; never write artist-name or copycat prompts.
+- Use original or explicitly authorized music. Record permissions for the
+  current song, recording, lyrics and intended campaign use; do not infer rights
+  from a file being supplied or from a previous production. Reuse valid recorded
+  authorization within scope. Do not write artist-name or copycat prompts.
 - Voice-cloning a real, named artist's voice requires written consent from the
   artist or estate.
 - Keep `watermark: false` where the tool supports it; enable the AIGC watermark only when the
   user explicitly requests it.
-- Generate the music master with Seed Audio (or another original source) so the
-  release stays distribution-clean.
+- Preserve a supplied authorized master. Generate a new original track only
+  when requested; generation alone does not establish distribution rights.
 
 ## Exclusion rules
 
@@ -450,19 +453,18 @@ Before returning the prompt, verify:
 3. The beat contract names the audio events and their visual relationship.
 4. Restraint, repetition, counterpoint or escalation is justified by the supplied
    track/brief; no chorus, bridge or energy change is invented.
-5. The audio treatment is explicit: native brackets, `@Audio N` timing authority,
-   or hybrid — never ambiguous.
+5. The audio treatment and any timing-reference binding are explicit and
+   supported for this request; black-sync is never forced from an old take.
 6. Lip-sync lines appear verbatim in `{...}` and match the audio-first master.
 7. Dense vocal coverage uses per-line cues; required timing is verified from audio
    or explicitly unresolved. Raw evidence and simplified prompt windows stay separate.
-8. **If `generate_audio` is true:** the prompt accounts for re-performance risk
-   (section 3a) and the timestamped timeline is used when coverage is critical.
-   Ambient-only or score-under-master sections use `generate_audio: false`
-   with a post bed instead of a "no music" line.
+8. Generated sound and visible mouth timing require listening and playback.
+   Exact delivery preserves the authorized master in post; ambience routes
+   follow the request and observed output rather than an inherited workaround.
 9. Each proposed generation uses a live-supported natural duration, or is an
    explicit continuous one-take.
 10. The genre lock is a single recipe, not a mixture.
 11. The style seal is compact and does not contradict the format or genre.
-12. No shot inside one generation is shorter than about 0.8 s; faster cuts,
-    lyrics and any on-screen text are assigned to the edit.
+12. Frame-exact cuts, lyrics and overlay text are assigned to the edit without
+    imposing a universal shot-length floor or fixed generation count.
 13. The response contains the prompt, not an unrelated production workflow.
