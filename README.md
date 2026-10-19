@@ -173,7 +173,7 @@ The workspace ships **78 skills**. Leaf skills are independent; declared orchest
 | **ugc-ad-modes** | Write hooks, scripts and Seedance prompts for nine ad modes using supplied product facts, audience objections, supported claims and accurate CTAs. |
 | **ugc-motion-presets** | Turn a named UGC motion preset (Atomic, Outfit Switch, Eating Zoom, Yacht, ...) into a canonical Seedance 2.5 prompt block with reference bindings, duration, and constraint flags. |
 | **seedance-motion-design** | Write Seedance 2.5 motion-design prompts while routing exact typography and UI to deterministic post graphics and synthesized visual layers to Seedream. |
-| **seedance-effects-studio** | Orchestrator: pick one of 45 named video effects (street colossus, incline, clones, melting, world morphing, eyes in, smash and grab and more), fit your photo or clip to the effect's recipe, write the Seedance 2.5 prompt, run prompt-review and a 480p draft through ark-mcp, inspect it against the recipe's checks, and ask before any final. Twelve recipes are probed; the rest are labelled untested. |
+| **seedance-effects-studio** | Select a named effect recipe for the current source, preserve observed identity and wardrobe, and validate supported generation in the owning project's workflow. |
 | **seedance-frame-break** | Write and QA Seedance 2.5 frame-break pop-out prompts where the subject is drawn over two fixed black bars, with a locked camera, staged break-outs, a product-hero variant, failure repairs and an all-frames pixel check of bar motion and overlap. |
 | **reference-edit-rebuild** | Plans a reference edit rebuilt with your own characters, products or clothing: measured edit list, beat grid and motion inventory, varied generated shots for people-led formats or animated asset layers for product formats, a code-built type-and-effects layer, a credit budget and per-segment refinement. |
 
@@ -234,9 +234,9 @@ The workspace ships **78 skills**. Leaf skills are independent; declared orchest
 | **seedream-character-outfit** | Writes Seedream image-to-image prompts that change the outfit on an approved character sheet, with always-worn accessories, a change contract, and identity-drift QA. |
 | **seedream-location-asset** | Writes structured Seedream prompts for cinematic location assets, reusable environment sheets, day and night lighting-state locks, and same-place environment plates for video restyles. |
 | **seedream-storyboard** | Create, revise, and optionally generate production-ready cinematic storyboards—from one hero panel with alternatives to a multi-panel continuity sequence—with BytePlus Seedream. Boards are planning and review artifacts, never Seedance references. |
-| **seedream-handcrafted-3d** | Writes handcrafted stylized 3D character and material-study prompts with painterly surfaces, tactile fabrics, reference roles, and visual QA. |
+| **seedream-handcrafted-3d** | Write handcrafted painterly 3D character and wardrobe prompts from the current brief, with reusable material techniques and no historical project gallery. |
 | **seedream-product-shot** | Preset Seedream product shots (studio white, color pop, lifestyle, plinth, marketplace backgrounds) bound to the approved product, with label, brand-color and white-background QA. |
-| **seedream-woodblock-poster** | Writes engraved woodblock-style poster and art-series prompts with reference roles, distinct subjects, shared print treatment, and visual QA. |
+| **seedream-woodblock-poster** | Write engraved woodblock-style poster and series prompts for requested subjects and cultures, with optional folklore guidance and no historical project gallery. |
 
 ### Deterministic graphics
 

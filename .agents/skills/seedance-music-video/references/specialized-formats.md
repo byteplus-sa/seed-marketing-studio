@@ -20,8 +20,9 @@ mode selection and caller responsibilities.
 - **Lyric**: the type is the star, but it is added in post. The prompt asks
   for simple, text-free imagery with a stated calm zone and a background dim
   enough for type. In the edit, pop each word on its accent from ASR word
-  times, hold every word long enough to read, keep to one or two fonts, and
-  make kinetic type faster and tighter in the chorus, looser in the verses.
+  times verified by listening, hold every word long enough to read, and keep
+  to one or two fonts. Type cadence follows the actual phrase and requested
+  effect; a chorus does not automatically require faster motion.
 - **Visualizer**: no performer, no story, no lyrics; audio-reactive shapes,
   waveforms, particles, or geometry that shift with the sections.
 - **Hybrid**: state which sections carry performance and which carry the
@@ -45,7 +46,8 @@ For an unlisted format or genre:
 
 1. Identify the format's address mode (direct, indirect, or none).
 2. Define the song map: which sections carry what visual energy.
-3. Choose the audio treatment (native vs audio-first) and the beat contract.
+3. Choose native audio, supported master-timing reference or post-master
+   assembly from the request, and define the beat contract.
 4. Name the genre lock: palette, lighting, camera grammar, and motion cadence.
 5. Define the performance-to-atmosphere ratio per section.
 6. Write a format-first opening and a compact style seal.

@@ -34,20 +34,23 @@ each contact window and cut. Record each item as pass, fail or not applicable.
   halo.
 - **Everything else untouched.** Faces, wardrobe, accessories, other props,
   background, camera, cuts and mouth movement match `@Video 1`.
-- **Technical.** The output decodes cleanly and has no audio stream. An 8n+1
-  frame input returns the same frame count; any other input lands within about
-  0.3 s of the source length. Check the frame edges for black side bars the
-  source did not have.
+- **Technical.** The silent output decodes cleanly and has no audio stream.
+  Measure duration, frame timestamps, cut boundaries and playback speed against
+  the approved source span. No 8n+1 frame guarantee or blanket 0.3 s tolerance
+  replaces this check. Report mismatches against the agreed target; do not
+  silently trim or retime. Check for unintended black side bars.
 
 ## Audio checks after mux
 
 Apply after the post-audio route is muxed, following the
 [video-to-video inputs contract](../../../contracts/video-to-video-inputs.md#post-audio).
 
-- The final duration equals the picture duration; padding or trim is recorded.
+- The final duration matches the agreed picture timeline; any authorized
+  padding or trim is recorded on a derivative, with originals preserved.
 - Two or three sync points (set-downs, hits, plosives) land on the picture.
-- On-screen speech stays on the mouths. A visible offset routes to the
-  re-voiced route or a new take.
+- On-screen speech stays on the mouths. A visible offset needs a scoped timing
+  repair or reviewed take; re-voicing requires authorization and does not by
+  itself repair visible mouth timing.
 - Listen in full; waveforms and loudness readings do not replace listening.
 
 ## Failures and repairs

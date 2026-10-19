@@ -28,21 +28,24 @@ Record each item as pass, fail or not applicable.
   surfaces show abstract shapes.
 - **Same place.** The background reads as the source's own place in the new
   medium; no different city, landscape or interior has been substituted.
-- **Technical.** Clean decode, no audio stream. Route A returns the source
-  frame count for an 8n+1 input (otherwise within about 0.3 s); Route B equals
-  the requested whole seconds. Check the frame edges for black side bars the
-  source did not have.
+- **Technical.** Clean decode and no audio stream for the silent route. Compare
+  actual duration, frame timestamps, playback speed and cut boundaries with the
+  approved source span. Do not assume an 8n+1 frame guarantee or a blanket
+  duration tolerance. A mismatch needs review against the agreed target, not
+  an automatic trim or retime. Check for unintended black side bars.
 
 ## Audio checks after mux
 
 Apply after the post-audio route is muxed, following the
 [video-to-video inputs contract](../../../contracts/video-to-video-inputs.md#post-audio).
 
-- The final duration equals the picture; padding or trim is recorded.
+- The final duration matches the agreed picture timeline; any authorized
+  padding or trim is recorded on a derivative, with originals preserved.
 - Two or three sync points land on the picture.
-- On-screen speech stays on the redrawn mouths. Simplified mouths in drawn
-  styles tolerate less precision; a visible offset still routes to the
-  re-voiced route or a new take.
+- Listen in full and inspect on-screen speech against the redrawn mouths.
+  Judge sync against the agreed target, not assumed tolerance for a drawn
+  style. Propose a scoped timing repair or new take for visible drift;
+  re-voicing requires authorization and is not by itself a lip-sync fix.
 
 ## Failures and repairs
 
@@ -50,8 +53,8 @@ Change one variable per retry: wording, style reference, anchor or route.
 
 | Symptom | Likely cause | Repair |
 | --- | --- | --- |
-| Output stays photographic | Route A keeps the source pixels | Try Route B with the same style block |
-| Subject redrawn but street, plant, table and sky stay photographic | No environment image of the same place is bound | Make an empty environment image of the same place in the target medium and use "Replace the scene with ... Refer to @Image 1 for the environment" (Route A), or use Route B with the same image |
+| Output stays photographic | Incomplete medium coverage in this output | Check the medium lock and conflicting references; consider a supported alternative route after review |
+| Subject redrawn but requested background surfaces stay photographic | Wording, references or route may be contributing | Name the missed surfaces; optionally propose an approved same-place environment image or supported route change. Honor a no-image request |
 | The scene moved to a different place (city became sea) | The prompt named a new location, or the environment image shows another place | Describe the source's own place in the environment image and the prompt; name no different location unless the user asked for one |
 | Extra chair, ashtray or cup appears | The environment image holds objects the shot lacks | Name each in the Environment Reference Role as not to be used; remove them from the image |
 | Hair or face colour changes toward a style frame | A style frame carries a different look | Say the source owns identity and keep hair colour in the scope; prefer an environment image to person-bearing frames |

@@ -154,6 +154,14 @@ Keep skill metadata concise and valid YAML. Move substantial conditional modes
 and examples into focused same-skill references with explicit loading guidance.
 A reference file must ship with the bundle or be a declared workspace adapter.
 
+Shared skills must work without prior local campaigns or personal context.
+Keep real local client/project names, private links, personal paths and one-run
+results out of reusable instructions; use clearly fictional, varied examples
+and parameterized paths. Examples never become default brands, claims, prices,
+currencies, cast or markets. Reuse only assets and facts explicitly selected
+for the current campaign. A market-specific pack is opt-in for the requested
+market, not a default inferred from the operator or installed skills.
+
 When a skill is added, renamed, removed or its description changes, update the
 README skill entry and catalog together. Each skill appears once. Preserve
 source-specific lock hash semantics; bundle integrity also covers scripts,

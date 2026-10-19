@@ -12,6 +12,7 @@ from dataclasses import dataclass, replace
 from itertools import pairwise
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 SCHEMA_VERSION = 1
 DEFAULT_MAX_CHARS = 32
@@ -52,10 +53,7 @@ SIZE_PATTERN = re.compile(r"^([1-9]\d{0,4})x([1-9]\d{0,4})$")
 RECT_PATTERN = re.compile(r"^(\d{1,5}),(\d{1,5}),([1-9]\d{0,4}),([1-9]\d{0,4})$")
 RATIO_PATTERN = re.compile(r"^([1-9]\d*):([1-9]\d*)$")
 COLOR_PATTERN = re.compile(r"^#[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?$")
-FONT_FAMILY_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _-]{0,63}$")
-FONT_SRC_PATTERN = re.compile(
-    r"^(?!/)(?!.*\.\.)[A-Za-z0-9._/-]+\.(?:woff2|woff|ttf|otf)$"
-)
+FONT_SUFFIXES = {".woff2", ".woff", ".ttf", ".otf"}
 COMPOSITION_ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 WIDE_FACTOR = 1.0
 NARROW_FACTOR = 0.55
@@ -751,6 +749,17 @@ def composition_folder(text: str) -> Path:
 
 
 def check_font_file(studio: Path, source: str) -> None:
+    relative = Path(source)
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or any(character in source for character in "\\:")
+        or any(unicodedata.category(character).startswith("C") for character in source)
+        or relative.suffix.lower() not in FONT_SUFFIXES
+    ):
+        raise CaptionError(
+            "font source must be a relative woff2, woff, ttf or otf path inside the Studio project"
+        )
     path = studio / source
     if path.is_symlink():
         raise CaptionError(f"font source {source} must be a regular file, not a symlink")
@@ -765,13 +774,18 @@ def check_font_file(studio: Path, source: str) -> None:
 def resolve_typography(
     arguments: argparse.Namespace, layout: Layout, studio: Path
 ) -> Typography:
-    if not FONT_FAMILY_PATTERN.match(arguments.font_family):
+    family = arguments.font_family
+    if (
+        not family.strip()
+        or len(family) > 240
+        or not all(
+            character in " _-.'()"
+            or unicodedata.category(character)[0] in {"L", "M", "N"}
+            for character in family
+        )
+    ):
         raise CaptionError(f"invalid font family {arguments.font_family!r}")
     if arguments.font_src is not None:
-        if not FONT_SRC_PATTERN.match(arguments.font_src):
-            raise CaptionError(
-                "font source must be a relative woff2, woff, ttf or otf path inside the Studio project"
-            )
         check_font_file(studio, arguments.font_src)
     for color in (arguments.text_color, arguments.box_color):
         if not COLOR_PATTERN.match(color):
@@ -824,6 +838,16 @@ def seconds_text(milliseconds: int) -> str:
     return f"{milliseconds / 1000:.3f}".rstrip("0").rstrip(".")
 
 
+def css_string(value: str) -> str:
+    escaped = "".join(
+        f"\\{ord(character):x} "
+        if character in '\\\"<>&' or ord(character) < 32 or ord(character) == 127
+        else character
+        for character in value
+    )
+    return f'"{escaped}"'
+
+
 def render_composition(
     cues: list[Cue],
     language: str,
@@ -837,8 +861,10 @@ def render_composition(
         if typography.anchor == "bottom"
         else f"top: {layout.y}px;"
     )
+    family = css_string(typography.family)
     font_face = (
-        f'      @font-face {{ font-family: "{typography.family}"; src: url("{typography.src}"); }}\n'
+        f"      @font-face {{ font-family: {family}; "
+        f"src: url({css_string(quote(typography.src, safe='/'))}); }}\n"
         if typography.src
         else ""
     )
@@ -859,7 +885,7 @@ def render_composition(
       <style>
 {font_face}      #root {{ position: absolute; inset: 0; }}
       .cue {{ position: absolute; left: {layout.x}px; width: {layout.safe_width}px; {vertical} display: flex; justify-content: center; text-align: center; }}
-      .cue span {{ font-family: "{typography.family}", sans-serif; font-size: {typography.size_px}px; line-height: {LINE_HEIGHT}; color: {typography.color}; background: {typography.box_color}; padding: 0.12em 0.4em; border-radius: 0.2em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }}
+      .cue span {{ font-family: {family}, sans-serif; font-size: {typography.size_px}px; line-height: {LINE_HEIGHT}; color: {typography.color}; background: {typography.box_color}; padding: 0.12em 0.4em; border-radius: 0.2em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }}
       </style>
       <div id="root" data-composition-id="{composition_id}" data-width="{layout.width}" data-height="{layout.height}">
 {chr(10).join(blocks)}

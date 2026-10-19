@@ -59,12 +59,9 @@ print treatment for a poster about another tradition.
   commercial poster unless the user supplies them and confirms the right to
   use them.
 
-## Worked example
+## Series composition
 
-The bundled [example series](../examples/README.md) applies this recipe to
-six creatures from one folklore tradition. Its prompts state each body plan
-before ornament, keep a horse-headed figure explicitly bipedal with human
-arms, keep a connected shapeshifter distinct from a creature with separated
-halves, and vary the motif per subject (smoke and roots, wings and sky, coils
-and waves). Treat those descriptors as one interpretation of one tradition,
-not as defaults for other subjects.
+State each body plan before ornament and keep distinct anatomical features
+explicit. Vary environmental motifs with the requested subjects: smoke and
+roots, wings and sky, or coils and waves. Treat each design as an interpretation
+of the supplied tradition, not a default for other subjects.

@@ -38,6 +38,9 @@ Without references, return a text-only prompt and no `@Image` bindings. A
 prompt-only request ends with prompts. An explicit generation request is handled
 by the caller under its production rules. Do not invent a seed, parameter,
 price, approved identity, or reproducibility guarantee.
+If a referenced image is missing or unreadable, request it and leave its visible
+details unresolved. Offer a text-only alternative only from supplied text,
+without claiming a match to the unavailable image.
 
 ## Read the reference as visual evidence
 
@@ -92,7 +95,7 @@ Ground cultural details in supplied descriptions or verified information.
 Do not invent sacred meanings or label an artistic interpretation as a
 definitive traditional depiction. Read [folklore recipe](references/folklore.md)
 when depicting any folklore, mythology, or cultural tradition; it covers
-research, respectful depiction, and a worked example.
+research, respectful depiction, and composition.
 
 ## Keep a series cohesive and distinct
 
@@ -160,13 +163,8 @@ generated candidate obeyed it. For a correction, preserve the source and
 describe the narrow visible change required; do not silently redesign a whole
 collection.
 
-## Observed examples
+## Prompt evaluation
 
-Read the [example series](examples/README.md) when an actual result and
-submitted prompt would help. The bundle contains one example series, six
-posters of creatures from a single folklore tradition, with unchanged
-historical prompts and resized previews with hashes. The series illustrates
-the method; it is not a default subject, setting, or culture. The style-only
-reference is not distributed; these are observed outputs, not standalone
-reproducible requests or proof that a wording change caused an improvement.
-Historical model and size records are not current API requirements.
+Use the [prompt-only cases](evals/evals.json) to check text-only concepts,
+series consistency, and missing-reference handling. These cases require no
+image generation and do not establish visual fidelity.

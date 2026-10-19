@@ -4,6 +4,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -374,6 +375,71 @@ class StaticAdBatchTests(unittest.TestCase):
         ]["fonts"]
         self.assertEqual(fonts["body"]["family"], "Lumo Display")
         self.assertEqual(fonts["body"]["alias"], "brand-body")
+
+    def test_unicode_family_names_are_metadata_not_css(self) -> None:
+        families = ["思源黑体", "خط عربي", "Cafe\u0301 Display", '字"; } @import url(x); /*']
+        for family in families:
+            with self.subTest(family=family):
+                for entry in self.brand["typography"]:
+                    entry["family"] = family
+                result = self.run_plan(overwrite=True)
+                self.assertEqual(result["inputs"]["fonts"]["headline"]["family"], family)
+                css = (self.root / result["stylesheet"]).read_text(encoding="utf-8")
+                self.assertNotIn(family, css)
+                self.assertIn("font-family: 'brand-headline';", css)
+                self.assertEqual(css.count("@font-face"), 2)
+
+    def test_unicode_font_paths_are_encoded_and_still_contained(self) -> None:
+        entry = self.brand["typography"][0]
+        entry["family"] = "思源黑体"
+        entry["file"] = "assets/字体 (正式版)' #%.woff2"
+        font = self.root / "brand" / entry["file"]
+        font.write_bytes(HEAD_BYTES)
+        result = self.run_plan()
+        css = (self.root / result["stylesheet"]).read_text(encoding="utf-8")
+        self.assertIn("%E5%AD%97", css)
+        self.assertIn("%27", css)
+        self.assertIn("%23%25", css)
+        font.unlink()
+        font.symlink_to(self.root.parent / "outside.woff2")
+        with self.assertRaisesRegex(ValueError, "escapes the asset root"):
+            self.run_plan(overwrite=True)
+
+    def test_blank_control_and_oversize_font_names_are_rejected(self) -> None:
+        for family in (" ", "字\n体", "\x00", "字" * 241):
+            with self.subTest(family=family):
+                self.brand["typography"][0]["family"] = family
+                with self.assertRaises(ValueError):
+                    self.run_plan()
+                self.assertFalse((self.root / "statics").exists())
+
+    @unittest.skipUnless(os.environ.get("PORTABILITY_FONT"), "set PORTABILITY_FONT for local render")
+    def test_unicode_local_font_render_smoke(self) -> None:
+        font_bytes = Path(os.environ["PORTABILITY_FONT"]).read_bytes()
+        for entry in self.brand["typography"]:
+            entry.update(family="思源黑体", file="assets/字体 (1)' #%.ttf", sha256=digest(font_bytes))
+        (self.root / "brand/assets/字体 (1)' #%.ttf").write_bytes(font_bytes)
+        image = b'<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="blue"/></svg>'
+        (self.root / "product/pack.svg").write_bytes(image)
+        (self.root / "brand/assets/logo.svg").write_bytes(image)
+        self.brand["logos"][0]["sha256"] = digest(image)
+        self.spec.update(language="zh", layouts=["hero-product"], ratios=["1:1"])
+        self.spec["product"]["image"] = "product/pack.svg"
+        self.spec["angles"] = [dict(copy.deepcopy(ANGLE), headline="你好 Brand 123")]
+        result = subprocess.run(
+            [sys.executable, str(SCRIPT), "plan", str(self.write_inputs())],
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        job = json.loads(result.stdout)["jobs"][0]
+        rendered = subprocess.run(
+            [sys.executable, *job["command"][3:]],
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(rendered.returncode, 0, rendered.stderr)
+        record = json.loads((self.root / job["render_record"]).read_text())
+        self.assertEqual(record["renderer"]["font_policy"], "project_local_required")
+        self.assertGreater((self.root / job["png"]).stat().st_size, 1000)
 
     def test_banned_words_and_their_simple_plurals_are_refused(self) -> None:
         self.brand["copy_rules"]["banned_words"] = ["miracle", "glass"]

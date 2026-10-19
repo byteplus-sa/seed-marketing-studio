@@ -10,17 +10,17 @@ Read [the entrypoint](../SKILL.md).
   approved; they carry status in many markets.
 - Match period and region. Literary or dated language is valid when the
   character calls for it.
-- Short sentences perform better: 3-5 lines per scene, each speakable in one
-  breath.
+- For new drafts, choose line length from the intended pace and available
+  duration. Do not shorten approved lines just to meet a fixed line count.
 
 ## Code-switching
 
 - Name the dominant language and the switching pattern in the dialogue-language
   line, for example "English-dominant with short phrases in <language>".
-- Keep the switched words few and place them mid-sentence at normal volume.
-- Whispered or shouted positions, and a word that starts a line after a pause,
-  produce the most errors in practice. Place plot-critical words elsewhere
-  when rewriting is in scope.
+- Preserve the approved switching pattern, word positions and delivery.
+- If a current listening review identifies a problem at a switch, isolate the
+  affected word and delivery. Moving it or changing volume is an option only
+  within authorized revision scope, not a universal remedy.
 
 ## Accent
 

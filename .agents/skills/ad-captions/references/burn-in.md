@@ -43,6 +43,13 @@ A size whose ratio differs from the placement by more than 1% is rejected.
 
 ## Checks before sign-off
 
+- `--font-family` accepts Unicode letters, combining marks and numbers, plus
+  spaces and `_-. '()` punctuation, up to 240 characters. The emitted family is
+  a quoted, escaped CSS string, not a CSS declaration or a fallback list.
+  `--font-src` accepts Unicode local filenames, including spaces and punctuation,
+  and emits a percent-encoded URL. Pass the actual filename, not a pre-encoded
+  URL. Absolute paths, `..` components, URL schemes, backslashes, control
+  characters, missing files, direct symlinks and symlink escapes remain refused.
 - Play one cue per language in Studio, including every right-to-left and CJK
   language; confirm punctuation side and that no line starts with closing
   punctuation.
