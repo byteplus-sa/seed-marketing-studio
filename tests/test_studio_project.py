@@ -1822,6 +1822,44 @@ class StudioProjectTests(unittest.TestCase):
                 self.project, "assembly-review", fake_runner(stdout=CHECK_OK)
             )
 
+    def test_changed_composition_invalidates_picture_lock_at_stage_exit(self):
+        self.ready_for_assembly()
+        self.lock_assembly()
+        composition = self.root / "compositions/s01_sh010.html"
+        composition.write_text(
+            composition.read_text().replace("object-fit: contain", "object-fit: cover")
+        )
+        with self.assertRaisesRegex(studio.StudioError, "picture lock is stale"):
+            studio.complete_stage(
+                self.project, "assembly-review", fake_runner(stdout=CHECK_OK)
+            )
+        self.assertEqual(
+            studio.stage_entry(studio.read_stages(self.project), "assembly-review")[
+                "status"
+            ],
+            "review",
+        )
+        studio.render(self.project, "revised", "draft", self.render_runner())
+        self.record_lock(
+            "picture", "studio/renders/revised.mp4", decision_id="lock-revised"
+        )
+        studio.complete_stage(
+            self.project, "assembly-review", fake_runner(stdout=CHECK_OK)
+        )
+
+    def test_cannot_record_picture_lock_for_an_outdated_render(self):
+        self.ready_for_assembly()
+        studio.render(self.project, "cut", "draft", self.render_runner())
+        index = self.root / "index.html"
+        index.write_text(
+            index.read_text().replace("background: #000", "background: #fff")
+        )
+        with self.assertRaisesRegex(
+            studio.StudioError, "changed since the picture render"
+        ):
+            self.record_lock("picture", "studio/renders/cut.mp4")
+        self.assertFalse((self.project / "decisions/lock-picture.json").exists())
+
     def test_reopening_a_stage_clears_its_locks(self):
         self.ready_for_assembly()
         self.lock_assembly()
@@ -2217,6 +2255,56 @@ class StudioElementLockTests(unittest.TestCase):
         self.add_element("nena", versions=("v01",), status="review")
         report = studio.sync_elements(self.project)
         self.assertEqual(report["locked"], [])
+        self.assertEqual(self.locked_files(), [])
+
+    def test_sync_rejects_stale_approval_before_changing_any_locked_assets(self):
+        names = self.add_element()
+        decision = self.decision("mira", names[2])
+        studio.record_element_lock(self.project, "mira", decision)
+        target = self.assets / "LOCKED_mira_v03.png"
+        approved = target.read_bytes()
+        extra = self.assets / "LOCKED_ghost_v01.png"
+        extra.write_bytes(b"preserve until validation succeeds")
+        paths = [
+            self.project / decision["subject_path"],
+            self.project / decision["review_path"],
+            self.project / f"decisions/{decision['decision_id']}.json",
+        ]
+        for path in paths:
+            with self.subTest(path=path.name):
+                original = path.read_bytes()
+                try:
+                    path.write_bytes(original + b"\nchanged after approval")
+                    with self.assertRaisesRegex(studio.StudioError, "stale approval"):
+                        studio.sync_elements(self.project)
+                    self.assertEqual(target.read_bytes(), approved)
+                    self.assertTrue(extra.is_file())
+                finally:
+                    path.write_bytes(original)
+        self.assertEqual(studio.sync_elements(self.project)["copied"], [])
+
+    def test_sync_preserves_locked_copy_when_approved_source_is_missing(self):
+        names = self.add_element()
+        studio.record_element_lock(
+            self.project, "mira", self.decision("mira", names[2])
+        )
+        target = self.assets / "LOCKED_mira_v03.png"
+        approved = target.read_bytes()
+        (self.project / "elements/mira" / names[2]).unlink()
+        with self.assertRaisesRegex(studio.StudioError, "approved source is missing"):
+            studio.sync_elements(self.project)
+        self.assertEqual(target.read_bytes(), approved)
+
+    def test_sync_does_not_promote_a_selection_without_approval_evidence(self):
+        names = self.add_element(status="approved")
+        manifest = self.project / "elements/mira/element.md"
+        manifest.write_text(
+            manifest.read_text().replace(
+                "status: approved", f"status: approved\nselected_variant: {names[2]}"
+            )
+        )
+        with self.assertRaisesRegex(studio.StudioError, "hash-bound evidence"):
+            studio.sync_elements(self.project)
         self.assertEqual(self.locked_files(), [])
 
     def test_sync_needs_an_initialised_studio_project(self):
