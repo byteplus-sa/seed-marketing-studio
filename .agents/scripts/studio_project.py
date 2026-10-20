@@ -19,11 +19,13 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+from ruamel.yaml.error import YAMLError
 from validate_request import (
     approval_decision_findings,
     contained_path,
     parse_frontmatter,
     project_mode_snapshot,
+    project_review_mode,
     schema_findings,
 )
 
@@ -1526,11 +1528,12 @@ def stage_gate(
         "provenance_sha256": None,
         "index_sha256": None,
     }
+    try:
+        review_mode = project_review_mode(project)
+    except (ValueError, TypeError, OSError, YAMLError) as error:
+        failures.append(f"project.md is not a valid brief record: {error}")
+        return failures, evidence
     if stage_id == "brief-development":
-        try:
-            project_mode_snapshot(project)
-        except (ValueError, TypeError, OSError) as error:
-            failures.append(f"project.md is not a valid brief record: {error}")
         return failures, evidence
     root = studio_root(project)
     if not (root / "index.html").is_file():
@@ -1549,12 +1552,13 @@ def stage_gate(
             for shot in shots
             if shot.shot_id not in on_timeline
         ]
-        evidence["check_ran"] = True
-        evidence["check_ok"] = check_passed(
-            run_hyperframes(project, ["check", "--json"], runner)
-        )
-        if not evidence["check_ok"]:
-            failures.append("hyperframes check failed")
+        if review_mode == "strict" or stage_id == "delivery":
+            evidence["check_ran"] = True
+            evidence["check_ok"] = check_passed(
+                run_hyperframes(project, ["check", "--json"], runner)
+            )
+            if not evidence["check_ok"]:
+                failures.append("hyperframes check failed")
     provenance_path = root / "provenance.json"
     if provenance_path.is_file():
         evidence["provenance_sha256"] = sha256_file(provenance_path)

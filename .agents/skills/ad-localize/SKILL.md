@@ -29,6 +29,13 @@ and disclosure rules from [ad compliance](../../contracts/ad-compliance.md);
 brand and talent pins from the [shared library](../../contracts/shared-library.md).
 This skill does not relax any of them.
 
+Read and copy `review_mode` independently of `approval_mode`. Default uses
+minimal preflight and actual final sanity, one image and no automatic
+draft-first pass; strict retains detailed review and sampling. Do not load
+strict craft checklists in default. Applicable claims, rights, disclosure and
+native-human evidence remain required in both modes. Never fabricate a user
+quote or reviewer approval to complete a record.
+
 **No market is built in.** Language, variety, register, casting, settings,
 currency, legal lines, jurisdictions and placements come from the user or a
 cited source. Never infer a market from the user's name, location, account or
@@ -152,21 +159,25 @@ records each element's level and lets one element sit below the default.
    `price_source`. Cut or hold any claim that is not supported there
    (`localize.claims_market_scoped`).
 7. **Set up the localized project.** `projects/<campaign>-<market-id>/` gets
-   its own `project.md` (the source brief, the same `approval_mode`, the market
+   its own `project.md` (the source brief, the same `approval_mode` and
+   `review_mode`, the market
    card path and SHA-256, the source master path and SHA-256, the chosen levels)
    and its own Studio project. It places byte copies of the source's
    **text-free** selected takes, pinned by hash, never the flattened master,
    so localized text is never laid over source-language text.
 8. **Produce through the routed skills** in the order text, voice, talent,
    cultural, transcreation, as the plan needs. Every generation-bound prompt
-   is frozen, reviewed inline with `prompt-review`, registered with
-   `prepare_request.py --register` and drafted at 480p first. Run
+   is frozen, checked with mode-appropriate preflight and registered with
+   `prepare_request.py --register`. Strict uses inline `prompt-review` and
+   480p drafts first; default goes directly to the requested supported target.
+   Run
    `market_card.py gate --level <L> [--element <id>] --stage final` before any
    final-resolution request; the gate uses the stricter of `--level` and the
    card's `level_default` unless the element has its own row in `inventory.md`,
    and without `--element` it also takes the highest level `inventory.md`
    records.
-   L3 to L5 stop there until the reviewer signs off. **Every L3 to L5
+   L3 to L5 stop there until the reviewer signs off, including direct-to-target
+   default production. **Every L3 to L5
    final-resolution request passes `--required-rule localize.native_review` to
    `prepare_request.py`**, and that review check is `pass` only with the passing
    gate output as its evidence.
@@ -215,7 +226,7 @@ Level-specific checks are in [levels](references/levels.md).
   source mouth motion) or `not_applicable` (L1, off-screen voice). Never claim
   sync that was not viewed.
 - **Records.** Every paid operation registered with its prompt snapshot and
-  review; estimated and confirmed cost; disclosure records for paid
+  any required review; estimated and confirmed cost; disclosure records for paid
   deliverables; `handoff.md` lists levels, unverified items and open defects.
 
 ## Specialist hints (prose, not directives)
@@ -231,7 +242,7 @@ replace talent, props, products and settings; `seedance-virtual-portrait`
 binds authorized identities; `product-intake` sources the market's facts;
 `brief-intake`, `ugc-ad-modes` and `seedance-prompt-25` write an L5 ad;
 `ad-delivery-formats` cuts ratios; `ad-creative-check` runs the pre-spend
-check; `prompt-review` reviews every generation-bound prompt.
+check; `prompt-review` handles strict or explicitly required/requested review.
 
 ## References
 

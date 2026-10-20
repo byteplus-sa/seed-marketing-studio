@@ -25,8 +25,10 @@ specialist runs it, and which production defaults make the result better.
   in step with the manifests through `studio_project.py` for every stage
   review and handoff. A project with a `showcase.json` is a pre-Studio canvas
   project and keeps its canvas checkpoint instead.
-- Delegate modality work to the narrowest applicable specialist skill. Run
-  prompt review inline unless the user explicitly asks for a sub-agent review.
+- Delegate modality work to the narrowest applicable specialist skill. In
+  strict mode run prompt review inline unless the user asks for a sub-agent.
+  Default mode uses minimal preflight and final sanity without loading strict
+  checklists; explicit required rules still need genuine evidence.
 - Prefer a deterministic workflow when the next action is known. Use agentic
   judgment for creative choices, contradiction resolution, and review.
 - Provider success is `review`, never approval. A poll timeout resumes the
@@ -42,7 +44,8 @@ specialist runs it, and which production defaults make the result better.
    `studio/stages.json` (`showcase.json` for a pre-Studio canvas project),
    relevant element, scene and shot manifests, prompt snapshots, and the latest
    review decisions. Manifests and the registry win over `handoff.md`. A new
-   Studio project starts with `approval_mode: approve_for_me` in `project.md`,
+   Studio project starts with `review_mode: default` and
+   `approval_mode: approve_for_me` in `project.md`,
    `studio_project.py init <project>`, then
    `studio_project.py stage <project> start brief-development`.
 3. **Never hand-write Studio state** (`stages.json`, `provenance.json`,
@@ -52,8 +55,9 @@ specialist runs it, and which production defaults make the result better.
 4. Determine the current stage from recorded artifacts and lifecycle states,
    not from filenames.
 5. Identify contradictions, missing inputs, stale dependencies, pending provider
-   tasks, and decision gates. Recheck the effective approval mode before each
-   decision.
+   tasks, and decision gates. Read both independent modes; missing fields use
+   default/approve_for_me for new actions and invalid values fail. Recheck
+   before each operation or decision.
 6. State the current stage, the next safe objective, required specialist
    skills, and any user decision needed before spending credits.
 
@@ -103,9 +107,10 @@ department workflow.
 Read [production defaults](references/production-defaults.md) before the first
 paid video submission and again at assembly. In short:
 
-1. **Draft first.** Every new Seedance 2.5 shot is a 480p Draft, reviewed and
-   selected, then promoted to the delivery target. Edit inputs only before the
-   Draft; re-check audio on the final.
+1. **Mode-aware sampling.** Default produces one image and goes directly to the
+   requested supported video target. Strict uses three images and a 480p
+   draft before final generation; explicit count/draft instructions win.
+   Native Draft/promotion requires verified capability and unchanged inputs.
 2. **Audio route from the brief.** Native dialogue keeps native audio.
    Ambience-only, score-driven and wordless pieces generate picture with
    `generate_audio: false` and build the bed in post, because a "no music" line
@@ -174,14 +179,18 @@ Approval modes, decision evidence and lock rules are defined once in the
 production policy. The orchestration-specific rules are:
 
 - Declare a run budget (generated seconds or currency) before the first paid
-  submission, and stop and report before exceeding it. Promote only selected
-  drafts.
+  submission, and stop and report before exceeding it. When using drafts,
+  promote only selected drafts.
 - A tie between passing candidates uses stable operation ID and
   variation-index order. Do not promote the least-bad output merely to advance.
 - Rights, real-person likeness or voice consent, new spending beyond the
   declared budget, external delivery and publishing need their own scope in
   either mode. An approval to generate never approves its result.
 - Record estimated and confirmed cost separately.
+- In default mode, keep candidate/final sanity evidence short and factual when
+  the selection or stage-lock writer needs it. Auto-approve passing in-scope
+  work as the agent under `approve_for_me`; never invent a user quote, rights
+  grant, disclosure decision or native human sign-off.
 
 ## Handle revisions
 

@@ -17,27 +17,25 @@ For actual image creation:
 - use `seedream_generate_image_variations` for independent alternatives;
 - use `seedream_edit_image` for point- or bounding-box-guided corrections;
 - set `persist: true`;
-- use the lowest suitable draft size;
+- use the lowest suitable size for the requested target; default mode has no
+  automatic draft-first pass;
 - set `watermark: false` unless the user requires a visible watermark;
 - use `prompt_optimization: standard` for final candidates and `fast` only when
   latency matters more than fidelity.
 - Upload and pass the resolved local Element files as ordered reference inputs;
   keep their `@Image N` indices identical in the prompt, request, and manifest.
 
-For a one-panel board, generate three alternatives of that same panel by
-default: `p010 v01`, `p010 v02`, and `p010 v03`. They share the same decisive
-moment and continuity contract but explore useful composition, lens, staging,
-or lighting differences. They are candidates, not a narrative sequence.
+In default review mode, generate one sample: `p010 v01` for a one-panel board,
+`board v01` for a whole-grid asset, or one sample per requested separate panel.
+Preserve the requested panel count and layout, including three-panel grids.
 
-For a multi-panel single-image grid board, generate three variants of the whole
-grid by default: `board v01`, `board v02`, and `board v03`. They share the same
-panel plan and continuity contract but may differ in composition within each
-cell, grid layout balance, or rendering.
-
-For a multi-panel separate-images board, generate three variants by default for
-hero and high-risk panels. For ordinary continuity panels, first generate
-one low-cost draft sequence; add alternatives only where composition or
-continuity is unresolved.
+Strict mode defaults to three samples of a single panel or whole grid:
+`v01`, `v02`, `v03`. For separate images, use three samples for hero and
+high-risk panels and one initial sequence for ordinary continuity panels.
+Explicit requested count wins in either mode. Samples keep prompt, references
+and effective parameters identical except supported seed variation; creative
+alternatives change only requested axes with their own provenance. Samples
+are candidates, not extra narrative panels.
 
 ### 11. Persist every generated result locally
 

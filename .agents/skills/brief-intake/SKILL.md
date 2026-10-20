@@ -172,6 +172,23 @@ remaining decision. Explain what each interpretation would make the viewer feel.
 
 ## 5. Confirm and persist the right scope
 
+Record the independent policies in new project YAML:
+
+```yaml
+review_mode: default
+approval_mode: approve_for_me
+```
+
+Missing fields use these defaults for new actions only; invalid values fail.
+Default review means minimal preflight and final sanity, one image and no
+automatic draft-first pass. Strict review retains detailed checks, three-image
+sampling and draft-first. Do not load strict checklists or request a prompt
+review report in default mode unless explicitly requested or required by
+applicable rules. Existing approval authority is unchanged: the agent makes
+in-scope creative choices under `approve_for_me` and records agent evidence,
+not fabricated user quotes. Claims, rights, paid-ad disclosure decisions and
+explicit native human review remain separate requirements.
+
 Present the proposed direction with reasons, then identify decisions actually
 requiring acceptance: a new concept, a changed lock, or an impactful assumption.
 For project work, read `approval_mode` from `project.md`. In `approve_for_me`,

@@ -115,7 +115,7 @@ def frontmatter(root: Path, relative: str) -> dict[str, Any]:
     return parse_frontmatter(contained_path(root, relative).read_text())
 
 
-def project_mode_snapshot(root: Path) -> tuple[str, str]:
+def project_policy_snapshot(root: Path) -> tuple[str, str, str]:
     path = contained_path(root, "project.md")
     content = path.read_bytes()
     text = content.decode("utf-8")
@@ -123,16 +123,28 @@ def project_mode_snapshot(root: Path) -> tuple[str, str]:
     mode = metadata.get("approval_mode", "approve_for_me")
     if mode not in ("approve_for_me", "ask_for_approval"):
         raise ValueError("Invalid project approval mode")
-    return mode, hashlib.sha256(content).hexdigest()
+    review_mode = metadata.get("review_mode", "default")
+    if review_mode not in ("default", "strict"):
+        raise ValueError("Invalid project review mode; expected default or strict")
+    return mode, review_mode, hashlib.sha256(content).hexdigest()
+
+
+def project_mode_snapshot(root: Path) -> tuple[str, str]:
+    mode, _, digest = project_policy_snapshot(root)
+    return mode, digest
+
+
+def project_review_mode(root: Path) -> str:
+    return project_policy_snapshot(root)[1]
 
 
 def project_mode_findings(root: Path, request: dict[str, Any]) -> list[Finding]:
-    if request["schema_version"] != 2:
-        return []
     try:
         mode, digest = project_mode_snapshot(root)
     except (ValueError, TypeError, OSError, UnicodeError, YAMLError) as error:
         return [Finding("approval.current_mode", str(error), "project.md")]
+    if request["schema_version"] != 2:
+        return []
     if request["approval_mode"] != mode or request["project_sha256"] != digest:
         return [
             Finding(
@@ -761,6 +773,32 @@ def validate_review(
     return findings
 
 
+def request_review_findings(
+    root: Path,
+    request: dict[str, Any],
+    review: Any,
+    required_rule_ids: list[str],
+    *,
+    review_provided: bool = False,
+) -> list[Finding]:
+    try:
+        mode = project_review_mode(root)
+    except (ValueError, TypeError, OSError, UnicodeError, YAMLError) as error:
+        return [Finding("review.current_mode", str(error), "project.md")]
+    if review is not None or review_provided:
+        return validate_review(
+            review, request.get("request_sha256", ""), required_rule_ids
+        )
+    if mode == "strict" or required_rule_ids:
+        return [
+            Finding(
+                "review.complete_evidence",
+                "A completed review is required in strict mode or for explicit required rules",
+            )
+        ]
+    return []
+
+
 def reconcile_operation(
     operation: dict[str, Any], provider_observation: dict[str, Any]
 ) -> RecoveryDecision:
@@ -802,22 +840,16 @@ def main() -> int:
         findings = validate_request(
             args.project, request, json.loads(args.capabilities.read_text())
         )
-        if args.review:
-            findings.extend(
-                validate_review(
-                    json.loads(args.review.read_text()),
-                    request.get("request_sha256", ""),
-                    args.required_rule,
-                )
+        findings.extend(
+            request_review_findings(
+                args.project,
+                request,
+                json.loads(args.review.read_text()) if args.review else None,
+                args.required_rule,
+                review_provided=args.review is not None,
             )
-        else:
-            findings.append(
-                Finding(
-                    "review.complete_evidence",
-                    "A completed review is required before submission",
-                )
-            )
-    except (OSError, ValueError) as error:
+        )
+    except (OSError, ValueError, TypeError, YAMLError) as error:
         findings = [Finding("input.readable", str(error))]
     print(
         json.dumps(

@@ -15,6 +15,10 @@ mode selection and caller responsibilities.
 
 Before creating files:
 
+- read `review_mode` independently of `approval_mode`; absent review mode is
+  `default`, invalid values fail, and historical selections remain unchanged;
+- use one sample per panel/grid asset in default, three in strict unless the
+  user specifies a count; this never reduces a three-panel layout to one panel;
 - search for the project, scene, shot, character, location, and prop;
 - reuse approved assets and existing IDs;
 - open every relevant `elements/*/character.md`, `elements/*/location.md`, and
@@ -55,9 +59,10 @@ Extract or infer:
 
 Ask only when a missing answer would materially change identity, format, cost,
 or story meaning. Otherwise state reasonable assumptions and continue. An
-explicit request to generate the storyboard authorizes a low-cost draft pass;
-higher resolution, large batches, or repeated paid re-generation requires a
-new explicit request or approval.
+explicit request to generate authorizes in-scope production at the requested
+supported target and budget, not an automatic extra draft pass. Strict mode or
+an explicit draft request uses the draft workflow. Expanded scope, larger
+batches or spending beyond the authorized budget needs separate approval.
 
 ### 3. Break the scene into observable beats
 
@@ -240,5 +245,6 @@ Grid layout: [e.g. 2×3, reading left-to-right, top-to-bottom]
 Use panel numbers in increments of 10 so panels can be inserted without
 renumbering.
 
-For a one-panel board, create only `p010`. Generate alternatives as variants of
-`p010`; do not mislabel three alternatives as three narrative panels.
+For a one-panel board, create only `p010` with one sample in default mode.
+Generate alternatives only for strict mode or a requested count, as variants
+of `p010`; do not mislabel three alternatives as three narrative panels.

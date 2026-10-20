@@ -21,6 +21,7 @@ class RequestValidationTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
+        (self.root / "project.md").write_text("# Legacy fixture\n")
         (self.root / "prompt.md").write_text("A performer walks beside @Image 1.\n")
         (self.root / "image.png").write_bytes(b"fixture image")
         (self.root / "character.md").write_text(

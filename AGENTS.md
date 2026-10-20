@@ -90,8 +90,8 @@ orchestrators own cross-skill sequencing, generation gates and delegation.
 `film-production` manages multi-scene production using its stage/handoff
 contracts. `ad-variant-matrix` (variant tests) and `ad-localize` (market
 adaptation) are declared orchestrators: they plan and gate, hand every prompt,
-edit and render to specialists, and never bypass prompt-review, the registry
-or the approval mode. Load only specialists needed for the current stage or requested axis.
+edit and render to specialists, and never bypass applicable review requirements,
+the registry or the approval mode. Load only specialists needed for the current stage or requested axis.
 
 ### Skill sources and symlinks
 
@@ -169,6 +169,22 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
 
 ## Production invariants
 
+- Read `review_mode: default|strict` independently of `approval_mode` from
+  `project.md` YAML. Missing fields use `default` and `approve_for_me` for new
+  actions only; invalid values fail. In `default`, use minimal preflight and
+  actual final sanity, one image unless a count is requested, and no default
+  draft-first pass. Do not load strict checklists or require prompt-review
+  reports. In `strict`, retain detailed prompt and output checks, three-image
+  sampling and Seedance draft-first. This mode policy governs older skill
+  recipes that state those defaults unconditionally.
+- Auto-approve in-scope creative production under `approve_for_me` after actual
+  inspection, recording an agent decision rather than pretending the user
+  approved it. Existing writers may need a short hash-bound candidate/final
+  sanity record: record only what was actually inspected, with limitations.
+  No fake passes, fabricated user quotes or invented reviewer sign-offs.
+  `ask_for_approval` still waits for the user's explicit choice in either
+  review mode. Rights, budget, reference locks, claims, platform-required
+  disclosure and explicit native human evidence remain separate boundaries.
 - Draft breakdown may precede canon. Dependent production generation requires
   the relevant approved recurring, branded or story-critical elements.
 - Identify all visible props; only threshold-qualified props require separate
@@ -230,18 +246,28 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   post with FFmpeg or HyperFrames.
 - Preserve exact canonical descriptors where applicable. Prefer positive,
   observable direction; necessary edit-scope exclusions are allowed.
-- Run prompt-review for every generation-bound prompt, inline by default. Use
+- In `strict`, run prompt-review for every generation-bound prompt, inline by default. Use
   a sub-agent only when the user explicitly requests sub-agent prompt review for
   the project or specific generation. Resolve CRITICAL/MAJOR findings. Missing
   reviewer output is incomplete. Documentation/manifest-only edits, acquired
   brand/product assets (`generation: none`), and deterministic
   static renders (`generation: deterministic_html`) do not trigger paid
-  generation or prompt-review; changed worked examples are reviewed offline.
+  generation or prompt-review; changed worked examples are reviewed offline
+  when detailed review is requested. In `default`, prompt-review is optional
+  unless the user requests it or explicit applicable rules require evidence.
   Deterministic renders still require exact-copy, font, overflow, dimension,
   alpha, thumbnail-legibility, provenance, and visible-design QA.
 - Freeze the exact prompt beside its intended output before submission. Verify
   request hash, current reference hashes, ordered roles/bindings, explicit
-  selections and supported parameters. Changed inputs invalidate review.
+  selections and supported parameters. Changed inputs or `project.md` invalidate
+  pending version-2 requests and their reviews through the project digest.
+  Explicit review or approval mode selects version 2; legacy projects retain
+  their original version selection. Version 1 cannot register or begin
+  submission once either mode is explicit. Preserve historical hashes,
+  versions and decisions.
+  `--review` is optional for default registration/validation without required
+  rules. Every explicit `--required-rule` requires a real report; any supplied
+  failing, stale or incomplete report blocks in either mode.
 - Persist a prepared operation in the project task registry before submission;
   save an acknowledged task ID immediately. Resume existing tasks after poll
   timeouts. Unknown acceptance holds for reconciliation or explicit retry scope.
@@ -268,11 +294,15 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   in either approval mode. A stage exits only through
   `studio_project.py stage <project> complete <stage-id>`, which requires a
   valid `project.md` for `brief-development`; a Studio project with no blocking
-  `status` issue from `scene-breakdown` on; a placed take for every shot and a
-  passing `check` for `shot-generation`, `assembly-review` and `delivery`; no
-  pending selection for `assembly-review` and `delivery`; and for `delivery` a
-  newest `render` record at a delivery-level quality (`standard` or higher) that
-  matches the current files and placed takes. `render` is the only authority for
+  `status` issue from `scene-breakdown` on; a placed take for every shot at
+  `shot-generation`, `assembly-review` and `delivery`; a passing HyperFrames
+  `check` at delivery in both review modes and at those intermediate frame
+  stages only in strict mode. Skipped checks keep `check_ran: false` and
+  `check_ok: false`; status, provenance, locks and freshness still apply.
+  `assembly-review` and `delivery` require no pending selection; `delivery`
+  also requires the newest `render` record at a delivery-level quality
+  (`standard` or higher) to match the current files and placed takes.
+  `render` is the only authority for
   final files: post work made elsewhere (FFmpeg, `render_short.py`) is placed in
   Studio as a clip or overlay and rendered; `record-render` registers a
   non-gating render only. Variants are chosen with `candidates`, a swap in
@@ -293,16 +323,18 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   and final local master locks. Preserve other variants and prior history unless
   explicitly changed. Rights and real-person consent remain separate from a
   creative selection; neither mode grants them by inference.
-- Default generative-image selection sets contain three stochastic samples with
+- Strict generative-image selection sets contain three stochastic samples with
   identical prompt, references and effective parameters except supported seed
   variation. Deterministic renders produce one exact version per specification.
   Explicit requested count or creative alternatives override the generative
-  default.
-- Seedance 2.5 video generation defaults to an explicit `resolution: "480p"`
+  default. Default review mode generates one image.
+- In strict mode, Seedance 2.5 video generation defaults to an explicit `resolution: "480p"`
   draft before final-resolution generation. Review and select the draft under
   the project approval mode before advancing; explicit user instructions override
   this default. Follow the production policy for exceptions, final QA and verified
-  native Draft/promotion support. Studio canvas size follows the delivery target.
+  native Draft/promotion support. Default review mode goes directly to the
+  requested supported delivery target unless drafts are requested.
+  Studio canvas size follows the delivery target.
 - Use the lowest suitable cost/resolution within the request. Set watermark
   false only when the tool supports that parameter, unless the user requests it.
 - Separate lip-sync audio is opt-in. Generate scenes at natural supported
@@ -328,7 +360,7 @@ repository maintenance unless explicitly scoped.
 
 | Location | Contents |
 | --- | --- |
-| `projects/<project>/project.md` | Brief, `approval_mode`, proposed/confirmed axes, project state |
+| `projects/<project>/project.md` | Brief, independent `review_mode` and `approval_mode`, proposed/confirmed axes, project state |
 | `projects/<project>/studio/` | HyperFrames Studio project: `index.html`, `hyperframes.json`, `compositions/`, `assets/`, `STORYBOARD.md`, `stages.json`, `renders/`, `provenance.json` |
 | `projects/<project>/showcase.json` and `index.html` | Canvas manifest and review surface of a pre-Studio canvas project |
 | `projects/<project>/review/` | Optional plain static HTML + CSS visual aids (for example `elements.html`); never a gate, never served |
@@ -432,7 +464,7 @@ unit, smoke, lint, type, build/syntax, diff and secrets checks. A missing runtim
 or unavailable tool is not a passing test.
 
 Production-stage verification runs `studio_project.py stage <project> complete
-<stage-id>` (with `status` and `check`) for Studio projects, or the canvas
+<stage-id>` (with `status` and mode-appropriate `check`) for Studio projects, or the canvas
 checkpoint from the showcase skill for pre-Studio canvas projects. `media-review` is an unavailable-browser or
 explicitly requested OS-player fallback and does not satisfy this checkpoint.
 

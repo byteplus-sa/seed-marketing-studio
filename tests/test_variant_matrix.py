@@ -146,6 +146,7 @@ class VariantMatrixTests(unittest.TestCase):
         decision = self.project / HERO_DECISION
         decision.parent.mkdir(parents=True)
         decision.write_text('{"decision": "approved"}')
+        (self.project / "project.md").write_text("---\nreview_mode: strict\n---\n")
         take = self.project / HERO_TAKE_FILE
         take.parent.mkdir(parents=True)
         take.write_bytes(HERO_BYTES)
@@ -166,6 +167,45 @@ class VariantMatrixTests(unittest.TestCase):
 
     def rule_ids(self, result):
         return {finding["rule_id"] for finding in result["findings"]}
+
+    def test_default_mode_omits_blanket_craft_rules_and_draft_first(self):
+        (self.project / "project.md").write_text("---\ntitle: Fixture\n---\n")
+        code, result = self.run_cli(
+            "register", self.write(base_matrix()), "--project", self.project,
+            *UNIT_COSTS, *VIDEO_FLAGS, "--final-resolution", "720p",
+        )
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["review_mode"], "default")
+        self.assertEqual(result["stage"], "production")
+        for operations in result["operations"].values():
+            for operation in operations:
+                command = operation["register_command"]
+                self.assertIn("resolution=720p", params(command))
+                self.assertFalse(SHOT_RULES & required_rules(command))
+                self.assertNotIn("video.text_free", required_rules(command))
+                self.assertNotIn("ad.variant_budget_gate", required_rules(command))
+                self.assertTrue({
+                    "ad.claims_supported", "ad.no_fabricated_testimonial",
+                    "brand.copy_rules", "library.pin_current",
+                } <= required_rules(command))
+
+    def test_default_mode_requires_delivery_target_not_an_implicit_draft(self):
+        (self.project / "project.md").write_text("# Legacy brief\n")
+        code, result = self.run_cli(
+            "register", self.write(base_matrix()), "--project", self.project,
+            *UNIT_COSTS, *VIDEO_FLAGS,
+        )
+        self.assertEqual(code, 1, result)
+        self.assertNotIn("operations", result)
+
+    def test_invalid_review_mode_refuses_variant_commands(self):
+        (self.project / "project.md").write_text("---\nreview_mode: quick\n---\n")
+        code, result = self.run_cli(
+            "register", self.write(base_matrix()), "--project", self.project,
+            *UNIT_COSTS, *VIDEO_FLAGS,
+        )
+        self.assertEqual(code, 1, result)
+        self.assertNotIn("operations", result)
 
     def test_one_axis_at_a_time_changes_exactly_one_axis_per_variant(self):
         code, result = self.run_cli("plan", self.write(base_matrix()))
