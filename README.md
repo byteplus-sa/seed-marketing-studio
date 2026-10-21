@@ -17,6 +17,7 @@ The studio is a set of **agent skills** that an MCP-capable coding agent (Claude
 | UGC, demo, review, try-on and showcase ads | `ugc-ad-modes`, `ugc-motion-presets` |
 | Cinematic TVCs and brand films | `brief-intake`, `film-production`, `seedance-shot-design` |
 | Launch videos, motion graphics, product hypermotion | `seedance-motion-design`, `hyperframes` |
+| CGI product worlds, material transitions and surreal commercials | `seedance-cgi-advertising` |
 | Viral effects and trend edits | `seedance-effects-studio`, `seedance-frame-break`, `reference-edit-rebuild` |
 | Recreating a reference ad's grammar with your brand | `template-factory` |
 | Product, outfit, talent or location swaps in existing footage | `seedance-object-swap`, `seedance-vfx-pipeline` |
@@ -195,7 +196,7 @@ human sign-off before final generation and delivery.
 
 ## Skills
 
-The workspace ships **78 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
+The workspace ships **79 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
 
 ### Orchestration and review
 
@@ -226,6 +227,7 @@ The workspace ships **78 skills**. Leaf skills are independent; declared orchest
 | **ugc-ad-modes** | Write hooks, scripts and Seedance prompts for nine ad modes using supplied product facts, audience objections, supported claims and accurate CTAs. |
 | **ugc-motion-presets** | Turn a named UGC motion preset (Atomic, Outfit Switch, Eating Zoom, Yacht, ...) into a canonical Seedance 2.5 prompt block with reference bindings, duration, and constraint flags. |
 | **seedance-motion-design** | Write Seedance 2.5 motion-design prompts while routing exact typography and UI to deterministic post graphics and synthesized visual layers to Seedream. |
+| **seedance-cgi-advertising** | Design product-led CGI worlds, camera moves, transition endpoints and sound cues, with exact-packaging boundaries and scoped repair guidance. |
 | **seedance-effects-studio** | Select a named effect recipe for the current source, preserve observed identity and wardrobe, and validate supported generation in the owning project's workflow. |
 | **seedance-frame-break** | Write and QA Seedance 2.5 frame-break pop-out prompts where the subject is drawn over two fixed black bars, with a locked camera, staged break-outs, a product-hero variant, failure repairs and an all-frames pixel check of bar motion and overlap. |
 | **reference-edit-rebuild** | Plans a reference edit rebuilt with your own characters, products or clothing: measured edit list, beat grid and motion inventory, varied generated shots for people-led formats or animated asset layers for product formats, a code-built type-and-effects layer, a credit budget and per-segment refinement. |
