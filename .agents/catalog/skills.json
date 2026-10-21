@@ -361,6 +361,15 @@
       "upstream_hash": null,
       "overlay_notes": null
     },
+    "seedance-cgi-advertising": {
+      "kind": "leaf",
+      "description": "Write Seedance CGI ad treatments and prompts with product-led worlds, camera moves, transitions and sound cues. Use for CGI product ads or surreal commercials, not UI explainers or source edits.",
+      "readme_summary": "Design product-led CGI worlds, camera moves, transition endpoints and sound cues, with exact-packaging boundaries and scoped repair guidance.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
     "seedance-effects-studio": {
       "kind": "orchestrator",
       "description": "Orchestrator. Offer a menu of 45 named video effects (street colossus, incline, clones, melting, world morphing, eyes in, bullet time, earth zoom, smash and grab and more), let the user pick one, inspect their photo or clip, write that effect's Seedance 2.5 prompt from its recipe, run prompt-review, submit a 480p draft through ark-mcp, save and QA the take, then ask before any higher resolution final. Sequences seedance-prompt-25, prompt-review, ark-mcp, seedance-restyle (video-to-video effects), the Studio project and the post tools named in each recipe. Use when the user wants a named visual effect applied to their own photo, product or clip, or asks what effects are available. Not for free-form prompts (seedance-prompt-25), whole-clip restyles that are not on the menu (seedance-restyle), or multi-scene films (film-production).",

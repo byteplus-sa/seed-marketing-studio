@@ -241,6 +241,12 @@
       "skillPath": ".agents/skills/seedance-camera-presets/SKILL.md",
       "computedHash": "3c19d40a122c9978972bc9f28c838762315fb2648ec1718c1502327f7da529f2"
     },
+    "seedance-cgi-advertising": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-cgi-advertising/SKILL.md",
+      "computedHash": "a38f0d17780b8736785cf3fd2e227ed6a47cae805f9080eaaadc5a6f0239a564"
+    },
     "seedance-effects-studio": {
       "source": "./local",
       "sourceType": "local",
