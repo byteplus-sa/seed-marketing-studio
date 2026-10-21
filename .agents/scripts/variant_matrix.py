@@ -12,7 +12,8 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from validate_request import Finding, schema_findings
+from ruamel.yaml.error import YAMLError
+from validate_request import Finding, project_review_mode, schema_findings
 
 AXES = (
     "hook",
@@ -77,8 +78,8 @@ RATIO_COST_NOTE = (
 REGISTER_PROCEDURE = [
     "Write the variant shot manifest at studio.manifest with studio.frontmatter",
     "Write and freeze the row prompt at the --prompt path",
-    "Run hash_command and bind prompt-review to the printed request_sha256",
-    "Resolve CRITICAL and MAJOR findings, then run register_command",
+    "Run hash_command; bind required compliance evidence (and strict prompt-review) to request_sha256",
+    "Resolve failing or incomplete required evidence, then run register_command",
     "Submit only a registered operation, in 'after' order, under the project approval mode",
     (
         "A row with base_variant starts from that variant's selected take; an "
@@ -86,18 +87,22 @@ REGISTER_PROCEDURE = [
         "its source, and a step owned by another row is never registered again"
     ),
     (
-        "Select a passing 480p draft with a hash-bound decision before running "
-        "register --stage final; a retake uses a new --take"
+        "Inspect and select with a hash-bound decision; default goes directly to "
+        "the delivery target, strict or explicit drafts precede --stage final; "
+        "a retake uses a new --take"
     ),
 ]
 PROVIDER_ROUTES = {"object-swap", "motion-recast", "hook-opening", "language-dub"}
 AUDIO_ROUTES = {"language-dub"}
 SOURCE_PRESERVING_ROUTES = {"object-swap", "motion-recast"}
-COMMON_RULES = (
+COMPLIANCE_RULES = (
     "ad.claims_supported",
     "ad.no_fabricated_testimonial",
     "brand.copy_rules",
     "library.pin_current",
+)
+COMMON_RULES = (
+    *COMPLIANCE_RULES,
     "ad.variant_one_axis",
     "ad.variant_budget_gate",
 )
@@ -593,7 +598,9 @@ def step_params(route: str, options: argparse.Namespace) -> list[str]:
     return params
 
 
-def step_rules(route: str, exemption: str | None) -> list[str]:
+def step_rules(route: str, exemption: str | None, review_mode: str) -> list[str]:
+    if review_mode == "default":
+        return list(COMPLIANCE_RULES)
     rules = list(COMMON_RULES)
     if route not in AUDIO_ROUTES:
         rules.extend(VIDEO_RULES)
@@ -608,7 +615,7 @@ def flag_pairs(flag: str, values: list[str]) -> list[str]:
 
 def staged(step: dict[str, Any], stage: str) -> bool:
     return step["provider_operation"] and (
-        stage == "draft" or step["route"] not in AUDIO_ROUTES
+        stage != "final" or step["route"] not in AUDIO_ROUTES
     )
 
 
@@ -635,7 +642,7 @@ def operation_commands(
         asset = f"{row['name']}_{options.take}_{'audio' if audio else options.stage}"
         params = step_params(route, options)
         exemption = shot_rule_exemption(route, options.static_by_design)
-        rules = step_rules(route, exemption)
+        rules = step_rules(route, exemption, options.review_mode)
         base = [
             "uv",
             "run",
@@ -765,25 +772,28 @@ def option_findings(
     rows: list[dict[str, Any]], options: argparse.Namespace
 ) -> list[Finding]:
     findings: list[Finding] = []
-    if options.stage == "final" and (
-        not options.final_resolution
-        or not RESOLUTION.fullmatch(options.final_resolution)
-        or options.final_resolution == DRAFT_RESOLUTION
-    ):
-        findings.append(
-            Finding(
-                "register.final_resolution",
-                "--stage final needs --final-resolution at the delivery target "
-                "(for example 1080p); a 480p delivery reuses the selected draft",
-                "--final-resolution",
-            )
-        )
     routes = {
         step["route"]
         for row in rows
         if row["role"] == "variant"
         for step in staged_steps(row, options.stage)
     }
+    if routes - AUDIO_ROUTES and options.stage != "draft" and (
+        not options.final_resolution
+        or not RESOLUTION.fullmatch(options.final_resolution)
+        or (
+            options.stage == "final"
+            and options.final_resolution == DRAFT_RESOLUTION
+        )
+    ):
+        findings.append(
+            Finding(
+                "register.final_resolution",
+                "Production/final video needs --final-resolution at the delivery "
+                "target; --stage final at 480p reuses the selected draft instead",
+                "--final-resolution",
+            )
+        )
     needed: list[str] = []
     if routes - AUDIO_ROUTES:
         needed += ["video_model", "video_operation"]
@@ -834,6 +844,11 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
         findings.extend(cost_findings)
     result["rows"] = rows
     if args.command == "register":
+        args.review_mode = project_review_mode(args.project)
+        args.stage = args.stage or (
+            "draft" if args.review_mode == "strict" else "production"
+        )
+        result["review_mode"] = args.review_mode
         if not TAKE.fullmatch(args.take):
             raise ValueError(f"--take must look like t01: {args.take}")
         findings.extend(register_findings(matrix, args.project))
@@ -885,7 +900,7 @@ def parser() -> argparse.ArgumentParser:
     register.add_argument("--audio-model")
     register.add_argument("--audio-operation")
     register.add_argument("--capabilities")
-    register.add_argument("--stage", choices=("draft", "final"), default="draft")
+    register.add_argument("--stage", choices=("production", "draft", "final"))
     register.add_argument("--final-resolution")
     register.add_argument("--take", default="t01")
     register.add_argument("--static-by-design", choices=STATIC_BY_DESIGN)
@@ -896,7 +911,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
         result, findings = run(args)
-    except (OSError, ValueError, TypeError, UnicodeError) as error:
+    except (OSError, ValueError, TypeError, UnicodeError, YAMLError) as error:
         result, findings = {}, [Finding("input.readable", str(error))]
     print(
         json.dumps(

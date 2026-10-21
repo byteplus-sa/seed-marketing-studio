@@ -231,10 +231,13 @@ descriptions are kept to 1–2 sentences. If it still overflows, split the board
 
 ### 9d. Prompt-review gate
 
-The calling agent owns the workspace prompt-review gate. Return this prompt,
-ordered reference bindings, model/mode, and change contract to the caller for a
-complete review of the exact request before submission. This leaf skill does
-not load or invoke a sibling skill.
+The calling agent owns mode-appropriate preflight. Default review mode needs
+no full prompt-review checklist/report unless explicitly requested or required
+by applicable rules. Return the prompt, ordered reference bindings, model/mode
+and change contract; verify capabilities, hashes and reference locks in both
+modes. This leaf does not load or invoke a sibling skill.
+
+Strict or explicitly requested detailed review checks:
 
 - Element bindings (`@Image N` indices match the request and manifest)
 - Directing principles (assets first, positive instructions, direct don't describe)
@@ -242,5 +245,5 @@ not load or invoke a sibling skill.
 - Continuity props and screen direction across panels
 - Prompt length within the 4,000-character limit
 
-Run the gate after writing the prompt snapshot file but before calling
+Run applicable preflight after writing the prompt snapshot file but before calling
 `seedream_generate_image` or `seedream_edit_image`.

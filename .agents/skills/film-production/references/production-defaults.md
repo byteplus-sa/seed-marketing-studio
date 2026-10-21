@@ -7,9 +7,20 @@ not provider guarantees. An explicit user instruction overrides any of them.
 Exact tool parameters live in the `ark-mcp` Seedance reference; this file says
 when to use them.
 
-## 1. Draft first, then promote
+## Review depth
 
-Plan every new Seedance 2.5 shot as a 480p Draft followed by a promotion.
+Read the independent `review_mode` and `approval_mode` in `project.md`.
+Default mode uses minimal preflight and actual final sanity, one generated
+image and no default draft-first pass. Do not load strict checklists or create
+mandatory craft reports. The detailed review procedures below are strict-mode
+or explicitly requested guidance; preserve capability, hash, reference, rights,
+claims, disclosure, native-human, budget and registry requirements in both.
+
+## 1. Optional draft, then final
+
+Strict mode plans Seedance 2.5 shots as 480p drafts followed by final generation.
+Default goes directly to the requested supported target unless drafts are
+requested. Native Draft/promotion is used only when the live schema supports it.
 
 1. Freeze and review the full request (prompt, ordered references, duration,
    ratio, `generate_audio`, task type) and submit it with `draft: true` when

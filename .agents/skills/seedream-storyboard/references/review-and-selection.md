@@ -8,10 +8,17 @@ mode selection and caller responsibilities.
 
 ### 12. Review the board
 
+In `review_mode: default`, inspect actual panel/grid content for the requested
+beat, identities, layout, continuity and obvious defects. Keep short factual
+sanity evidence if the decision writer needs it, including limitations.
+Do not require the full dimension checklist below or invent pass records.
+The detailed checklist applies only in strict mode or when explicitly requested.
+
 Evaluate every individual panel. For multi-panel separate-images boards, also
 evaluate the ordered contact sheet. For multi-panel single-image grid boards,
 evaluate the whole grid image for both per-panel quality and cross-panel flow.
-For a one-panel board, compare its three variants side by side; a comparison
+For a one-panel board, inspect its single default sample. Compare variants
+side by side only when strict mode or the user requested multiple samples; a comparison
 sheet is a review artifact, not another storyboard panel and never a video
 input.
 
@@ -50,7 +57,7 @@ Reject or repair:
 Present candidates in panel order with filename or artifact ID, material
 differences, known continuity or anatomy issues, and a recommendation.
 
-For project selection, follow the project's `approval_mode` per the
+For project selection, follow the independent `approval_mode` per the
 [Production policy](../../../contracts/production-policy.md): against the recorded beat, canon, and continuity criteria, save the hash-bound review and either the validated agent decision or a recommendation awaiting the user's choice. If no panel passes or inspection is
 unavailable, leave selection unresolved. After a mode-authorized choice:
 

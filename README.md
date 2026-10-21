@@ -57,9 +57,8 @@ flowchart LR
   A --> B[Treatment and directing axes]
   B --> C[Canon: product, talent, location, exact graphics]
   C --> D[Shot plan]
-  D --> E[Prompt and prompt-review]
-  E --> F[480p Seedance draft]
-  F -->|select| G[Final-resolution take]
+  D --> E[Prompt and mode-appropriate preflight]
+  E --> G[Generate at delivery target]
   G --> H[Studio assembly: supers, CTA, end card, mix]
   H --> I[Render and delivery QA]
 ```
@@ -78,7 +77,7 @@ flowchart LR
 - **Brief first.** `brief-intake` records the intended audience reaction, the central visual idea, the product facts and the CTA, plus any cited reference ads.
 - **Canon before shots.** Real logos and packshots are acquired from the brand, never regenerated. Exact copy, prices, CTAs and end cards are rendered with `html-graphic-render`; Seedream is for invented photography and illustration.
 - **Text stays out of generated video.** Captions, taglines, CTAs and end cards are added in post (HyperFrames or FFmpeg).
-- **Draft first.** Seedance 2.5 runs at 480p first; only the selected draft is generated at the delivery resolution.
+- **Review depth is explicit.** Default uses one image, minimal preflight and final sanity, with no automatic draft-first pass. Strict retains detailed checks, three-image sampling and Seedance 480p draft-first.
 - **Cinematic means planned coverage.** Narrative and ad shots carry a recorded shot plan (size, angle, move, lens intent, named light source) so spots do not read as a single static take.
 - **Compliance is recorded, not assumed.** Claims, testimonials and AI disclosure for paid ads follow the [ad compliance contract](.agents/contracts/ad-compliance.md); placement specs live in the dated [ad platforms contract](.agents/contracts/ad-platforms.md).
 - **Studio is the final authority.** HyperFrames Studio holds the locked assets and renders the delivery file.
@@ -120,8 +119,62 @@ Put these in a gitignored `.env`; never commit them.
 2. Build or pin a brand kit (`brand-kit`), add the product card (`product-intake`), then create `projects/<campaign>/project.md` with the brief (or ask the agent to run `brief-intake`).
 3. Run `uv run python .agents/scripts/studio_project.py init <campaign>` and `stage <campaign> start brief-development`.
 4. Build canon: acquire brand assets, render exact graphics with `html-graphic-render`, and lock Seedream sheets with `studio_project.py lock-element`.
-5. Plan shots with `seedance-shot-design`, write prompts with the `seedance-*` skills, review them with `prompt-review`, and submit through `ark-mcp`.
+5. Plan shots with `seedance-shot-design`, write prompts with the `seedance-*` skills, run mode-appropriate preflight, register the request, and submit through `ark-mcp`.
 6. Place selected takes, supers and audio in Studio, then `studio_project.py render` and `stage <campaign> complete delivery`.
+
+### Review and approval modes
+
+New `project.md` frontmatter uses two independent settings:
+
+```yaml
+---
+review_mode: default
+approval_mode: approve_for_me
+---
+```
+
+`default` means minimal preflight and actual final sanity, one generated image
+per requested asset, and direct generation at the requested supported target.
+No full prompt-review checklist/report or extra draft pass is mandatory.
+Set `review_mode: strict` for the existing detailed checks, three-image
+sampling and draft-first workflow. Explicit counts or draft requests win;
+three-panel sheet and storyboard layouts are unchanged.
+
+Studio runs the expensive HyperFrames check at delivery in both modes. Strict
+also runs it at shot-generation and assembly-review; default skips those
+intermediate checks with `check_ran: false` and `check_ok: false`. Status, placed
+takes, provenance, locks and render freshness remain enforced.
+
+`approve_for_me` lets the agent select and lock passing in-scope creative work;
+`ask_for_approval` waits for your explicit choice. Neither review mode changes
+that authority. Existing writers still need short truthful, hash-bound
+candidate/final sanity evidence, never a fake checklist pass or user quote.
+Missing mode fields use the defaults for new actions only; invalid values fail.
+
+For ordinary default requests, omit `--review` from both commands:
+
+```bash
+uv run python .agents/scripts/prepare_request.py --project projects/<p> --asset <asset> --prompt <prompt.md> --model <model> --operation <operation> --expected-output <output> --write --register --capabilities <capabilities.json>
+uv run python .agents/scripts/validate_request.py --project projects/<p> --request <request.json> --capabilities <capabilities.json>
+```
+
+Strict mode or any explicit `--required-rule <id>` requires `--review <file>`.
+Any supplied failing, stale, malformed or incomplete review blocks in either
+mode. Explicit approval/review mode selects version 2; legacy version selection
+and hashes are preserved. The version-2 project digest invalidates pending
+requests and reviews when the brief or mode changes; a version-1 request cannot
+register or begin submission after either mode becomes explicit.
+
+**Marketing residual:** default variant-matrix operations still require four
+focused compliance records in a real request-bound report:
+`ad.claims_supported`, `ad.no_fabricated_testimonial`, `brand.copy_rules` and
+`library.pin_current`. Missing evidence stays blocked, not filled with fake
+passes. Default variant registration uses `--stage production` and
+`--final-resolution <target>` for video; strict defaults to `--stage draft`.
+Rights, capabilities, reference locks, budget, registry and duplicate safety
+remain. Paid-ad disclosure decisions need your actual words, platform-required
+disclosures remain required, and L3-L5 localization still needs explicit native
+human sign-off before final generation and delivery.
 
 ---
 
@@ -151,8 +204,8 @@ The workspace ships **78 skills**. Leaf skills are independent; declared orchest
 | **brief-intake** | Shape intent-led briefs; hand off footage for native-first, capability-checked analysis while preserving confirmed decisions. |
 | **film-production** | Orchestrates multi-scene, multi-modality production one stage at a time while keeping one HyperFrames Studio project synchronized for review and handoff. |
 | **template-factory** | Native-first ad reference analysis and quick structure clones mapped to sourced product facts, preserving campaign rights and review gates. |
-| **prompt-review** | Review and fix BytePlus Seedance, Seed Audio, and Seedream prompts against the repo's best practices inline by default; use a sub-agent only when explicitly requested for a project or specific generation. |
-| **ad-variant-matrix** | Turn one approved hero ad into a one-axis-at-a-time variant matrix with routing, naming, cost and budget gates; every row still goes through prompt-review and registration. |
+| **prompt-review** | Review prompts for strict mode, explicit review requests or required rules; routine default production skips full checklists. Sub-agent review requires an explicit request. |
+| **ad-variant-matrix** | Plan approved-ad variants with routing, cost and budget gates; default keeps four focused compliance records, strict adds craft review, and all operations register. |
 | **ad-localize** | Adapt an approved ad to another market at the depth chosen per element: captions/text, voice, talent, cultural adaptation or full transcreation, with native review gates. |
 
 ### Campaign layer
@@ -310,7 +363,7 @@ The workspace ships **78 skills**. Leaf skills are independent; declared orchest
 
 - **Secrets** come from environment variables or a gitignored `.env`. Never hard-code or commit credentials or signed URLs.
 - **Watermark** is off by default where the tool supports the parameter.
-- **Cost:** lowest suitable resolution first (480p Seedance drafts), three Seedream samples per selection set, final resolution only for the selected draft.
+- **Cost:** lowest suitable cost within the requested target; default uses one image and no extra draft pass, strict uses three samples and selected 480p drafts before final generation.
 - **Reproducibility:** every element, scene and shot has a manifest with the prompt snapshot, references, model, parameters, task IDs, hashes and cost.
 - **Rights:** real people, voices, brands and logos need authorization; creative approval never implies it.
 - **Local-first:** `projects/`, `library/`, `docs/`, `plans/` and `specs/` stay local and are never committed.

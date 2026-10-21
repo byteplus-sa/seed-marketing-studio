@@ -18,10 +18,23 @@ Output: panel/grid prompts, provenance, candidate outputs when authorized, and u
 
 ## Procedure and reference loading
 
-Read context-and-preflight, then panel-and-grid-prompts for authoring. Read generation-and-persistence only when generation is authorized; review-and-selection for promotion, and editing-failed-panels only for a requested revision.
+Read context-and-preflight, then panel-and-grid-prompts for authoring. Read
+generation-and-persistence only when generation is authorized;
+review-and-selection only for strict or requested detailed review; and
+editing-failed-panels only for a requested revision. Default selection uses
+actual panel/grid sanity and the existing hash-bound decision writer under
+the production policy, without loading the detailed review checklist.
 
 Read only the mode-specific resources needed for the request. Reference paths
 mentioned in prose are relative to this skill directory unless a link says otherwise.
+
+Read independent `review_mode` and `approval_mode` from `project.md` first.
+Missing review mode means `default`; invalid values fail. Default generates
+one sample per requested panel or whole-grid asset and uses minimal preflight
+and actual final sanity, not a full checklist/report. Strict retains the
+detailed review and three-sample workflow. Explicit sample counts win.
+Sample count does not change panel count: preserve three-panel layouts,
+three-view character sheets, and any requested grid or narrative sequence.
 
 - [Context And Preflight](references/context-and-preflight.md) — 1. Inspect existing project context; 2. Lock the brief; 3. Break the scene into observable beats; 4. Decide panel density; 5. Preflight every reference; 6. Establish geography and continuity; 7. Build the panel plan.
 - [Panel And Grid Prompts](references/panel-and-grid-prompts.md) — 8. Write the exact prompt for each panel; 9. Write the multi-panel prompt; 9c. Prompt length budget; 9d. Prompt-review gate.
@@ -31,14 +44,15 @@ mentioned in prose are relative to this skill directory unless a link says other
 
 ## Submission boundary and failure behavior
 
-The caller owns production authorization, the exact request preflight, and the
-complete hash-bound prompt review. The caller reviews inline by default and
+The caller owns production authorization and exact request preflight, plus
+complete hash-bound prompt review when strict or explicitly required.
+Default does not load strict checklists. The caller reviews inline and
 uses a sub-agent only when the user explicitly requests sub-agent prompt review
 for the project or specific generation. A leaf returns its prompt package without
 loading sibling skills. An explicitly declared orchestrator may coordinate the
 review and submission stages. Missing required inputs remain unresolved; a draft
 or technical success does not establish approval. Preserve optional timing,
-the three-image sampling default where applicable, and the requested delta.
+mode-appropriate sampling, panel layouts, and the requested delta.
 
 ## Source authority
 
@@ -220,13 +234,14 @@ and continuity are accepted.
 ## Default response structure
 
 For a one-panel request, return a compact hero-beat decision, one `p010` panel
-plan, reference inventory, exact prompt, three variant records, video-handoff
-notes (staging text plus the element references to bind), review checklist,
-and selection needed. For a multi-panel plan
+plan, reference inventory, exact prompt, one sample record by default (three
+in strict or the requested count), video-handoff notes (staging text plus the
+element references to bind), actual sanity evidence and selection state.
+Include a full review checklist only in strict or when requested. For a multi-panel plan
 or prompt package, return the panel delivery mode (single-image grid or
 separate images), render style (sketch default or full color), assumptions and
 locks, reference inventory, beat and panel plan, spatial and continuity
-contract, generation setup, exact panel prompts, review checklist, and open
+contract, generation setup, exact panel prompts, mode-appropriate evidence, and open
 decisions. When images were actually generated, add generated variants and the
 technical record.
 

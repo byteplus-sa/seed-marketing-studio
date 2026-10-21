@@ -8,7 +8,7 @@ description: >-
   dubbing with captions, market adaptation, per-ratio delivery), names every
   variant
   {campaign}_{concept}_{axis-values}_v{nn}, previews cost, and refuses rows over
-  the budget or variant cap. Every row still passes prompt-review and registry
+  the budget or variant cap. Every row still passes mode-appropriate review and registry
   registration; nothing is submitted by the planner. Use to multiply a winning
   ad into testable variants. Not for writing the hero ad, separate concept
   tests, or reading performance results.
@@ -19,8 +19,17 @@ description: >-
 This skill is an **explicitly-marked orchestrator**. It plans and sequences
 variant production around one approved hero ad and delegates every prompt,
 edit and render to the specialist skills named below. It never calls a
-provider itself and never bypasses prompt-review, the registry or the approval
-mode.
+provider itself and never bypasses applicable review requirements, the registry
+or the approval mode.
+
+Read independent `review_mode` and `approval_mode` from `project.md`. Missing
+fields use default/approve_for_me for new actions; invalid values fail.
+Default skips blanket prompt-craft checklists and draft-first. Four focused
+compliance records still require an honest request-bound report for Marketing
+variants: `ad.claims_supported`, `ad.no_fabricated_testimonial`,
+`brand.copy_rules` and `library.pin_current`. Do not fabricate passes when
+facts, brand rules or pin evidence are missing. Strict retains the full
+existing review. Budget and one-axis checks run in code in both modes.
 
 **Key rule: change one axis per variant unless the user explicitly asks for a
 full factorial.** One change per row is what makes a result attributable.
@@ -66,9 +75,9 @@ flowchart LR
   C -->|no| R[Reduce axes or values, or ask for budget]
   C -->|yes| A{approval mode}
   A --> W[Per row: specialist prompt]
-  W --> PR[prompt-review bound to request hash]
+  W --> PR[Compliance evidence; strict adds craft review]
   PR --> REG[prepare_request.py --write --register]
-  REG --> S[Submit 480p draft]
+  REG --> S[Generate at target; strict defaults to draft]
   S --> Q[QA and select under approval mode]
   Q --> D[Delivery per ratio]
 ```
@@ -116,10 +125,12 @@ flowchart LR
      regular file inside `--project` (no absolute path, `..` or symlink
      escape; `matrix.hero_decision`, `matrix.hero_take`), and the take file
      must still hash to `hero.sha256` (`matrix.hero_hash_mismatch`).
-   - **Draft first.** The default `--stage draft` adds `--param
-     resolution=480p` to both commands; hook steps also get
-     `--param duration=4`.
-   - **Required rules.** Every step carries `--required-rule` for
+   - **Generation target.** Default review mode uses `--stage production`,
+     requiring `--final-resolution <target>` for video. Strict defaults to
+     `--stage draft`, adding `--param resolution=480p`; an explicit stage wins.
+     Hook steps also get `--param duration=4`. Production includes audio steps;
+     final is a second video-only pass after selected drafts.
+   - **Required rules.** Strict steps carry `--required-rule` for
      `ad.claims_supported`, `ad.no_fabricated_testimonial`,
      `brand.copy_rules`, `library.pin_current`, `ad.variant_one_axis` and
      `ad.variant_budget_gate`; video steps add `video.text_free`. Hook steps
@@ -127,9 +138,11 @@ flowchart LR
      `--static-by-design <format>` records a static-by-design exemption.
      Swap and Motion Transfer steps record the source-preserving-edit
      exemption and dub steps the no-video-shot exemption in
-     `shot_rule_exemption`; the reviewer cites that exemption.
-   - **Asset IDs** are `<name>_<take>_draft`, `<name>_<take>_final` or
-     `<name>_<take>_audio`, so drafts, finals and retakes each get a distinct
+     `shot_rule_exemption`; the reviewer cites that exemption. Default retains
+     only the four compliance rules above. Do not load universal or shot-craft
+     checklists for those focused records.
+   - **Asset IDs** are `<name>_<take>_production`, `<name>_<take>_draft`,
+     `<name>_<take>_final` or `<name>_<take>_audio`, so stages and retakes get a distinct
      registry identity. A row registers at most its own last step; `after`
      names the variant whose selected take that step starts from.
    - **Paths** live in the variant's Studio shot folder
@@ -140,12 +153,15 @@ flowchart LR
      `ad-localize` plans, reviews and registers its own operations.
 6. **Produce each row** through the route below. For every provider step:
    write the shot manifest, write the prompt with the specialist skill, freeze
-   it at the printed path, run the hash command, run `prompt-review` inline
-   bound to that hash, resolve CRITICAL and MAJOR findings, run the register
+   it at the printed path, run the hash command, record the focused compliance
+   evidence (full `prompt-review` in strict) bound to that hash, resolve
+   failing or incomplete evidence, run the register
    command, then submit. Steps within a row run in their `after` order;
    independent rows may run in parallel with explicit file ownership.
-7. **QA and select** each 480p draft under the approval mode with a
-   hash-bound decision, then run `register --stage final --final-resolution
+7. **QA and select** the actual output under the approval mode with a
+   hash-bound decision. Default needs short actual candidate/final sanity,
+   not a full craft checklist. When using drafts, then run
+   `register --stage final --final-resolution
    <delivery target>` for the selected rows and repeat review, registration,
    QA and selection for the final. Place each selected take in its variant
    shot in Studio and record the selection. Rows that fail QA keep their
@@ -278,9 +294,10 @@ full table is in [axis routing](references/axis-routing.md#project-paths).
 - **Budget and cap refuse, they do not trim.** When `cost` exits 1, propose
   which axis or values to drop, or ask for a higher budget. Never silently
   drop rows.
-- **Every row is a normal generation.** Prompt-review, frozen prompts, request
-  hashes, registry registration before submission, 480p drafts first and the
-  approval mode apply to each provider step exactly as for any other shot.
+- **Every row is a normal generation.** Mode-appropriate review, frozen
+  prompts, request hashes, registry registration before submission and the
+  approval mode apply to each provider step. Strict defaults to 480p drafts;
+  default goes directly to the requested supported target.
 - **Facts and CTA never vary by accident.** A hook row changes the opening
   beat only; a language row translates the locked script; no row invents a
   claim, offer or testimonial. Check rows against

@@ -26,9 +26,9 @@ from validate_request import (
     parse_frontmatter,
     prepared_evidence_findings,
     project_mode_snapshot,
+    request_review_findings,
     schema_findings,
     validate_request,
-    validate_review,
 )
 
 VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
@@ -137,7 +137,10 @@ def canvas_contract_version(root: Path) -> int:
 
 def declares_approval_mode(root: Path) -> bool:
     text = contained_path(root, "project.md").read_text(encoding="utf-8")
-    return text.startswith("---") and "approval_mode" in parse_frontmatter(text)
+    if not text.startswith("---"):
+        return False
+    metadata = parse_frontmatter(text)
+    return "approval_mode" in metadata or "review_mode" in metadata
 
 
 def canvas_finding(root: Path, request: dict[str, Any]) -> Finding | None:
@@ -311,12 +314,21 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
         findings = prepared_evidence_findings(root, request)
     result: dict[str, Any] = {"request_sha256": request["request_sha256"]}
     review = capabilities = None
-    if args.register and not findings:
+    if args.review:
         review = load_json(root, args.review)
+        findings.extend(
+            request_review_findings(
+                root, request, review, args.required_rule, review_provided=True
+            )
+        )
+    if args.register and not findings:
         capabilities = load_json(root, args.capabilities)
         findings = validate_request(root, request, capabilities)
         findings.extend(
-            validate_review(review, request["request_sha256"], args.required_rule)
+            request_review_findings(
+                root, request, review, args.required_rule,
+                review_provided=args.review is not None,
+            )
         )
         canvas = canvas_finding(root, request)
         if canvas is not None:
@@ -328,7 +340,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
         release_unregistered_request(root, args.asset, request["operation_id"])
     path = write_once(root, f"requests/request_{args.asset}.json", serialize(request))
     result["path"] = path.relative_to(root).as_posix()
-    if args.register and review is not None and capabilities is not None:
+    if args.register and capabilities is not None:
         try:
             if args.adopt_provider_task_id:
                 adopt_submitted_operation(
@@ -385,8 +397,8 @@ def parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     cli = parser()
     args = cli.parse_args(argv)
-    if args.register and not (args.write and args.review and args.capabilities):
-        cli.error("--register requires --write, --review and --capabilities")
+    if args.register and not (args.write and args.capabilities):
+        cli.error("--register requires --write and --capabilities")
     if args.replace_unregistered and not args.write:
         cli.error("--replace-unregistered requires --write")
     adopting = args.adopt_provider_task_id

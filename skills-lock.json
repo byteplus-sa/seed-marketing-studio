@@ -23,7 +23,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-localize/SKILL.md",
-      "computedHash": "43808639fdcc7f76b40a24254f07ab0a3b57282317626c9031809a4ffb634f28"
+      "computedHash": "2d4ae9d9f8a1e32aa4ff2104f51638f970a9ad5adb757610ca65e307cdce6a1b"
     },
     "ad-performance-loop": {
       "source": "./local",
@@ -35,7 +35,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-variant-matrix/SKILL.md",
-      "computedHash": "6cd3a3912a325d83239fa010e6aeede600d08129e7754755eeb45797dbf27ddf"
+      "computedHash": "0cb3859f4361beae2caf1884319b761c1c2ffea7e6a2d6f21ec227b3398822fa"
     },
     "ark-mcp": {
       "source": "./local",
@@ -65,7 +65,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/brief-intake/SKILL.md",
-      "computedHash": "4bfc14879899852bff1eb375f164da9a18b3a0c032601d7d441ab08561fe2934"
+      "computedHash": "a280f00797850d7350403fd97d1ba98160d8fe50ac7cedf47a2e9e87a3595dd0"
     },
     "color-grade-palettes": {
       "source": "./local",
@@ -95,7 +95,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/film-production/SKILL.md",
-      "computedHash": "d840a37e6e14ebf94787605a350f89262c9d78670919e306bc52a2a214b54a3e"
+      "computedHash": "2c918c447ac31c5cfccd041e36611975796fe42506d54793b4b4d1ba925df378"
     },
     "general-video": {
       "source": "heygen-com/hyperframes",
@@ -191,7 +191,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/prompt-review/SKILL.md",
-      "computedHash": "dfddd1da252de5dc8c692eeaaa9baa10f9f765e6744d4ae3729d54dab8fbfc19"
+      "computedHash": "37cf909284c0b7c9d4c2ef6e3fc3189c7de932ab3efa5cd94e0130013047134d"
     },
     "reference-edit-rebuild": {
       "source": "./local",
@@ -407,7 +407,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-storyboard/SKILL.md",
-      "computedHash": "51b4c5ddcd272151b206dacd15f0003bace079df56f47f80b5b0467d9a0561da"
+      "computedHash": "e8345e75a51ad4938d426349f174526a13fc2514e25ca6c405dd96c09667f29c"
     },
     "seedream-woodblock-poster": {
       "source": "./local",

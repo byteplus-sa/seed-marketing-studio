@@ -48,8 +48,8 @@
     },
     "ad-variant-matrix": {
       "kind": "orchestrator",
-      "description": "Orchestrator that turns one approved hero ad into a planned variant test matrix: one axis at a time by default (full factorial only on request) across hook, talent, product, outfit, location, language, market and ratio. Routes each axis to its specialist (new opening beat spliced in Studio, object swap, dubbing with captions, market adaptation, per-ratio delivery), names every variant {campaign}_{concept}_{axis-values}_v{nn}, previews cost, and refuses rows over the budget or variant cap. Every row still passes prompt-review and registry registration; nothing is submitted by the planner. Use to multiply a winning ad into testable variants. Not for writing the hero ad, separate concept tests, or reading performance results.",
-      "readme_summary": "Turn one approved hero ad into a one-axis-at-a-time variant matrix with routing, naming, cost and budget gates; every row still goes through prompt-review and registration.",
+      "description": "Orchestrator that turns one approved hero ad into a planned variant test matrix: one axis at a time by default (full factorial only on request) across hook, talent, product, outfit, location, language, market and ratio. Routes each axis to its specialist (new opening beat spliced in Studio, object swap, dubbing with captions, market adaptation, per-ratio delivery), names every variant {campaign}_{concept}_{axis-values}_v{nn}, previews cost, and refuses rows over the budget or variant cap. Every row still passes mode-appropriate review and registry registration; nothing is submitted by the planner. Use to multiply a winning ad into testable variants. Not for writing the hero ad, separate concept tests, or reading performance results.",
+      "readme_summary": "Plan approved-ad variants with routing, cost and budget gates; default keeps four focused compliance records, strict adds craft review, and all operations register.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
@@ -282,8 +282,8 @@
     },
     "prompt-review": {
       "kind": "orchestrator",
-      "description": "Review BytePlus Seedance, Seedream, and Seed Audio prompts inline by default, with sub-agent review only when the user explicitly requests it for a project or specific generation. Use explicit model, operation, change contract, and request hash. Return rule findings and complete or incomplete status; fix and re-review changed prompts before generation. Use for video, VFX, multilingual dialogue, image/character/location/prop/UI/card/storyboard prompts, music, SFX, or ambience. Trigger when asked to review, QA, validate, or lint prompts, or before submitting newly authored generation prompts. Exclude manifest-only edits, generated-media review, and frozen snapshots unless re-review is explicitly requested.",
-      "readme_summary": "Review and fix BytePlus Seedance, Seed Audio, and Seedream prompts against the repo's best practices inline by default; use a sub-agent only when explicitly requested for a project or specific generation.",
+      "description": "Review generation prompts when explicitly requested, required by scoped rules, or in strict review mode. Do not trigger for routine default-mode production, manifest edits, or generated-media review.",
+      "readme_summary": "Review prompts for strict mode, explicit review requests or required rules; routine default production skips full checklists. Sub-agent review requires an explicit request.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
