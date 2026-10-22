@@ -79,7 +79,7 @@ flowchart LR
 - **Brief first.** `brief-intake` records the intended audience reaction, the central visual idea, the product facts and the CTA, plus any cited reference ads.
 - **Canon before shots.** Real logos and packshots are acquired from the brand, never regenerated. Exact copy, prices, CTAs and end cards are rendered with `html-graphic-render`; Seedream is for invented photography and illustration.
 - **Text stays out of generated video.** Captions, taglines, CTAs and end cards are added in post (HyperFrames or FFmpeg).
-- **Review depth is explicit.** Default uses one image, minimal preflight and final sanity, with no automatic draft-first pass. Strict retains detailed checks, three-image sampling and Seedance 480p draft-first.
+- **Review depth is explicit.** Default uses one image, minimal preflight and final sanity. Strict retains detailed checks and three-image sampling. Both modes use draft-first video.
 - **Cinematic means planned coverage.** Narrative and ad shots carry a recorded shot plan (size, angle, move, lens intent, named light source) so spots do not read as a single static take.
 - **Compliance is recorded, not assumed.** Claims, testimonials and AI disclosure for paid ads follow the [ad compliance contract](.agents/contracts/ad-compliance.md); placement specs live in the dated [ad platforms contract](.agents/contracts/ad-platforms.md).
 - **Studio is the final authority.** HyperFrames Studio holds the locked assets and renders the delivery file.
@@ -136,11 +136,17 @@ approval_mode: approve_for_me
 ```
 
 `default` means minimal preflight and actual final sanity, one generated image
-per requested asset, and direct generation at the requested supported target.
-No full prompt-review checklist/report or extra draft pass is mandatory.
+per requested asset, and draft-first video.
+No full prompt-review checklist/report is mandatory.
 Set `review_mode: strict` for the existing detailed checks, three-image
-sampling and draft-first workflow. Explicit counts or draft requests win;
+sampling and the same draft-first workflow. Explicit image counts win;
 three-panel sheet and storyboard layouts are unchanged.
+
+Every new Seedance 2.5 request, including edits and variants, explicitly sets
+`resolution: "480p"` and boolean `draft: true`. A delivery target alone is not
+a bypass; new 2.5 generations have no skip-draft exception. Resolve tool-schema or transport mismatches without
+dropping the flag or silently using non-draft 2.5. Other models without native
+Draft use a plain 480p test; promote only selected native Drafts.
 
 Studio runs the expensive HyperFrames check at delivery in both modes. Strict
 also runs it at shot-generation and assembly-review; default skips those
@@ -153,7 +159,8 @@ that authority. Existing writers still need short truthful, hash-bound
 candidate/final sanity evidence, never a fake checklist pass or user quote.
 Missing mode fields use the defaults for new actions only; invalid values fail.
 
-For ordinary default requests, omit `--review` from both commands:
+For ordinary default requests, omit `--review` from both commands. Add
+`--param resolution=480p --param draft=true` when preparing Seedance 2.5:
 
 ```bash
 uv run python .agents/scripts/prepare_request.py --project projects/<p> --asset <asset> --prompt <prompt.md> --model <model> --operation <operation> --expected-output <output> --write --register --capabilities <capabilities.json>
@@ -171,8 +178,10 @@ register or begin submission after either mode becomes explicit.
 focused compliance records in a real request-bound report:
 `ad.claims_supported`, `ad.no_fabricated_testimonial`, `brand.copy_rules` and
 `library.pin_current`. Missing evidence stays blocked, not filled with fake
-passes. Default variant registration uses `--stage production` and
-`--final-resolution <target>` for video; strict defaults to `--stage draft`.
+passes. Both modes default variant registration to `--stage draft`, emitting
+`resolution=480p` and, for Seedance 2.5, `draft=true`. The generic final pass is
+for other models; prepare 2.5 promotions individually from selected
+`draft_task_id` values and supported output settings.
 Rights, capabilities, reference locks, budget, registry and duplicate safety
 remain. Paid-ad disclosure decisions need your actual words, platform-required
 disclosures remain required, and L3-L5 localization still needs explicit native
@@ -367,7 +376,7 @@ The workspace ships **80 skills**. Leaf skills are independent; declared orchest
 
 - **Secrets** come from environment variables or a gitignored `.env`. Never hard-code or commit credentials or signed URLs.
 - **Watermark** is off by default where the tool supports the parameter.
-- **Cost:** lowest suitable cost within the requested target; default uses one image and no extra draft pass, strict uses three samples and selected 480p drafts before final generation.
+- **Cost:** lowest suitable cost within the requested target; default uses one image, strict uses three samples, and both use selected 480p video drafts before final generation (native `draft: true` for Seedance 2.5).
 - **Reproducibility:** every element, scene and shot has a manifest with the prompt snapshot, references, model, parameters, task IDs, hashes and cost.
 - **Rights:** real people, voices, brands and logos need authorization; creative approval never implies it.
 - **Local-first:** `projects/`, `library/`, `docs/`, `plans/` and `specs/` stay local and are never committed.

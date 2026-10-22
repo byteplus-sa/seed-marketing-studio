@@ -13,7 +13,12 @@ from pathlib import Path
 from typing import Any
 
 from ruamel.yaml.error import YAMLError
-from validate_request import Finding, project_review_mode, schema_findings
+from validate_request import (
+    Finding,
+    is_seedance_25,
+    project_review_mode,
+    schema_findings,
+)
 
 AXES = (
     "hook",
@@ -87,9 +92,9 @@ REGISTER_PROCEDURE = [
         "its source, and a step owned by another row is never registered again"
     ),
     (
-        "Inspect and select with a hash-bound decision; default goes directly to "
-        "the delivery target, strict or explicit drafts precede --stage final; "
-        "a retake uses a new --take"
+        "Inspect and select the 480p draft with a hash-bound decision in both "
+        "review modes; promote Seedance 2.5 with the selected draft_task_id and "
+        "output settings, use --stage final for other models; a retake uses a new --take"
     ),
 ]
 PROVIDER_ROUTES = {"object-swap", "motion-recast", "hook-opening", "language-dub"}
@@ -593,6 +598,8 @@ def step_params(route: str, options: argparse.Namespace) -> list[str]:
         DRAFT_RESOLUTION if options.stage == "draft" else options.final_resolution
     )
     params = [f"resolution={resolution}"]
+    if options.stage == "draft" and is_seedance_25(options.video_model):
+        params.append("draft=true")
     if route == "hook-opening":
         params.append(f"duration={HOOK_MIN_DURATION_S}")
     return params
@@ -778,12 +785,32 @@ def option_findings(
         if row["role"] == "variant"
         for step in staged_steps(row, options.stage)
     }
-    if routes - AUDIO_ROUTES and options.stage != "draft" and (
-        not options.final_resolution
-        or not RESOLUTION.fullmatch(options.final_resolution)
-        or (
-            options.stage == "final"
-            and options.final_resolution == DRAFT_RESOLUTION
+    if (
+        routes - AUDIO_ROUTES
+        and options.stage != "draft"
+        and is_seedance_25(options.video_model or "")
+    ):
+        findings.append(
+            Finding(
+                "seedance.draft_promotion",
+                "Seedance 2.5 starts with --stage draft in both review modes. "
+                "For finals, prepare each selected native draft_task_id with only "
+                "supported output settings; this matrix has no per-row draft task "
+                "selection and cannot emit native promotions. A delivery target "
+                "alone does not authorize a fresh non-draft request.",
+                "--stage",
+            )
+        )
+    if (
+        routes - AUDIO_ROUTES
+        and options.stage != "draft"
+        and (
+            not options.final_resolution
+            or not RESOLUTION.fullmatch(options.final_resolution)
+            or (
+                options.stage == "final"
+                and options.final_resolution == DRAFT_RESOLUTION
+            )
         )
     ):
         findings.append(
@@ -845,9 +872,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
     result["rows"] = rows
     if args.command == "register":
         args.review_mode = project_review_mode(args.project)
-        args.stage = args.stage or (
-            "draft" if args.review_mode == "strict" else "production"
-        )
+        args.stage = args.stage or "draft"
         result["review_mode"] = args.review_mode
         if not TAKE.fullmatch(args.take):
             raise ValueError(f"--take must look like t01: {args.take}")

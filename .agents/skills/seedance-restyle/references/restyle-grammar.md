@@ -203,8 +203,9 @@ slightly stepped motion. Preserve the source lamp's motivated light direction.
 Silent output. Sound is added in post.
 ```
 
-Package: verify the current edit schema and source binding requirements, use a
-supported 480p draft and `generate_audio: false`, and preserve the original
+Package: verify the current edit schema and source binding requirements, use
+explicit `resolution: "480p"`, boolean `draft: true` and `generate_audio: false`,
+resolving schema or transport conflicts without dropping the flag, and preserve the original
 source. Do not round or trim its frame count. Review medium coverage, geometry,
 contacts and actual timing before muxing the authorized source audio.
 

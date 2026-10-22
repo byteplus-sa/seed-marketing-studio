@@ -78,9 +78,11 @@ post-audio route, and the test-ladder rung.
    captions and copy are added in post.
 8. **Test ladder**: follow the workspace draft policy with currently supported
    parameters. Propose a short probe only for a difficulty identified in the
-   current source or result, with user approval for its selected span. Use
-   native Draft and promotion only when the live schema supports the route;
-   otherwise use a new reviewed request. Prior runs do not gate a new case.
+   current source or result, with user approval for its selected span. Every
+   new 2.5 generation uses explicit `resolution: "480p"` and boolean
+   `draft: true` in both review modes. Resolve schema or transport conflicts
+   without dropping the flag; promote only selected native Drafts.
+   Prior runs do not gate a new case.
 9. **Keep the same place.** A restyle changes how the background looks, never
    where the scene is: a city street stays a city street, with the same kind of
    buildings, furniture and plants. Never name a different location unless the

@@ -14,6 +14,9 @@ from ruamel.yaml import YAML
 from ruamel.yaml.error import YAMLError
 
 SCHEMA_ROOT = Path(__file__).resolve().parents[1] / "contracts/schemas"
+SEEDANCE_25_MODEL = re.compile(
+    r"(?:^|[-._])seedance[-._]2[-._]5(?:$|[-._])", re.IGNORECASE
+)
 
 
 @dataclass(frozen=True)
@@ -593,6 +596,115 @@ def external_schema_references(value: Any) -> bool:
     return False
 
 
+def is_seedance_25(model: str) -> bool:
+    return bool(SEEDANCE_25_MODEL.search(model))
+
+
+def native_draft_findings(request: dict[str, Any]) -> list[Finding]:
+    if not is_seedance_25(request["model"]):
+        return []
+    params = request["params"]
+    task_id = params.get("draft_task_id")
+    if isinstance(task_id, str) and task_id.strip():
+        if set(params) <= {
+            "draft_task_id",
+            "resolution",
+            "watermark",
+            "return_last_frame",
+            "priority",
+            "execution_expires_after",
+            "safety_identifier",
+        }:
+            return []
+    elif (
+        "draft_task_id" not in params
+        and params.get("draft") is True
+        and params.get("resolution") == "480p"
+    ):
+        return []
+    return [
+        Finding(
+            "seedance.draft_promotion",
+            'New Seedance 2.5 requests require resolution="480p" and boolean '
+            "draft=true in both review modes. A delivery target does not skip "
+            "native draft. Resolve capability or transport conflicts, never "
+            "fall back to plain 480p. A selected native draft promotion carries "
+            "only draft_task_id and supported output settings.",
+            "params",
+        )
+    ]
+
+
+def draft_promotion_findings(root: Path, request: dict[str, Any]) -> list[Finding]:
+    try:
+        registry = json.loads(contained_path(root, "task_ids.json").read_text())
+        if schema_findings(registry, "task-registry.schema.json"):
+            raise ValueError("Draft source registry is invalid")
+        sources = [
+            task
+            for task in registry["tasks"]
+            if task["provider_task_id"] == request["params"]["draft_task_id"]
+        ]
+        if len(sources) != 1:
+            raise ValueError("draft_task_id must identify one registered native Draft")
+        source = sources[0]
+        if (
+            source["model"] != request["model"]
+            or source["params"].get("draft") is not True
+            or source["params"].get("resolution") != "480p"
+            or source["submission_status"] != "terminal"
+            or source["provider_status"] not in ("succeeded", "completed")
+            or source["review_status"] == "rejected"
+        ):
+            raise ValueError(
+                "Promotion needs a successful native 480p Draft of the same model"
+            )
+        prompt = contained_path(root, source["prompt_file"]).read_bytes()
+        if (
+            hashlib.sha256(prompt).hexdigest() != source["prompt_sha256"]
+            or source["prompt_sha256"] != request["prompt_sha256"]
+            or source["request_sha256"]
+            != compute_request_hash(
+                prompt,
+                source["references"],
+                source["model"],
+                source["operation"],
+                source["params"],
+                approval_mode=source.get("approval_mode"),
+                project_sha256=source.get("project_sha256"),
+            )
+        ):
+            raise ValueError(
+                "Draft source or prompt changed; prepare a new native Draft"
+            )
+        if request["references"] != source["references"]:
+            raise ValueError(
+                "Promotion provenance must retain the exact draft references, never new inputs"
+            )
+        output = source.get("extensions", {}).get("expected_output")
+        if not isinstance(output, str) or not output:
+            raise ValueError(
+                "Draft source has no recorded output for selection verification"
+            )
+        for path in sorted((root / "decisions").glob("*.json")):
+            decision = json.loads(
+                contained_path(root, f"decisions/{path.name}").read_text()
+            )
+            if (
+                isinstance(decision, dict)
+                and decision.get("decision_type") == "variant_selection"
+                and decision.get("asset_id") == source["asset_id"]
+                and decision.get("subject_path") == output
+                and not decision_findings(root, decision)
+            ):
+                return []
+        raise ValueError(
+            "Draft needs a passing hash-bound selection decision; review_status alone is insufficient"
+        )
+    except (ValueError, TypeError, OSError, UnicodeError, YAMLError) as error:
+        return [Finding("seedance.draft_promotion", str(error), "task_ids.json")]
+
+
 def capability_findings(request: dict[str, Any], evidence: Any) -> list[Finding]:
     malformed = schema_findings(evidence, "capability-evidence.schema.json")
     if malformed:
@@ -632,7 +744,13 @@ def capability_findings(request: dict[str, Any], evidence: Any) -> list[Finding]
     try:
         Draft202012Validator.check_schema(schema)
         for error in Draft202012Validator(schema).iter_errors(request["params"]):
-            findings.append(Finding("model.supported_mode", error.message))
+            message = error.message
+            if is_seedance_25(request["model"]):
+                message += (
+                    ". Resolve Seedance 2.5 capability evidence or transport "
+                    "without dropping native draft or falling back to plain 480p"
+                )
+            findings.append(Finding("model.supported_mode", message))
     except (SchemaError, TypeError, ValueError) as error:
         findings.append(
             Finding("model.supported_mode", f"Invalid capability schema: {error}")
@@ -663,11 +781,22 @@ def capability_findings(request: dict[str, Any], evidence: Any) -> list[Finding]
     return findings
 
 
-def prepared_evidence_findings(project_root: Path, request: Any) -> list[Finding]:
+def prepared_evidence_findings(
+    project_root: Path, request: Any, *, existing_submission: bool = False
+) -> list[Finding]:
     findings = schema_findings(request, "generation-request.schema.json")
     if findings:
         return findings
+    if not existing_submission:
+        findings.extend(native_draft_findings(request))
     root = Path(project_root).resolve()
+    if (
+        not existing_submission
+        and is_seedance_25(request["model"])
+        and "draft_task_id" in request["params"]
+        and not findings
+    ):
+        findings.extend(draft_promotion_findings(root, request))
     try:
         prompt_path = contained_path(root, request["prompt_file"])
         prompt_bytes = prompt_path.read_bytes()
@@ -721,9 +850,15 @@ def prepared_evidence_findings(project_root: Path, request: Any) -> list[Finding
 
 
 def validate_request(
-    project_root: Path, request: Any, capability_evidence: Any
+    project_root: Path,
+    request: Any,
+    capability_evidence: Any,
+    *,
+    existing_submission: bool = False,
 ) -> list[Finding]:
-    findings = prepared_evidence_findings(project_root, request)
+    findings = prepared_evidence_findings(
+        project_root, request, existing_submission=existing_submission
+    )
     if schema_findings(request, "generation-request.schema.json"):
         return findings
     findings.extend(capability_findings(request, capability_evidence))

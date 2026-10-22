@@ -4,11 +4,11 @@
     {
       "id": 1,
       "prompt": "Submit this approved 10 s Seedance 2.5 shot through ark-mcp as a draft, then promote the selected draft to 1080p with watermark off.",
-      "expected_output": "Two background submissions through ark_job_submit with the target's arguments nested under arguments.input: a draft request with draft true and 480p (or resolution omitted), then a promotion request that carries only draft_task_id, resolution 1080p and watermark false. Both IDs are recorded and the final audio is re-checked.",
+      "expected_output": "Two background submissions through ark_job_submit with the target's arguments nested under arguments.input: a draft request with boolean draft true and explicit resolution 480p, then a promotion request that carries only draft_task_id, resolution 1080p and watermark false. Both IDs are recorded and the final audio is re-checked.",
       "files": [],
       "assertions": [
         "The submission shape is {input: {tool_name, arguments: {input: {...}}}}.",
-        "The draft request sets draft true and does not set a resolution other than 480p.",
+        "The draft request sets boolean draft true and explicit resolution 480p in either review mode; a schema mismatch is resolved without dropping the flag.",
         "The promotion request contains draft_task_id, resolution and watermark and no prompt, images, videos, audios, duration, ratio, generate_audio or omni_reference_task_type.",
         "watermark false is sent again on the promotion because omitted settings use model defaults.",
         "The agent says the final render's audio must be checked again because it is not identical to the draft's."

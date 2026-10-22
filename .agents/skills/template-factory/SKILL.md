@@ -179,11 +179,12 @@ pin_local → breakdown_draft → breakdown_approved → elements_draft
    transport. Prefer `seedance_2_5_create_task`; use an equivalent Ark CLI route
    only before any ambiguous submission and only when it satisfies the same
    contract. Set the pin's ratio as a request parameter, never as a prompt
-   sentence. Submit each clip as a 480p draft (`resolution: "480p"`), review
+   sentence. Submit each new 2.5 clip with explicit `resolution: "480p"` and
+   boolean `draft: true` in both modes, review
    it, and select under the project's approval mode before final-resolution
-   generation. Use native Draft/promotion (`draft: true`, then
-   `draft_task_id`) only after verifying current tool, model and operation
-   support; otherwise the final is a new registered, reviewed request. Persist the task id, poll, download, and run technical and
+   generation. Resolve schema or transport conflicts without dropping the
+   flag; promote selected native Drafts by `draft_task_id` after verifying
+   current constraints. Persist the task id, poll, download, and run technical and
    playback QA, including frame samples with corner crops for leaked text. Keep
    exact brand copy, logos and captions out of the video prompt (plain, clean
    space) and composite them afterwards as deterministic `html-graphic-render`
@@ -322,14 +323,15 @@ supported clip, split on shot boundaries, generate natural-duration clips, and
 assemble approved takes; do not compress the whole template into an unsupported
 duration.
 
-Seedance 2.5 template runs default to 480p drafts for video drafts and
+Seedance 2.5 template runs require explicit `resolution: "480p"` and boolean
+`draft: true` in both modes for every new generation and
 revisions, with the delivery resolution recorded as a separate project
-decision. Use native Draft/promotion only after verifying current tool, model
-and operation support. Generate or promote the final only after passing draft
+decision. Resolve schema or transport conflicts without dropping the flag.
+Promote the final only after passing draft
 review and mode-authorized selection (including draft assembly review for
 multi-shot work), then re-inspect the final: its audio is not identical to the
-draft's. Honor explicit user overrides
-and record verified operation constraints.
+draft's. There is no skip-draft exception. Other models without native Draft
+use a plain 480p test followed by a separately registered final request.
 
 ## Storyboard rules
 

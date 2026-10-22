@@ -108,6 +108,7 @@ native task support.
          "input": {
            "prompt": "...",
            "draft": true,
+           "resolution": "480p",
            "ratio": "16:9",
            "duration": 10,
            "generate_audio": true,
@@ -256,9 +257,13 @@ actual properties. Media QA steps live in
    live schema carries the fields you plan to send. Do not send fields the
    live tool lacks; for example, the Seedance create tools in this workspace
    expose no `camera_fixed` or `seed`.
-2. **Draft Seedance 2.5 first.** Submit `draft: true` (480p), review, then
+2. **Draft Seedance 2.5 first in both review modes.** Submit explicit
+   `resolution: "480p"` and boolean `draft: true`, review, then
    promote with `draft_task_id` only. Details and constraints in
-   [Seedance creation](references/seedance.md).
+   [Seedance creation](references/seedance.md). Resolve a missing Draft field
+   in the schema or transport; never omit it or silently use non-draft 2.5.
+   A delivery target alone is not an override. Other models without native
+   Draft use a plain 480p test.
 3. **Poll at the advertised interval** (`recommended_poll_after_ms`,
    `poll_after_ms`) and relay `queue.hint`; ModelArk publishes no queue
    position or ETA.

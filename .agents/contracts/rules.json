@@ -412,10 +412,9 @@
         "preflight"
       ],
       "owner_path": ".agents/skills/seedance-prompt-25/references/parameter-reference.md",
-      "summary": "A Seedance 2.5 draft is a draft-mode 480p request, and its final is promoted by draft_task_id carrying only output settings; prompt, references, duration, ratio and audio change only before the draft, and the final's audio is checked again.",
+      "summary": "Every new Seedance 2.5 generation uses explicit resolution 480p and boolean draft true in both review modes; a delivery target alone does not bypass it. Resolve schema or transport mismatches without dropping the flag. Promote a selected native draft by draft_task_id with only output settings, and check final audio again.",
       "exceptions": [
-        "An operation without native Draft support records capability evidence and runs the final as a new reviewed request.",
-        "An explicit user instruction to skip the draft."
+        "Other models without native Draft use a plain 480p test and a new reviewed final request; this is not a fallback for Seedance 2.5."
       ]
     },
     {

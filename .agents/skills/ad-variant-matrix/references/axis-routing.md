@@ -71,7 +71,7 @@ instead of requiring the shot-plan rules.
 
 - Parameters follow the swap route: `@Video 1` is the muted master,
   `generate_audio: false`, ratio and duration omitted (locked to the input),
-  `resolution: 480p` for the draft.
+  explicit `resolution: "480p"` and boolean `draft: true` for every new 2.5 draft.
 - Sound returns in post: the hero's audio track, re-cut if the swap changed
   any timing.
 

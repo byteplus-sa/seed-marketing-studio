@@ -24,7 +24,7 @@ or the approval mode.
 
 Read independent `review_mode` and `approval_mode` from `project.md`. Missing
 fields use default/approve_for_me for new actions; invalid values fail.
-Default skips blanket prompt-craft checklists and draft-first. Four focused
+Default skips blanket prompt-craft checklists, but video is draft-first in both modes. Four focused
 compliance records still require an honest request-bound report for Marketing
 variants: `ad.claims_supported`, `ad.no_fabricated_testimonial`,
 `brand.copy_rules` and `library.pin_current`. Do not fabricate passes when
@@ -77,7 +77,7 @@ flowchart LR
   A --> W[Per row: specialist prompt]
   W --> PR[Compliance evidence; strict adds craft review]
   PR --> REG[prepare_request.py --write --register]
-  REG --> S[Generate at target; strict defaults to draft]
+  REG --> S[480p draft; native draft=true for Seedance 2.5]
   S --> Q[QA and select under approval mode]
   Q --> D[Delivery per ratio]
 ```
@@ -125,11 +125,16 @@ flowchart LR
      regular file inside `--project` (no absolute path, `..` or symlink
      escape; `matrix.hero_decision`, `matrix.hero_take`), and the take file
      must still hash to `hero.sha256` (`matrix.hero_hash_mismatch`).
-   - **Generation target.** Default review mode uses `--stage production`,
-     requiring `--final-resolution <target>` for video. Strict defaults to
-     `--stage draft`, adding `--param resolution=480p`; an explicit stage wins.
-     Hook steps also get `--param duration=4`. Production includes audio steps;
-     final is a second video-only pass after selected drafts.
+   - **Generation target.** Both modes default to `--stage draft`, adding
+     `--param resolution=480p` and, for resolved Seedance 2.5 models,
+     `--param draft=true`. A delivery target alone does not bypass drafts.
+     Resolve schema or transport mismatches without dropping the native flag.
+     Other models without native Draft use plain 480p tests. Hook steps also
+     get `--param duration=4`; audio steps get neither video parameter.
+     Explicit production/final stages remain available for other models.
+     For 2.5, the planner refuses those stages: prepare promotions individually
+     from selected `draft_task_id` values and supported output settings, since
+     the matrix has no per-row native draft selection.
    - **Required rules.** Strict steps carry `--required-rule` for
      `ad.claims_supported`, `ad.no_fabricated_testimonial`,
      `brand.copy_rules`, `library.pin_current`, `ad.variant_one_axis` and
@@ -160,10 +165,12 @@ flowchart LR
    independent rows may run in parallel with explicit file ownership.
 7. **QA and select** the actual output under the approval mode with a
    hash-bound decision. Default needs short actual candidate/final sanity,
-   not a full craft checklist. When using drafts, then run
+   not a full craft checklist. For other models without native Draft, run
    `register --stage final --final-resolution
    <delivery target>` for the selected rows and repeat review, registration,
-   QA and selection for the final. Place each selected take in its variant
+   QA and selection for the final. For 2.5, register a native promotion from
+   the selected draft instead; changed inputs start another native Draft.
+   Place each selected take in its variant
    shot in Studio and record the selection. Rows that fail QA keep their
    name; a retake is a new `--take t02`, not a new variant name.
 8. **Deliver** each selected variant per placement with `ad-delivery-formats`
@@ -296,8 +303,8 @@ full table is in [axis routing](references/axis-routing.md#project-paths).
   drop rows.
 - **Every row is a normal generation.** Mode-appropriate review, frozen
   prompts, request hashes, registry registration before submission and the
-  approval mode apply to each provider step. Strict defaults to 480p drafts;
-  default goes directly to the requested supported target.
+  approval mode apply to each provider step. Both modes default to 480p drafts,
+  with explicit boolean `draft: true` for every new Seedance 2.5 generation.
 - **Facts and CTA never vary by accident.** A hook row changes the opening
   beat only; a language row translates the locked script; no row invents a
   claim, offer or testimonial. Check rows against
