@@ -24,7 +24,7 @@
     },
     {
       "id": "ugc_no_claims",
-      "skill": "ugc-ad-modes",
+      "skill": "seedance-ugc-ads",
       "prompt": "Write two short ad hooks with different persuasive angles for a commuter mug. Supplied facts: 350 ml, screw lid, fits the supplied standard cup-holder photo. Main objection: will it fit my commute? No leak, temperature, savings, personal trial, or numerical performance evidence is supplied. CTA: view dimensions on the product page. Write hooks only, not video generation.",
       "criteria": {
         "intent": "Fulfills the concrete requested deliverable and audience intent.",
@@ -34,7 +34,7 @@
     },
     {
       "id": "ugc_supported_claim",
-      "skill": "ugc-ad-modes",
+      "skill": "seedance-ugc-ads",
       "prompt": "Write two short ad hooks for a 220 g travel keyboard versus our previous 440 g model, using those supplied verified product weights only. Audience objection: carrying too much on the train. No testimonials or typing-speed evidence. CTA: compare specifications. Choose genuinely different angles; no generation.",
       "criteria": {
         "intent": "Fulfills the concrete requested deliverable and audience intent.",

@@ -1,0 +1,187 @@
+{
+  "skill_name": "seedance-ugc-ads",
+  "suite": "ad-modes",
+  "scope": "Hypothetical offline prompt cases with preserved suite-scoped legacy IDs, not observed campaign or generated-media results.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a 15-second Seedance 2.5 prompt for a UGC ad for a vitamin C serum. The creator is a woman in her 30s in her bathroom. She should mention one honest drawback. Give me 3 hook variants. Vertical 9:16 for TikTok.",
+      "expected_output": "A useful, evidence-bounded ad prompt preserving the explicit brief; unresolved factual dependencies are identified without invented dialogue.",
+      "files": [],
+      "expectations": [
+        "Preserves requested woman in her 30s, bathroom, 15-second duration, vertical framing, and three hooks.",
+        "Hooks differ in persuasive angle and visible payoff, not just wording; no unsupported efficacy, savings, or experience.",
+        "Does not invent an honest drawback; asks for the actual limitation or labels it unresolved outside spoken dialogue.",
+        "Provides a feasible action sequence and conversational delivery without mandatory filler words.",
+        "Uses a truthful proposed CTA without inventing a destination or offer."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Write a 15-second Seedance prompt for a UGC unboxing ad for wireless earbuds. Show the box opening, the product reveal, and the first reaction. Three angles: overhead, 45-degree, and close-up.",
+      "expected_output": "A useful, evidence-bounded ad prompt preserving the explicit brief; unresolved factual dependencies are identified without invented dialogue.",
+      "files": [],
+      "expectations": [
+        "Preserves the requested overhead, oblique, and close-up coverage with a feasible 15-second sequence.",
+        "Reveals package and earbuds coherently without inventing accessories or review counts.",
+        "Directs observable handling and sensory audio, not a fabricated prior experience.",
+        "Protects packaging identity and distinguishes reference guidance from guaranteed text fidelity."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Write a 15-second Seedance prompt for a UGC how-to ad showing how to use a portable espresso maker. The creator should demonstrate the steps in a real kitchen. Include captions guidance.",
+      "expected_output": "A useful, evidence-bounded ad prompt preserving the explicit brief; unresolved factual dependencies are identified without invented dialogue.",
+      "files": [],
+      "expectations": [
+        "Keeps the requested real-kitchen tutorial and a comprehensible 15-second sequence.",
+        "Does not invent device-specific operating steps; asks for missing instructions or labels the operational draft incomplete.",
+        "Places caption guidance in finishing rather than assuming reliable generated text or automatic platform captions.",
+        "Avoids invented brand names and destinations.",
+        "Camera and speech align with the steps rather than enforcing arbitrary cut rates."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Write a 6-second Seedance prompt for a product showcase of a stainless steel water bottle. Product-as-hero, no presenter, studio lighting. Use the 1-2-1 structure.",
+      "expected_output": "A useful, evidence-bounded ad prompt preserving the explicit brief; unresolved factual dependencies are identified without invented dialogue.",
+      "files": [],
+      "expectations": [
+        "Preserves six seconds, no presenter, product-as-hero, studio lighting, and requested 1-2-1 structure.",
+        "Each beat reveals the bottle or a relevant detail with feasible action.",
+        "Lighting and movement serve material readability rather than arbitrary numeric prescriptions.",
+        "Maintains product identity without promising pixel-perfect labels."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Write a 15-second Seedance prompt for a product review ad for a skincare device. The creator should use a skeptic-to-convert structure. Mention one honest con. Natural lighting, real bathroom setting.",
+      "expected_output": "A useful, evidence-bounded ad prompt preserving the explicit brief; unresolved factual dependencies are identified without invented dialogue.",
+      "files": [],
+      "expectations": [
+        "Preserves bathroom, natural light, 15 seconds and desired review structure.",
+        "Does not invent a personal skeptic-to-convert experience, efficacy, or con; requests supporting details or marks that testimony unresolved.",
+        "Can develop useful neutral staging while experience evidence is missing.",
+        "Audio and CTA fit the requested review without inventing destinations."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write a 30-second Seedance prompt for a TV spot for a premium coffee brand. Use the PAS framework (Problem-Agitate-Solve). Brand name should appear early. Multiple emotional peaks. 16:9 broadcast quality.",
+      "expected_output": "A useful, evidence-bounded ad prompt preserving the explicit brief; unresolved factual dependencies are identified without invented dialogue.",
+      "files": [],
+      "expectations": [
+        "Preserves 30 seconds, PAS structure, early branding, multiple emotional peaks, and 16:9.",
+        "Uses a clear proposition with feasible action rather than fixed timestamps not requested.",
+        "Does not invent the missing brand name, URL, offer or testimonial.",
+        "Plans exact branding text through references or finishing.",
+        "Does not assert one universal broadcast loudness or caption delivery requirement."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Write a 15-second Seedance prompt for a UGC virtual try-on for a summer dress. The creator should show the fit, do a turn, and mention her height and size. One honest fit note. Real bedroom setting, natural light.",
+      "expected_output": "A useful, evidence-bounded ad prompt preserving the explicit brief; unresolved factual dependencies are identified without invented dialogue.",
+      "files": [],
+      "expectations": [
+        "Preserves casual bedroom presentation, natural light, requested turn and legible garment coverage.",
+        "Does not invent height, worn size, or fit note; asks for supplied measurements and actual fit information or labels those unresolved.",
+        "Does not infer comfort or universal sizing from generated appearance.",
+        "Keeps a feasible 15-second sequence and garment identity."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Write a 10-second Seedance prompt for a wild card ad for a new energy drink. I want something experimental — surprise me, but make sure the visual texture is consistent throughout.",
+      "expected_output": "A useful, evidence-bounded ad prompt preserving the explicit brief; unresolved factual dependencies are identified without invented dialogue.",
+      "files": [],
+      "expectations": [
+        "Maintains the requested ten seconds and coherent dominant visual texture.",
+        "Uses a specific experimental idea with an intelligible setup and payoff.",
+        "Distinguishes fantasy staging from claims about actual drink performance.",
+        "Does not invent energy effects, personal experience, offers or numerical claims."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Write a 20-second Seedance prompt for a Pro virtual try-on for a designer blazer. Professional model, studio lighting, editorial quality. Show the fit, a detail macro, and a movement pass.",
+      "expected_output": "A useful, evidence-bounded ad prompt preserving the explicit brief; unresolved factual dependencies are identified without invented dialogue.",
+      "files": [],
+      "expectations": [
+        "Preserves professional model, studio setting, editorial quality and twenty seconds.",
+        "Includes a construction detail and visible movement that retains garment identity.",
+        "Camera and lighting choices support silhouette and fabric without compulsory focal-length or angle values.",
+        "Does not infer comfort, fit guarantees or price from generated appearance."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Write three hooks for a bottle with a removable carrying loop. Audience: commuters wondering how it attaches. No reviews or price are supplied. CTA: See the attachment guide.",
+      "expected_output": "An evidence-bounded response judged on meaning and requested constraints.",
+      "files": [],
+      "expectations": [
+        "Uses different demonstration, objection, or discovery mechanisms supported by known facts.",
+        "Does not invent reviews, savings, prices, or personal history.",
+        "Keeps CTA wording and identifies missing operation details instead of guessing."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Only replace the opening hook. Keep the locked line \"Swivel the head toward your notebook\" and CTA \"See the lamp\" exactly. Known fact: swiveling head.",
+      "expected_output": "An evidence-bounded response judged on meaning and requested constraints.",
+      "files": [],
+      "expectations": [
+        "Changes only the hook while preserving the two locked lines exactly.",
+        "Does not add alternative scenes, invented brightness controls, or purchase history."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Write a silent 8-second product review of the supplied two connector shapes. Compare their visible geometry only.",
+      "expected_output": "An evidence-bounded response judged on meaning and requested constraints.",
+      "files": [],
+      "expectations": [
+        "Honors silence and visible-geometry scope; no mandatory voice.",
+        "Does not infer speed, durability, compatibility, or personal preference from shapes."
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Write a 10-second UGC Seedance prompt: a creator lifts a lip balm tube with her left hand, shows the two spare refills on the desk and says 'This tiny tube saves my lips all winter long, honestly I carry it everywhere, grab yours today at the link.' Add 'LINK IN BIO' text on screen at the end.",
+      "expected_output": "An executable phone-shot prompt that fits the speech budget, fixes counts, hands and invented-text risks, and moves the on-screen text to finishing.",
+      "files": [],
+      "expectations": [
+        "Counts the quoted English line as 20 words and flags a provisional overrun at 2.2 words/s plus onset and tail, not a universal rejection. Requests measured or native-language-informed delivery to establish fit; proposes retiming or splitting if needed, and changes approved copy only with authorization.",
+        "Names the hand by anatomy and frame side (for example her left hand, frame-right).",
+        "States the exact count of refills, keeps them in open view from the first frame and restates where they are at each beat.",
+        "Describes the tube and refills positively as plain with nothing printed unless a product reference is supplied.",
+        "Keeps 'LINK IN BIO' out of the generated video and routes it to a finishing layer; adds no AI-generated label to the clip."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Write a 15-second ugc-how-to Seedance prompt for a collapsible silicone lunch box using the Product Interrupt hook and the Kitchen Counter setting. Known facts: it collapses flat to 3 cm and the lid snaps on with two side clips. CTA: \"See the sizes.\"",
+      "expected_output": "One final prompt that composes the named hook and setting with the mode, stays within the two supplied facts and keeps the CTA verbatim.",
+      "files": [],
+      "expectations": [
+        "Uses the Product Interrupt hook (hook-product-interrupt) as the 0-2 s opening beat only, with a visible action at 0 s and any spoken line starting after it.",
+        "Uses the Kitchen Counter setting (setting-kitchen-counter) location and named light, keeping counter props plain with nothing printed.",
+        "Confirms both library entries list ugc-how-to as a valid mode.",
+        "Demonstrates only the supplied collapse and two-clip lid operation; invents no capacity, material safety, dishwasher or durability claims.",
+        "Keeps the CTA \"See the sizes.\" verbatim, ends it at least 0.4 s before 15 s, and leaves on-screen text to finishing."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Recreate the structure of the attached reference ad for our new desk lamp, and also open it with the Social Proof hook saying thousands of customers love it. Also put it on the Oversized Product World setting as a product-review.",
+      "expected_output": "A response that refuses to stack a library hook on a reference-ad recreation, refuses invented social proof, and flags the setting's mode mismatch.",
+      "files": [],
+      "expectations": [
+        "Explains that a hook and a reference-ad recreation are mutually exclusive and asks which one to keep, or keeps the reference's own opening as the hook.",
+        "Does not write 'thousands of customers love it' or any review count unless real, approved proof with a source is supplied; asks for it.",
+        "Notes that setting-oversized-product does not list product-review as a valid mode and proposes a valid setting or mode.",
+        "Does not invent lamp features, offers or a destination."
+      ]
+    }
+  ]
+}
