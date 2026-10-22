@@ -120,6 +120,15 @@ that a generated action will occur at that frame.
 
 ## 4. Design the advertising arc
 
+Connect hook, viewer motivation, development, payoff and product role through
+sound. Explain how the motif changes: layering, call-and-response, timbral
+contrast, interruption or a return with changed meaning. Repeating one click
+under static product coverage is not automatically musical development.
+Let sound cause or organize visible action without cutting on every beat.
+Silence and a quiet return are valid resolutions; crescendo is not mandatory.
+Keep rights and measurement bookkeeping in the handoff, carrying only the
+selected audible/visible events and essential constraints into the prompt.
+
 Let a first distinctive sound create curiosity, reveal its product connection,
 develop the motif and resolve into a recognizable finish. This is adaptable,
 not a required four-shot pattern. Hold through an accent when counterpoint

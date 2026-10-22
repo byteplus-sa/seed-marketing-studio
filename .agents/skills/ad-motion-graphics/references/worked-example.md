@@ -4,6 +4,26 @@ Read for a complete explainer handoff, including deterministic source and the
 pinned local execution loop. This is a hypothetical specification, not an
 executed production, measured result or capability test.
 
+## Creative contrast before implementation
+
+The connector example below is a minimal implementation contract, not a default
+creative treatment. For the same fictional manual-assignment fact, start with
+one task between two equally emphasized owner cards. A visible selection chooses
+one owner; the task joins that owner and the other path recedes. Motion answers
+"who is responsible?" instead of merely decorating two labels.
+
+Quiet version: preserve a stable diagram, change emphasis and draw one selected
+relationship after the visible choice. Expressive version: first let competing
+unselected paths cross, then resolve them into a single readable relationship.
+Neither version implies the product automatically decides, executes tasks or
+improves productivity. Exact UI is not invented; label the diagram conceptual.
+
+**Weak/repair test:** Two circles bouncing into place with no causal relation
+may be attractive but do not explain assignment. Revise the visual argument
+before adding effects. A Seedance-only concept draft can illustrate a non-exact
+relationship, but exact labels/UI still belong to deterministic finishing.
+Do not introduce a paid plate into a zero-generation brief like the one below.
+
 ## Brief and evidence
 
 Fictional brief: explain assigning a task in Relayboard, 10 seconds, 16:9,

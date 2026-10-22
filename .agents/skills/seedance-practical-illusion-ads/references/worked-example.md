@@ -4,6 +4,27 @@ Hypothetical prompt-only exercise. No rig, calibrated geometry, generation or
 media inspection exists. Reference selections below are assumed for this example
 and must be grounded in actual files before production.
 
+## Creative contrast before solving geometry
+
+The skyline study below is useful only if its opening actually creates a
+misreading; miniature blocks beside a recognizable bottle are not enough.
+For an open fictional rectangular-bottle brief, propose an apparent doorway:
+the bottle's dark cap aligns with a lintel on a background flat, and two nearer
+side flats conceal its outer contours. A controlled separation of the flats
+reveals the bottle already standing behind them, unchanged in scale and support.
+This is proposed generated staging, not a validated rig or real product size.
+
+Quiet version: lock the camera, let the opening read, then move the two flats
+aside and hold the exposed product. Expressive version: a wider native shot
+after the reveal shows the separated planes, reinterpreting the first view.
+Use that cut only when permitted; retain one source under a one-generation cap.
+If the brief says conceal the mechanism, omit the explanatory wide.
+
+**Weak/repair test:** Before refining centimeters or adding an orbit, ask what
+the viewer could plausibly mistake the opening for and which visible evidence
+changes that reading. A failed misreading is a creative defect even if every
+object remains geometrically stable.
+
 ## Brief and Authority
 
 A ten-second 16:9 ad for a plain amber rectangular bottle with a square cap.

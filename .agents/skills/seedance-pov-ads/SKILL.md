@@ -57,6 +57,15 @@ delivery image. Account for any reflected wearer and authorization scope.
 
 ## 2. Build a Perception-Action Loop
 
+Connect hook, participant motivation, development, payoff and product role
+before detailing fingers. Give the viewer something to anticipate, choose,
+discover or complete. Hands moving a product between two empty surfaces are
+only handling coverage unless the brief makes that movement meaningful.
+Let gaze and reachable action reveal information; camera shake is not embodied
+involvement. Retain calm movement where it aids perception.
+Keep contact bookkeeping outside the prompt while preserving essential grip,
+support, anatomy, identity and viewpoint facts in its action wording.
+
 Use notice -> orient -> reach -> contact -> manipulate -> release -> inspect
 as a reasoning tool, not a mandatory seven-shot structure.
 Make one supported interaction the payoff. Combine phases when simple; leave

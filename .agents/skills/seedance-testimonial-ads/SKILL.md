@@ -83,6 +83,14 @@ it; translations need meaning and usage confirmation, not invented fluency.
 
 ## 3. Build the customer story from evidence
 
+Find the hook and viewer relevance in the authorized account's specificity,
+not a scripted conversion arc. Select its meaningful detail, context and bounded
+payoff without embellishing words, emotion or results. A strong quiet quote
+can be complete; do not demand conflict, a reversal or a louder performance.
+If the available account is generic, request a better authorized excerpt or
+report that limitation. Never manufacture evidence to raise creative intensity.
+Keep permission bookkeeping outside the prompt while preserving portrayal limits.
+
 Use `documented context -> actual action -> bounded experience -> next action`
 only when each part exists. A strong quote can stand alone; do not force an
 invented problem or conversion arc around it.
@@ -103,7 +111,7 @@ finished project is not evidence that the reported outcome happened.
 Real before/after evidence needs provenance and comparable conditions;
 never synthesize either side or alter it to strengthen the claim.
 
-## 4. Plan restrained coverage without manufacturing sincerity
+## 4. Plan evidence-led coverage without manufacturing sincerity
 
 ```text
 shot_id / source_id / approximate window / testimony beat and picture role
@@ -113,8 +121,8 @@ named light source / key side / quality / continuity anchors
 reference roles / permitted performance changes / sound / handles
 ```
 
-For an authorized reenactment, direct conversational delivery with concrete
-behavior: an attentive eyeline, comfortable breath, one purposeful gesture.
+For an authorized reenactment, match the authorized account's delivery range
+with concrete behavior, rather than imposing universal quietness or enthusiasm.
 Do not add tears, hesitation, accents, hardship or "spontaneous" reactions as
 evidence of sincerity. Match only the authorized portrayal.
 For original footage, performance is source material, not a prompt to rewrite.

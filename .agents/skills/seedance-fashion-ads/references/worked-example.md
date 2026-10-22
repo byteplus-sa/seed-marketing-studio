@@ -4,6 +4,27 @@ Hypothetical prompt-only exercise. No media was generated, inspected or approved
 The references and decisions below are assumed supplied solely for this example;
 real bindings require actual selected files and authorization.
 
+## Creative contrast before construction
+
+The front-view exercise below protects limited garment evidence; it is not the
+default fashion performance. For an open brief with the same front-view limits,
+propose "refuse the line": the wearer stands aligned with a wall recess, then
+travels laterally across three hard-edged pools of light while facing forward,
+stopping deliberately off-center. Shoulders initiate the movement and sleeves
+follow; attitude comes from choosing a position, not a neutral pose.
+
+Quiet version: hold a full figure as the wearer takes one decisive lateral step
+away from the imposed alignment and meets the lens. Expressive version: a
+front-facing rhythmic three-step phrase, cut to a low frontal silhouette, then
+a planted off-center finish. Both preserve the evidenced jacket construction;
+neither exposes unknown rear views, promises comfort or invents fabric content.
+The changed lighting and choreography are proposals for an open brief, not
+permission to replace the locked window light in the exercise below.
+
+**Weak/repair test:** Weight shift -> short step -> blank hold is insufficient
+when the brief asks for attitude. Add a motivated physical phrase, not an orbit
+that hides the garment or a compulsory wind machine.
+
 ## Brief and Authority
 
 A ten-second 4:5 editorial ad for a slate-blue jacket. The requested reaction is

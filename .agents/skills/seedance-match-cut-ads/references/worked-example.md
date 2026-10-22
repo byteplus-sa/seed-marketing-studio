@@ -4,6 +4,27 @@ Read for a complete match-cut package. This is hypothetical craft direction:
 all source files, permissions, coordinates and timings are assumptions or
 targets, not verified generated footage.
 
+## Creative contrast before endpoint arithmetic
+
+The circle exercise below isolates alignment, not a universal advertising idea.
+For an open fictional headphone brief with approved earcup views, use a
+turntable platter matched to the earcup: a shared circular contour connects
+a room-scale listening ritual to a personal one. Do not imply sound fidelity,
+wireless operation or compatibility without evidence. The edit is an association,
+not a literal vinyl-to-plastic transformation.
+
+Quiet: one hard match transfers a listener's attention from the platter to the
+headphones, followed by a readable recognition hold. Expressive: a matched hand
+gesture changes context from arranging records to picking up the headphones;
+the same movement links rituals rather than adding unrelated circular objects.
+These are different mechanisms and proposed alternatives, not extra sources.
+Use one native-cut source if that is the budget, with less exact alignment
+control explicitly acknowledged.
+
+**Weak/repair test:** Paper disc -> lamp solely because both are round may be a
+valid shape study but needs a brief-specific meaning before becoming a full ad.
+Do not repair that missing meaning by adding more arbitrary circles.
+
 ## Brief and identity
 
 Fictional product: Halo pendant lamp with a smooth circular white diffuser.

@@ -59,6 +59,15 @@ locked morph with a cut, or a locked cut with a dissolve, without a decision.
 
 ## 2. Build the commercial correspondence
 
+Before endpoint arithmetic, connect the hook, viewer motivation, development,
+payoff and product role. Each match should make a new association legible:
+contrasting contexts, an unexpected continuation or a product-linked pattern
+that resolves. Matching circles solely because they are circular is a geometry
+exercise unless that recognition serves the brief. A calm two-image association
+can work; additional transitions are not a substitute for meaning.
+Keep calculation and task bookkeeping in the handoff; carry the essential
+endpoint targets, identity and action into the creative prompt.
+
 Write why each match matters to the buyer: a repeated shape reveals the
 product, an action links contexts, or a declared fantasy expresses a feeling.
 Avoid a series of unrelated visual tricks. Give each pair a recognizable

@@ -77,6 +77,14 @@ Neither mode supplies rights, extra spend or a paid-ad disclosure decision.
 
 ## 1. Plan the explanation
 
+Connect the hook, viewer motivation, development, payoff and product role
+before selecting effects. Motion should change a relationship the viewer can
+understand: grouping, routing, comparison, transformation or a resolved choice.
+An attractive shape moving between two positions is not automatically an
+explanation. Use contrast and anticipation while preserving reading time.
+Exact-copy and evidence records belong in the design handoff, not a Seedance
+plate prompt. Retain all essential safety, identity and scope constraints.
+
 Write the proposition as an observable change in understanding, not an effect:
 viewer problem -> demonstrated mechanism -> supported outcome -> next action.
 Offer distinct treatments only when direction is open. Keep a settled brief.

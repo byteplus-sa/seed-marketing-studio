@@ -16,19 +16,21 @@ description: >-
 
 # Seedance Shot Design
 
-A Seedance prompt reads flat when nobody decided what the camera and the light
-do for each beat. This skill makes those decisions explicit, one shot at a
+A Seedance prompt may read flat because the idea does not develop, even when
+camera and light are specified. Establish what changes for the viewer first,
+then make coverage decisions explicit, one shot at a
 time, before the prompt is written. It is planning only: it never calls a tool,
 never generates media, and never replaces the grammar owned by the prompt
 skill.
 
 ## Why clips read flat
 
-Workspace reviews of rejected drafts traced flat, stock-footage takes to four
-causes. The plan exists to remove each one.
+Diagnose the actual missing contribution before applying these craft heuristics.
+Camera variety alone cannot rescue an empty premise.
 
 | Cause | What the plan does instead |
 | --- | --- |
+| An object is handled but nothing develops | Identify curiosity, motivation and payoff; return a weak premise for development rather than disguise it with moves |
 | One setup for the whole clip | Several shots, each with its own size, angle, move and key side (V1) |
 | No camera-move statement, so the model holds a neutral frame | Every shot states its move with a start and an end, or records a `static_reason` (V3, V6) |
 | Soft, hedged words ("gentle", "subtle", "slight") on every line | Active verbs with a speed: the camera drives in, sweeps, rises, snaps; the light rakes, cuts out, floods |
@@ -36,14 +38,17 @@ causes. The plan exists to remove each one.
 
 ### Cinematic sequence bar
 
-For an ad, trailer or showcase spot of about 15 s or more, build the piece as
-sequences of about 5 s, each generated as its own clip of 2-3 shots, and cut
-them together in assembly. A 30 s spot is about six such sequences. Each shot
-carries one action, a lens intent, a camera move, a motivated light source and
-depth layers (a named foreground, the subject, a named background), and each
-sequence has one `wow` shot: the image the sequence is remembered for. A single
-30 s pass that carries nine or more beats read as stock footage in workspace
-reviews, so do not plan one unless the user asks for a single take.
+Separate editorial structure from provider source count. One generation can
+contain several native shots; one continuous take cannot. Preserve both the
+authorized generation count and any no-cuts lock. Derive internal shots from
+the hook, development and payoff within the supported duration. Separate
+short sources offer independent edit control only when that scope is available.
+
+Each shot carries an action, lens intent, purposeful move or hold, named light
+and useful depth. The `wow` field names the memorable moment, which may be
+recognition, a withheld response or a tactile detail rather than spectacle.
+If too much action is requested, simplify the causal unit or surface the
+runtime conflict; never silently split it into extra generations.
 
 ## Boundary
 
@@ -101,23 +106,26 @@ and the per-shot facts the Seedance 2.5 prompt carries.
    input, not a suggestion. A confirmed project axis must reach the shots, and
    the plan records where. Fill only the gaps.
 2. **Choose the energy level** from the intended reaction and format, never
-   from genre alone.
+   from genre alone. Separately describe performance intensity, action density,
+   camera energy, editing rhythm and sound dynamics when they differ. These
+   are creative choices, not numerical scores or new required schema fields.
 
    | Level | Fits | Typical shot length | Camera | Light |
    | --- | --- | --- | --- | --- |
-   | Restrained | Naturalistic, documentary, brand-safe realism, quiet drama | 3-10 s | Slow motivated push, drift or pan; holds as contrast | Motivated window or practical light; soft contrast between shots |
+   | Restrained | Attention, intimacy, anticipation or deliberate understatement | 3-10 s | Purposeful holds or slow moves | Source and contrast chosen for the idea, not automatically soft daylight |
    | Standard | Most narrative, ad and micro-drama work (default) | 2-6 s | One clear motivated move in about half the shots; one signature move | A named key side per shot; one contrast beat such as backlight or a practical |
    | Kinetic | Action, sport, chase, music video, high-energy ad | 1-3 s | Tracking, whip, handheld, crash zoom, orbit or FPV per beat | Hard contrast, rim or backlight, flicker, colored practicals |
 
-   Restrained lowers the amplitude of moves and light shifts; it does not lower
-   the variety of size, angle and light between shots. Choose kinetic only when
+   Restrained does not mean inactive, brand-safe or emotionally blank. A held
+   wide may contain highly expressive action. Choose kinetic only when
    the brief supports it, and only for shots without spoken lines.
 3. **Give every beat a job:** establish, reveal, emphasize, connect, escalate,
    hold or release. A shot with no job is cut or merged into its neighbor.
 4. **Set the shot count and lengths** from the beats. A clip carries at most
-   about 7 shots and none shorter than about 0.8 s (observed in this
-   workspace's production reviews); split a longer kinetic sequence into
-   several clips. A shorter cut is planned as an assembly cut: generate each
+   about 7 shots and none shorter than about 0.8 s as provisional planning
+   heuristics, not capability limits. Simplify crowded action within a fixed
+   source budget; propose multiple clips only when authorized. A shorter cut
+   is planned as an assembly cut: use each
    side at a natural length and trim in post (see the pacing preset skill's
    assembly-only cuts). Make lengths uneven and give the turn shot a length unlike its
    neighbors. One shot across a long clip needs a recorded one-take or
@@ -155,6 +163,12 @@ and the per-shot facts the Seedance 2.5 prompt carries.
    [coverage patterns](references/coverage-patterns.md).
 
 ## Variety rules
+
+V1-V3, V5 and V9 guide coverage, not creative quality. When a deliberate
+static composition, repetition or regular rhythm carries the idea, record
+the observable reason and waive the conflicting heuristic. Do not add a move,
+cut or light change solely to satisfy a quota. Explicit locks always prevail;
+legible action, light continuity and source-count limits still apply.
 
 | Rule | Check |
 | --- | --- |
@@ -210,8 +224,8 @@ Before returning a plan, confirm:
 6. A cut shorter than about 0.8 s (a blink cut, a vision flash, a fast
    intercut) is an assembly cut: the plan names the clips it is cut from, and
    each clip is generated at a natural length.
-7. A spot of about 15 s or more is planned as about 5 s sequences of 2-3
-   shots, each with one `wow` shot, unless the user asked for a single take.
+7. Internal shots develop the idea within the authorized source count.
+   A single generation is not mislabeled as a mandatory continuous take.
 8. No shot relies on a prompted focus pull away from a face; that defocus is
    planned for post.
 9. The plan names where it is stored and which prompt carries it.

@@ -43,6 +43,15 @@ performance evidence or default brand, cast, market or colour.
 
 ## 1. Find the Garment's Editorial Argument
 
+Connect hook, viewer desire, development, payoff and garment role before
+construction checks. Choose an attitude and physical phrase: claiming space,
+breaking a formation, resisting a rhythm or inviting a closer look. Let body,
+cloth and environment develop it together. A short step followed by a neutral
+pose is not a universal editorial idea. Quiet tension is valid when deliberate;
+do not prescribe runway spectacle or frantic cutting to every garment.
+Keep the continuity ledger in the handoff and translate only its essential
+anchors into the prompt, leaving room for expressive behavior.
+
 Choose one visible relationship: a seam echoed by architecture, a rigid line
 contrasted with a relaxed gesture, or a moving hem settling into a silhouette.
 Write the proposition as garment feature -> staged action -> readable payoff.

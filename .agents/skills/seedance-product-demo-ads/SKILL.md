@@ -41,6 +41,14 @@ are illustrative inputs, never defaults or actual product evidence.
 
 ## 1. Choose the demonstrated proposition
 
+Before the state ledger, connect the hook, viewer motivation, development,
+payoff and product role. Start with a recognizable question or constraint,
+then make the supported answer satisfying to see. A mechanism study may be
+quiet, but a full ad needs a reason to watch that mechanism. Do not add an
+orbit or a beauty hold to disguise a demonstration with no meaningful question.
+Keep this reasoning outside prompt prose; carry only its visible action and
+essential operation, safety and continuity constraints into the prompt.
+
 Write `viewer question -> supported operation -> visible end state`.
 Prefer one operation that can be inspected to several asserted benefits.
 For a problem-solution structure, establish the actual constraint before the

@@ -38,6 +38,15 @@ worked package and when testing or changing this skill.
 
 ## 1. Build one playable incongruity
 
+Connect hook, viewer curiosity, development, payoff and product role before
+performance restraint. Make the situation disproportionate enough to read
+without a funny voice: scale, social ritual, status or a visible contradiction
+can carry absurdity. Solemnly handling a small object is not by itself a joke.
+Test setup, recognition and release; each should contribute something new.
+Keep performances sincere and task-directed, not blank. Do not solve a weak
+premise with laughter, a sting or frantic cuts. Carry the actual comic action
+into the prompt; keep compliance and task bookkeeping in the handoff.
+
 Write `ordinary task / disproportionate rule or response / visible contradiction`.
 Choose one primary comic mechanism rather than stacking unrelated gags.
 

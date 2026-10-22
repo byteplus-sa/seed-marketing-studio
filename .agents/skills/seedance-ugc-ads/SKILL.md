@@ -73,6 +73,14 @@ where evidence, rights or references are unresolved.
 
 ## Select Mode and Angle
 
+For a full ad, connect hook, viewer motivation, development, payoff and product
+role before expanding technical direction. Give the creator a specific
+perspective and a reason to address this viewer: curiosity, a practical question
+or a playful challenge, not an invented purchase history. Let phrasing, emphasis
+and interaction carry personality. A steady phone is compatible with lively
+behavior; neutral feature recitation is not the default voice.
+Do not impose this development pass on preset-only or narrow revision requests.
+
 Read the requested section of [mode recipes](references/mode-recipes.md), or its
 custom recipe when none fits. Preserve these mode IDs:
 
@@ -172,6 +180,12 @@ or dense arcs, propose natural-duration scenes with explicit continuity, not a
 mandatory number of generations.
 
 ## Make the Prompt Executable
+
+Keep claim ledgers, review modes, cost and task bookkeeping in the handoff.
+The creative prompt needs the actual action, performance, sound and essential
+identity/continuity constraints, not every planning field repeated as prose.
+Necessary safety and scope exclusions stay; do not suppress expression merely
+to make the scene easier to constrain.
 
 Use only the sections the scope needs: visual texture, subject/reference roles,
 environment, timestamped action and end states, camera, and audio. For a full

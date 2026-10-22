@@ -44,6 +44,15 @@ Their material, colour, timing and product do not become defaults.
 
 ## 1. Assign Material Roles
 
+Connect hook, viewer motivation, development, payoff and product role before
+pose bookkeeping. Make the material do something conceptually useful: unfold
+a journey, build a relationship, resist then yield, or reconfigure a world.
+Paper texture plus two panels uncovering a product is not automatically a
+selling idea. Anticipation and material consequence can be compelling at a
+quiet pace; neither jitter nor more cuts creates inventiveness.
+Keep counts and construction ledgers in the handoff, carrying the essential
+support, material behavior and identity constraints into the prompt.
+
 Choose one selling idea that can be expressed by arranging, folding, stacking,
 rolling or revealing tangible-looking pieces. Start with the relationship
 between the product and those pieces, not a catalog of animation media.

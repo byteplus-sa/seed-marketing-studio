@@ -6,6 +6,23 @@ criterion is not a recorded test result or a model reliability claim.
 
 ## Hypothetical worked example
 
+The package below is a constrained mechanism study, not a default full-ad
+concept. For an open brief, develop the viewer's question before borrowing it.
+
+**Contrasting fictional concepts:** Assume an approved folding music stand,
+documented opening steps and selected folded/open views, with no speed claim.
+Quiet: begin with a musician holding a score and looking for somewhere to put
+it; show the stand's opening in an unhurried continuous view and end when the
+score has a place. Expressive: in a rehearsal room, a conductor raises a baton,
+then realizes the score is still in hand; an assistant opens the stand, the
+score settles, and the held upbeat finally releases into music. The delay is
+fictional staging, not a product defect or a measured setup-time comparison.
+
+**Weak/repair test:** "Spin the stand, show the hinge, hold" demonstrates parts
+without answering a question. Repair the premise, not the spin speed. Both
+alternatives must retain documented steps and enough time for safe operation;
+if the locked runtime cannot fit, surface it rather than hide steps.
+
 Brief: one silent 12-second continuous 16:9 demonstration of an unbranded
 folding desk stand. Supplied selected reference R1 shows the same stand folded
 and open; instruction F1 permits lifting the rear support to its fixed stop.

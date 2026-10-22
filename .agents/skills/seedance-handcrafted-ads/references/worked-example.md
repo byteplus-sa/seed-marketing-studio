@@ -3,6 +3,25 @@
 Hypothetical prompt-only exercise, not a generated or inspected ad. The selected
 references and approved choices are assumptions for this example only.
 
+## Creative contrast before pose counts
+
+The two-panel reveal below is a construction study, not the default selling
+idea. For a fictional travel notebook with selected closed/open views, propose
+a paper journey: three connected accordion folds rise from a crafted set around
+the unchanged notebook, forming a path that returns toward its cover. Paper
+edge, fold and support continuity make the journey tangible. This is a metaphor,
+not proof of travel durability, handmade manufacture or sustainable materials.
+
+Quiet version: one fold opens, pauses at a turn, then reveals the path's return
+to the notebook. Expressive version: three folds rise in a staggered cascade,
+changing the set from flat to navigable before settling around the hero.
+Choose one treatment within the source count, not both as automatic generations.
+The product never becomes paper and exact type remains in post.
+
+**Weak/repair test:** More paper texture on two panels does not give their
+opening a purpose. Make construction reveal a relationship. Do not substitute
+random melting, texture boil or camera jitter for material invention.
+
 ## Brief and Authority
 
 A nine-second square ad for a pale-green cylindrical tin with a fitted lid.

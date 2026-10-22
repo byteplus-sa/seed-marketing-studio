@@ -4,6 +4,26 @@ Read for a full sound-led prompt package. All inputs, rights records and cue
 measurements below are fictional assumptions for this example. They are not
 observations of a real track or facts about a real product.
 
+## Creative contrast before cue engineering
+
+The master-alignment package below is deliberately narrow, not a template for
+every musical ad. For a fictional shoe brief with approved appearance but no
+acoustic-performance claim, propose designed percussion from three toe taps:
+one isolated tap creates the question, a second performer answers across a
+rehearsal floor, and their two patterns meet in a shared final step. The shoe
+remains recognizable through footwork; the sound is designed, not proof of its
+actual timbre. Use only authorized original native music when that is the brief.
+
+A quiet version can let one dancer's phrase grow through heel/toe contrast and
+resolve into a held stance with a final single tap. An expressive version can
+use the two-person call-and-response and contrasting floor-level views in one
+source. Neither requires a crescendo, visible singing or separate audio tasks.
+
+**Weak/repair test:** One latch click followed by six seconds of unrelated
+product posing has no developed sonic argument. Make the motif alter the
+visible action, or retain a minimal sonic-logo treatment only when requested.
+All timing here is proposed; no listening or generated-output evidence exists.
+
 ## Hypothetical brief
 
 Product: Arc case, a small charcoal storage case with one hinged lid and one

@@ -6,6 +6,24 @@ humor across audiences. Review behavior rather than checking for buzzwords.
 
 ## Hypothetical worked example
 
+The restrained stationery study below isolates timing; it is not the default
+comic premise. For a separately authorized fictional umbrella concept, assume
+only documented manual opening and selected identity views. A host raises an
+umbrella while two assistants solemnly redirect a freestanding velvet rope
+around its new footprint. The host steps aside and the assistants earnestly
+move the rope again. The joke is disproportionate ceremony, not proof of
+weather protection, product size superiority or an actual institution's policy.
+
+**Quiet treatment:** One fixed wide lets the repeated misallocation of effort
+become clear; the assistants remain absorbed in alignment, not expressionless.
+**More expansive treatment:** A native cut reveals an entire unused ceremonial
+carpet behind the tiny roped area, then returns to their painstaking adjustment.
+Keep one provider source if requested. Neither version needs laughing,
+eyebrow flourishes or an automatic comedic sting.
+**Weak/repair test:** Merely opening a case solemnly offers little mismatch.
+Strengthen the visible situation when the premise is open; preserve a locked
+premise when only performance intensity was requested.
+
 Brief: one 12-second 16:9 continuous take. Two fictional coworkers solemnly
 ceremonialize opening a pencil case. Product reference R1 and instruction F1
 support its single zipper opening, nothing more. Selected R2 and R3 are

@@ -6,6 +6,24 @@ audience response. Evaluate semantics; keyword matching is insufficient.
 
 ## Hypothetical worked example
 
+The quiet puzzle example below teaches a causal unit, not a default setting
+or intensity. Contrast it with this separately authorized fictional premise:
+a stagehand must deliver the actor's cue card before an entrance. The expected
+hook is empty, ruling out the first search. A colleague blocks the doorway;
+the stagehand reaches around, expecting obstruction. The colleague reveals the
+card from an approved zip pouch and hands it over, having kept it ready.
+The audience reappraises the apparent blocker as a helper. A cue light and
+audible stage introduction establish why the entrance cannot wait.
+
+The pouch remains a supported storage object, not a magical solution. One
+source can contain the search, confrontation and handoff as internal shots.
+Native dialogue and sound are optional according to the brief, not new tasks.
+
+**Weak/repair test:** Looking under three identical empty boxes adds no useful
+information after the first search. Remove repetition and make the next action
+respond to the returned information. Do not force a reversal into every shot
+or invent higher stakes when the user has locked a quiet friendship story.
+
 Brief: a 15-second 16:9 friendship story, one source generation with native
 cuts allowed. Product is an unbranded zip pouch. Selected R1 supplies its views;
 F1 supports only zipper opening and small-item storage. Fictional characters

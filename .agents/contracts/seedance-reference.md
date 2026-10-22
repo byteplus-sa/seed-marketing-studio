@@ -37,9 +37,12 @@ A preset adds control (timing, holds, a named variant), not the effect itself:
 plain wording already produces a light going off or a lunge, and a timed light
 cue on a declared source is honoured closely. Load a preset when the plan or
 the user names that axis; do not stack presets to make a flat clip dynamic.
-Flat video usually comes from a single-setup clip with no camera-move statement
-and soft verbs, so the remedy is a shot plan with one action, a move and a named
-light per shot.
+Diagnose flat video before prescribing moves: a weak premise, absent motivation
+or missing payoff needs development, not more camera vocabulary. Give each shot
+an observable contribution and a purposeful move or hold with named light.
+Performance, action, camera, editing and sound need not share one intensity.
+Respect deliberate restraint and source budgets: one generation can contain
+several native shots, while a continuous-take lock prohibits cuts.
 
 A static camera or an unchanging light is a choice that carries a recorded
 reason (`static_reason`); the allowed values and the exempt formats are in
@@ -67,3 +70,15 @@ medium, surface behavior, motion cadence, and handmade imperfections must stay
 coherent throughout the video. Use `seedance-music-video` when the prompt's
 timing, energy, and visual structure must follow the music (music video, lyric
 video, visualizer, performance clip) rather than a spoken story.
+
+## Offline creative regression
+
+For skill maintenance, use
+[ad development cases](../../tests/fixtures/ad_development_cases.json) with
+`evaluate_skill_quality.py`: obtain complete candidate text from each skill
+version, blind the pairs, and judge the brief's semantic criteria with concrete
+evidence. Preserve ties and failures. Cases include all twelve ad formats,
+compelling stillness, repeated batch concepts, technical camouflage, missing
+evidence, narrow revisions and one-source native cuts. The fixture is test
+input, not pre-scored proof. Unit tests validate packing and evidence handling;
+they do not establish creativity, audience response or generated-media quality.

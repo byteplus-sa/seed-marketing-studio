@@ -39,6 +39,15 @@ validated camera solves. Do not inherit their dimensions or products as defaults
 
 ## 1. Explain the Trick Before Describing the Spectacle
 
+Connect hook, viewer curiosity, development, payoff and product role before
+geometry detail. Name a plausible initial misreading and what evidence later
+changes it. A product merely standing beside miniature scenery may create no
+illusion to resolve. Make the reveal reinterpret the opening, not just expose
+more background. If the brief locks concealment, resolve product recognition
+without exposing the mechanism. Preserve a fixed sightline when it carries
+the effect; camera movement is not a quality requirement.
+Keep calculations in the handoff and essential staged geometry in the prompt.
+
 Write two sentences:
 
 ```text

@@ -6,6 +6,23 @@ representation and handoffs without submitting generation or contacting anyone.
 
 ## Hypothetical worked example
 
+The insert below tests preservation, not how to manufacture an interesting
+account. A stronger ad requires stronger authorized source material.
+
+**Contrasting synthetic evaluation inputs, never reusable quotations:** In
+fixture A, an authorized original speaker quietly describes choosing a
+particular pencil for a portrait and shows their actual pencil case. Preserve
+that specificity and original delivery. In fixture B, an energetic teacher's
+authorized recording describes how they arrange their own art materials;
+retain its enthusiasm and real demonstration rather than prescribing a slow
+breath and a static smile. Neither account establishes universal benefits.
+Assume scope covers those original recordings only, not cloned portrayal.
+
+**Weak/repair test:** A generic quote becomes no more truthful or useful when
+surrounded by invented tears and a fictional transformation story. Request a
+relevant approved excerpt, or report the creative limitation. Preserve exact
+words, qualifications and consent even when a more dramatic rewrite is tempting.
+
 Brief: retain a supplied customer's original audio and generate one silent
 8-second 16:9 illustrative insert for a zip pencil case. In this hypothetical
 fixture T1 is an authorized recording, whose selected range contains exactly

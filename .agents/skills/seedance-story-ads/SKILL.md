@@ -41,6 +41,15 @@ worked package and when evaluating or changing this skill.
 
 ## 1. Establish the causal engine
 
+Before coverage, connect hook, viewer motivation, development, payoff and
+product role. Test the engine through consequential behavior, not merely five
+correctly filled fields. A failed attempt must matter and change the next
+action; the audience needs something to anticipate. Do not make all stakes
+life-or-death or substitute dramatic music for missing jeopardy. Preserve quiet
+stories when the reveal changes our understanding. Technical identity and
+rights ledgers stay in the handoff; their essential visible constraints remain
+in the prompt.
+
 Use these bespoke dramatic definitions consistently, not the textbook meanings:
 
 - **Goal:** the single, unchanging thing the hero fights for, fixing something

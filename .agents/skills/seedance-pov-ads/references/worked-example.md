@@ -4,6 +4,25 @@ Hypothetical prompt-only exercise. No actual reference, video or sound has been
 inspected. Assumed selected inputs below must be replaced with real evidence
 before a production caller binds them.
 
+## Creative contrast before hand anatomy
+
+The mug exercise below is a contact study, not a full-ad premise. For a separate
+fictional sketchbook brief with supported page turning and selected views:
+the participant follows a friend's pointing hand to a rooftop view, opens the
+sketchbook onto their knees, and frames the view above the blank page. The viewer
+anticipates making something; no drawing skill or product result is claimed.
+
+Quiet: remain seated, lift the gaze from blank page to skyline, then bring the
+page back into the shared view. Expressive: walk through an accessible terrace
+door, orient toward the friend's indicated view, sit and open the book. Keep
+eye-level ownership, plausible reach and enough time for each action; simplify
+the approach if the runtime is short. Neither needs camera shake or a new
+generation per phase. Native ambience or silence follows the actual brief.
+
+**Weak/repair test:** Moving an empty mug to an empty coaster may verify hands
+without creating participation. Give the viewer a meaningful discovery or
+choice when the concept is open; do not rewrite a locked handling-only request.
+
 ## Brief and Authority
 
 Eight-second 16:9 eye-level first-person ad for a plain blue handled mug.

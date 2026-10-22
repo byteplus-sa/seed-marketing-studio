@@ -3,6 +3,23 @@
 All cases are **hypothetical**. Failures are simulated editorial diagnoses, not
 observed generated-media behavior or measured advertising results.
 
+## Personality without invented experience
+
+- **Fictional inputs:** A commuter mug's supplied dimensions and selected
+  cup-holder reference establish fit. No leakage or temperature evidence.
+- **Weak:** "Here is a mug." Rotate it, point at the lid, hold and smile.
+- **Restrained alternative:** The creator studies the crowded console, looks
+  at the viewer and asks, "Where would you put yours?" Place the mug in the
+  evidenced holder; let the clear fit answer before the dimensions CTA.
+- **Expressive alternative:** The creator introduces the holder as an audition:
+  "One opening. One candidate." Present the mug like a hopeful applicant,
+  demonstrate the same supported fit, then give it a solemn welcoming nod.
+  This is playful staging, not a claim about a real purchase or test.
+- **Repair principle:** Add a viewpoint and an anticipated answer, not faster
+  camera moves. Preserve the same claim boundary and one-source budget.
+- **Check:** The two concepts differ in motivation and performance. Neither
+  invents personal experience, leak resistance or a comparison product.
+
 ## Invented numerical hook and experience
 
 - **Brief:** A travel bottle has a flip latch and a removable carrying loop.
