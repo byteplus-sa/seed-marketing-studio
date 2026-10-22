@@ -72,8 +72,9 @@ mode selection and caller responsibilities.
 
 ### Cost ladder
 - Draft first, then promote the selected draft (see [Draft mode](#draft-mode)).
-  Explicit user instructions override the default; record verified operation
-  constraints when a draft is unsupported.
+  Both review modes require explicit `resolution: "480p"` and boolean
+  `draft: true` for every new 2.5 generation, without a skip-draft exception.
+  Resolve schema or transport conflicts without dropping the native flag.
 - Keep resolution in request parameters, separate from prompt text and Studio
   canvas dimensions. Final requests and outputs need fresh request review and QA
   under the workspace production policy.
@@ -127,8 +128,8 @@ approval states in the shot manifest before submission.
 The Seedance 2.5 tool documents a two-step draft (`draft`, `draft_task_id`;
 checked 2026-10-17). Confirm the current tool schema before relying on it.
 
-1. **Draft.** Submit the full request with `draft: true` (resolution omitted or
-   `480p`). Prompt, references, duration, ratio, `generate_audio` and task type
+1. **Draft.** Submit the full request with boolean `draft: true` and explicit
+   `resolution: "480p"`. Prompt, references, duration, ratio, `generate_audio` and task type
    are frozen here; make every change before this call.
 2. **Review and select** the draft under the project's approval mode: motion,
    shot plan, continuity, speech timing and audio.
@@ -141,9 +142,9 @@ checked 2026-10-17). Confirm the current tool schema before relying on it.
 4. **Re-check the final.** Picture and soundtrack are not byte-identical to the
    draft; inspect playback, dialogue words and audio again before placing it.
 
-Without native draft support (another model or operation), a 480p request is
+For other models without native Draft support, a plain 480p request is
 an ordinary paid generation, and the final is a new reviewed request that may
-change picture, timing or audio.
+change picture, timing or audio. This is not a fallback for Seedance 2.5.
 
 ## Guide disclaimer
 

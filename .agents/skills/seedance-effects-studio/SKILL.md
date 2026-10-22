@@ -185,7 +185,7 @@ states what is missing.
    capability files and `--write --register` so the prepared operation is in the
    project `task_ids.json` before any submission. Read
    [generation flow](references/generation-flow.md) for the exact calls.
-8. **Draft.** Submit one 480p draft through `ark-mcp` (`draft: true`; the video-to-video effects use `resolution: 480p` instead, unless current capabilities explicitly support native draft mode on the edit route). Save the
+8. **Draft.** Submit every new 2.5 generation through `ark-mcp` with explicit `resolution: "480p"` and boolean `draft: true` in both review modes, including video-to-video effects. Resolve schema or transport conflicts without dropping the flag. Save the
    provider task ID as soon as it is acknowledged. Poll the same task; never
    resubmit after a timeout.
 9. **Persist and QA.** Save the video locally, record bytes, SHA-256 and actual
@@ -227,7 +227,7 @@ Provider rules (details and wording in
 - Review generated audio against the requested sound design on the current take.
 - Video inputs (edit, restyle, extend) are rejected when they show a realistic
   person, generated or real, unless each person is bound as an `asset://`
-  Virtual Portrait or authorized asset. Do not use edit-route draft mode without explicit current capability support.
+  Virtual Portrait or authorized asset. Resolve missing edit-route native Draft support in the schema or transport before submission; do not omit `draft: true`.
 - Check lettering, counts and cut timing against the brief on current outputs.
   Keep requested counts explicit; revise only from current-input evidence.
   Use the recipe's post steps for exact overlays, cuts and cadence.

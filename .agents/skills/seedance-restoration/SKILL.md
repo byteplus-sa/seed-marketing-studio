@@ -91,7 +91,9 @@ instead. Footage without people binds normally.
    explicit and dominant; never bury it in a mixed list.
 6. **Package for review.** Return the prompt, parameters and ladder rung; the
    caller runs prompt review against the Seedance 2.5 edit checklist before
-   submission. Rung 1 is a 480p probe of the defect window, which shows
+   submission. Every new 2.5 generation uses explicit `resolution: "480p"`
+   and boolean `draft: true` in both modes; resolve schema or transport
+   conflicts without dropping the flag. Rung 1 probes the defect window, which shows
    whether lines, tears and bands leave and whether people and camera stay
    intact. Grain and fine texture cannot be judged at 480p, so they are judged
    on the final-resolution rung.
@@ -146,7 +148,8 @@ frame. They need different vocabulary and a different mental model:
 ### Template (scan-line tear / rolling band)
 
 Submit with `omni_reference_task_type="edit"`, `generate_audio: false`, and the
-`resolution` of the ladder rung (480p probe, then the delivery resolution).
+explicit `resolution: "480p"` and boolean `draft: true`; promote the selected
+native Draft to the supported delivery resolution.
 
 ```text
 [Edit Goal]
@@ -177,7 +180,8 @@ duplicated copy.
 ## Canonical prompt template (Seedance 2.5 edit)
 
 Submit with `omni_reference_task_type="edit"`, `generate_audio: false`, and the
-`resolution` of the ladder rung (480p probe, then the delivery resolution).
+explicit `resolution: "480p"` and boolean `draft: true`; promote the selected
+native Draft to the supported delivery resolution.
 Both templates end with the silent audio block:
 
 ```text
@@ -242,8 +246,8 @@ direction.
   direction"), and face protection ("never waxy, plastic, or warped") belong in
   every prompt that preserves people.
 - **Submission.** `omni_reference_task_type="edit"`, the muted master as
-  `@Video 1` (an `asset://` video when people are visible), `resolution` per
-  rung (480p probe first; standard 2.5 has no 4K), `generate_audio: false`,
+  `@Video 1` (an `asset://` video when people are visible), explicit
+  `resolution: "480p"`, boolean `draft: true`, `generate_audio: false`,
   `watermark: false` only when the tool supports the parameter. Duration and
   ratio lock to the input — do not set them.
 - **Temporal denoising with a no-ghosting guard.** Always pair the temporal

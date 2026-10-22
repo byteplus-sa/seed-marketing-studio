@@ -85,10 +85,11 @@ top of it.
    (`html-graphic-render` overlays).
 7. **Review and submit.** Every prompt passes `prompt-review` inline. Prepare
    and register each request with `prepare_request.py --register`, then
-   submit a 480p draft (`resolution: "480p"`), review it, and select under the
-   project's approval mode before final-resolution generation. Use native
-   Draft/promotion only after verifying current tool, model and operation
-   support; otherwise the final is a new registered, reviewed request.
+   submit every new 2.5 generation with explicit `resolution: "480p"` and
+   boolean `draft: true` in both review modes, review it, and select under the
+   project's approval mode before native promotion. Resolve schema or transport
+   conflicts without dropping the flag. Other models without native Draft use
+   a plain 480p test followed by a new registered, reviewed final request.
 8. **Assemble** the takes in Studio to the beat sheet's cut times, retiming in
    the edit rather than regenerating, and add overlays and audio in post.
 

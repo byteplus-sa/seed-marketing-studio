@@ -69,11 +69,14 @@ background result. Record the provider `task_id` immediately.
 
 ## Draft mode (2.5 and Premium)
 
-Draft mode is a provider-native two-step flow. Verify the fields in the live
-schema before use; the tool descriptions in this workspace list them.
+Draft mode is a provider-native two-step flow required for every new 2.5
+generation in both review modes, including edits and variants. Verify the
+fields in the live schema; resolve schema or transport mismatches without
+dropping `draft` or silently falling back to non-draft 2.5. A delivery target
+alone does not skip this pass.
 
-1. **Draft:** submit the full request with `draft: true`. `resolution` must be
-   omitted or `480p`. It is billed as a normal 480p video.
+1. **Draft:** submit the full request with boolean `draft: true` and explicit
+   `resolution: "480p"`. It is billed as a normal 480p video.
 2. **Review** the draft (playback, motion, continuity, audio) and record a
    selection before promoting.
 3. **Promote:** submit a new request with `draft_task_id` set to the succeeded
@@ -96,8 +99,8 @@ Rules for the promotion call:
 - **Re-check audio on the final render.** The final soundtrack is not
   byte-identical to the draft's; speech timing and words can differ.
 - A plain `resolution: "480p"` request without `draft: true` is not a Draft
-  task and cannot be promoted; the final is then a new paid request that can
-  change picture, timing, or audio.
+  task and cannot be promoted. Other models without native Draft use that plain
+  480p test followed by a new paid final request; it is not a fallback for 2.5.
 
 ```json
 {"tool_name": "seedance_2_5_create_task",
@@ -155,6 +158,7 @@ Draft-first 2.5 text-to-video (`arguments.input`):
 {
   "prompt": "A cinematic 30-second scene...",
   "draft": true,
+  "resolution": "480p",
   "ratio": "16:9",
   "duration": 30,
   "generate_audio": true,
@@ -172,15 +176,16 @@ First and last frame:
     {"role": "last_frame", "kind": "url", "url": "https://cdn.example.com/end.png"}
   ],
   "resolution": "480p",
+  "draft": true,
   "duration": 5
 }
 ```
 
-Premium 4k (whitelisted accounts only):
+Premium draft before 4k promotion (whitelisted accounts only):
 
 ```json
 {"prompt": "A 4K aerial shot over a coastline at golden hour",
- "resolution": "4k", "ratio": "16:9", "duration": 15}
+ "resolution": "480p", "draft": true, "ratio": "16:9", "duration": 15}
 ```
 
 Video references are URL-only. Upload a local or Base64 video with

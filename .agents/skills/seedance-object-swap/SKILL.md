@@ -88,9 +88,11 @@ parameters, the post-audio route, and the test-ladder rung.
    captions, taglines, CTAs and end cards are added in post.
 6. **Test ladder**: follow the workspace draft policy with currently supported
    parameters. Propose a contact-window probe for a difficulty in the current
-   source or result, with user approval for its selected span. Use native Draft
-   and promotion only when the live schema supports the route; otherwise use a
-   new reviewed request. Re-check final audio and picture. Prior runs are not gates.
+   source or result, with user approval for its selected span. Every new 2.5
+   generation uses explicit `resolution: "480p"` and boolean `draft: true` in
+   both review modes. Resolve schema or transport conflicts without dropping
+   the flag; promote only selected native Drafts. Re-check final audio and
+   picture. Prior runs are not gates.
 
 ## Route and parameters
 

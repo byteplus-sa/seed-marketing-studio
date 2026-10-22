@@ -33,6 +33,14 @@ exact graphic layer.
 
 Resolve the actual tool schema/model binding before selecting operation, resolution, duration, reference roles/counts, or optional flags. A capability record contains model, source, verified_at, operations, parameter JSON Schemas, required_parameters, reference_roles, max_references, and supports_first_frame_with_reference_images. Recheck when the tool, binding, or operation changes; cached evidence is historical, not a live guarantee.
 
+Every new Seedance 2.5 generation uses explicit `resolution: "480p"` and
+boolean `draft: true` in both review modes. If the tool schema disagrees,
+resolve the binding/schema or use an equivalent supported transport before
+submission; never omit the flag or fall back silently to non-draft 2.5.
+Resolve endpoint aliases to the model family before request preparation.
+Other models without native Draft use a plain 480p test. Delivery resolution
+alone is not a skip-draft override.
+
 The workspace default remains Seedance 2.5; legacy 2.0 may be selected for a verified capability such as an available lower-cost variant. Requested 4K needs 2.0 or, when the operator has enabled it, the whitelist-only 2.5 Premium model (the 2.5 feature set plus 4K); standard 2.5 tops out at 1080p. Skills defer to this paragraph for 4K routing. A face in a shot is a QA concern, not an automatic model switch. Chaining does not override unsupported mixed frame/reference inputs.
 
 Credential names are BYTEPLUS_MODELARK_API_KEY and BYTEPLUS_SEED_AUDIO_API_KEY. A transport may document compatibility aliases. Resolve secrets, region, and base URL at runtime; never serialize credentials into requests, fixtures, snapshots, or logs.

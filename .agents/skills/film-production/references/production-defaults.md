@@ -3,7 +3,8 @@
 Read [the entrypoint](../SKILL.md). Load this reference when planning a project's
 stage flow, before the first paid video submission, at assembly, and whenever a
 take needs a fix. These defaults come from observed production runs; they are
-not provider guarantees. An explicit user instruction overrides any of them.
+not provider guarantees. Explicit user instructions may override creative
+defaults, but not the native Draft requirement for new Seedance 2.5 generations.
 Exact tool parameters live in the `ark-mcp` Seedance reference; this file says
 when to use them.
 
@@ -11,20 +12,22 @@ when to use them.
 
 Read the independent `review_mode` and `approval_mode` in `project.md`.
 Default mode uses minimal preflight and actual final sanity, one generated
-image and no default draft-first pass. Do not load strict checklists or create
+image and draft-first video. Do not load strict checklists or create
 mandatory craft reports. The detailed review procedures below are strict-mode
 or explicitly requested guidance; preserve capability, hash, reference, rights,
 claims, disclosure, native-human, budget and registry requirements in both.
 
-## 1. Optional draft, then final
+## 1. Draft first, then final
 
-Strict mode plans Seedance 2.5 shots as 480p drafts followed by final generation.
-Default goes directly to the requested supported target unless drafts are
-requested. Native Draft/promotion is used only when the live schema supports it.
+Both modes start every new Seedance 2.5 generation with explicit
+`resolution: "480p"` and boolean `draft: true`, including edits and variants.
+A delivery target alone does not skip this pass. Resolve schema or transport
+conflicts without dropping the flag; other models without native Draft use a
+plain 480p test.
 
 1. Freeze and review the full request (prompt, ordered references, duration,
-   ratio, `generate_audio`, task type) and submit it with `draft: true` when
-   the live schema exposes Draft mode. **Edit inputs only before the Draft.**
+   ratio, `generate_audio`, task type) and submit it with `resolution: "480p"`
+   and `draft: true`. **Edit inputs only before the Draft.**
 2. Inspect the Draft's playback, motion, continuity, shot plan and audio, and
    record a passing selection under the project's approval mode. For
    multi-shot work, review the draft assembly too.
@@ -36,8 +39,8 @@ requested. Native Draft/promotion is used only when the live schema supports it.
    soundtrack is not byte-identical to the Draft's, and words or timing can
    move.
 
-A plain 480p request without `draft: true` cannot be promoted; its final is a
-new paid request that may change picture, timing or audio, and it needs its
+A plain 480p request from another model without native Draft cannot be promoted;
+its final is a new paid request that may change picture, timing or audio, and it needs its
 own registration and review. When a fix requires a prompt change, write a new
 Draft rather than promoting the old one.
 
