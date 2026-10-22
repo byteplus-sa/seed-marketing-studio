@@ -42,7 +42,7 @@ RESOLUTION = re.compile(r"^\d{3,4}p$")
 STEP_SKILLS = {
     "object-swap": ["source-subject-map", "seedance-object-swap"],
     "motion-recast": ["seedance-motion-recast"],
-    "hook-opening": ["ugc-ad-modes", "seedance-prompt-25"],
+    "hook-opening": ["seedance-ugc-ads", "seedance-prompt-25"],
     "language-dub": ["audio-dubbing", "seedance-prompt-25-dialogue", "ad-captions"],
     "market-adapt": [LOCALIZE_SKILL],
     "ratio-reframe": ["ad-delivery-formats"],

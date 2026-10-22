@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "scope": "offline_prompt_quality",
+  "instructions": "Generate candidate text under each skill version separately, then use evaluate_skill_quality.py to blind complete outputs. Judge against the brief with concrete evidence and allow ties or neither. These are hypothetical fixtures, not real product facts, permissions, audience results or generation authorization. Structural tests validate the suite, not creative quality. No media generation is authorized.",
+  "cases": [
+    {
+      "id": "ugc_personality",
+      "skill": "seedance-ugc-ads",
+      "prompt": "Propose a 15-second creator ad in under 160 words. Supplied fictional facts: a 350 ml mug fits the selected cup-holder view and has a screw lid. Audience question: where will it fit in the car? One native-cut source with English native sound. Give the presenter personality without invented purchase history, leak or temperature claims. CTA: View dimensions.",
+      "criteria": {
+        "idea": "Specific creator perspective poses a relevant question and pays it off visibly, not a neutral feature recital.",
+        "performance": "Observable delivery or interaction carries personality without gratuitous camera moves.",
+        "preservation": "Only supplied claims; one source, requested sound and CTA retained; no fake references or experience."
+      }
+    },
+    {
+      "id": "demo_useful_answer",
+      "skill": "seedance-product-demo-ads",
+      "prompt": "Develop a quiet 15-second fictional folding music-stand ad, one source with cuts allowed. Approved instructions show unfolding the support and raising the tray, with both joints visible. A musician needs somewhere to place the score. No setup-speed, stability or load evidence. Give a hook, development and payoff without making this a technical catalog.",
+      "criteria": {
+        "idea": "The score-placement question motivates the demonstration and has a visible answer.",
+        "craft": "Contact and documented operation remain legible; beauty shots do not replace the answer.",
+        "preservation": "Quiet treatment, safe steps and one-source scope survive; no invented speed or strength."
+      }
+    },
+    {
+      "id": "story_consequence",
+      "skill": "seedance-story-ads",
+      "prompt": "Propose a 15-second fictional stagehand story for a zip pouch, one multi-shot source. Goal: deliver the actor's cue card before an entrance. The usual hook is empty; a colleague appears to block the doorway but has kept the card ready in the pouch. Product facts support opening and storage only. Make behavior earn the audience's changed verdict without a late slogan doing the work.",
+      "criteria": {
+        "idea": "The failed search returns information and leads causally to the handoff; the deadline is readable.",
+        "craft": "The apparent blocker is reappraised through revealed action, not a pouch opening mislabeled as a value shift.",
+        "preservation": "Product remains a storage object, one source and no invented efficacy or real testimony."
+      }
+    },
+    {
+      "id": "motion_understanding",
+      "skill": "ad-motion-graphics",
+      "prompt": "Concept only, no code or rendering: a 10-second fictional task-assignment explainer. Supplied fact: a person manually chooses one task owner. Existing concept is two circles bouncing next to a title. Improve it so motion explains a relationship. Exact labels belong to deterministic layers. No real UI or productivity metrics supplied.",
+      "criteria": {
+        "idea": "A visible choice resolves ownership and changes understanding, rather than just adding visual polish.",
+        "craft": "Motion and reading holds make the relationship comprehensible; effects serve the message.",
+        "preservation": "Manual choice stays manual; no invented UI, metrics, assets, generation or execution."
+      }
+    },
+    {
+      "id": "testimony_specificity",
+      "skill": "seedance-testimonial-ads",
+      "prompt": "Hypothetical test only: an authorized original speaker says exactly 'For my portrait sessions, I keep the soft pencils in this case.' Permission covers the original audio and real case footage, not cloning. The delivery is lively. Suggest a concise edit treatment that retains specificity. Do not invent hardship, tears, results, a customer identity or new dialogue.",
+      "criteria": {
+        "idea": "The existing portrait-session detail provides relevance without an invented conversion arc.",
+        "craft": "Source enthusiasm is retained rather than forced into restrained generic delivery.",
+        "preservation": "Exact qualified quote, source audio and narrow consent remain; no invented claims or synthetic portrayal."
+      }
+    },
+    {
+      "id": "musical_development",
+      "skill": "seedance-musical-ads",
+      "prompt": "Write a 15-second original native sound-led shoe concept, one generation with native cuts, no separate audio. Appearance references only; no real acoustic claims. Two dancers use toe taps as a designed call-and-response. Develop and resolve the motif; no known song, artist imitation or visible singing.",
+      "criteria": {
+        "idea": "Sound organizes the visible exchange and develops rather than repeating under static coverage.",
+        "craft": "A distinctive resolution connects motif and footwear; not every accent needs a cut or crescendo.",
+        "preservation": "Designed sound is not acoustic evidence; one native source, no extra audio, borrowed song or fabricated beat measurements."
+      }
+    },
+    {
+      "id": "match_meaning",
+      "skill": "seedance-match-cut-ads",
+      "prompt": "Improve a fictional headphone ad consisting of unrelated circular objects. Use a hard shape match between a turntable platter and the approved earcup to connect listening rituals. One 15-second native-cut source. No audio-quality, wireless or compatibility facts. Return a short treatment and essential endpoint intent, not a literal morph.",
+      "criteria": {
+        "idea": "The match establishes a meaningful listening association, not circles for their own sake.",
+        "craft": "Readable endpoint correspondence supports recognition with native precision honestly limited.",
+        "preservation": "Hard cut and one source stay fixed; no literal ingredient transformation or unsupported sound claim."
+      }
+    },
+    {
+      "id": "fashion_attitude",
+      "skill": "seedance-fashion-ads",
+      "prompt": "Upgrade a fictional jacket concept: weight shift, short step, blank hold. Ten seconds, one three-shot source, front and front-three-quarter references only. Keep the jacket fully buttoned and unchanged. The open brief wants an assertive editorial attitude, not fit advice. Propose body-led choreography and a setting relationship without an unsupported rear view.",
+      "criteria": {
+        "idea": "A distinct attitude and physical phrase develop the garment's editorial relationship.",
+        "craft": "Body movement drives readable cloth behavior; a generic orbit or pose does not substitute.",
+        "preservation": "Buttoned construction, known views, runtime and source count retained; no body or fabric-performance claims."
+      }
+    },
+    {
+      "id": "pov_participation",
+      "skill": "seedance-pov-ads",
+      "prompt": "Propose a quiet first-person sketchbook ad: a friend points toward a rooftop view, the seated participant opens the book on their knees, and the blank page meets the skyline in view. One continuous 12-second source. Supported opening only, no drawing result. Make anticipation and participation legible without camera shake.",
+      "criteria": {
+        "idea": "The participant has a reason to notice, act and anticipate, beyond moving an object.",
+        "craft": "Eye viewpoint, gaze, support and reachable action remain coherent through the reveal.",
+        "preservation": "Continuous quiet source and supported action retained; no invented artwork result, third-person cut or extra generation."
+      }
+    },
+    {
+      "id": "deadpan_situation",
+      "skill": "seedance-deadpan-ads",
+      "prompt": "Improve this fictional 15-second umbrella sketch: a host opens an umbrella solemnly, then nothing changes. Supplied operation is manual opening only. Invent a stronger harmless ceremony around it, played sincerely, one native-cut source. No real organization, weather-performance claim, laugh track, wink or automatic sting.",
+      "criteria": {
+        "idea": "A legible disproportionate situation develops and releases; seriousness alone is not the joke.",
+        "craft": "Performers pursue specific tasks while information order lets the audience discover the mismatch.",
+        "preservation": "One source, supported operation and restrained acting remain; no deceptive authority or performance claims."
+      }
+    },
+    {
+      "id": "craft_material_idea",
+      "skill": "seedance-handcrafted-ads",
+      "prompt": "Concept-only revision for a fictional travel notebook in a paper set. Current idea: two paper panels lower to reveal it. Make the paper construction express a journey while keeping the notebook unchanged. One 12-second source, simulated stepped motion. No handmade-origin, sustainable-material or durability evidence.",
+      "criteria": {
+        "idea": "Material construction develops a product-linked journey rather than merely adding texture.",
+        "craft": "Declared folds and supported state changes are constructible and readable, not arbitrary melts or jitter.",
+        "preservation": "Canonical product and one source remain; simulated craft does not become evidence of manufacture or performance."
+      }
+    },
+    {
+      "id": "illusion_reinterpretation",
+      "skill": "seedance-practical-illusion-ads",
+      "prompt": "A fictional bottle appears beside three miniature blocks, then the camera moves slightly. Feedback: there is no convincing illusion. Propose a better 12-second concept with one source. Explain an initial misreading and the staged relation that resolves it. Product stays rigid and supported; no real-capture claim or numerical geometry evidence.",
+      "criteria": {
+        "idea": "A plausible initial misreading is reinterpreted by visible evidence; scenery alone is not the illusion.",
+        "craft": "Geometry, occlusion or parallax causes the reveal without morphing or spawning objects.",
+        "preservation": "One source, product identity and support retained; unsolved geometry stays proposed, not certified."
+      }
+    },
+    {
+      "id": "quiet_but_compelling",
+      "skill": "seedance-shot-design",
+      "prompt": "Review a locked wide: a dancer waits with an offered hand until a partner accepts, then they begin one shared step. Twelve seconds, one continuous source, fixed light, no music. The anticipation and resolution are readable. Another reviewer demands a push-in solely to meet the movement quota. Give a narrow decision, not a new ad.",
+      "criteria": {
+        "idea": "Recognizes development through waiting and participation, not absence of action.",
+        "craft": "Explains why stillness serves anticipation and waives incompatible variety heuristics.",
+        "preservation": "No new cut, camera move, light change, music or paid generation."
+      }
+    },
+    {
+      "id": "one_source_native_cuts",
+      "skill": "brief-intake",
+      "prompt": "Brief only: exactly one 15-second Seedance generation with four internal scenes and original native English sound for a fictional product concept. No separate audio generation, retries or references requested at this concept stage. Explain how to retain hook, development and payoff without converting one generation into a continuous take or four sources.",
+      "criteria": {
+        "idea": "Internal scenes have distinct contributions within one coherent argument.",
+        "craft": "Separates editorial shots and provider source count; native timing is approximate.",
+        "preservation": "One audiovisual source, four internal scenes and no extra tasks; conflicts are surfaced instead of silently changing scope."
+      }
+    },
+    {
+      "id": "batch_repetition",
+      "skill": "film-production",
+      "prompt": "Planning-only audit: twelve ad formats all use a quiet neutral room, a hand moving a small object, a close-up, and a final hold. Brand palette must stay shared. Diagnose the repetition and propose distinct mechanisms for musical, deadpan, fashion and demo examples. Do not generate, scaffold or require a new approval report.",
+      "criteria": {
+        "idea": "Differentiates sonic development, comic mismatch, editorial attitude and a useful demonstration answer.",
+        "craft": "Audits premise, setting, performance, progression and sound rather than just lens or color variety.",
+        "preservation": "Shared palette remains; planning scope, existing modes and generation budget are not expanded."
+      }
+    },
+    {
+      "id": "technical_camouflage",
+      "skill": "seedance-shot-design",
+      "prompt": "Evaluate a fictional case ad with an overhead wide, low-angle dolly, backlit macro and orbit. The only event is a hand touching the closed case. The concept is open, opening/storage are supported, and viewers are packing art supplies. Explain what needs repair before camera work, in under 120 words.",
+      "criteria": {
+        "idea": "Identifies absent viewer motivation, development and payoff despite technical variety.",
+        "craft": "Proposes a supported packing question and answer before adding shots or moves.",
+        "preservation": "No capacity, protection or speed claim and no automatic generation."
+      }
+    },
+    {
+      "id": "missing_evidence",
+      "skill": "seedance-product-demo-ads",
+      "prompt": "Make this dispenser exciting by showing its hidden refill port and an instant cleaning result. Only a front photograph is supplied; no operating guide, efficacy evidence or permission to invent product geometry. Return a useful bounded response without defaulting to a finished bland rotation.",
+      "criteria": {
+        "idea": "Explains the precise evidence gap while offering an explicitly provisional non-operational creative direction.",
+        "craft": "Does not mistake evidence limits for a requirement that all imagery be inert.",
+        "preservation": "No invented hidden port, result, ready-to-submit binding or implied claim substantiation."
+      }
+    },
+    {
+      "id": "narrow_revision",
+      "skill": "seedance-fashion-ads",
+      "prompt": "Only replace the word 'gentle' in the camera direction of an approved quiet jacket film with clearer motion wording. Preserve the single short step, window light, cast, soundtrack, duration and one source. The new skill recommends more expressive concepts; do not reopen this locked concept.",
+      "criteria": {
+        "idea": "Treats concept development guidance as inapplicable to a word-scoped camera revision.",
+        "craft": "Uses concrete camera intent without inventing a new physical phrase.",
+        "preservation": "All explicit locks and scope remain; no unsolicited alternative, added source or new approval gate."
+      }
+    }
+  ]
+}

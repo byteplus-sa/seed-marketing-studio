@@ -99,27 +99,41 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
   sits in a single shot, and the speakers' lit sides differ without a second
   source appearing.
 
-## A 30-second spot written as one pass
+## One source is not one continuous take
 
-- **Brief:** A 30-second cinematic ad for a hair-care product: a rider crosses a
-  rain-soaked neon city at night and arrives with her hair still flowing.
-- **Initial prompt shape:** One 30-second prompt with nine timestamped beats
-  (street, traffic, rain, close-up, product, wind, arrival, smile, pack shot),
-  one global "cinematic lighting" sentence and no camera move per beat.
-- **Observed shape:** Workspace reviews of single 30-second passes like this
-  one judged them stock footage: each beat gets about three seconds, the camera
-  defaults to neutral framing, and nothing is designed to be remembered.
-- **Hypothesis:** Too many beats per clip, no per-shot camera or light, and no
-  image built to land.
-- **Smallest repair:** Six sequences of about 5 s, each its own clip of 2-3
-  shots with one action per shot. Sequence 1: a low tracking shot beside the
-  wheel through puddles, then a crash zoom onto her eyes under the helmet
-  visor, magenta sign light from frame-right, rain in the foreground, the
-  street receding behind. The `wow` shot of each sequence is planned first
-  (sequence 3: her hair lifting in slow motion against a wall of signs). The
-  pack shot and all copy are post layers.
-- **Tradeoff:** Six generations and an assembly instead of one; each clip can
-  be drafted, reviewed and replaced alone.
-- **Acceptance:** Each sequence has 2-3 shots with a lens intent, a move, a
-  named source and depth layers, one `wow` shot, and lengths that vary between
-  sequences; the edit, not one prompt, carries the 30-second structure.
+- **Brief:** One 15-second generation, native cuts and original native sound,
+  fictional footwear ad. Show a dancer deciding to join a rehearsal. Supplied
+  references establish appearance only, not comfort or performance benefits.
+- **Weak plan:** Three separate five-second sources, each an isolated shoe
+  view, justified as a cinematic requirement.
+- **Repair:** One source with three internal shots: foot pauses at the rehearsal
+  threshold; dancer responds to the room's rhythm with a short step phrase;
+  the phrase joins the ensemble's final step. Give each shot a readable action,
+  motivated framing and named rehearsal-room light. Keep footwear visible
+  without implying it improves dancing. Native music is original as requested.
+- **Tradeoff:** Native cuts are less independently controllable. Simplify action
+  if it cannot fit rather than ordering additional sources.
+- **Acceptance:** One request intent, three internal shots, meaningful
+  development, no extra audio task, no assertion of frame-exact native cuts.
+
+## Technical variety hiding an empty idea
+
+- **Brief:** An open ad concept should make a fictional storage product relevant
+  to packing art supplies; only documented opening and storage are supported.
+- **Weak plan:** Overhead, low angle, orbit, backlight, macro; product does
+  nothing except sit still while a hand points at it.
+- **Repair:** Establish the packing question and a supported arrangement that
+  answers it before revising coverage. Do not invent capacity or protection.
+- **Acceptance:** Each view helps the viewer understand the answer; changing
+  key sides alone is not development or proof of creative quality.
+
+## Compelling stillness must survive the variety check
+
+- **Brief:** Locked wide of a performer waiting for a partner's hand before
+  beginning a duet. No camera move, cut, lighting cue or added music.
+- **Wrong repair:** Add a push solely to satisfy V3.
+- **Correct decision:** Retain the lock and the pause. Direct attention to the
+  offered hand and the answering step, which changes waiting into participation.
+  Record the lock and waive incompatible variety heuristics.
+- **Acceptance:** Stillness supports anticipation; no gratuitous motion or
+  fabricated claim about an observed audience response.

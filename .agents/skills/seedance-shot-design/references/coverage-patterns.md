@@ -8,6 +8,12 @@ guarantee of an outcome. Adapt the sizes and moves to the energy level, then
 check the take. Wording for a named move belongs to the camera preset skill;
 wording for a named light setup belongs to the lighting preset skill.
 
+Before choosing a pattern, name the viewer's question and what changes by the
+end. Coverage is not a substitute for an idea. These patterns may occupy native
+shots within one provider source; they do not authorize additional generations.
+Respect source count, runtime and continuous-take locks. Deliberate stillness
+or repetition can replace a pattern when it serves the brief.
+
 - [Reveal ladder](#reveal-ladder)
 - [Dialogue exchange with variation](#dialogue-exchange-with-variation)
 - [Power shift](#power-shift)
@@ -113,8 +119,8 @@ Use when a moment must land.
 
 - Shots: one or two moving shots, then a locked hold on the payoff.
 - What changes: the move stops. Record `contrast_hold` as the `static_reason`.
-- Watch for: a hold with no preceding motion; it reads as inert rather than
-  chosen.
+- Watch for: an unmotivated hold. Stillness can also create anticipation without
+  preceding motion; record what the viewer is waiting to notice or understand.
 
 ## Foreground reveal
 
@@ -214,10 +220,10 @@ kneeling, a child and an adult) and the height gap is the story.
 | "Hold steady" as the default camera line | The static choice is unrecorded and applied everywhere | Record a `static_reason` or give the shot a move |
 | One global lighting sentence for a multi-shot clip | The light never changes meaning | Name source and direction per shot |
 | A project axis promising dolly and crane work that no shot line uses | The plan was written but never carried | Copy the axis into the shot lines or record the override |
-| More than about seven shots in one clip, or shots under about 0.8 s | Observed in this workspace's production reviews as cuts the model merges or drops | Respect the shot ceiling and split a long kinetic sequence into several clips; make a shorter cut in post as an assembly cut |
+| Crowded internal shots or very short cuts | Cuts may merge or drop; the approximate seven-shot and 0.8 s heuristics are not capability guarantees | Simplify within the authorized source count; exact short cuts need inspected editorial handles, not automatic extra generations |
 | A shot stacking more than two simultaneous moves | The camera preset guidance records instability risk | One primary move per shot and at most one secondary |
 | Equal shot lengths with the turn the same length as its neighbors | Nothing marks the turning point | Uneven durations; give the turn a length unlike its neighbors |
 | A move that decorates but has no story reason | Movement without meaning adds noise | State what the move reveals or emphasizes |
-| A 30 s spot written as one pass with nine or more beats | Read as stock footage in workspace reviews | Plan about 5 s sequences of 2-3 shots, each with one `wow` shot, per the cinematic sequence bar |
+| Many unrelated beats in a long source | New framings do not create development | Refine hook, progression and payoff; separate internal shots from provider source count rather than prescribing more generations |
 | A focus pull away from a face asked of the prompt | Drafts keep the face sharp | Generate with ordinary focus and add the defocus in post |
 | A multi-character scene covered by clean singles only | The relationship between the characters never shares a frame | Add a dirty single, an over-the-shoulder or a two-shot, per the framing reference |

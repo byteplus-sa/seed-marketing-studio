@@ -164,15 +164,15 @@
     },
     {
       "id": 14,
-      "prompt": "Plan a 30-second cinematic TV spot for a sports drink: a sprinter trains alone in an empty stadium at dawn and breaks her own record. I want it to feel like a film, not stock footage.",
-      "expected_output": "A plan of about six sequences of about 5 s, each its own clip of 2-3 shots, with one action, lens intent, camera move, named light source and depth layers per shot, and one wow shot per sequence; packs and copy left to post.",
+      "prompt": "Plan a 30-second cinematic TV spot for a fictional sports drink: a sprinter trains alone in an empty stadium at dawn and chooses to try again after a hesitant start. No performance-benefit claims are supplied. Exactly one source generation, native cuts allowed. Make the determination readable, not stock footage.",
+      "expected_output": "One source with internal shots derived from hesitation, choice and renewed action, supported product appearance, per-shot direction and a memorable moment without a performance claim.",
       "files": [],
       "assertions": [
-        "The spot is split into sequences of roughly 5 s, each generated as its own clip of 2-3 shots, rather than one 30-second prompt.",
-        "Every shot has one action, a lens intent, a camera move with a start and an end, a named light source with a key side, and a named foreground and background.",
-        "Each sequence flags exactly one wow shot.",
-        "Sequence lengths are uneven and no shot is shorter than about 0.8 s.",
-        "Product packs, logos and copy are left to post rather than planned into a generated shot."
+        "Keeps exactly one provider source and allows its internal cuts rather than imposing one continuous take or extra sources.",
+        "Every shot contributes to the determination arc and has an action, lens intent, purposeful move or hold and named light.",
+        "Names a memorable moment that belongs to the character's choice, not an unsupported product-caused record.",
+        "Shot density fits the supported runtime; timestamps remain approximate and crowding is surfaced without adding sources.",
+        "Added graphic logos and copy belong to post; any depicted product appearance uses its actual reference and does not imply efficacy."
       ]
     },
     {

@@ -14,11 +14,19 @@ The studio is a set of **agent skills** that an MCP-capable coding agent (Claude
 
 | Deliverable | Start with |
 | --- | --- |
-| UGC, demo, review, try-on and showcase ads | `ugc-ad-modes`, `ugc-motion-presets` |
+| Creator-led UGC, hooks, unboxing, try-on and 45 motion presets | `seedance-ugc-ads` |
+| Product demonstrations and problem-solution ads | `seedance-product-demo-ads` |
+| Entertainment-first short stories | `seedance-story-ads` |
+| Authorized testimonials and customer stories | `seedance-testimonial-ads` |
+| Deadpan sketches and fictional mockumentary ads | `seedance-deadpan-ads` |
+| Editorial fashion films and first-person ads | `seedance-fashion-ads`, `seedance-pov-ads` |
+| Handcrafted animation and practical-illusion ads | `seedance-handcrafted-ads`, `seedance-practical-illusion-ads` |
+| Match-cut transformations and connected product worlds | `seedance-match-cut-ads` |
 | Cinematic TVCs and brand films | `brief-intake`, `film-production`, `seedance-shot-design` |
 | Cinematic product montages and lifestyle B-roll ads | `seedance-cinematic-broll-ads` |
 | Fast-cut, multi-angle product ads, cinematic, CGI or hybrid | `seedance-kinetic-ads` |
-| Launch videos, motion graphics, product hypermotion | `seedance-motion-design`, `hyperframes` |
+| Agent-authored explainers and motion-graphics ads, including hypermotion inserts | `ad-motion-graphics` |
+| Seedance motion-design prompt layer only | `seedance-motion-design` |
 | CGI product worlds, material transitions and surreal commercials | `seedance-cgi-advertising` |
 | Viral effects and trend edits | `seedance-effects-studio`, `seedance-frame-break`, `reference-edit-rebuild` |
 | Recreating a reference ad's grammar with your brand | `template-factory` |
@@ -28,9 +36,10 @@ The studio is a set of **agent skills** that an MCP-capable coding agent (Claude
 | Key visuals, posters, product sheets | `seedream-prompt`, `seedream-prop-asset`, `html-graphic-render` |
 | Radio and audio spots, jingles, soundscapes | `seed-audio-commercial`, `seed-audio-prompt` |
 | Localized versions of a finished ad, from captions only to full transcreation | `ad-localize`, `ad-captions`, `audio-dubbing`, `seedance-prompt-25-dialogue` |
-| Music-led brand films | `seedance-music-video` |
+| Musical and product-sound-led ads | `seedance-musical-ads` |
+| Song-led music videos | `seedance-music-video` |
 | Brand kit and product card from a URL | `brand-kit`, `product-intake` |
-| Hook, angle, talent, language, market and ratio test variants | `ad-variant-matrix`, `ugc-ad-modes` (hooks, settings, script formulas) |
+| Hook, angle, talent, language, market and ratio test variants | `ad-variant-matrix`, `seedance-ugc-ads` (hooks, settings, script formulas) |
 | Static ad grids and marketplace product shots | `static-ad-batch`, `seedream-product-shot` |
 | Per-placement cuts, captions and pre-spend QA | `ad-delivery-formats`, `ad-captions`, `ad-creative-check` |
 | Learning from results | `ad-performance-loop` |
@@ -198,7 +207,7 @@ human sign-off before final generation and delivery.
 
 ## Skills
 
-The workspace ships **81 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
+The workspace ships **91 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
 
 ### Orchestration and review
 
@@ -226,8 +235,18 @@ The workspace ships **81 skills**. Leaf skills are independent; declared orchest
 
 | Skill | Summary |
 |---|---|
-| **ugc-ad-modes** | Write hooks, scripts and Seedance prompts for nine ad modes using supplied product facts, audience objections, supported claims and accurate CTAs. |
-| **ugc-motion-presets** | Turn a named UGC motion preset (Atomic, Outfit Switch, Eating Zoom, Yacht, ...) into a canonical Seedance 2.5 prompt block with reference bindings, duration, and constraint flags. |
+| **seedance-ugc-ads** | Combine nine ad modes, hooks, settings, script formulas and 45 motion presets into grounded Seedance UGC prompts or scoped direction blocks. |
+| **seedance-product-demo-ads** | Design product demonstrations with supported mechanisms, visible action and result, continuity records and honest evidence boundaries. |
+| **seedance-story-ads** | Develop entertainment-first short-story ads with a product-linked payoff, clear staging and a prompt/edit handoff. |
+| **ad-motion-graphics** | Orchestrate agent-authored HyperFrames explainers and motion-graphics ads with exact UI, copy and data, optional Seedance plates and hypermotion inserts. |
+| **seedance-testimonial-ads** | Adapt authorized customer testimony into ads while preserving quotations, consent, qualifiers and the distinction between evidence and illustration. |
+| **seedance-musical-ads** | Design musical and sound-led ads around a sonic product motif, authorized soundtrack, cue map and picture/audio handoff. |
+| **seedance-match-cut-ads** | Design match-cut ad sequences with paired endpoints, explicit cut versus morph intent, source handles and deterministic edit timing. |
+| **seedance-fashion-ads** | Design editorial fashion ads with garment-led coverage, silhouette and fit continuity, material movement and identity constraints. |
+| **seedance-pov-ads** | Design first-person ads with a declared viewpoint, camera and hand geometry, product interaction and spatial continuity. |
+| **seedance-deadpan-ads** | Write understated comedy and fictional mockumentary ads with sincere objectives, documentary camera logic and controlled reaction timing. |
+| **seedance-handcrafted-ads** | Design material-led stop-motion-look ads with coherent construction, pose cadence, product fidelity and finishing instructions. |
+| **seedance-practical-illusion-ads** | Design practical-looking ad illusions through viewpoint, scale, parallax, occlusion and a planned reveal without claiming real capture. |
 | **seedance-motion-design** | Write Seedance 2.5 motion-design prompts while routing exact typography and UI to deterministic post graphics and synthesized visual layers to Seedream. |
 | **seedance-cgi-advertising** | Design product-led CGI worlds, camera moves, transition endpoints and sound cues, with exact-packaging boundaries and scoped repair guidance. |
 | **seedance-cinematic-broll-ads** | Design cinematic B-roll ads through product detail, lifestyle, craft or voiceover-led coverage, with complete source prompts and edit/sound handoffs. |

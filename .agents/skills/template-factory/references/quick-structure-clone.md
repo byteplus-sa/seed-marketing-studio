@@ -15,7 +15,7 @@ the storyboard, the per-beat motion breakdown and the reusable recipe.
 | Product, CTA and supported facts are known | A music-led montage whose cut grid must be rebuilt shot by shot (compose with `reference-edit-rebuild`) |
 
 A quick structure clone **is** a reference-ad recreation: the reference's own
-opening is the hook. Do not add a hook from the `ugc-ad-modes` hook library on
+opening is the hook. Do not add a hook from the `seedance-ugc-ads` hook library on
 top of it.
 
 ## Inputs
@@ -79,7 +79,7 @@ top of it.
    settle those values, compose with `seedance-shot-design` to fill them.
 6. **One Seedance prompt per clip.** Write each beat, or a run of adjacent
    short beats grouped into one natural-duration clip, as a Seedance 2.5
-   prompt that carries its manifest's shot plan (compose with `seedance-prompt-25`, and with `ugc-ad-modes` for the
+   prompt that carries its manifest's shot plan (compose with `seedance-prompt-25`, and with `seedance-ugc-ads` for the
    mode texture). Bind only the product reference and approved elements. Keep
    every clip text-free; supers, prices and the CTA card are finishing layers
    (`html-graphic-render` overlays).
