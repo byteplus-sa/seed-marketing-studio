@@ -36,6 +36,15 @@ Do this once per hero, before any row prompt:
 
 **Route:** regenerate the opening beat only, then splice it onto the hero.
 
+For a character-performance opening, establish intent with `acting-direction`
+before coverage, then encode the supplied beats with `seedance-acting-console`.
+Store the plan and source hashes in the variant's existing `shot.md`. Register
+with `acting.plan_bound` in either review mode, even for a held UGC frame.
+A product-only or otherwise non-performance opening records why the rule is
+not applicable; `--hook-performance non-performance` applies to all hooks
+planned in that invocation, not to swaps or localization. Retain the exact
+copy, CTA, supported claims, product identity and the hero's remaining body.
+
 - Take the hook entry by ID from the `ugc-ad-modes` hook library
   (`references/hooks.md`) and write the opening as a new Seedance 2.5 shot with
   `seedance-prompt-25` grammar, at the hero's ratio and with the same talent,
@@ -61,6 +70,9 @@ then Object Swap on the muted hero master with `seedance-object-swap`. It
 keeps motion, framing, cuts and timing and replaces one element class. A swap
 is a source-preserving edit, so its register command records that exemption
 instead of requiring the shot-plan rules.
+It also inherits the source performance; do not add acting cues that change
+expressions, pauses, product contact, blocking or action outside the selected
+axis. Review that preservation rather than requiring a new performance plan.
 
 | Axis | Target reference | Notes |
 | --- | --- | --- |

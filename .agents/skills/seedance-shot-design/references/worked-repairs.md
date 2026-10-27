@@ -6,6 +6,11 @@ for the procedure and the variety rules.
 All cases are **hypothetical**. The failure descriptions are simulated editorial
 judgments drawn from recurring prompt shapes, not measured generation outcomes.
 
+These examples select contrast as one possible repair, not a universal gate.
+Intentional stillness, equal timing and no-turn scenes remain valid. Preserve
+source locks, exact copy and budget; diagnose unreadable beats before changing
+coverage, and retain a working hold instead of adding motion for variety.
+
 ## Equal-length size ladder with no move or light change
 
 - **Brief:** A 12-second kitchen scene. A mother opens the door, her son peeks
@@ -13,10 +18,9 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
 - **Initial prompt shape:** Shot 1 (0-3 s) wide shot of the room. Shot 2 (3-6 s)
   medium shot at the door. Shot 3 (6-9 s) medium two-shot. Shot 4 (9-12 s) wide
   shot. One lighting sentence at the top: "soft late-afternoon daylight".
-- **Simulated failure:** Every shot is eye level and static, the shots are the
-  same length, and the light never changes. The scene plays as one framing cut
-  four times.
-- **Hypothesis:** Only size varies, and the cuts carry no other change.
+- **Simulated failure:** The child's tap and the mother's response are not
+  readable. Static camera, equal timing and constant light alone are not defects.
+- **Hypothesis:** The framing does not expose the relevant action and response.
 - **Smallest repair:** Keep the four beats and plan them with two declared
   sources (the window at screen-left, the front door that opens at about 5 s) and
   uneven lengths. Shot a (3.0 s): high wide, slow crane down, window sun from
@@ -28,9 +32,9 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
 - **Tradeoff:** More facts for the model to honor in 12 seconds. One primary move
   per shot, one room and two fixed sources keep the plan within what a clip can
   hold.
-- **Acceptance:** Adjacent shots differ in at least two of size family, angle
-  class, move and key side; lengths are uneven; the child's tap lands on the one
-  shot flagged as the turn; no shot uses a source the scene did not declare.
+- **Acceptance:** The child's tap and the mother's response read clearly in
+  the selected coverage; no undeclared source appears. A simpler held setup
+  passes too if it preserves these beats and the approved intent.
 
 ## A recorded axis that never reaches the shots
 
@@ -60,9 +64,8 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
   answers {Wouldn't miss it.}
 - **Initial prompt shape:** "Hold a steady medium shot at eye level" for the whole
   clip, with "natural light".
-- **Simulated failure:** The brief's calm is honored, but the clip is one framing
-  for twelve seconds and the light is flat.
-- **Hypothesis:** The restrained level was read as "no variety".
+- **Simulated failure:** The listener is hidden when the answer registers.
+- **Hypothesis:** Framing obscures the exchange, not that restraint lacks variety.
 - **Smallest repair:** Keep restrained energy and declare two sources: cool light
   from the freezer doors above the aisle, and warm shop-floor fill. Shot a (4 s):
   medium two-shot at eye level, very slow drift left to right, the shopper's line
@@ -73,9 +76,9 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
   `contrast_hold` after the push, warm floor fill rising on her face.
 - **Tradeoff:** More cuts than a single hold; every move stays slow, and each
   line sits inside one shot with room for the late start of speech.
-- **Acceptance:** Size family, angle class and key side change between shots
-  while every move stays slow and motivated, each line fits its shot, and no
-  large move lands during speech. For this fictional English exchange only,
+- **Acceptance:** Both lines and listening responses remain readable; a held
+  two-shot or the proposed cuts may pass. Each line fits its shot and no
+  large move hides speech. For this fictional English exchange only,
   words / 2.2 plus 1 s onset and 0.4 s tail is a provisional planning estimate,
   not a rejection threshold. Measured or native-language-informed delivery
   determines fit; retime or split if needed, without rewriting approved text.
@@ -120,6 +123,7 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
   pack shot and all copy are post layers.
 - **Tradeoff:** Six generations and an assembly instead of one; each clip can
   be drafted, reviewed and replaced alone.
-- **Acceptance:** Each sequence has 2-3 shots with a lens intent, a move, a
-  named source and depth layers, one `wow` shot, and lengths that vary between
-  sequences; the edit, not one prompt, carries the 30-second structure.
+- **Acceptance:** Required beats survive the 30-second edit with readable
+  action, lens intent and declared lighting; exact copy stays in post.
+  Six generations, uneven lengths and `wow` counts are not gates. Use this
+  proposed split only within the approved source count and budget.

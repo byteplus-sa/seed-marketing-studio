@@ -105,6 +105,10 @@ shot_plan:
 
 ## Field rules
 
+Intentional stillness and regular timing remain valid. Optional `turn` and
+`wow` annotations describe selected intent, not required events or quotas.
+Keep performance beat IDs and readability criteria in the existing shot notes.
+
 | Field | Rule |
 | --- | --- |
 | `status` | `draft` until the scene's locations are approved, then `ready` after revalidation |
@@ -112,8 +116,8 @@ shot_plan:
 | `axis_carry` | Where each confirmed project axis appears (camera, lens, lighting, pacing, energy), or the scene override and its reason |
 | `sources` | Every light source the scene uses, with a fixed world position and the event that switches it on |
 | `cues` | Optional, per source. Each cue has `at_s` (scene time), `change` (`on`, `off`, `dim` or `flicker`), `trigger` (the visible or story event) and, when it lands inside a shot, that shot's `id`. A shot's `light` describes the state at its start and names any cue inside it |
-| `duration_s` | Shot length in seconds; lengths are uneven and the turn differs from its neighbors |
-| `turn` | `true` on exactly one shot |
+| `duration_s` | Shot length in seconds, fitted to performance and locked timing; regular lengths are valid |
+| `turn` | Optional; mark a turn only when the selected scene framework contains one |
 | `job` | One of establish, reveal, emphasize, connect, escalate, hold, release |
 | `size` | Extreme wide, wide, medium, medium close-up, close-up, extreme close-up or insert |
 | `framing` | Single, dirty single, two-shot, three-shot, group, over-the-shoulder, over-the-hip, point of view or insert, per [framing](framing.md). Required in a scene with two or more characters |
@@ -126,7 +130,7 @@ shot_plan:
 | `static_reason` | Required with a static hold; a value from the entrypoint table |
 | `lens_intent` | A visible result (sharp plane, soft background, compression), never a number alone. A focus pull away from a face is marked `post` rather than prompted |
 | `depth_layers` | Recommended at standard and kinetic energy. A named foreground, the subject and a named background, each a visible thing in the declared location |
-| `wow` | `true` on one shot per clip: the image the clip is remembered for. It may be the turn |
+| `wow` | Optional emphasis annotation when a standout image serves the approved brief |
 | `light` | A declared `source`, the `key_side` relative to the lens, and the quality and contrast |
 | `contrast_with_previous` | Which of size family, angle class, move and key side change; `n/a` for the first shot |
 
@@ -151,9 +155,9 @@ Seedance 2.5 drafts honour a stated cue time. The plan's job is to give every
 cue a time, a change and a trigger; an untimed "partway through" switch lands
 at an unplanned moment.
 
-A plan with `energy`, `sources`, a `turn`, uneven `duration_s` values and a
-`contrast_with_previous` for every shot after the first is complete enough for
-review.
+A plan records `energy`, `sources`, `duration_s` and the purpose of its framing
+and motion or holds. `contrast_with_previous` may explain deliberate repetition.
+No turn, timing contrast or standout-image count is required for review.
 
 ## Sequences in a long spot
 
@@ -176,10 +180,11 @@ sequences:
     wow: s01_sh020_c
 ```
 
-Each sequence has 2-3 shots, one action per shot and one `wow` shot. Lengths
-vary from sequence to sequence like shot lengths do. The joins between
-sequences are cuts made in assembly, so a sequence may end on a held frame that
-the edit trims.
+In this optional example, each sequence has 2-3 shots and a standout image.
+Choose actual shot count and lengths from the approved beats, source locks and
+budget; holds, equal lengths and no standout annotation are valid. Joins between
+sequences are assembly cuts, so a sequence may end on a held frame that the edit
+trims without losing required performance evidence.
 
 ## Carrying the plan into the prompt
 

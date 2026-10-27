@@ -8,6 +8,10 @@ guarantee of an outcome. Adapt the sizes and moves to the energy level, then
 check the take. Wording for a named move belongs to the camera preset skill;
 wording for a named light setup belongs to the lighting preset skill.
 
+Intentional stillness, equal durations, repeated framing and scenes without a
+turn are valid. Preserve source count, timing, copy and campaign locks. Choose
+a pattern only for the approved beat; no motion, contrast or turn quota applies.
+
 - [Reveal ladder](#reveal-ladder)
 - [Dialogue exchange with variation](#dialogue-exchange-with-variation)
 - [Power shift](#power-shift)
@@ -31,15 +35,14 @@ Use when the viewer must discover something in stages.
 
 - Shots: a wide that places the subject, a medium that isolates the action, a
   close-up or insert that shows the discovered detail.
-- What changes: size on every cut; add a push-in on the last rung so the
-  discovery has motion.
-- Watch for: three equal-length shots with identical eye-level framing. Make the
-  final rung the shortest or the most distinct.
+- What changes: attention narrows toward the discovery; a push-in is optional.
+- Watch for: a discovery that cannot be read. Preserve equal timing or repeated
+  framing when purposeful; change only what obscures the detail.
 
 ## Dialogue exchange with variation
 
-Use when two or more people talk and the scene must not feel like a camera on a
-tripod.
+Use when an exchange benefits from changing viewpoints. A locked two-shot can
+instead preserve listening, silence and uninterrupted response.
 
 - Shots: an over-the-shoulder, a single on the speaker, a single from a lower or
   higher angle at the point of tension, and a two-shot to release.
@@ -113,8 +116,8 @@ Use when a moment must land.
 
 - Shots: one or two moving shots, then a locked hold on the payoff.
 - What changes: the move stops. Record `contrast_hold` as the `static_reason`.
-- Watch for: a hold with no preceding motion; it reads as inert rather than
-  chosen.
+- Watch for: a hold without readable intent. A `performance_hold` needs no
+  preceding motion and may last throughout the scene.
 
 ## Foreground reveal
 
@@ -208,16 +211,16 @@ kneeling, a child and an adult) and the height gap is the story.
 
 ## Failure shapes to avoid
 
-| Shape | Why it reads as boring | Repair |
+| Shape to investigate | Evidence needed | Scoped repair |
 | --- | --- | --- |
-| Wide, medium, two-shot, wide at equal length with no move | Size changes, nothing else does | Add one angle change, one motivated move and one light-direction change |
+| Wide, medium, two-shot, wide at equal length with no move | The intended beat is unreadable, not merely regular or still | Adjust framing, timing or staging only where needed; preserve purposeful repetition |
 | "Hold steady" as the default camera line | The static choice is unrecorded and applied everywhere | Record a `static_reason` or give the shot a move |
-| One global lighting sentence for a multi-shot clip | The light never changes meaning | Name source and direction per shot |
+| One global lighting sentence for a multi-shot clip | Source and direction are unclear in individual shots | Name source and direction per shot; unchanged lighting is valid |
 | A project axis promising dolly and crane work that no shot line uses | The plan was written but never carried | Copy the axis into the shot lines or record the override |
 | More than about seven shots in one clip, or shots under about 0.8 s | Observed in this workspace's production reviews as cuts the model merges or drops | Respect the shot ceiling and split a long kinetic sequence into several clips; make a shorter cut in post as an assembly cut |
 | A shot stacking more than two simultaneous moves | The camera preset guidance records instability risk | One primary move per shot and at most one secondary |
-| Equal shot lengths with the turn the same length as its neighbors | Nothing marks the turning point | Uneven durations; give the turn a length unlike its neighbors |
+| Equal shot lengths around a selected turn | The intended change is not readable in performance or composition | Clarify that change; timing contrast is optional and locked timing stays unchanged |
 | A move that decorates but has no story reason | Movement without meaning adds noise | State what the move reveals or emphasizes |
-| A 30 s spot written as one pass with nine or more beats | Read as stock footage in workspace reviews | Plan about 5 s sequences of 2-3 shots, each with one `wow` shot, per the cinematic sequence bar |
+| A 30 s spot written as one pass with many beats | Actual review shows missing or unreadable beats | Consider separate clips within authorization and budget; six sequences and `wow` shots are optional, not quotas |
 | A focus pull away from a face asked of the prompt | Drafts keep the face sharp | Generate with ordinary focus and add the defocus in post |
 | A multi-character scene covered by clean singles only | The relationship between the characters never shares a frame | Add a dirty single, an over-the-shoulder or a two-shot, per the framing reference |

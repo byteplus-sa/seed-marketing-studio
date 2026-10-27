@@ -32,6 +32,10 @@ space, so sound direction in the prompt shapes the final result.
 Input: a video brief, resolved model/operation, duration policy, ordered input
 roles, approved relevant Elements, and any current motion/blockout manifest
 selected for intentional conditioning.
+For new or revised character performance, consume the caller's performance
+plan and encoded beat cues. Missing intentions, listener tasks, triggers or
+end states remain unresolved, not replaced by emotion adjectives. Preserve
+exact ad copy, CTA, supported claims and product identity.
 
 Output: a six-part prompt, reference bindings, applicable mode parameters,
 explicit appearance and motion authorities, and observable acceptance criteria
@@ -271,7 +275,10 @@ Before handing the package to review, confirm:
    references are selected by scene.
 3. Every shot or stage carries its planned size, angle, move and named light,
    or a recorded static reason; shot count and lengths fit the duration.
-4. Emotions and cinematography terms are paired with visible or audible cues.
+4. Supplied performance intentions, triggers, registration and listener
+   responses reach the prompt with readable consequences (`acting.plan_bound`).
+   Intentional stillness and non-response remain valid. Source-preserving edits
+   inherit acting; do not rewrite locked action to add cues.
 5. The hygiene items above hold: positive wording, counts, frame-side hands,
    text-free frames, no parameters in the text.
 6. Spoken lines fit the speech budget; the audio route matches the piece.

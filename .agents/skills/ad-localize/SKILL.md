@@ -96,6 +96,17 @@ sign-off never covers another variant or the market's own record.
 
 ## Adaptation levels
 
+Follow the [performance contract](../../contracts/performance-direction.md)
+without expanding the selected level. L1 text and L2 voice retain picture
+performance. L3 talent and L4 source-preserving swaps inherit action, expression,
+pauses and blocking; do not add acting improvements. Newly authored or materially
+changed character performance, normally L5 for that beat, uses
+`acting-direction` before coverage and `seedance-acting-console` for cue encoding.
+Store `## Performance plan` in the localized scene or shot, preserve locked
+target copy/CTA and supported market claims, and require `acting.plan_bound`
+when applicable in both review modes. This never replaces
+`localize.native_review`, campaign pins or the budget gate.
+
 The user picks one level for the whole ad or a level per element. **Recommend
 the cheapest level that satisfies the user's goal; never force one.** Levels
 compose: L3 talent with L2 voice and L1 text is a normal plan. Read

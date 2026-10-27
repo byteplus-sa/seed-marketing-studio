@@ -104,11 +104,11 @@ question; static images and sound-only briefs skip the ones that do not apply.
   halation or vignette. Record a grade or a capture-format look (camcorder,
   film stock) only when the brief asks for one, and treat it as a post
   treatment rather than a prompt word.
-- **Cinematic bar for ads and TVCs.** Unless the format is static by design
-  (selfie UGC, talking head), propose a sequence structure: about six 5 s
-  sequences of 2–3 shots for a 30 s spot, one action per shot, each shot with a
-  camera move, a motivated light and depth, and one standout "wow" image per
-  sequence. A single pass carrying many beats reads as stock footage.
+- **Coverage intent for ads and TVCs.** Choose shot count and timing from the
+  approved beats, readable performance and budget. Short sequences can help
+  crowded spots, but six clips, unequal durations, moves and standout images
+  are optional techniques. Intentional stillness, repeated framing and a
+  sustained take remain valid; do not add generations to meet a quota.
 
 Also list the on-screen copy as post overlays: generated footage stays
 text-free, and no "AI-generated" or "fictional" label is added unless the user,
@@ -147,14 +147,14 @@ a format that is static by design), not a neutral default.
 
 | Axis | Derivation | Composition hint for a calling agent |
 | --- | --- | --- |
-| Structure | Narrative development needs an event and progression; one-off static assets do not | `tig-scene-engine` |
-| Acting | Specify an observable reaction/tactic only if a performer matters; match detail to framing | `seedance-acting-console` |
+| Structure | Preserve the source under the selected framework; do not invent a turn for observational or static work | `scene-craft` |
+| Acting | Bind intentions, triggers and listening to the source before encoding readable shot cues | `acting-direction` for planning; `seedance-acting-console` for encoding |
 | Camera | Choose viewpoint, framing, and the movement that reveals the central idea; vary size and angle across a scene | `seedance-shot-design`, then `seedance-camera-presets` |
 | Lens | Describe perspective, separation, and context; add optical terms only when useful | `seedance-lens-presets` |
 | Lighting | Motivate a source and its direction, and let it change meaning across the scene | `seedance-shot-design`, then `seedance-lighting-presets` |
 | Grade | Default ungraded original colours; propose a grade or look only when requested or when reference fidelity needs it, as a post treatment | `color-grade-palettes` |
 | Pacing | Give the action enough time; stillness, repetition, contrast, and escalation are choices | `seedance-pacing-presets` |
-| Staging | Define geography only when action or relationships depend on it | `tig-blocking-map` |
+| Staging | Define geography only when action or relationships depend on it | `blocking-map` |
 | Medium | Preserve requested medium; propose only when the idea benefits from that choice | `seedance-animation-styles` |
 | Audio | Record the audio route (native, picture only, lip-sync audio, silent); separate lip-sync audio remains opt-in | `seed-audio-prompt` / `seed-audio-commercial` |
 

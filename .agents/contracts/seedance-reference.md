@@ -12,9 +12,10 @@ they are prompt-composition only and never call the API themselves.
 | Lens / focal length / aperture / sensor | `seedance-lens-presets` | Always pairs numeric optics with the visible result; resolve requested 4K against current model capabilities |
 | Lighting | `seedance-lighting-presets` | Causal lighting presets; emit both the Seedream `Lighting:` recipe (elements) and the Seedance visual-style phrase so image + video share one lighting intent |
 | Color grading | `color-grade-palettes` | Named palettes + film looks in the Visual Style slot; keep one project-wide palette; optional FFmpeg match graphs in the mix step |
-| Acting / emotion | `seedance-acting-console` | Scene-level analysis (motive, tactic, eye-work) + per-character cue encoding (6 emotions × 3 intensities); optional audio reinforcement via `seed-audio-prompt` |
-| Scene structure & dramaturgy | `tig-scene-engine` | Five-element engine (Goal, Obstacle, Tactic, Reversal, Value Shift); bespoke definitions — do not substitute textbook craft |
-| Staging / blocking | `tig-blocking-map` | Color-coded outline schematic for character disposition; geometry only, no style bleed |
+| Performance direction | `acting-direction` | Source-bound intentions, triggers, listening and performance beats before coverage |
+| Acting cue encoding | `seedance-acting-console` | Encodes supplied intent; optional emotion bank, no required gesture count or automatic separate audio |
+| Scene structure & dramaturgy | `scene-craft` | Explicitly selected craft framework; the bespoke five-element engine is optional, not a universal gate |
+| Staging / blocking | `blocking-map` | Color-coded outline schematic for character disposition; geometry only, no style bleed |
 | Pacing / rhythm | `seedance-pacing-presets` | Speed ramps and montage pacing; second-level timestamps are opt-in and not frame-accurate |
 | Animation medium & handcrafted style | `seedance-animation-styles` | Material-first Seedance prompts for clay, felt, wood puppets, toys, vintage cel, painterly 2D, crafted 3D, silicone, crayon, and custom media |
 | Music video | `seedance-music-video` | Song-first Seedance prompts: format (performance/narrative/conceptual/lyric/visualizer/hybrid), song-section map, beat/cut-density contract, audio-first lip-sync, and a per-genre style lock |
@@ -25,6 +26,12 @@ they are prompt-composition only and never call the API themselves.
 | Storyboard, full multi-scene production | `seedream-storyboard`, `film-production` | Boards are planning and review artifacts, never Seedance references (`references.no_board_binding`): their staging goes into prompt text; end-to-end production orchestration across scenes |
 
 ## Composition rules
+
+For character-performance work, use the [performance contract](performance-direction.md):
+source scene to acting plan, shot readability, cue encoding, then prompt review
+and actual-take acceptance. Preserve exact ad copy, CTA, supported claims and
+product identity. Static/non-performance assets need no acting plan, while
+preservation-only edits inherit the source performance.
 
 Narrative, ad, micro-drama, music-video and showcase shots get a shot plan by
 default: size, angle, camera move, lens intent and light source per shot, from
@@ -37,9 +44,10 @@ A preset adds control (timing, holds, a named variant), not the effect itself:
 plain wording already produces a light going off or a lunge, and a timed light
 cue on a declared source is honoured closely. Load a preset when the plan or
 the user names that axis; do not stack presets to make a flat clip dynamic.
-Flat video usually comes from a single-setup clip with no camera-move statement
-and soft verbs, so the remedy is a shot plan with one action, a move and a named
-light per shot.
+A flat-performance diagnosis needs evidence of intent, encoding and actual
+playback. Camera movement cannot replace a missing pursuit or response.
+Preserve intentional stillness, quiet holds and sustained attention; coverage
+heuristics do not authorize added movement, cuts or light changes.
 
 A static camera or an unchanging light is a choice that carries a recorded
 reason (`static_reason`); the allowed values and the exempt formats are in

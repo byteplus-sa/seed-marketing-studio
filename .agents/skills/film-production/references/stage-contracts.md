@@ -78,8 +78,9 @@ brief also records:
   capture-format look is requested, in which case it is a post treatment;
 - the **on-screen copy** (titles, captions, CTA, end card) that post will add,
   and any label the user or platform requires;
-- for ads and TVCs, the **cinematic bar**: sequence count and length, one action
-  per shot, and the wow image each sequence must deliver.
+- for ads and TVCs, the **coverage intent**: sequence count and length fitted
+  to approved beats and budget, including purposeful holds. Standout images,
+  timing contrast and turns are optional, not per-sequence requirements.
 
 The brief is the `brief-development` stage source; `stage complete` checks that
 `project.md` is a valid record.
@@ -95,6 +96,15 @@ inspection suffices. Scripts and
 article text alone do not satisfy that gap.
 
 ## 2. Scene and production breakdown
+
+New or materially revised character performance needs `acting-direction`
+before coverage and a source-bound `## Performance plan` in the scene file.
+Carry beat IDs, intentions, listening tasks, registration/response timing and
+critical acceptance into shot notes, then `seedance-acting-console` encoding.
+The [performance contract](../../../contracts/performance-direction.md) owns
+applicability: source-preserving edits inherit performance; static assets do
+not acquire acting requirements. Quiet holds and intentional stillness override
+the optional cinematic cadence below without adding paid generations.
 
 Entry: an accepted brief and available story or script material. Draft scene
 and shot breakdown may precede canonical asset generation; it identifies which
@@ -217,6 +227,13 @@ assembly, to the cut's measured length.
 
 ## 6. Shot generation
 
+Applicable performance prompts require `acting.plan_bound` with real source,
+plan and request evidence in both review modes. Default checks this scoped rule
+without loading blanket craft checklists. Actual-take acceptance includes
+registration, listening, response, exact delivery and product/prop continuity.
+Missing critical performance blocks selection or promotion; no passing take
+means a bounded revision within budget or an unresolved stage.
+
 Entry: shot objective, the scene's revalidated shot plan (or recorded exemption), selected
 video mode, approved inputs, reference roles, prompt snapshot target, duration,
 and any requested audio (if Stage 5 was completed) exist. In strict mode the
@@ -261,6 +278,10 @@ If no take passes, make a bounded correction within the run budget or leave the
 shot blocked.
 
 ## 7. Assembly and review
+
+Recheck accepted performance beats in the actual edit: trimming must not remove
+registration, the listener's response, exact copy or the intended held duration.
+Inspect playback and listen; transcript correctness alone is insufficient.
 
 Entry: approved takes and any requested audio assets exist.
 

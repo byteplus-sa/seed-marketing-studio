@@ -773,6 +773,54 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertFalse(SHOT_RULES & required_rules(operation["register_command"]))
         self.assertIn("ugc", operation["shot_rule_exemption"])
 
+    def test_character_hook_requires_acting_in_both_modes_even_with_static_camera(self):
+        for mode in ("default", "strict"):
+            for approval in ("approve_for_me", "ask_for_approval"):
+                (self.project / "project.md").write_text(
+                    f"---\nreview_mode: {mode}\napproval_mode: {approval}\n---\n"
+                )
+                before = {path: path.read_bytes() for path in self.project_files() if path.is_file()}
+                flags = ["seedance-2.5" if flag == "video-model-a" else flag for flag in VIDEO_FLAGS]
+                code, result = self.register(
+                    base_matrix(), *UNIT_COSTS, *flags, "--static-by-design", "ugc"
+                )
+                self.assertEqual(code, 0, result)
+                _, hook = self.hook_operation(result)
+                for key in ("hash_command", "register_command"):
+                    self.assertIn("acting.plan_bound", required_rules(hook[key]))
+                    self.assertIn("draft=true", params(hook[key]))
+                    self.assertIn("resolution=480p", params(hook[key]))
+                self.assertIn("acting-direction", hook["skills"])
+                self.assertLess(hook["skills"].index("acting-direction"), hook["skills"].index("seedance-acting-console"))
+                self.assertLess(hook["skills"].index("seedance-acting-console"), hook["skills"].index("seedance-prompt-25"))
+                self.assertFalse(SHOT_RULES & required_rules(hook["register_command"]))
+                self.assertEqual(before, {path: path.read_bytes() for path in self.project_files() if path.is_file()})
+                for operations in result["operations"].values():
+                    for operation in operations:
+                        if operation["route"] != "hook-opening":
+                            self.assertNotIn("acting.plan_bound", operation["required_rules"])
+
+    def test_non_performance_hook_omits_acting_without_omitting_campaign_gates(self):
+        for mode in ("default", "strict"):
+            (self.project / "project.md").write_text(f"---\nreview_mode: {mode}\n---\n")
+            code, result = self.register(
+                base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS,
+                "--hook-performance", "non-performance",
+            )
+            self.assertEqual(code, 0, result)
+            _, hook = self.hook_operation(result)
+            self.assertNotIn("acting.plan_bound", hook["required_rules"])
+            self.assertNotIn("acting-direction", hook["skills"])
+            self.assertIn("Non-performance", hook["performance_scope"])
+            self.assertTrue(set(variant_matrix.COMPLIANCE_RULES) <= set(hook["required_rules"]))
+
+    def test_invalid_hook_performance_scope_is_rejected_before_writing(self):
+        before = self.project_files()
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as raised:
+            self.register(base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS, "--hook-performance", "unknown")
+        self.assertEqual(raised.exception.code, 2)
+        self.assertEqual(self.project_files(), before)
+
     def test_asset_ids_carry_take_and_stage_so_finals_and_retakes_register(self):
         _, draft = self.register(base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS)
         row, first = self.hook_operation(draft)

@@ -72,6 +72,17 @@
       "exceptions": []
     },
     {
+      "id": "acting.plan_bound",
+      "severity": "error",
+      "applies_to": ["narrative_video"],
+      "owner_path": ".agents/contracts/performance-direction.md",
+      "summary": "Character-performance prompts carry source-bound intentions, triggers, registration, listening and readable consequences without changing approved copy, claims, CTA or product identity.",
+      "exceptions": [
+        "Static assets, empty plates and non-performance work record not_applicable.",
+        "Preservation-only edits inherit performance and use edit-preservation checks."
+      ]
+    },
+    {
       "id": "shot.plan_bound",
       "severity": "error",
       "applies_to": [

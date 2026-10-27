@@ -64,16 +64,17 @@ frame-synced to on-screen action unless SFX are placed by timestamp.
 
 ## 3. Cinematic structure for ads and TVCs
 
-A single long pass carrying nine or more beats reads as stock footage. For a
-cinematic spot:
+A long pass can overload readable beats. The following sequence recipe is
+optional, not a motion, timing, turn or standout-image quota. Preserve
+intentional stillness, source count, exact copy and budget. For a spot whose
+approved intent benefits from segmented coverage:
 
-- Build a 30 s spot as about **six sequences of about 5 s**, each with **2–3
+- Consider a 30 s spot as about **six sequences of about 5 s**, each with **2–3
   shots** and **one action per shot**.
-- Give every shot a lens intent, a camera move, a motivated named light source
+- Give every shot a lens intent, a motivated camera move or hold, a named light source
   and depth layers (foreground, subject, background), carried from the
   `seedance-shot-design` plan.
-- Give every sequence **one "wow" image**: the frame that would sell the spot
-  as a still.
+- A sequence may include a standout image if useful; no `wow` count is required.
 - Use dynamic verbs over soft mood words, and state the camera move for every
   shot. A static shot carries its recorded reason.
 - Keep every planned shot at least about 0.8 s; Seedance merges shorter shots.

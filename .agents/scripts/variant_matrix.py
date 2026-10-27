@@ -605,14 +605,20 @@ def step_params(route: str, options: argparse.Namespace) -> list[str]:
     return params
 
 
-def step_rules(route: str, exemption: str | None, review_mode: str) -> list[str]:
+def step_rules(
+    route: str, exemption: str | None, review_mode: str,
+    hook_performance: str = "character",
+) -> list[str]:
     if review_mode == "default":
-        return list(COMPLIANCE_RULES)
-    rules = list(COMMON_RULES)
-    if route not in AUDIO_ROUTES:
-        rules.extend(VIDEO_RULES)
-    if exemption is None:
-        rules.extend(SHOT_RULES)
+        rules = list(COMPLIANCE_RULES)
+    else:
+        rules = list(COMMON_RULES)
+        if route not in AUDIO_ROUTES:
+            rules.extend(VIDEO_RULES)
+        if exemption is None:
+            rules.extend(SHOT_RULES)
+    if route == "hook-opening" and hook_performance == "character":
+        rules.append("acting.plan_bound")
     return rules
 
 
@@ -649,7 +655,15 @@ def operation_commands(
         asset = f"{row['name']}_{options.take}_{'audio' if audio else options.stage}"
         params = step_params(route, options)
         exemption = shot_rule_exemption(route, options.static_by_design)
-        rules = step_rules(route, exemption, options.review_mode)
+        rules = step_rules(route, exemption, options.review_mode, options.hook_performance)
+        performance = route == "hook-opening" and options.hook_performance == "character"
+        skills = list(step["skills"])
+        if performance:
+            skills = [
+                skills[0], "acting-direction",
+                *([] if exemption else ["seedance-shot-design"]),
+                "seedance-acting-console", *skills[1:],
+            ]
         base = [
             "uv",
             "run",
@@ -676,11 +690,18 @@ def operation_commands(
                 "route": route,
                 "stage": options.stage,
                 "take": options.take,
-                "skills": step["skills"],
+                "skills": skills,
                 "after": previous,
                 "params": params,
                 "required_rules": rules,
                 "shot_rule_exemption": exemption,
+                "performance_scope": (
+                    "New character performance: bind the plan in shot.md; preserve copy, CTA, claims and hero body"
+                    if performance else
+                    "Non-performance hook: record applicability evidence"
+                    if route == "hook-opening" else
+                    "Inherited source performance; preserve actions and edit scope"
+                ),
                 "hash_command": base,
                 "register_command": [
                     *base,
@@ -929,6 +950,10 @@ def parser() -> argparse.ArgumentParser:
     register.add_argument("--final-resolution")
     register.add_argument("--take", default="t01")
     register.add_argument("--static-by-design", choices=STATIC_BY_DESIGN)
+    register.add_argument(
+        "--hook-performance", choices=("character", "non-performance"), default="character",
+        help="Character hooks require acting evidence in both modes; non-performance hooks record why it does not apply",
+    )
     return cli
 
 

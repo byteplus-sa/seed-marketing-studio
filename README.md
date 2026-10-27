@@ -58,9 +58,9 @@ flowchart LR
   K[Brand kit + product card] --> A[Brief and audience reaction]
   A --> B[Treatment and directing axes]
   B --> C[Canon: product, talent, location, exact graphics]
-  C --> D[Shot plan]
+  C --> D[Performance and shot plan]
   D --> E[Prompt and mode-appropriate preflight]
-  E --> G[Generate at delivery target]
+  E --> G[Draft, inspect, select, promote]
   G --> H[Studio assembly: supers, CTA, end card, mix]
   H --> I[Render and delivery QA]
 ```
@@ -80,7 +80,7 @@ flowchart LR
 - **Canon before shots.** Real logos and packshots are acquired from the brand, never regenerated. Exact copy, prices, CTAs and end cards are rendered with `html-graphic-render`; Seedream is for invented photography and illustration.
 - **Text stays out of generated video.** Captions, taglines, CTAs and end cards are added in post (HyperFrames or FFmpeg).
 - **Review depth is explicit.** Default uses one image, minimal preflight and final sanity. Strict retains detailed checks and three-image sampling. Both modes use draft-first video.
-- **Cinematic means planned coverage.** Narrative and ad shots carry a recorded shot plan (size, angle, move, lens intent, named light source) so spots do not read as a single static take.
+- **Performance before coverage.** Character work uses a source-bound acting plan before shot design and cue encoding. Intentional stillness and regular timing are valid; moves, turns and standout images are not quotas.
 - **Compliance is recorded, not assumed.** Claims, testimonials and AI disclosure for paid ads follow the [ad compliance contract](.agents/contracts/ad-compliance.md); placement specs live in the dated [ad platforms contract](.agents/contracts/ad-platforms.md).
 - **Studio is the final authority.** HyperFrames Studio holds the locked assets and renders the delivery file.
 
@@ -121,7 +121,7 @@ Put these in a gitignored `.env`; never commit them.
 2. Build or pin a brand kit (`brand-kit`), add the product card (`product-intake`), then create `projects/<campaign>/project.md` with the brief (or ask the agent to run `brief-intake`).
 3. Run `uv run python .agents/scripts/studio_project.py init <campaign>` and `stage <campaign> start brief-development`.
 4. Build canon: acquire brand assets, render exact graphics with `html-graphic-render`, and lock Seedream sheets with `studio_project.py lock-element`.
-5. Plan shots with `seedance-shot-design`, write prompts with the `seedance-*` skills, run mode-appropriate preflight, register the request, and submit through `ark-mcp`.
+5. Plan applicable character work with `acting-direction`, then coverage with `seedance-shot-design` and cues with `seedance-acting-console`. Write prompts, run mode-appropriate preflight with applicable `acting.plan_bound` evidence, register the request, and submit through `ark-mcp`.
 6. Place selected takes, supers and audio in Studio, then `studio_project.py render` and `stage <campaign> complete delivery`.
 
 ### Review and approval modes
@@ -178,7 +178,9 @@ register or begin submission after either mode becomes explicit.
 focused compliance records in a real request-bound report:
 `ad.claims_supported`, `ad.no_fabricated_testimonial`, `brand.copy_rules` and
 `library.pin_current`. Missing evidence stays blocked, not filled with fake
-passes. Both modes default variant registration to `--stage draft`, emitting
+passes. New character hooks also require `acting.plan_bound` in both modes,
+including static-camera formats; source-preserving edits inherit performance.
+Both modes default variant registration to `--stage draft`, emitting
 `resolution=480p` and, for Seedance 2.5, `draft=true`. The generic final pass is
 for other models; prepare 2.5 promotions individually from selected
 `draft_task_id` values and supported output settings.
@@ -206,7 +208,7 @@ human sign-off before final generation and delivery.
 
 ## Skills
 
-The workspace ships **80 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
+The workspace ships **81 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
 
 ### Orchestration and review
 
@@ -216,7 +218,7 @@ The workspace ships **80 skills**. Leaf skills are independent; declared orchest
 | **film-production** | Orchestrates multi-scene, multi-modality production one stage at a time while keeping one HyperFrames Studio project synchronized for review and handoff. |
 | **template-factory** | Native-first ad reference analysis and quick structure clones mapped to sourced product facts, preserving campaign rights and review gates. |
 | **prompt-review** | Review prompts for strict mode, explicit review requests or required rules; routine default production skips full checklists. Sub-agent review requires an explicit request. |
-| **ad-variant-matrix** | Plan approved-ad variants with routing, cost and budget gates; default keeps four focused compliance records, strict adds craft review, and all operations register. |
+| **ad-variant-matrix** | Plan approved-ad variants with cost and budget gates; both modes retain compliance and applicable acting evidence, strict adds broader craft review, and all operations register. |
 | **ad-localize** | Adapt an approved ad to another market at the depth chosen per element: captions/text, voice, talent, cultural adaptation or full transcreation, with native review gates. |
 
 ### Campaign layer
@@ -257,15 +259,16 @@ The workspace ships **80 skills**. Leaf skills are independent; declared orchest
 
 | Skill | Summary |
 |---|---|
-| **seedance-shot-design** | Plan per-shot coverage for Seedance scenes: shot count and jobs, size, framing, angle, camera move, lens intent and light per shot, with variety rules and an energy level. |
+| **seedance-shot-design** | Plan intent-led Seedance coverage with readable performance, purposeful moves or holds, declared lighting and optional contrast heuristics. |
 | **seedance-camera-presets** | Compose prompt-only camera moves and framing, including optical zoom, Dutch angle, dolly, orbit, FPV, rack focus, whip pan, and single, two-shot, over-the-shoulder, point-of-view and insert framing. |
 | **seedance-lens-presets** | Translates a lens, focal length, aperture, focus or sensor request into a canonical visible-result phrase for Seedance prompts or Seedream style, and routes unreliable focus pulls and tape looks to post. |
 | **seedance-lighting-presets** | Translates a named lighting setup (rim light, backlight, golden hour, night and moonlight, soft/hard light, three-point, Rembrandt, practicals, silhouette, contre-jour) into a Seedream `Lighting:` recipe and a matching Seedance phrase, and words timed light cues inside a shot. |
 | **seedance-pacing-presets** | Compose prompt-only rhythm, speed ramps, time-lapse, freeze frame, progressive part-by-part changes and named picture/audio transitions, including match cuts, dissolves, wipes and J/L cuts. |
 | **color-grade-palettes** | Defaults to no grade (original Seedance colours); when a palette or film look is requested, maps it to a canonical grade sentence for Seedance or Seedream and/or a high-bit-depth-safe FFmpeg post look on the untouched master. |
-| **seedance-acting-console** | Turn playable motives and tactics into observable acting cues appropriate to framing, visibility and intensity. |
-| **tig-scene-engine** | Writes and audits screenplay scenes and sequences using a five-element dramatic engine — Goal, Obstacle, Tactic, Reversal, Value Shift — with custom definitions. Use to write new scenes, draft options, develop sequences, or audit/test/diagnose existing scenes for structural strength. Default scene-craft skill for thriller and psychological drama. |
-| **tig-blocking-map** | Tigran's project-agnostic method for giving Seedance character DISPOSITION via a color-coded outline schematic — a "staging reference" (blocking map). |
+| **acting-direction** | Plan source-bound character intentions, listening and performance beats before coverage, preserving approved copy and campaign scope. |
+| **seedance-acting-console** | Encode supplied performance intent as concise shot-ready cues, preserving listening, source locks and intentional stillness. |
+| **scene-craft** | Write and audit source-preserving scenes under an explicitly selected framework; the five-element engine is optional. |
+| **blocking-map** | Plan character geometry with source-preserving blocking maps and text staging, retaining the approved medium. |
 
 ### Video edits (video-to-video)
 
@@ -364,7 +367,7 @@ The workspace ships **80 skills**. Leaf skills are independent; declared orchest
 
 | Source | Type | Skills |
 |---|---|---|
-| **Project-authored** | `local` | All `seedance-*`, `seedream-*`, `seed-audio-*`, `ugc-*`, `ad-*`, `tig-*` and `audio-*` skills, plus `brand-kit`, `product-intake`, `static-ad-batch`, `brief-intake`, `film-production`, `template-factory`, `prompt-review`, `reference-edit-rebuild`, `omnihuman-prompt-20`, `html-graphic-render`, `color-grade-palettes`, `source-subject-map`, `ffmpeg-scene-transitions`, `ffmpeg-side-by-side-comparison`, `ark-mcp`, `lark-showcase-aigc`, `showcase-html`, `media-review`, `update` |
+| **Project-authored** | `local` | All `seedance-*`, `seedream-*`, `seed-audio-*`, `ugc-*`, `ad-*` and `audio-*` skills, plus `acting-direction`, `scene-craft`, `blocking-map`, `brand-kit`, `product-intake`, `static-ad-batch`, `brief-intake`, `film-production`, `template-factory`, `prompt-review`, `reference-edit-rebuild`, `omnihuman-prompt-20`, `html-graphic-render`, `color-grade-palettes`, `source-subject-map`, `ffmpeg-scene-transitions`, `ffmpeg-side-by-side-comparison`, `ark-mcp`, `lark-showcase-aigc`, `showcase-html`, `media-review`, `update` |
 | **HyperFrames (vendored)** | `github: heygen-com/hyperframes` | `hyperframes`, `hyperframes-*` and `general-video`; never installed globally or on demand |
 | **FFmpeg (vendored)** | `github: digitalsamba/claude-code-video-toolkit` | `ffmpeg` |
 

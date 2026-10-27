@@ -8,6 +8,16 @@ The normal flow is brief → draft breakdown → required canon → optional sto
 
 ## Review mode
 
+For new or materially revised character-performance scenes, orchestrators use
+`acting-direction` before shot design and `seedance-acting-console` for cue
+encoding. The [performance contract](performance-direction.md) requires
+`acting.plan_bound` only when applicable, including focused evidence in default
+mode. Preserve campaign copy, claims, CTA, identity, pins, budget and localization
+sign-off. Inspect actual acting and listening before selection, promotion and
+final acceptance. Source-preserving edits inherit performance. Quiet holds and
+intentional stillness override conflicting coverage heuristics; no camera move,
+cut, light change or emotion turn is required merely to meet a quota.
+
 Write `review_mode: default` and `approval_mode: approve_for_me` in new
 `project.md` YAML frontmatter. These are independent axes:
 
