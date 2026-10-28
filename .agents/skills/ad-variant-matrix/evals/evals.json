@@ -4,13 +4,13 @@
     {
       "id": 1,
       "prompt": "Our approved 15-second hero ad for a reusable water bottle is s01_sh010 take t02. Make variants: three new hooks, two other presenters (we have Virtual Portraits vp-lena and vp-omar), and 4:5 plus 1:1 versions. Budget is 60 USD; a 15 s 720p swap or hook draft costs about 4 USD on our account, reframes are free.",
-      "expected_output": "A one-axis-at-a-time matrix with hero values, eight variant rows, deterministic names, a cost preview of the provider rows against the 60 USD budget, per-axis routing and the prompt-review and registration gates per row.",
+      "expected_output": "A one-axis-at-a-time matrix with hero values, eight variant rows, deterministic names, an informative cost preview ignoring the legacy budget, per-axis routing and the prompt-review and registration gates per row.",
       "files": [],
       "expectations": [
         "Uses one_axis_at_a_time and does not silently produce a full factorial.",
         "Asks for or records the hero's current hook, talent and ratio values and the hero take's SHA-256 before approving the matrix.",
         "Routes hooks to a regenerated opening beat spliced in Studio, presenters to Object Swap with Virtual Portrait asset:// references, and ratios to delivery reframes with no provider step.",
-        "Runs variant_matrix.py plan and cost with explicit unit costs and reports the total against the budget before any spend.",
+        "Runs variant_matrix.py plan and cost with the available unit costs and reports an informative total without enforcing the legacy budget or requiring spending approval.",
         "States that each provider row needs its own frozen prompt, inline prompt-review bound to the request hash and prepare_request.py --register before submission, starting with a 480p draft.",
         "Plans each variant as its own Studio shot under scenes/variant-<kebab-name>/ and registers hook steps as 4 s 480p drafts trimmed to the opening span in Studio, with take- and stage-specific asset IDs."
       ]
@@ -18,12 +18,12 @@
     {
       "id": 2,
       "prompt": "Do every combination: 4 hooks x 3 talents x 3 languages x 3 ratios for the hero ad. Budget 50 USD, max 20 variants.",
-      "expected_output": "Plans the explicitly requested full factorial with the request recorded in notes, shows that it exceeds the variant cap and the deduplicated budget, and refuses to proceed or trim silently, offering concrete reductions.",
+      "expected_output": "Records the explicitly requested full factorial in notes, detects that it exceeds max_variants before expansion, and refuses to proceed or trim silently, offering concrete reductions. The legacy budget is ignored.",
       "files": [],
       "expectations": [
         "Accepts full_factorial because the user explicitly asked for every combination and records that request in the matrix notes, since plan refuses a full factorial with empty notes.",
         "Reports the expanded row count from the plan (108 rows when the hero's values are among the listed values, more if they are not) and that it exceeds max_variants 20.",
-        "Treats the cost command's refusal as a stop and does not drop rows silently.",
+        "Treats the max_variants resource-guard refusal as a stop and does not drop rows silently; costs never determine the refusal.",
         "Proposes concrete reductions such as one axis at a time or fewer values, and asks the user to choose.",
         "Explains that combined rows reuse the operations of the rows they build on (for example one talent swap serves every ratio row with that talent, and a 4:5 reframe costs 0 by default), so each unique swap, hook opening and dub is reviewed, registered and charged once and the total uses the deduplicated cost.",
         "States that combined rows which also change ratio deliver into variant-specific projects (projects/<campaign>-<variant-key>-<ratio>, for example a hook-and-talent row at 4:5), so no two variants share a delivery project, and that plan refuses any remaining clash with matrix.unique_projects."
@@ -57,13 +57,13 @@
     {
       "id": 5,
       "prompt": "Our approved hero ad for a reusable water bottle won in its home market (market ID market-north). Test it in two new markets we already have market cards for, market-south and market-east, and also give me a Spanish dub for market-south in the same row. Budget 30 USD, max 6 variants; we have not decided how deep each localization goes yet.",
-      "expected_output": "Adds a market axis with two one-axis rows routed to ad-localize, refuses to combine a language change with a market change in one row, requires an explicit market unit cost labelled as an estimate, and prints no provider commands for market rows.",
+      "expected_output": "Adds a market axis with two one-axis rows routed to ad-localize, refuses to combine a language change with a market change in one row, reports unknown market costs without blocking, and prints no provider commands for market rows.",
       "files": [],
       "expectations": [
         "Records market-north as the hero's market value and adds market-south and market-east as kebab-case market IDs matching the market card folders.",
         "Refuses or redirects the combined Spanish-dub-plus-market row, explaining that language belongs inside the market adaptation set by the market card in ad-localize.",
         "Routes each market row to ad-localize with no Studio shot in the campaign project, citing projects/<campaign>/markets/<market-id>/market.json and the localized project projects/<campaign>-<market-id>.",
-        "Asks for or records an explicit market unit cost before running cost, and states it is an estimate because the real cost depends on the per-element levels chosen in ad-localize.",
+        "Runs plan, cost and registration without requiring a budget or market price; reports unknown forecasts because real cost depends on the per-element levels chosen in ad-localize.",
         "States that register prints no provider commands for market rows and that ad-localize plans, reviews and registers its own operations per element level recorded in the market inventory.md (the card holds only level_default).",
         "Does not choose the localization levels itself."
       ]

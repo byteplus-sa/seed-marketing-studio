@@ -44,7 +44,6 @@ def base_matrix(**overrides):
         },
         "strategy": "one_axis_at_a_time",
         "max_variants": 12,
-        "budget_usd": 40,
     }
     matrix.update(overrides)
     return matrix
@@ -73,7 +72,7 @@ COMMON_RULES = {
     "brand.copy_rules",
     "library.pin_current",
     "ad.variant_one_axis",
-    "ad.variant_budget_gate",
+    "ad.variant_count_gate",
 }
 SHOT_RULES = {"shot.plan_bound", "shot.variety", "shot.axis_carry"}
 
@@ -422,12 +421,81 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(result["total_estimated_usd"], 1 * 2 + 9 + 1 * 2)
 
-    def test_cost_over_budget_is_refused(self):
+    def test_cost_over_legacy_budget_is_reported_without_refusal(self):
         code, result = self.run_cli(
             "cost", self.write(base_matrix(budget_usd=10)), *UNIT_COSTS
         )
-        self.assertEqual(code, 1)
-        self.assertIn("matrix.budget", self.rule_ids(result))
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["total_estimated_usd"], 12)
+        self.assertNotIn("budget_usd", result)
+
+    def test_no_budget_or_prices_allows_plan_cost_and_registration(self):
+        for mode in ("default", "strict"):
+            (self.project / "project.md").write_text(f"---\nreview_mode: {mode}\n---\n")
+            for command in ("plan", "cost", "register"):
+                with self.subTest(mode=mode, command=command):
+                    flags = (
+                        ["--project", self.project, *VIDEO_FLAGS]
+                        if command == "register" else []
+                    )
+                    code, result = self.run_cli(command, self.write(base_matrix()), *flags)
+                    self.assertEqual(code, 0, result)
+                    self.assertEqual(result["variant_count"], 5)
+                    if command != "plan":
+                        self.assertIsNone(result["total_estimated_usd"])
+                        self.assertEqual(result["unknown_cost_keys"], ["hook", "talent"])
+                        self.assertEqual(result["rows"][0]["estimated_cost_usd"], 0)
+                    if command == "register":
+                        self.assertTrue(result["operations"])
+
+    def test_legacy_budget_values_are_inert(self):
+        for value in (0, -1, None, "obsolete", {"cap": 0}, 0.004):
+            with self.subTest(value=value):
+                code, result = self.register(
+                    base_matrix(budget_usd=value), *UNIT_COSTS, *VIDEO_FLAGS
+                )
+                self.assertEqual(code, 0, result)
+                self.assertEqual(result["total_estimated_usd"], 12)
+                self.assertNotIn("budget_usd", result)
+
+    def test_json_prices_reject_invalid_values_but_allow_unknown(self):
+        for value in (-1, "invalid", True, float("nan"), float("inf")):
+            with self.subTest(value=value):
+                code, result = self.run_cli(
+                    "cost", self.write(base_matrix(unit_cost_usd={"hook": value}))
+                )
+                self.assertEqual(code, 1, result)
+        code, result = self.run_cli(
+            "cost", self.write(base_matrix(unit_cost_usd={"hook": None}))
+        )
+        self.assertEqual(code, 0, result)
+        self.assertIsNone(result["total_estimated_usd"])
+
+    def test_forecast_overflow_is_unknown_not_a_generation_gate(self):
+        code, result = self.register(
+            base_matrix(unit_cost_usd={"hook": 1e308, "talent": 1e308}),
+            *VIDEO_FLAGS,
+        )
+        self.assertEqual(code, 0, result)
+        self.assertIsNone(result["total_estimated_usd"])
+        self.assertTrue(result["operations"])
+
+    def test_enormous_json_price_is_rejected_without_crashing(self):
+        for command in ("plan", "cost", "register"):
+            with self.subTest(command=command):
+                code, result = self.run_cli(
+                    command,
+                    self.write(base_matrix(unit_cost_usd={"hook": 10**1000})),
+                    *(["--project", self.project] if command == "register" else []),
+                )
+                self.assertEqual(code, 1, result)
+                self.assertIn("cost.unit_invalid", self.rule_ids(result))
+
+    def test_unrepresentable_forecast_totals_are_unknown(self):
+        for amounts in ([10**1000], [10**1000, 1.0], [1e308, 1e308]):
+            with self.subTest(amounts=amounts):
+                self.assertIsNone(variant_matrix.estimated_total(amounts))
+        self.assertEqual(variant_matrix.estimated_total([10**300, 1.0]), 1e300)
 
     def test_variants_over_max_are_refused_in_plan_and_cost(self):
         path = self.write(base_matrix(max_variants=3))
@@ -482,12 +550,17 @@ class VariantMatrixTests(unittest.TestCase):
                 self.assertEqual(result["variant_count"], count)
                 self.assertEqual(len(result["rows"]), count + 1)
 
-    def test_missing_unit_cost_is_refused_rather_than_assumed_zero(self):
+    def test_missing_unit_cost_is_unknown_rather_than_assumed_zero(self):
         code, result = self.run_cli(
             "cost", self.write(base_matrix()), "--unit-cost", "hook=3"
         )
-        self.assertEqual(code, 1)
+        self.assertEqual(code, 0, result)
         self.assertIn("cost.unit_missing", self.rule_ids(result))
+        self.assertIsNone(result["total_estimated_usd"])
+        self.assertEqual(result["unknown_cost_keys"], ["talent"])
+        costs = {tuple(row["changed_axes"]): row["estimated_cost_usd"] for row in result["rows"]}
+        self.assertIsNone(costs[("talent",)])
+        self.assertEqual(costs[("hook",)], 3)
 
     def test_invalid_unit_cost_arguments_are_refused(self):
         path = self.write(base_matrix())
@@ -540,7 +613,8 @@ class VariantMatrixTests(unittest.TestCase):
             "language=2",
         ]
         code, result = self.run_cli("cost", path, *costs)
-        self.assertEqual(code, 1)
+        self.assertEqual(code, 0, result)
+        self.assertIsNone(result["total_estimated_usd"])
         self.assertIn("cost.unit_missing", self.rule_ids(result))
         code, result = self.run_cli(
             "cost", path, *costs, "--unit-cost", "motion-recast=9"
@@ -662,12 +736,12 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertNotIn("operations", result)
         self.assertTrue({"matrix.status", "matrix.hero_hash"} <= self.rule_ids(result))
 
-    def test_register_refuses_over_budget(self):
+    def test_register_allows_cost_above_legacy_budget(self):
         code, result = self.register(
             base_matrix(budget_usd=1), *UNIT_COSTS, *VIDEO_FLAGS
         )
-        self.assertEqual(code, 1)
-        self.assertNotIn("operations", result)
+        self.assertEqual(code, 0, result)
+        self.assertTrue(result["operations"])
 
     def test_unreadable_matrix_is_reported(self):
         path = self.root / "matrix.json"
@@ -1163,12 +1237,13 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertEqual(code, 0, result)
         self.assertNotIn("matrix.market_language", self.rule_ids(result))
 
-    def test_market_rows_need_an_explicit_unit_cost(self):
+    def test_market_rows_allow_unknown_unit_cost(self):
         path = self.write(market_matrix())
         code, result = self.run_cli(
             "cost", path, "--unit-cost", "hook=3", "--unit-cost", "ratio=0"
         )
-        self.assertEqual(code, 1)
+        self.assertEqual(code, 0, result)
+        self.assertIsNone(result["total_estimated_usd"])
         finding = next(
             f for f in result["findings"] if f["rule_id"] == "cost.unit_missing"
         )
@@ -1286,7 +1361,7 @@ class VariantMatrixTests(unittest.TestCase):
         markets = [op for op in operations if op["route"] == "market-adapt"]
         self.assertEqual(len(markets), 2)
 
-    def test_budget_gate_uses_the_deduplicated_total(self):
+    def test_legacy_budget_does_not_change_the_deduplicated_total(self):
         matrix = self.reuse_matrix()
         matrix["budget_usd"] = 16
         code, result = self.run_cli(
@@ -1307,8 +1382,8 @@ class VariantMatrixTests(unittest.TestCase):
             "--unit-cost",
             "market=5",
         )
-        self.assertEqual(code, 1)
-        self.assertIn("matrix.budget", self.rule_ids(result))
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["total_estimated_usd"], 16)
 
     def test_every_variant_row_adds_exactly_one_new_operation(self):
         matrix = swap_matrix()
@@ -1400,7 +1475,7 @@ class VariantMatrixTests(unittest.TestCase):
 
     def test_skill_cites_the_variant_rules(self):
         text = (ROOT / ".agents/skills/ad-variant-matrix/SKILL.md").read_text()
-        for rule in ("ad.variant_one_axis", "ad.variant_budget_gate"):
+        for rule in ("ad.variant_one_axis", "ad.variant_count_gate"):
             self.assertIn(rule, text)
 
 

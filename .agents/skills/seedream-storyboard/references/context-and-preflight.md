@@ -57,12 +57,14 @@ Extract or infer:
   coverage;
 - whether the user wants prompts only or actual image generation.
 
-Ask only when a missing answer would materially change identity, format, cost,
+Ask only when a missing answer would materially change identity, format,
 or story meaning. Otherwise state reasonable assumptions and continue. An
 explicit request to generate authorizes in-scope production at the requested
-supported target and budget, not an automatic extra draft pass. Strict mode or
+supported target, not an automatic extra draft pass. Strict mode or
 an explicit draft request uses the draft workflow. Expanded scope, larger
-batches or spending beyond the authorized budget needs separate approval.
+batches follow the project approval mode. Keep panel-count scope explicit;
+available costs are informative and unknown costs do not block generation.
+No budget, price lookup or spending approval is required.
 
 ### 3. Break the scene into observable beats
 

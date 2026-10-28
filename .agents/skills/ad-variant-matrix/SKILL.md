@@ -8,7 +8,7 @@ description: >-
   dubbing with captions, market adaptation, per-ratio delivery), names every
   variant
   {campaign}_{concept}_{axis-values}_v{nn}, previews cost, and refuses rows over
-  the budget or variant cap. Every row still passes mode-appropriate review and registry
+  the variant cap. Every row still passes mode-appropriate review and registry
   registration; nothing is submitted by the planner. Use to multiply a winning
   ad into testable variants. Not for writing the hero ad, separate concept
   tests, or reading performance results.
@@ -29,7 +29,7 @@ compliance records still require an honest request-bound report for Marketing
 variants: `ad.claims_supported`, `ad.no_fabricated_testimonial`,
 `brand.copy_rules` and `library.pin_current`. Do not fabricate passes when
 facts, brand rules or pin evidence are missing. Strict retains the full
-existing review. Budget and one-axis checks run in code in both modes.
+existing review. Variant-count and one-axis checks run in code in both modes.
 
 **Key rule: change one axis per variant unless the user explicitly asks for a
 full factorial.** One change per row is what makes a result attributable.
@@ -58,12 +58,13 @@ full factorial.** One change per row is what makes a result attributable.
    views for talent, official or authorized packshots for products, garment
    and location sheets. A missing or unapproved reference blocks only the rows
    that need it.
-4. **Unit cost per axis** in USD from current pricing for the route and
-   resolution, or the user's stated figure. Never guess a price; ask. Only
+4. **Optional unit cost per axis** in USD from current pricing for the route and
+   resolution, or the user's stated figure. Never guess a price; report unknown
+   when unavailable without blocking generation. Only
    `ratio` has a default: 0, because a Studio reframe is not a provider
    operation.
-5. **Budget and cap**: `budget_usd` and `max_variants`. Ask when either is
-   missing; do not default to "no limit".
+5. **Variant-count resource guard**: `max_variants`. Ask when it is missing.
+   No project or generation budget is required; legacy `budget_usd` is ignored.
 
 ## Procedure
 
@@ -71,8 +72,8 @@ full factorial.** One change per row is what makes a result attributable.
 flowchart LR
   H[Approved hero take] --> M[matrix.json]
   M --> P[plan: rows + names]
-  P --> C{cost: under budget and cap?}
-  C -->|no| R[Reduce axes or values, or ask for budget]
+  P --> C{Within max_variants?}
+  C -->|no| R[Agree fewer rows or a revised count limit]
   C -->|yes| A{approval mode}
   A --> W[Per row: specialist prompt]
   W --> PR[Compliance evidence; strict adds craft review]
@@ -102,20 +103,21 @@ flowchart LR
    `market` unit once per localized project, labelled an estimate in
    `market_estimate_note` because `ad-localize` chooses the real per-element
    levels; a reframe the `ratio` unit once per delivery project, **0 by
-   default** (`ratio_cost_note`), set only to budget native regeneration.
+   default** (`ratio_cost_note`), set only to estimate native regeneration.
    Each row's `estimated_cost_usd` counts the operations it owns;
    `operations_estimate` lists each unique operation with its owner and
-   `used_by` rows; the total and the budget gate use these deduplicated
-   costs. It exits 1 over `budget_usd` or `max_variants`, or when a routed
-   step has no unit cost. Show the per-row and total estimate before any
-   spend. A refusal here is a stop under **`ad.variant_budget_gate`**.
+   `used_by` rows; the total uses these deduplicated costs. Missing or null
+   prices produce `null` estimates and `unknown_cost_keys`, not zero or a
+   refusal. Known row estimates remain available even when the total is
+   unknown. Supplied prices must be finite and non-negative. Report available
+   costs without requiring a lookup or spending approval.
 4. **Approve the matrix.** In `approve_for_me` the agent may set `status:
-   approved` once the plan and cost pass and the hero hash is bound. In
+   approved` once the plan passes and the hero hash is bound. In
    `ask_for_approval` show the rows, names and total, and wait for the user's
    chat confirmation. The approval covers the plan only; each generated take is
    still selected separately.
 5. **Prepare registration.** `variant_matrix.py register <matrix> --project
-   projects/<campaign> --unit-cost ... --video-model <id> --video-operation
+   projects/<campaign> --video-model <id> --video-operation
    <op> --capabilities <evidence.json>` (plus `--audio-model` and
    `--audio-operation` when language rows exist) refuses a draft matrix, an
    unbound hero, or unresolved model, operation or capability values, and
@@ -138,7 +140,7 @@ flowchart LR
    - **Required rules.** Strict steps carry `--required-rule` for
      `ad.claims_supported`, `ad.no_fabricated_testimonial`,
      `brand.copy_rules`, `library.pin_current`, `ad.variant_one_axis` and
-     `ad.variant_budget_gate`; video steps add `video.text_free`. Hook steps
+     `ad.variant_count_gate`; video steps add `video.text_free`. Hook steps
      add `shot.plan_bound`, `shot.variety` and `shot.axis_carry` unless
      `--static-by-design <format>` records a static-by-design exemption.
      Swap and Motion Transfer steps record the source-preserving-edit
@@ -258,7 +260,6 @@ full table is in [axis routing](references/axis-routing.md#project-paths).
   },
   "strategy": "one_axis_at_a_time",
   "max_variants": 8,
-  "budget_usd": 40,
   "version": 1
 }
 ```
@@ -270,7 +271,8 @@ full table is in [axis routing](references/axis-routing.md#project-paths).
   may use only `{campaign}`, `{concept}`, `{nn}` and axis placeholders, and
   must keep names unique.
 - `unit_cost_usd` may record agreed unit costs per axis (including `market`)
-  and `motion-recast`; `--unit-cost` overrides it.
+  and `motion-recast`; `--unit-cost` overrides it. Missing or null costs are
+  unknown. Legacy `budget_usd` values are tolerated but never read or enforced.
 - Platform ad names must contain the variant name unchanged so
   `ad-performance-loop` can join results.
 
@@ -292,15 +294,15 @@ full table is in [axis routing](references/axis-routing.md#project-paths).
 - **One project per variant (`matrix.unique_projects`).** No two different
   variants share a localized or delivery project; rename a value that
   collides.
-- **Budget gate (`ad.variant_budget_gate`).** No variant production proceeds
-  after `variant_matrix.py cost` refuses the matrix for budget or variant
-  count.
+- **Variant-count guard (`ad.variant_count_gate`).** `plan`, `cost` and
+  `register` reject a count above `max_variants` before expanding rows. This
+  resource guard is independent of prices or monetary amounts.
 - **No hero, no matrix.** A hero that is not approved, has no decision record
   inside the project, or whose take file no longer hashes to `hero.sha256`
   stops the matrix; `register` checks all three.
-- **Budget and cap refuse, they do not trim.** When `cost` exits 1, propose
-  which axis or values to drop, or ask for a higher budget. Never silently
-  drop rows.
+- **Count limits refuse, they do not trim.** When the count exceeds
+  `max_variants`, propose fewer values or agree a revised count limit.
+  Never silently drop rows.
 - **Every row is a normal generation.** Mode-appropriate review, frozen
   prompts, request hashes, registry registration before submission and the
   approval mode apply to each provider step. Both modes default to 480p drafts,
@@ -328,6 +330,6 @@ practitioner conventions this skill follows.
 - Per variant: `scenes/variant-<kebab-name>/shot.md`, and in the same folder
   `prompt_<asset>.md`, its review, request, registry entry, takes and QA
   notes.
-- A short summary for the user: rows, names, estimated total versus budget,
+- A short summary for the user: rows, names, estimated total or unknown,
   rows blocked and why, and the next action. Update `handoff.md` before any
   long wait.

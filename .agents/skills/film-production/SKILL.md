@@ -175,20 +175,20 @@ override. At shot generation, inspect each take against its plan: a missing
 planned cut, move or light change is a soft defect to record, and a missing
 move or light on the turn shot is a hard-gate failure.
 
-## Approval and spending gates
+## Approval and cost reporting
 
 Approval modes, decision evidence and lock rules are defined once in the
 production policy. The orchestration-specific rules are:
 
-- Declare a run budget (generated seconds or currency) before the first paid
-  submission, and stop and report before exceeding it. When using drafts,
-  promote only selected drafts.
+- Do not require a run budget, known price or spending approval before
+  in-scope generation. Promote only selected drafts.
 - A tie between passing candidates uses stable operation ID and
   variation-index order. Do not promote the least-bad output merely to advance.
-- Rights, real-person likeness or voice consent, new spending beyond the
-  declared budget, external delivery and publishing need their own scope in
+- Rights, real-person likeness or voice consent, external delivery and
+  publishing need their own scope in
   either mode. An approval to generate never approves its result.
-- Record estimated and confirmed cost separately.
+- Record estimated and confirmed cost separately; report unknown when
+  unavailable without blocking generation. Legacy budget fields are inert.
 - In default mode, keep candidate/final sanity evidence short and factual when
   the selection or stage-lock writer needs it. Auto-approve passing in-scope
   work as the agent under `approve_for_me`; never invent a user quote, rights

@@ -60,7 +60,7 @@ Existing rules still apply to every localized deliverable:
 Input: the approved source campaign (`project.md`, shot manifests, the selected
 text-free takes, the delivered master and its render record, locks, the locked
 script and supers, the pinned brand kit, the product facts), the target market
-as the user describes it, the levels the user wants per element, budget, and
+as the user describes it, the levels the user wants per element, and
 any glossary or locked target-language wording.
 
 Output, never an overwrite of the source:
@@ -125,7 +125,7 @@ records each element's level and lets one element sit below the default.
 ## Workflow
 
 1. **Scope.** Ask what the user wants the audience to experience, which
-   elements must change, budget, placements, whether the ad is paid and where,
+   elements must change, placements, whether the ad is paid and where,
    and whether a native speaker or local reviewer is available. Ask only what
    would change the result.
 2. **Market card.** Create it and fill it from the user's answers and cited
@@ -144,10 +144,11 @@ records each element's level and lets one element sit below the default.
    other cast, setting, props, wardrobe, gestures, product SKU and music. Read
    them from the manifests, the Studio timeline and the final render, not from
    the plan.
-4. **Choose a level per element with a cost estimate.** Record level, route,
+4. **Choose a level per element with available cost estimates.** Record level, route,
    provider steps and the estimate per element in the `inventory.md` level
-   table, and the total against the budget. Unit costs come from current pricing for the route and resolution
-   or from the user's figure; never guess a price. Under `ask_for_approval`
+   table, and the total when known. Unit costs come from current pricing for the route and resolution
+   or from the user's figure; never guess a price. Missing estimates are unknown
+   and do not block generation or require spending approval. Under `ask_for_approval`
    show the plan and wait; under `approve_for_me` record the agent decision.
    A user-stated level is never raised or lowered by the agent.
 5. **Translate.** Fill `translation.md` for every spoken line and every

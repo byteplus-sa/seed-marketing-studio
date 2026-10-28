@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -787,6 +788,22 @@ def prepared_evidence_findings(
     findings = schema_findings(request, "generation-request.schema.json")
     if findings:
         return findings
+    for field in ("estimated", "confirmed"):
+        amount = request["cost"][field]
+        if amount is None:
+            continue
+        try:
+            finite = math.isfinite(amount)
+        except OverflowError:
+            finite = False
+        if not finite:
+            findings.append(
+                Finding(
+                    "cost.amount_invalid",
+                    "Cost must be finite or null for unknown",
+                    f"cost.{field}",
+                )
+            )
     if not existing_submission:
         findings.extend(native_draft_findings(request))
     root = Path(project_root).resolve()

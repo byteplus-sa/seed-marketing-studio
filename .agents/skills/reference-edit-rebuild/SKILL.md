@@ -8,7 +8,7 @@ description: >-
   generated shots of the character for people-led formats, animated asset
   layers for product and motion-graphics formats) and a deterministic
   HyperFrames type-and-effects layer. Keeps the cut grid in the assembly, sets
-  a version and credit budget, and tracks per-segment refinements. Use for
+  a version count, reports available costs, and tracks per-segment refinements. Use for
   "make this edit with my product", aura-farming, fashion and product-launch
   formats. Planning only. Not for style recipes (template-factory), recasting
   one clip (seedance-motion-recast), one-element swaps (seedance-object-swap)
@@ -68,7 +68,7 @@ and nothing else needs to be kept, recast or swap is simpler.
   or clothing, each with a role and SHA-256. More than five needs an explicit
   user decision recorded as a plan limit.
 - **Instructions** (optional): priorities such as a hero product shot, an
-  element to keep unchanged, platform, length, version count and credit cap.
+  element to keep unchanged, platform, length and version count.
 
 ## Output contract
 
@@ -118,11 +118,11 @@ A **Rebuild Plan** returned to the caller:
    audio leaks music and speech into the cut. A meme or UGC segment that needs
    its own sync sound gets an explicit question (native or post sound) rather
    than a silent default.
-8. **Budget.** Layers cost no credits. Generated shots draft at 480p first;
-   state the estimated credits per shot, ask before promoting drafts to the
-   delivery resolution, promote only the shots that made the cut, and respect
-   any user cap. Estimated and confirmed costs
-   stay separate.
+8. **Cost reporting.** Layers cost no credits. Generated shots draft at 480p
+   first, with native `draft: true` for Seedance 2.5. Report available
+   estimates per shot or unknown; estimates never gate generation. Promote
+   only selected shots under the project approval mode, respecting existing
+   authorization. Estimated and confirmed costs stay separate.
 9. **Hand off** the plan. After takes exist, run the assembly check below and
    keep the refinement ledger current.
 
@@ -154,8 +154,8 @@ A **Rebuild Plan** returned to the caller:
 7. **Refine by segment.** A correction invalidates only the segments it
    touches and their dependents. Unchanged takes keep their hashes and are not
    resubmitted.
-8. **One spend authority.** Show the estimated cost before each generation
-   wave and stop at the user's cap. Never submit the same paid segment twice.
+8. **No duplicate generation.** Never submit the same paid segment twice.
+   Report available costs without requiring a cap or spending approval.
 9. **Deliver source with the render.** A motion-layout rebuild ships the
    HyperFrames project beside the render so segments stay editable; generated
    takes are flat clips and are labeled as such.

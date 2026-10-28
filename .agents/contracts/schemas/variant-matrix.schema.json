@@ -10,8 +10,7 @@
     "hero",
     "axes",
     "strategy",
-    "max_variants",
-    "budget_usd"
+    "max_variants"
   ],
   "additionalProperties": false,
   "properties": {
@@ -124,8 +123,7 @@
       "minimum": 1
     },
     "budget_usd": {
-      "type": "number",
-      "minimum": 0
+      "description": "Legacy metadata accepted without validation or enforcement; ignored by the planner."
     },
     "unit_cost_usd": {
       "type": "object",
@@ -133,7 +131,7 @@
         "$ref": "#/$defs/costKey"
       },
       "additionalProperties": {
-        "type": "number",
+        "type": ["number", "null"],
         "minimum": 0
       }
     },

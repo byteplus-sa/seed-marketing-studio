@@ -59,6 +59,7 @@ vertical framing, <Name> centered and facing the camera throughout." and
 - Wardrobe and accessories come through the sheet, but the lav mic does not
   reliably appear from text alone. If it matters, QA it and say it twice
   (scene + subject).
-- Resolve current cost, supported dimensions and Draft/promotion capabilities
-  from the selected tool. Keep estimates separate from measured output and
+- Resolve supported dimensions and Draft/promotion capabilities
+  from the selected tool. Report available cost or unknown without blocking.
+  Keep estimates separate from measured output and
   confirmed billing; do not reuse another production's timings or token counts.

@@ -6,7 +6,7 @@ for a specific failure in its campaign, with the actual artifact and span.
 
 | Observed symptom | Inspect before deciding | Scoped repair and tradeoff |
 | --- | --- | --- |
-| Packaging warps during a hero closeup | Compare silhouette, pump/cap and label against the selected image at actual display size | Remove the failing span, use a truthful exact-product layer, or request a targeted take within budget; an exact end card alone is insufficient |
+| Packaging warps during a hero closeup | Compare silhouette, pump/cap and label against the selected image at actual display size | Remove the failing span, use a truthful exact-product layer, or request a targeted take within the requested scope; an exact end card alone is insufficient |
 | Source bottle is cropped | Check original image boundaries, not a generated reconstruction | Frame the supplied crop honestly or obtain a complete approved view; do not call invented unseen geometry exact |
 | Light stands or emitters enter the world | Inspect whether the prompt names a studio without emitter placement | Describe the light's result and put the physical source off-frame; retain visible fixtures only if the set treatment asks for them |
 | Every product gets the same ring tunnel | Compare event, scale, camera and sound across the collection | Change the governing world rule and payoff, not only colors |

@@ -171,6 +171,32 @@ class PrepareRequestTests(unittest.TestCase):
             [],
         )
 
+    def test_request_cost_metadata_rejects_nonfinite_and_invalid_amounts(self) -> None:
+        _, result = self.run_cli(self.argv())
+        request = result["request"]
+        for field in ("estimated", "confirmed"):
+            for amount in (float("nan"), float("inf"), -1, True, "bad", 10**1000):
+                with self.subTest(field=field, amount=amount):
+                    request["cost"] = {"estimated": None, "confirmed": None, "currency": "USD"}
+                    request["cost"][field] = amount
+                    findings = validation.prepared_evidence_findings(self.root, request)
+                    self.assertTrue(
+                        any(finding.path == f"cost.{field}" for finding in findings),
+                        findings,
+                    )
+
+    def test_request_cost_metadata_accepts_unknown_zero_and_finite_amounts(self) -> None:
+        _, result = self.run_cli(self.argv())
+        request = result["request"]
+        for amount in (None, 0, 1.25, 1e300):
+            with self.subTest(amount=amount):
+                request["cost"] = {"estimated": amount, "confirmed": amount, "currency": "USD"}
+                findings = validation.prepared_evidence_findings(self.root, request)
+                self.assertFalse(
+                    any(finding.path.startswith("cost.") for finding in findings),
+                    findings,
+                )
+
     def test_hash_is_deterministic_and_matches_validator(self) -> None:
         _, first = self.run_cli(self.argv())
         _, second = self.run_cli(self.argv())

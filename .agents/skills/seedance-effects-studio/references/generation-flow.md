@@ -180,10 +180,11 @@ forbade them.
   with `draft_task_id` (the Draft task ID,
   at most 7 days old) and only `resolution`, `watermark`, `return_last_frame`.
   Prompt, images, duration and audio come from the draft. Promotion renders
-  1080p in the documented path; revalidate these constraints and current cost.
+  1080p in the documented path; revalidate these capability constraints.
+  Report current cost when known, otherwise unknown without blocking promotion.
   If the promotion cannot provide the delivery target, resolve a supported
   export path; any new 2.5 generation still starts as a native Draft.
-  Follow existing generation authorization, project approval mode and budget;
+  Follow existing generation authorization and project approval mode;
   request authorization only when the final operation exceeds that scope. A promotion is a
   paid operation and is registered before it is submitted: operation ID
   `<draft operation>-promote`, the draft's prompt snapshot and references, params

@@ -25,7 +25,7 @@ references in default mode merely because a prompt is generation-bound.
 
 In default mode, confirm scope, supported capabilities, exact prompt and input
 hashes, ordered bindings, current reference selections, rights, applicable ad
-facts/disclosures, budget and duplicate/registry state before spending. Inspect
+facts/disclosures and duplicate/registry state before generation. Inspect
 the actual result for the requested content, obvious defects and delivery
 fitness, including playback/listening for those modalities. Default is not a
 claim that a detailed review ran. Missing perception or evidence stays
@@ -38,13 +38,22 @@ evidence, save a short schema-valid hash-bound sanity record of actual checks,
 inspection method, coverage, observations and limitations, not a fabricated
 full checklist. Keep the existing decision and lock writers.
 
-Neither review mode grants rights, likeness/voice consent, extra budget or
+Neither review mode grants rights, likeness/voice consent or
 publishing scope. Marketing claims still need supported market-scoped facts;
 testimonials cannot be fabricated; brand rules and platform-required
 disclosures still apply. Paid-ad disclosure records quote the user's actual
 decision, not an agent-written quote. L3-L5 native/local sign-off remains
 explicit human evidence before final generation and delivery. Explain those
 boundaries when blocked; do not impersonate a user or native reviewer.
+
+Project and generation budgets are not enforced. Do not require budget setup,
+spending approval or a known price before in-scope generation, and do not stop
+because an estimate exceeds a legacy cap. Legacy budget fields are inert.
+Cost forecasts and confirmed billing remain separate reporting data; missing
+prices are unknown, never assumed free. Numeric cost metadata must remain
+finite and non-negative. Resource cardinality (`max_variants`), provider/API
+limits, native drafts, rights/consent, creative approval modes, duplicate
+protection and registry locks remain unchanged.
 
 ## Persistent production workspace
 
@@ -204,7 +213,7 @@ Provider success sets `review`. In `approve_for_me`, inspect every candidate
 with modality-appropriate evidence, reject hard-gate failures, rank passing
 candidates against recorded criteria, and save a hash-bound review and agent
 decision before a validated writer sets `selected_variant` and `approved`. If
-none passes or inspection is unavailable, repair within the run budget or block
+none passes or inspection is unavailable, make an in-scope repair or block
 the stage. In `ask_for_approval`, record `recommended_variant` and review
 evidence, then wait for an explicit user choice before setting
 `selected_variant` or `approved`. A recommendation alone never approves. A
@@ -308,7 +317,7 @@ passing, hash-bound draft selection under the project's approval mode before
 final-resolution generation. For multi-shot projects, review the draft assembly
 and record the picture/audio decisions before generating final takes. Preserve
 all draft files, prompt snapshots, references, task IDs and decisions. Generate
-final takes only within the authorized scope and budget at the recorded delivery
+final takes only within the authorized scope at the recorded delivery
 target; do not assume 1080p is always required. A requested 480p delivery can use
 reviewed 480p takes after delivery QA.
 
@@ -365,7 +374,7 @@ default mode: `ad.claims_supported`, `ad.no_fabricated_testimonial`,
 `brand.copy_rules` and `library.pin_current`. These ad operations still need a
 real report, not a full prompt-craft checklist or fake pass. Verify applicability
 honestly, record what was actually checked, and leave missing evidence blocked.
-Its budget and one-axis gates still execute in code.
+Its variant-count resource guard and one-axis gates still execute in code.
 The validator is read-only and never submits a provider task. Capability
 evidence uses capability-evidence.schema.json and self-contained parameter
 schemas; external schema URLs are rejected.

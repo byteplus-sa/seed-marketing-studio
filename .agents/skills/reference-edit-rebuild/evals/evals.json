@@ -35,21 +35,21 @@
         "The correction is restated as locked decisions, requested delta, acceptance criteria, known rejections and invalidation scope.",
         "The title fix is a deterministic re-render with no paid generation, and shot 4 is the only regenerated take unless the asset change touches other segments that bind it.",
         "Unchanged takes keep their hashes and status and are not resubmitted.",
-        "An estimated cost is shown for the wave and the user's credit cap is respected.",
+        "Available estimates are reported for the wave; unknown prices or legacy credit caps do not block the requested correction or trigger spending approval.",
         "The full-edit assembly check is re-run after the new takes land."
       ]
     },
     {
       "id": 4,
       "prompt": "Make an aura-farming edit of my invented character Mimi (two approved photos) in the style of a typical cinematic aura edit reel, 9:16, about 13 seconds on a phonk beat I own.",
-      "expected_output": "A people-led Rebuild Plan: a shot list of five to eight distinct generated setups of Mimi (Seedream first frames from the locked photos, Seedance image-to-video drafts without ratio), each cut into short appearances on measured beat anchors, plus a deterministic type-and-effects layer, a 480p draft budget and a question before promotion.",
+      "expected_output": "A people-led Rebuild Plan: a shot list of five to eight distinct generated setups of Mimi (Seedream first frames from the locked photos, Seedance image-to-video drafts without ratio), each cut into short appearances on measured beat anchors, plus a deterministic type-and-effects layer, 480p native drafts and promotion under the project approval mode.",
       "files": [],
       "assertions": [
         "The footage layer is varied generated shots of the character, not one static cutout repeated across beats.",
         "Each setup differs in size, angle, light or action, and each is generated once at 4-5 s and cut into short appearances at the EDL times.",
         "The first-frame image-to-video requests omit ratio.",
         "Type uses mixed families without outlines, one word or phrase per beat, landing on the cut frame.",
-        "Drafts are 480p with an estimate, and promotion to the delivery resolution waits for the user's answer.",
+        "Drafts are 480p with native draft true; promotion follows the project approval mode and existing scope without requiring a known estimate or spending approval.",
         "The generated shots under the phonk bed are planned with generate_audio false, and no grade, grain or vignette is added unless the reference shows it."
       ]
     }

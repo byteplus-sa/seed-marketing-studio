@@ -15,7 +15,7 @@ Default mode uses minimal preflight and actual final sanity, one generated
 image and draft-first video. Do not load strict checklists or create
 mandatory craft reports. The detailed review procedures below are strict-mode
 or explicitly requested guidance; preserve capability, hash, reference, rights,
-claims, disclosure, native-human, budget and registry requirements in both.
+claims, disclosure, native-human and registry requirements in both.
 
 ## 1. Draft first, then final
 
@@ -157,10 +157,10 @@ Run these checks before a take passes, and use the narrowest fix.
   picture (copy the video stream and confirm its hash is unchanged). Measure the
   original first: loudness over time, its own transcript and its non-voice
   sounds, then confirm they survive.
-- **Music beds:** provider audits reject a share of music generations; budget
-  spare samples. Tempo and arc timing are only roughly obeyed, so measure and
+- **Music beds:** provider audits reject a share of music generations; diagnose
+  each rejection before revising or retrying. Tempo and arc timing are only roughly obeyed, so measure and
   pad or splice in assembly. Short lines truncate unless the prompt states the
   clip length and trailing silence.
-- **Retakes:** fix hard-gate failures within the run budget with one targeted
+- **Retakes:** fix hard-gate failures within the requested scope with one targeted
   change per retake, written as a revision (locked decisions, delta,
   acceptance, known rejections, invalidation scope).

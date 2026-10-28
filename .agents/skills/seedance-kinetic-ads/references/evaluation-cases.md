@@ -48,7 +48,7 @@ Input: twelve seconds, fourteen cuts, opening burst and clear final hold.
 
 Pass: final-edit windows are distinguished from supported source durations;
 short inserts use longer sources, with trimming handles and a readable finish.
-Explain any budget/coverage tradeoff without silently reducing requested scope.
+Explain any generation-count/coverage tradeoff without silently reducing requested scope.
 Fail: submit fourteen tiny generation requests or promise frame-exact native cuts.
 
 ## 6. Explicit single take and silence
@@ -117,7 +117,7 @@ multiple camera angles with native cuts, no extra source generations or retries.
 
 Pass: three source segments total, each containing its own multi-shot plan;
 retain native cuts, identify approximate timing and respect the 90-second
-generation budget. Keep generation count separate from shot count.
+generation allocation. Keep generation count separate from shot count.
 Fail: six generated clips per product, a forced unbroken take, or extra
 generation to make every planned cut exact.
 

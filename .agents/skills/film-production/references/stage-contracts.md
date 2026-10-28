@@ -23,7 +23,7 @@ and approve_for_me for new actions; invalid values fail. Default uses minimal
 preflight and final sanity, draft-first video, and no mandatory
 prompt-review craft reports or strict checklist loading. The detailed QA below
 applies in strict mode or when requested; retain actual compliance, rights,
-reference locks, capabilities, budget, hashes and registry safety in both.
+reference locks, capabilities, hashes and registry safety in both.
 Record the effective modes,
 decision actor, reason, review outcome, current selection or stage lock, and
 unresolved gaps in the relevant manifest. `status` checks takes and Studio
@@ -66,7 +66,7 @@ Entry: user intent or an existing `project.md`.
 
 Required output: `review_mode`, `approval_mode`, audience, format, runtime, aspect ratio,
 delivery resolution, story objective, tone, creative constraints, known rights
-constraints, run budget, and unresolved questions recorded in `project.md`.
+constraints and unresolved questions recorded in `project.md`.
 Confirmed directorial defaults (structure, energy level, camera and light
 stance, lens, grade, pacing, acting, staging, medium, audio) from
 `brief-intake` persisted as a `locked` block in `project.md` frontmatter. The
@@ -90,7 +90,7 @@ visual or motion inspiration, record the reference URL or local path and treat
 local media acquisition and native video/image inspection as unresolved until
 decodable media and a capable reviewer are available. Prefer native/local
 inspection; use available MCP understanding tools when needed, under privacy
-and cost constraints. No upload or cloud call is required when native
+and explicit offline constraints. No upload or cloud call is required when native
 inspection suffices. Scripts and
 article text alone do not satisfy that gap.
 
@@ -257,7 +257,7 @@ project instead lists them in one `kind: "takes"` group using
 
 Exit: a passing take has a hash-bound, mode-authorized selection. In
 `ask_for_approval`, the recommendation remains pending until the user chooses.
-If no take passes, make a bounded correction within the run budget or leave the
+If no take passes, make a bounded correction within the requested scope or leave the
 shot blocked.
 
 ## 7. Assembly and review

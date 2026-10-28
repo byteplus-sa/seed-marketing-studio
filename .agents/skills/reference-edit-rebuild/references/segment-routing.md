@@ -72,7 +72,8 @@ substitute for a moving shot.
    retime by trimming or clone-padding rather than regenerating.
 4. A window never crosses a layered or kept segment.
 5. Record per window: member segment IDs, requested duration, resolution
-   (480p draft first), estimated cost and assigned assets in binding order.
+   (480p draft first), available estimated cost or unknown, and assigned assets
+   in binding order. A known estimate is not required for generation.
 
 ## Reference footage as input
 
