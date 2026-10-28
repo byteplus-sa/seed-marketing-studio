@@ -291,9 +291,9 @@ Before returning an acting block, verify:
 - [ ] A suppression arc moves toward control and ends on one residual cue
       the framing can show.
 - [ ] An animal image is translated into observable cues, and a burst action
-      retains its intended energy and recovery. Use holds only when selected
-      for a demonstrated problem and compatible with source locks; no burst
-      count is an acceptance condition.
+      retains its intended energy and recovery. Preserve source-requested holds;
+      additional holds are optional repairs for a demonstrated problem and must
+      remain compatible with source locks. No burst count is an acceptance condition.
 - [ ] A veil or mask stays on; eye cues appear only when readable at the
       selected scale, with physical channels used otherwise.
 - [ ] Supplied triggers and consequences remain ordered; timestamps are

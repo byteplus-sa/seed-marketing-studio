@@ -227,7 +227,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-acting-console/SKILL.md",
-      "computedHash": "29661357aa6f42a8de0cee30a0f1e595a34bb1eede7dcacc87891fcc155bc960",
+      "computedHash": "decbc4d0a4899559b36f13dab60786da0eaf7d070b2c25da8509cb40a4478dca",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "seedance-ai-avatar": {

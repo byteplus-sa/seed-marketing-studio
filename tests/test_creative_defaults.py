@@ -14,6 +14,48 @@ def normalized(path: Path) -> str:
 
 
 class CreativeDefaultsTests(unittest.TestCase):
+    def test_action_frequency_checks_use_feasibility_not_count_alone(self):
+        paths = (
+            "seedance-prompt-25/references/scene-action.md",
+            "prompt-review/references/checklist-seedance-25.md",
+        )
+        for relative in paths:
+            with self.subTest(path=relative):
+                text = normalized(SKILLS / relative)
+                self.assertNotIn("never** demand impossible frequencies", text)
+                self.assertNotIn('e.g., "complete three actions in one second"', text)
+                self.assertIn("not a fixed action-count threshold", text)
+                self.assertIn("genuine timing conflicts or missing inputs", text)
+                self.assertIn("readability", text)
+                self.assertIn("source", text)
+                self.assertIn("optional repair", text)
+
+    def test_lunge_eval_preserves_requested_end_hold_without_requiring_pre_hold(self):
+        cases = json.loads(
+            (SKILLS / "seedance-acting-console/evals/evals.json").read_text()
+        )["evals"]
+        case = next(case for case in cases if case["id"] == 10)
+        self.assertIn("suddenly lunges", case["prompt"])
+        self.assertIn("to hold a needle at a young man's neck", case["prompt"])
+        self.assertIn("Keep the veil.", case["prompt"])
+        text = " ".join([case["expected_output"], *case["expectations"]]).lower()
+        self.assertNotIn("holds are optional, not a default", text)
+        self.assertNotIn("imposing pre/post holds", text)
+        for term in ("sudden lunge", "requested end hold", "needle", "neck",
+                     "pre-lunge hold", "optional", "conditional repair", "veil"):
+            self.assertIn(term, text)
+
+    def test_acting_self_check_distinguishes_source_holds_from_added_repairs(self):
+        text = normalized(SKILLS / "seedance-acting-console/SKILL.md")
+        checklist = text.split("## self-check checklist", 1)[1]
+        self.assertNotIn("use holds only when selected", checklist)
+        self.assertIn("preserve source-requested holds", checklist)
+        self.assertIn("additional holds", checklist)
+        self.assertIn("optional", checklist)
+        self.assertIn("demonstrated problem", checklist)
+        self.assertIn("source locks", checklist)
+        self.assertIn("no burst count is an acceptance condition", checklist)
+
     def test_compilers_and_reviews_do_not_soften_body_or_cap_bursts(self):
         paths = [
             SKILLS / "seedance-prompt-25/references/scene-action.md",
