@@ -98,9 +98,10 @@ coverage, and retain a working hold instead of adding motion for variety.
   a short insert before the key line, and light both speakers from the same
   declared dinner lamp seen from opposite camera sides.
 - **Tradeoff:** Less kinetic feel; clearer speech and a visible power shift.
-- **Acceptance:** No large move is planned during a spoken line, the key line
-  sits in a single shot, and the speakers' lit sides differ without a second
-  source appearing.
+- **Acceptance:** The key line, speaker attribution and listener response
+  remain readable at playback speed, with no invented light source. This
+  hypothetical repair uses quiet moves; a tracking or other energetic version
+  can pass the same readability check. Speech alone does not prohibit it.
 
 ## A 30-second spot written as one pass
 

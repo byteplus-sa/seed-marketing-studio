@@ -62,6 +62,13 @@ must stay ambient or score-led; generate the picture silent and build the bed
 in post. Say in the brief that post beds are laid to the cut and are not
 frame-synced to on-screen action unless SFX are placed by timestamp.
 
+Plan sound and editorial intent before generation in the existing brief or
+scene notes: anticipation, what a cut reveals or withholds, and the purpose of
+silence, texture or an accent. A sound-led reveal can guide picture without
+requiring finished audio early. Final assets and cue positions follow the
+measured edit and actual listening; this does not change audio-route, rights
+or spend authorization.
+
 ## 3. Cinematic structure for ads and TVCs
 
 A long pass can overload readable beats. The following sequence recipe is
@@ -75,11 +82,14 @@ approved intent benefits from segmented coverage:
   and depth layers (foreground, subject, background), carried from the
   `seedance-shot-design` plan.
 - A sequence may include a standout image if useful; no `wow` count is required.
-- Use dynamic verbs over soft mood words, and state the camera move for every
-  shot. A static shot carries its recorded reason.
-- Keep every planned shot at least about 0.8 s; Seedance merges shorter shots.
-  Blink cuts, intercuts and vision flashes are built in the edit, not the
-  prompt.
+- Use concrete action and intent instead of mood words alone; state the
+  motivated move or hold. Gentle or abrupt performance can be appropriate.
+  A static shot carries its recorded reason.
+- About 0.8 s per shot and about 7 shots per clip are provisional generation
+  heuristics, not provider limits or guaranteed merge/drop thresholds. Preserve
+  requested rhythm and source timing without automatic retiming or shot removal.
+  Offer assembly for precise cuts or omitted action, within authorization and
+  budget; return genuine feasibility conflicts rather than changing locks.
 - Set ratio as a request parameter, never as a sentence in the prompt. 21:9 is
   an accepted Seedance 2.5 ratio for a scope look.
 
@@ -116,7 +126,17 @@ one only when the user, platform or brief requires it.
 
 ## 7. Assembly defaults
 
-Default assembly does **conform, trim, crop, overlays, end card and mix only**.
+Technical assembly uses **conform, trim, crop, overlays, end card and mix**.
+It also needs artistic acceptance against the brief, not just clean joins.
+Inspect full-speed playback and listen when audio is in scope. In existing
+review evidence, cite timestamps for the intended attention, revealed or
+withheld information, rhythm and payoff (including a deliberate unresolved
+ending). Recheck sound hierarchy, silence, anticipation and release, and ensure
+trims preserve accepted performance and exact copy. Neither movement nor
+stillness is a quality proxy. Unavailable playback/listening stays unresolved;
+a critical artistic failure blocks selection until a scoped repair passes.
+Keep evidence short in default mode and detailed in strict; no new runtime or
+mandatory report is required.
 
 - **No grade.** Keep the original Seedance colours that matched the approved
   drafts. Add a grade, grain, halation, vignette or a capture-format look only

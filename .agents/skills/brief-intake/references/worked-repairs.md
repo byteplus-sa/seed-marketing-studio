@@ -59,13 +59,18 @@ judgments, not observed generated-media results.
 - **Simulated failure:** One pass carries nine beats at one framing, so it
   reads as stock footage; native audio is likely to add a score or voices the
   edit cannot remove; the grade was never requested.
-- **Smallest repair:** Six 5 s sequences of 2–3 shots, one action per shot
-  (the hood snaps up, a puddle jump in low-angle slow motion, a grin under a
-  streetlamp), each with a camera move, a named light and one wow image.
+- **Smallest repair:** Clarify the premise: the viewer follows the cyclist
+  discovering play in the rain, without claiming unverified jacket performance.
+  Fit coverage to the hood, puddle and arrival beats, retaining a continuous
+  take if readable. Short sequences and standout images are optional within
+  budget, not cadence or variety quotas. Name the light and motivated move or hold.
   Audio route `picture_only`: generate silent picture and build rain, footsteps
-  and score in post. Keep original colours; list the logo end card as a post
-  overlay.
+  and score in post. Plan the rain's change from interruption to playful rhythm
+  before generation; final accents follow the measured cut. Keep original
+  colours; list the logo end card as a post overlay.
 - **Tradeoff:** More shots to plan and assemble, and a post sound pass; in
   return each sequence has a visible idea and the sound is controlled.
 - **Acceptance:** The proposal names the sequence structure, the audio route
   with its reason, the look default, and the on-screen copy as post overlays.
+  Playback and listening must establish that attention and payoff work; a
+  technically joined edit or a written premise alone cannot establish that.

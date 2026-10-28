@@ -119,11 +119,11 @@
     {
       "id": 10,
       "prompt": "A veiled elder whose fine mesh veil leaves only her eyes visible suddenly lunges like a snake to hold a needle at a young man's neck. Keep the veil.",
-      "expected_output": "The snake image turned into observable cues with one burst and still holds, while the veil stays on and the eyes carry the threat.",
+      "expected_output": "The supplied sudden lunge encoded with grounded speed, contact and recovery, while the veil stays on and readable cues carry the threat. Holds are optional, not a default.",
       "files": [],
       "expectations": [
         "The animal image is translated into observable body cues and the word snake is not left alone as the direction.",
-        "There is exactly one burst action, with a still hold before it and a still hold after it.",
+        "Preserves the supplied sudden lunge without adding actions or imposing pre/post holds; any proposed hold is a conditional repair, not a burst-count rule.",
         "The veil is kept and the eyes stay readable through it; no lip or nostril expression is required.",
         "Wardrobe or identity is restated after the burst so it does not drift."
       ]

@@ -71,6 +71,18 @@
         "The jug is described positively as plain and unprinted (for example smooth glazed surface with nothing printed) rather than only with 'no text'.",
         "Duration, resolution and ratio are request parameters, not sentences in the prompt."
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "Legacy Seedance 2.0 prompt only: a 10-second physical-comedy product demo. The presenter quickly reaches twice for a rolling plain spool, recovers balance between attempts and says exactly {Not that one!}. Preserve both attempts, their quick pace, the held wide frame, constant window light and the final catch. No new claims, cuts, pre/post holds or generation.",
+      "expected_output": "A legacy prompt preserving repeated energetic action and exact dialogue, with grounded recovery and a readability check rather than a slow-body default.",
+      "files": [],
+      "expectations": [
+        "Keeps both quick attempts, balance recovery and final catch without imposing a single-burst cap or added holds.",
+        "Preserves the wide camera, light and exact {Not that one!}; speech does not require quieter performance.",
+        "Uses the legacy prompt structure and appropriate references without claiming native 2.5 Draft support.",
+        "Returns any demonstrated duration or visibility conflict for a scoped repair rather than silently changing action, copy or budget."
+      ]
     }
   ]
 }

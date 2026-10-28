@@ -120,9 +120,10 @@ paid video submission and again at assembly. In short:
    Ambience-only, score-driven and wordless pieces generate picture with
    `generate_audio: false` and build the bed in post, because a "no music" line
    does not reliably hold.
-3. **Cinematic sequences for ads and TVCs.** About six 5 s sequences of 2–3
-   shots for a 30 s spot, one action per shot, each shot with lens, camera move,
-   motivated light and depth, and one wow image per sequence.
+3. **Intent-led coverage for ads and TVCs.** Choose count and duration from
+   readable action, listening and the approved budget. Each shot carries lens
+   intent, a motivated move or hold and named light. Short sequences, variety,
+   turns and standout images are optional, not cadence or hold quotas.
 4. **Storyboards plan; they are never bound** as Seedance references. Bind
    element references and write staging in the prompt.
 5. **People in video inputs** (extension, video-to-video) need `asset://`
@@ -164,7 +165,11 @@ At the brief/development stage, run `brief-intake` before writing the brief's
 required output. It proposes directing defaults derived from the idea, and the
 brief must also record the audio route, the look intent (ungraded original
 colours unless a look is requested), the on-screen copy that will be added in
-post, and, for ads and TVCs, the cinematic sequence bar. Persist the
+post, and, for ads and TVCs, coverage intent. Resolve a new vague brief's compact
+premise, attention and payoff; offer alternatives only for genuinely open ideas
+or requested exploration. Scoped specialist prompts do not gain a mandatory
+development workflow. Plan sound and editorial intent before generation,
+without requiring final audio assets early. Persist the
 mode-authorized confirmed set as a `locked` block in `project.md`.
 
 At scene breakdown, run `acting-direction` before shot design for new or

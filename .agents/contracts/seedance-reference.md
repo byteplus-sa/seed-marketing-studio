@@ -8,7 +8,7 @@ they are prompt-composition only and never call the API themselves.
 | Axis | Skill | Notes |
 |---|---|---|
 | Shot plan: coverage, per-shot camera, lens intent and light | `seedance-shot-design` | Decides shot count, each shot's job, size, angle, move and light source, and checks neighbor contrast, angle range and light per shot; the preset skills below resolve each decision into canonical wording |
-| Camera movement & camera styles | `seedance-camera-presets` | Moves, techniques (dolly zoom, FPV, bullet-time orbit, one-take), and 10 camera styles; keep ≤2 moves per shot |
+| Camera movement & camera styles | `seedance-camera-presets` | Moves, techniques (dolly zoom, FPV, bullet-time orbit, one-take), and 10 camera styles; move count is a planning heuristic, not a cap on coherent requested choreography |
 | Lens / focal length / aperture / sensor | `seedance-lens-presets` | Always pairs numeric optics with the visible result; resolve requested 4K against current model capabilities |
 | Lighting | `seedance-lighting-presets` | Causal lighting presets; emit both the Seedream `Lighting:` recipe (elements) and the Seedance visual-style phrase so image + video share one lighting intent |
 | Color grading | `color-grade-palettes` | Named palettes + film looks in the Visual Style slot; keep one project-wide palette; optional FFmpeg match graphs in the mix step |
@@ -21,7 +21,7 @@ they are prompt-composition only and never call the API themselves.
 | Music video | `seedance-music-video` | Song-first Seedance prompts: format (performance/narrative/conceptual/lyric/visualizer/hybrid), song-section map, beat/cut-density contract, audio-first lip-sync, and a per-genre style lock |
 | Original music / vocal master, audio-first track | `seed-audio-prompt`, `seed-audio-commercial` | Seed Audio prompt structure (T2A/TA2A) and commercial full-soundscape composition for an original music or vocal master |
 | Production design: sets, props and locations with an emotional function | `seedream-location-asset`, `seedream-prop-asset` | The element manifest's optional `emotional_function` (see element identification) turns a feeling into visible design: fit, scale, height, pattern, age; a counterpoint location states a world rule |
-| Editorial structure: intercut, ellipsis, inserts | `seedance-pacing-presets`, `seedance-shot-design` | Blink cuts, intercuts and vision flashes are assembly-only cuts: each side is generated at a natural length and cut in post; the scene's shot plan records them. A defocus that leaves the subject soft is also a post effect |
+| Editorial structure: intercut, ellipsis, inserts | `seedance-pacing-presets`, `seedance-shot-design` | Offer assembly for precise cuts or omitted action, including blink cuts, intercuts and vision flashes; record the selected route in the shot plan. About 0.8 s per shot and about 7 shots per clip are provisional generation heuristics, not provider limits. Preserve requested rhythm and source timing without automatic retiming; return genuine feasibility conflicts. A defocus that leaves the subject soft remains a post effect |
 | Sonic motif and voice treatment | `seed-audio-prompt` | A recurring sound for a power or ordeal (layered voice, abrasive drone, solo vocal) with one curve keyed to the scene's beats |
 | Storyboard, full multi-scene production | `seedream-storyboard`, `film-production` | Boards are planning and review artifacts, never Seedance references (`references.no_board_binding`): their staging goes into prompt text; end-to-end production orchestration across scenes |
 
@@ -65,8 +65,11 @@ carried.
 
 Do not let two skills fight: exactly one grade per clip, one dominant lighting
 direction per shot with the same physical light source across the cuts of a
-scene, and 1–2 camera moves per shot. Record the plan and the chosen canonical
-phrases in `shot.md` alongside the prompt snapshot.
+scene, and coherent camera choreography. One or two moves is a planning
+heuristic, not a provider limit or acceptance cap. Preserve requested
+simultaneous components and ordered phases; check endpoints, readability and
+incompatible directions rather than count alone. Record the plan and the chosen
+canonical phrases in `shot.md` alongside the prompt snapshot.
 
 Load `seedance-lighting-presets` / `color-grade-palettes` alongside
 `seedream-prompt` when generating matching element sheets. Use

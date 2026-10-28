@@ -136,8 +136,8 @@ does not require more movement or override a restraint lock.
 Load [restraint and shape patterns](references/restraint-and-shape.md) when a
 tactic needs a precise shape: a **first sign** (one small cue as the earliest
 consequence), a **suppression arc** (a visible feeling brought under control),
-an **animal image** translated into body cues with at most one burst action
-per shot, or **eyes through concealment** (a veil or mask that leaves only the
+an **animal image** translated into body cues at the intended speed and
+amplitude, or **eyes through concealment** (a veil or mask that leaves only the
 eyes to carry the tactic).
 
 ---
@@ -260,9 +260,11 @@ dialogue-to-shot mapping in existing shot/scene evidence.
 - **Cues serve the tactic, not the emotion label.** Always derive visible
   behavior from what the character is doing (the tactic), not from what they're
   feeling. The emotion bank is optional, not a required classification.
-- **Burst control is optional.** For a supplied lunge, a hold before and after
-  the stop can clarify the movement. Keep supplied wardrobe and timing;
-  return any conflict rather than adding holds across locked action.
+- **Burst control is optional.** Speed, amplitude, interruptions and recovery
+  follow supplied intent. A hold around one burst can repair demonstrated
+  smearing or unclear contact; it is not a default cap on repeated action.
+  Keep wardrobe and timing; return conflicts rather than inserting holds
+  across locked action. Dialogue alone does not reduce body or camera energy.
 - **Emotion arcs need ordered triggers and consequences.** Use multiple beats;
   timestamps are optional unless requested or needed for verified audio alignment.
 - **Evidence limits.** A prompt-only repair predicts a clearer cue; it does
@@ -289,8 +291,9 @@ Before returning an acting block, verify:
 - [ ] A suppression arc moves toward control and ends on one residual cue
       the framing can show.
 - [ ] An animal image is translated into observable cues, and a burst action
-      uses this pattern's single burst and holds only where compatible with
-      source locks; conflicts are returned, not silently repaired.
+      retains its intended energy and recovery. Use holds only when selected
+      for a demonstrated problem and compatible with source locks; no burst
+      count is an acceptance condition.
 - [ ] A veil or mask stays on; eye cues appear only when readable at the
       selected scale, with physical channels used otherwise.
 - [ ] Supplied triggers and consequences remain ordered; timestamps are

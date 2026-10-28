@@ -297,7 +297,11 @@ Before handing the package to review, confirm:
 - Multi-reference goal is to select and combine correct materials, **not** to make every material appear at once.
 - For subtitles, formulas, signs, product specs, or frame-level timing that must be completely accurate, keep the footage text-free and add the exact layer in post.
 - Mismatched first/last-frame ratios may stretch the last frame (auto-lock rules above).
-- Shots shorter than about 0.8 s merge; blink cuts, intercuts and vision flashes are assembly cuts.
+- About 0.8 s per shot and about 7 shots per clip are provisional generation
+  heuristics, not provider limits or guaranteed merge/drop thresholds. Preserve
+  requested rhythm and source timing without automatic retiming or shot removal.
+  Offer assembly for precise cuts or omitted action; return genuine feasibility
+  conflicts rather than promising exact control from a prompt.
 - A rack focus that leaves the subject soft mostly fails; the model keeps the face sharp. Add that defocus in post.
 - For one-click video, specify image order and character mapping explicitly if they matter.
 - Seamless transitions aim for visual/audio continuity; they do not guarantee pixel-identical preservation.

@@ -49,8 +49,9 @@ instead preserve listening, silence and uninterrupted response.
 - What changes: size and angle between singles, and the key side. Light the
   speakers from the same declared source seen from the two camera sides, so each
   speaker's lit side differs without a second source appearing.
-- Watch for: moves on speaking shots. Keep them slow so lips and eyes stay
-  readable; let the angle and light carry the variety.
+- Watch for: a move hiding required speaker or listener evidence. Judge
+  readability at the intended speed and scale; energetic dialogue and a held
+  exchange are both valid. Slow only the part that actually needs repair.
 
 ## Power shift
 
@@ -86,8 +87,9 @@ action would look silly, such as a compelled walk across a room.
 - Generate the push-in and the end state as separate clips at natural lengths.
   The defocus ramp and the blink, a few frames of darkness or soft image, are
   added in post.
-- Watch for: a prompt that asks one clip to "skip" the walk. The model fills
-  the gap with a walk. Keep the ellipsis in the edit.
+- Watch for: a prompt that asks one clip to "skip" the walk may still show it.
+  Offer assembly when omission must be controlled; do not promise that a
+  prompt-only approximation will omit the action.
 
 ## Scale contrast
 
@@ -148,14 +150,15 @@ Use when the climactic action deserves a three-dimensional look.
 - Shots: an orbit around the subject at the peak beat, with an optional slow
   ramp. Orbit direction belongs to the camera preset; timing belongs to the
   pacing preset.
-- Watch for: an orbit combined with a second large move in the same shot.
+- Watch for: incompatible directions or obscured action when an orbit combines
+  with other moves; preserve coherent requested choreography.
 
 ## Light progression
 
 Use to let light carry the emotional arc without changing the room.
 
 - Shots: the same declared sources seen three ways: a side key early, a
-  contre-jour at the turn (a silhouette only on shots without speech), a warm
+  contre-jour at the turn (a silhouette when required evidence stays readable), a warm
   rim or practical at the release.
 - What changes: key side relative to the lens and the contrast ratio; the
   sources and the set stay fixed. A new source appears only with a motivating
@@ -192,8 +195,8 @@ singles.
 
 - Shots: one three-shot or group shot that holds the beat, then a single on the
   character who turns it.
-- What changes: featured count and size, with a move kept quiet if lines are
-  spoken.
+- What changes: featured count and size, with camera energy chosen separately
+  from vocal energy. Spoken lines require readability, not automatic restraint.
 - Watch for: a group shot where one character is the only one with something to
   play; cut to the single on that character.
 
@@ -217,10 +220,10 @@ kneeling, a child and an adult) and the height gap is the story.
 | "Hold steady" as the default camera line | The static choice is unrecorded and applied everywhere | Record a `static_reason` or give the shot a move |
 | One global lighting sentence for a multi-shot clip | Source and direction are unclear in individual shots | Name source and direction per shot; unchanged lighting is valid |
 | A project axis promising dolly and crane work that no shot line uses | The plan was written but never carried | Copy the axis into the shot lines or record the override |
-| More than about seven shots in one clip, or shots under about 0.8 s | Observed in this workspace's production reviews as cuts the model merges or drops | Respect the shot ceiling and split a long kinetic sequence into several clips; make a shorter cut in post as an assembly cut |
-| A shot stacking more than two simultaneous moves | The camera preset guidance records instability risk | One primary move per shot and at most one secondary |
+| More than about seven shots in one clip, or shots under about 0.8 s | Provisional generation-planning heuristics from workspace reviews, not provider limits; inspect for actual missing or unreadable beats | Preserve requested rhythm and source timing, with no automatic retiming or shot removal. Offer assembly for frame-accurate precision or omitted action; return genuine feasibility conflicts rather than silently changing locks |
+| A shot with combined camera moves | Incompatible simultaneous directions, unclear handoffs or demonstrated readability failure | Repair only the conflicting span within source locks; one or two moves is a planning heuristic, not a cap on coherent requested choreography |
 | Equal shot lengths around a selected turn | The intended change is not readable in performance or composition | Clarify that change; timing contrast is optional and locked timing stays unchanged |
 | A move that decorates but has no story reason | Movement without meaning adds noise | State what the move reveals or emphasizes |
 | A 30 s spot written as one pass with many beats | Actual review shows missing or unreadable beats | Consider separate clips within authorization and budget; six sequences and `wow` shots are optional, not quotas |
 | A focus pull away from a face asked of the prompt | Drafts keep the face sharp | Generate with ordinary focus and add the defocus in post |
-| A multi-character scene covered by clean singles only | The relationship between the characters never shares a frame | Add a dirty single, an over-the-shoulder or a two-shot, per the framing reference |
+| A multi-character scene covered by clean singles only | Required relationships or listener responses are unreadable | Adjust the affected coverage; a shared frame is optional when singles already communicate the relationship |

@@ -63,7 +63,9 @@ Source skill: `seedance-prompt-20`
 12a. **Shot plan carried (`shot.plan_bound`, `shot.variety`, `shot.axis_carry`).**
     The Seedance 2.5 shot-plan items (`shot.plan_bound`, `shot.variety`, `shot.axis_carry` in [the 2.5 checklist](checklist-seedance-25.md#shot-plan-and-structure)) apply to a 2.0 prompt: each shot line carries
     its size, angle, camera move (or a recorded static reason) and a declared
-    light source with its key side, and neighboring shots differ.
+    light source with its key side. Contrast, cadence, turns and standout images
+    are optional; repeated framing, constant light and sustained holds pass
+    when they serve the approved intent and readability.
 
 13. **Per-shot references repeated.** Every shot repeats applicable `@Image N`,
     `@Video N`, `@Audio N` references inline.
@@ -72,8 +74,10 @@ Source skill: `seedance-prompt-20`
     actions/expressions, (3) Position/spatial changes, (4) Lighting & color tone,
     (5) Audio.
 
-15. **Coherent camera movement.** Use one or two clear requested movements per
-    shot, with sequence and endpoints; avoid competing simultaneous directions.
+15. **Coherent camera movement.** One or two moves is a planning heuristic,
+    not a cap on coherent requested choreography. Check sequence, endpoints
+    and readability; flag incompatible simultaneous directions or unclear
+    handoffs, not move count alone.
 
 16. **Complexity budget.** At most 3 major action beats or 4 tightly related shots
     for 15s generation.
@@ -81,10 +85,13 @@ Source skill: `seedance-prompt-20`
 17. **Action detail.** Body-part level detail (hands, legs, head, shoulders, back)
     with range, speed, force.
 
-18. **Motion preference.** The performer's body prefers slow, gentle,
-    continuous motion and avoids high-burst, large-dynamic actions unless the
-    brief calls for them. Camera and cut energy follow the shot plan, not this
-    item.
+18. **Motion intent.** Body speed, amplitude, interruptions and recovery follow
+    the approved action. Quiet performance and repeated bursts are valid;
+    evaluate readability, contact and balance, not a low-energy default or a
+    burst-count cap. Slowing motion or separating a burst with holds is an
+    optional repair for a demonstrated failure. Speech does not impose an
+    energy ceiling on actor, camera or edit rhythm; check required delivery,
+    lip-sync and listener evidence at the actual framing and speed.
 
 19. **Emotion externalization.** Emotions are externalized as physical details,
     never bare labels.

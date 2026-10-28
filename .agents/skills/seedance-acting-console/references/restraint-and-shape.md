@@ -53,14 +53,14 @@ alone in the prompt.
 | Hawk stillness | Watching for the opening | Head still and level, eyes tracking without blinking, only the head turns |
 | Cat play | Toying with a weaker partner | Slow, loose movement, a relaxed half-smile, one sudden quick touch, then withdrawal |
 
-A strike or other sudden speed change is a burst action. For this pattern,
-use at most one per shot, a still hold before it and a still hold after it,
-and restate supplied wardrobe after the burst ("her charcoal coat unchanged").
-These controls aim to reduce motion and identity drift, not guarantee it.
-Use supplied timing; about 2 seconds is only a provisional pre-burst hold when
-timing is open. Return a conflict for caller retiming/splitting when the pattern
-cannot fit locked beats. Do not erase additional locked actions or invent
-wardrobe. The caller reconciles this burst with the surrounding motion plan.
+A strike or other sudden speed change is a burst action. Preserve supplied
+speed, amplitude, interruptions and recovery, including repeated bursts.
+If actual playback shows smearing or unclear contact, isolating one action
+with holds is an optional repair, not this pattern's default or a shot-wide
+cap. Keep wardrobe stable and use supplied timing. Return conflicts for
+authorized retiming or splitting; do not erase additional actions, insert
+unrequested holds or invent wardrobe. The caller reconciles any repair with
+the surrounding motion plan.
 
 ## Eyes through concealment
 

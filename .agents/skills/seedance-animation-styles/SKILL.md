@@ -145,17 +145,21 @@ window). A narrative or ad animation takes its shot plan from the shot-design
 skill when one exists; this skill words each shot in the medium. A sequence
 with no camera statement and one global light line tends to read flat.
 
-Treat time ranges as a readable pacing plan. Keep every shot inside one clip
-at about 0.8 s or longer; the model merges shorter shots, so a faster cut is
-made in assembly.
+Treat time ranges as a readable pacing plan. About 0.8 s per shot is a
+provisional generation heuristic, not a provider limit or guaranteed merge/drop
+threshold. Preserve requested rhythm and source timing without automatic
+retiming or shot removal. Offer assembly for precise cuts or omitted action;
+return genuine feasibility conflicts rather than changing locks.
+
+When timing is open, these are examples, not minimum shot lengths:
 
 - reaction or detail: roughly 2–3 seconds;
 - simple action: roughly 3–5 seconds;
 - complex action, transformation, or location change: roughly 4–6 seconds.
 
-If the requested actions do not fit, split the concept into multiple prompts.
-Do not compress many locations, transformations, and reactions into an
-unreadable sequence.
+If the requested actions demonstrably do not fit, return the conflict and
+propose a scoped split within authorization. Do not silently change timing or
+compress locations, transformations, and reactions into an unreadable sequence.
 
 For a one-take prompt, explicitly state `one continuous unbroken shot, no cuts`
 and describe how the environment transforms around the moving subject.
@@ -283,7 +287,8 @@ Before returning the prompt, verify:
 6. Each shot or stage has one primary event, a visible end state, a camera
    move with a start and an end (or a held frame with its reason) and a named
    light source.
-7. The sequence fits its time budget or has been split.
+7. The sequence fits its time budget or a genuine conflict is returned;
+   a proposed split preserves locks and requires authorization.
 8. Tone is expressed through observable timing and behavior.
 9. The style seal is compact and does not contradict the medium.
 10. Generated footage carries no text or logos, and no post look is asked of

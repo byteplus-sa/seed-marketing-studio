@@ -54,6 +54,14 @@ product efficacy. Separate an observable feature from a claim about its effects.
 
 ## 2. Select a mode and persuasive angle
 
+For new vague or underspecified work, resolve a compact creative premise:
+what the viewer should notice or feel, what carries attention, and what payoff
+makes the ending matter. Ground it in supplied product truth; a payoff may be
+understanding a detail, not a transformation or new claim. If materially
+different ideas remain open, offer concise alternatives with their tradeoffs
+or ask the smallest question needed to choose. Do not expand a settled
+single-prompt or scoped revision into a mandatory alternatives workflow.
+
 Read only the matching section of [mode recipes](references/mode-recipes.md), or
 the custom template when no preset fits:
 
@@ -166,7 +174,9 @@ Ad formats hit the same few Seedance failure modes; apply these to every mode
   with pauses, onset (initially 0.5-1.5 s) and final tail (initially at least
   0.4 s); verify the actual take. Without evidence, timing is provisional.
   Preserve language and locked copy; propose retiming or splitting before
-  authorized rewrites. Keep the last 3 s to one or two state changes.
+  authorized rewrites. Judge closing beats by readability of the intended
+  words, action and response, not a state-change count. Simplifying a crowded
+  ending is an optional repair for demonstrated failure within source locks.
   Trimming the head later does not lengthen the tail.
 - **Counted items.** When the demo counts items (three pods, two lids), name
   each by size and position, keep every counted item in open view from the first
@@ -182,14 +192,28 @@ Ad formats hit the same few Seedance failure modes; apply these to every mode
   beat, including selfie and mirror framing.
 - **Shot plans for polished modes.** In `product-showcase`, `tv-spot`,
   `wild-card` and `virtual-try-on`, give each shot one action with its intent,
-  a size, lens intent, camera move and a named light source. Shots shorter than
-  about 0.8 s merge; build a 30 s spot from about six 5 s generations of two or
-  three shots each rather than one nine-beat pass.
+  a size, lens intent, motivated move or hold and a named light source.
+  Coverage follows readable action, listening and approved timing, not a
+  six-clip cadence. Repeated framing, equal lengths, quiet holds and energetic
+  dialogue are valid. Turns, variety and standout images are optional, with
+  no hold or `wow` quota. About 0.8 s per shot and about 7 shots per clip are
+  provisional generation heuristics, not provider limits or guaranteed
+  merge/drop thresholds. Preserve requested rhythm and source timing without
+  automatic retiming or shot removal. Offer assembly for precise cuts or
+  omitted action within source-count and budget authorization; return genuine
+  feasibility conflicts rather than changing locks.
 
 Read [worked repairs](references/worked-repairs.md) for a phone-shot demo that
 breaks each of these and its repaired prompt.
 
 ## 6. Direct audio and CTA
+
+Plan sound and editorial intent with the premise, before generation: what is
+heard before it is seen, what a cut reveals or withholds, and whether a pause,
+silence, texture or accent carries attention and payoff. Keep this compact for
+scoped prompts. Final assets need not exist yet; cue timing remains provisional
+until measured against the edit. No audio route or separate-audio authorization
+changes merely because sound is planned early.
 
 Honor silence, native dialogue, voiceover, or supplied music. Speech needs room
 in the mix; a quiet bed is optional, not universally prohibited. Requested music

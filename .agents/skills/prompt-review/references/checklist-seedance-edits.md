@@ -49,8 +49,10 @@ whose feature is absent (no references → skip material mapping).
 
 ### Camera (only when the edit intentionally re-stages the camera)
 
-13. One or two coherent camera moves when re-staging is intentionally requested;
-    use semantic cues and add numeric timing only for requested or critical
+13. Preserve coherent requested choreography when re-staging is intentional.
+    One or two moves is a planning heuristic, not a cap; check readability,
+    endpoints and incompatible simultaneous directions, not count alone.
+    Use semantic cues and add numeric timing only for requested or critical
     synchronization. Expand uncommon terms (orbit: direction + parallax).
     Apply the camera-direction item of the [Seedance 2.5 checklist](checklist-seedance-25.md#shot-plan-and-structure).
 14. Camera-move items are N/A when the edit must preserve the source camera.

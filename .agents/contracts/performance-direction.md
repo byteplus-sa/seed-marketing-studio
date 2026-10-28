@@ -55,6 +55,21 @@ Shot notes identify relevant beats, visibility and critical acceptance criteria.
 Prompts carry the pursuit, trigger and readable response once, not a full essay.
 Reserve time for listening and response as well as speech.
 
+Body speed, amplitude, interruptions and recovery follow approved intent,
+including repeated energetic actions. Actor intensity, camera energy and edit
+rhythm are independent; dialogue is not an automatic kinetic exclusion.
+Evaluate required words, lip-sync, contact and listener evidence at the actual
+framing and speed. Slowing an action or isolating a burst with holds is an
+optional repair for demonstrated failure, not a universal acceptance rule.
+
+For new vague work, settle the compact creative premise, attention and payoff
+before execution; offer alternatives when materially different ideas remain
+open. Scoped prompts inherit settled intent and need no expanded workflow.
+Plan sound and editorial intent before generation in existing brief/scene
+notes: what is heard before seen, what the edit reveals or withholds, and how
+silence or an accent supports the intended response. No final sound asset or
+new runtime is required early; final cues follow the measured edit.
+
 Bind current plan, source, shot plan and exact request hashes in review evidence
 or existing upstream hash fields where supported. No request schema or provider
 parameter is added. Changed interpretation, plan or cues invalidate dependent
@@ -100,6 +115,17 @@ blink, tears or cue count. No passing take means a bounded revision within
 budget or a blocked stage, never selection of the least-bad output. Unavailable
 playback/listening remains unresolved. Recheck the final output and actual edit
 so trimming does not remove the accepted beat.
+
+Set a small relevant set of artistic acceptance criteria from the brief before
+selection. Inspect full-speed playback of takes and the final edit with sound
+when in scope, recording timestamps and beat IDs in existing review evidence.
+Check the intended audience attention and payoff, meaningful sustained waiting
+or deliberate ambiguity, and sound/editorial rhythm as well as technical
+legibility. A correct transcript, schema or clean join is not artistic evidence.
+Do not reward extra motion, cuts, turns or holds by count. Unavailable perception
+or a missing critical artistic beat remains unresolved; keep repairs within
+locks and budget. Default evidence stays focused and concise, strict review
+stays detailed, and existing human approvals remain authoritative.
 
 ## Provenance and Limits
 

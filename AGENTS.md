@@ -170,6 +170,19 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
 
 ## Production invariants
 
+- For new vague moving-image briefs, resolve a compact creative premise,
+  attention and payoff before execution. Offer alternatives when materially
+  different ideas remain open; settled single-prompt and scoped edits do not
+  acquire an expanded workflow. Plan sound and editorial intent before generation
+  in existing brief/scene notes, without requiring final audio assets early.
+  Intensity and coverage follow intent and actual readability, not cadence,
+  variety, turn, hold or standout quotas. Actor energy, camera energy and edit
+  rhythm are separate; dialogue is not an automatic kinetic exclusion.
+  Use brief-specific artistic acceptance and actual full-speed playback/listening
+  of takes and the final edit, with timestamps in existing review evidence.
+  Unavailable perception is unresolved, not a pass; offline checks do not prove
+  artistic quality. Keep default evidence concise and preserve strict review,
+  existing approval modes, all locks and budget boundaries.
 - New or materially revised character performance uses `acting-direction`
   before shot design, then `seedance-acting-console` to encode relevant beats.
   Store `## Performance plan` in the existing scene or variant shot file.

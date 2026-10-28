@@ -234,7 +234,26 @@ Narrative shots need events, intent, blocking and observable end states. Static 
 
 Narrative, ad, micro-drama, music-video and showcase shots also need a recorded shot plan before prompt authoring: for each shot, duration, size, angle, camera move, lens intent, and a named light source with its key side, produced by `seedance-shot-design` and stored with the scene. A static camera or an unchanging light needs a recorded `static_reason`. Exemptions are recorded, never assumed: a user lock, a static-by-design format (the `ugc`, `ugc-how-to`, `ugc-unboxing`, `product-review` and `ugc-virtual-try-on` modes, named UGC presets with a locked camera block, talking-head, avatar and news takes, frame-break), an explicit per-shot camera plan from another skill (a pin plan; a music-video genre lock is vocabulary, not an exemption), a plate for cutdown, a source-preserving edit, an extension continuation, or no video shot at all. A confirmed (`agent_confirmed` or `user_confirmed`) camera, lens, lighting, pacing or energy axis recorded in `directorial_axes` or the `locked` block must reach the shot prompts, or the scene records an override with its reason; `proposed` and `defaulted` axes may be revised freely. A user-confirmed lock is never replaced by the plan.
 
-Inspect each take against its plan. In strict mode, a planned cut, camera move or light change that is missing is a soft defect to record; a missing move or light on the shot flagged as the turn is a hard-gate failure. A 480p draft checks shot structure before final-resolution generation in both modes; Seedance 2.5 also requires boolean `draft: true`. In default mode, preserve the requested direction and inspect actual results without a mandatory craft checklist. A project whose scene breakdown is already complete plans only new or revised shots, proposes a migration preview for older scenes, and never invents a plan for takes that already exist.
+Inspect each take against its plan. In strict mode, record missing planned
+cuts, moves or light cues against the approved intent; a failure is critical
+when it loses a required beat or violates a lock, not merely because a shot
+is labelled a turn. Contrast, cadence, holds and standout images have no
+mandatory count. Dialogue does not impose a body or camera energy ceiling;
+judge actual readability. A 480p draft checks shot structure before
+final-resolution generation in both modes; Seedance 2.5 also requires boolean
+`draft: true`. In default mode, preserve the requested direction and inspect
+actual results without a mandatory craft checklist. A project whose scene
+breakdown is already complete plans only new or revised shots, proposes a
+migration preview for older scenes, and never invents a plan for existing takes.
+
+Plan sound and editorial intent before generation in existing brief/scene
+notes. Use brief-specific artistic acceptance in actual full-speed playback
+and listening, with timestamps for attention, intended payoff, sustained
+observation or deliberate ambiguity and sound hierarchy. Recheck the final
+edit after trimming and overlays. Missing perception remains unresolved;
+technical success and offline evals do not establish artistic quality.
+Keep default evidence concise and strict review detailed, using existing
+review and decision writers without new runtime gates.
 
 Choose the static-graphics route by fidelity requirement. Exact copy,
 typography, logos, screen/UI layouts, title cards, posters, product lineups,
