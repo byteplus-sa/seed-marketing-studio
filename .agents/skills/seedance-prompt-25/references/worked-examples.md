@@ -19,7 +19,7 @@ intent and light per shot, a pinned count, a frame-side hand, a plain prop
 surface and a budgeted line.
 
 Request parameters: `duration: 11`, `ratio: "16:9"`, `draft: true`,
-`generate_audio: true`, `watermark: false`.
+`resolution: "480p"`, `generate_audio: true`, `watermark: false`.
 
 ```text
 @Image 1 defines the baker: appearance, hairstyle and clothing only. @Image 2
@@ -69,7 +69,7 @@ A picture-only request: the sound bed is built with Seed Audio in post because
 a "no music, no voices" line does not reliably hold with native audio on.
 
 Request parameters: `duration: 8`, `ratio: "21:9"`, `draft: true`,
-`generate_audio: false`. Post: forest ambience bed from Seed Audio, recorded as
+`resolution: "480p"`, `generate_audio: false`. Post: forest ambience bed from Seed Audio, recorded as
 not frame-synced.
 
 ```text
@@ -107,5 +107,5 @@ Except for the object or area explicitly modified above, keep all other people, 
 content, camera movements, cuts, and event order from @Video 1 unchanged.
 ```
 
-Request parameters: ratio and duration follow the source; `generate_audio:
+Request parameters: `resolution: "480p"`, `draft: true`; ratio and duration follow the source; `generate_audio:
 false` with the source's own audio restored in post.

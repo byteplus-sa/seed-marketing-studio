@@ -190,8 +190,12 @@ throughout. Review motion by playback and sound by listening; still frames
 cannot establish either. Report pass, fail or untested with evidence locators.
 Prompt-only checks cannot certify physical performance or platform approval.
 
-Honor review_mode independently of approval_mode. In default mode add no
-mandatory draft or prompt-review gate; strict requirements remain caller-owned.
+Honor review_mode independently of approval_mode. Prompt-only work generates
+nothing; downstream production and review remain caller-owned.
+Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
+`draft: true` in both review modes. Promote only selected native Drafts.
+Surface source-count conflicts before generation; never bypass drafts or
+silently expand scope.
 Rights, claims and the user's paid-delivery disclosure decision remain separate
 from creative approval. Do not invent disclosure text or a user's decision.
 

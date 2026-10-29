@@ -85,7 +85,10 @@ the post-audio route and the test-ladder rung it targets.
    post through the recorded route in
    [audio and lip-sync](references/audio-and-lipsync.md).
 8. **Test ladder**: a 480p probe of the key beat, then the full duration at
-   480p, then the final resolution. Each rung is a separate reviewed request.
+   480p, then native promotion of the selected full-duration Draft. Every new
+   2.5 generation sets explicit `resolution: "480p"` and boolean `draft: true`
+   in both modes. Resolve schema or transport conflicts without dropping the
+   flag. Each rung is a separate reviewed request.
 
 ## Mode selection
 

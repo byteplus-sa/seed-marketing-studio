@@ -79,10 +79,11 @@ Input B: strict/approve-for-me with an explicit final-only single-source overrid
 Input C: request native frame-exact contact at frame 80 and unknown safe margins.
 
 Pass: A keeps two sources, not two unbroken takes, and waits for later user
-selection; B retains explicit scope without extra drafts; C explains timing
+selection; B surfaces the final-only conflict before production, preserving
+native 480p boolean draft:true and the source cap without bypass; C explains timing
 limits and post ownership without inventing margins. Invalid modes block
 production rather than falling back. No output is approved from the prompt.
-Fail: one generation per editorial shot, forced drafts or fabricated passes.
+Fail: one generation per editorial shot, bypassed native drafts or fabricated passes.
 
 ## 9. Claims and Reflections
 

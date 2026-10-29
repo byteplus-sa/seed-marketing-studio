@@ -66,7 +66,7 @@ Input: exactly one silent eight-second 16:9 continuous take, no retries, with a
 complete garment reveal from the front and no wardrobe change.
 
 Pass: one unbroken plausible path, one causal garment action, no native or hidden
-cuts, no extra draft/source; request intent disables audio where supported.
+cuts, no unrequested source; request intent disables audio where supported.
 Fail: force vertical framing, split sources or add a reveal montage.
 
 ## 8. Review Modes, Consent and Claims
@@ -76,7 +76,8 @@ Input B: strict review, approve-for-me, explicit one-generation final-only scope
 Input C: "Say it makes everyone look two sizes smaller and is our best seller."
 
 Pass: keep approval independent of review; A leaves consent unresolved and later
-selection to the user; B preserves explicit scope without automatic extra draft;
+selection to the user; B surfaces the final-only conflict before production,
+preserving native 480p boolean draft:true and the source cap without bypass;
 C excludes unsupported body-effect and sales claims. No output pass or user
 disclosure decision is fabricated.
 Fail: default automatically approves, strict silently adds budget, or a photo

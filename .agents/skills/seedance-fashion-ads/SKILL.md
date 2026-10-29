@@ -179,10 +179,12 @@ and identifies any necessary downstream consequences.
 Inherit current project policy without introducing a production gate here:
 `review_mode` and `approval_mode` are independent. Missing values mean `default`
 and `approve_for_me` for new actions only; invalid values block production.
-Default has minimal preflight and actual final sanity, no mandatory draft.
-Strict retains detailed review and Seedance 480p draft-first unless explicitly
-overridden. Explicit generation counts prevail; unresolved conflicts go to the
-caller. `approve_for_me` permits inspected in-scope agent selections;
+Default has minimal preflight and actual final sanity; strict retains detailed
+review. Every new Seedance 2.5 generation requires `resolution: "480p"` and
+boolean `draft: true` in both review modes. Promote only selected native Drafts.
+Surface source-count conflicts before generation; never bypass drafts or
+silently expand scope. Prompt-only work generates nothing.
+`approve_for_me` permits inspected in-scope agent selections;
 `ask_for_approval` waits for the user. Neither grants rights, budget or release.
 Paid-ad disclosure remains the user's recorded decision, not an automatic label.
 Prompt-only drafting does not require production locks or fabricated approvals.

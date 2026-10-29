@@ -127,8 +127,9 @@ underside, stable mug count, grip before lift, support before release and clear
 final recognition. Motion requires playback and sound requires listening.
 These remain untested, not passed.
 
-The hypothetical default review/ask-for-approval project needs no automatic
-draft, but later inspected selection waits for the user. Strict review would
-retain its detailed review and draft default unless explicitly overridden;
-the caller must preserve the explicit one-source scope. Rights and any paid-ad
+The hypothetical default review/ask-for-approval project waits for the user's
+inspected selection. New Seedance 2.5 production uses `resolution: "480p"` and
+boolean `draft: true` in both review modes, promoting only selected native Drafts.
+Resolve any conflict with the one-source scope before generation, without
+bypassing drafts or adding sources silently. Rights and any paid-ad
 disclosure decision remain separate from creative approval.

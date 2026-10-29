@@ -106,7 +106,9 @@ Input: exactly two 20-second tests, each continuous and silent, three actions
 per test, but runtime capability has not yet been verified.
 Pass: two sources only; continuous state chains and explicit runtime check.
 Native timestamps stay approximate; incompatible density is surfaced.
-Fail: six short sources, invented duration support or a default draft pass.
+Production handoff retains native 480p boolean draft:true in both review modes
+and surfaces count conflicts without adding sources or bypassing drafts.
+Fail: six short sources, invented duration support or generation during prompt-only work.
 
 ## 7. Safety and comparison conditions
 

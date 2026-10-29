@@ -2,6 +2,7 @@ import contextlib
 import hashlib
 import io
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -168,41 +169,154 @@ class VariantMatrixTests(unittest.TestCase):
     def rule_ids(self, result):
         return {finding["rule_id"] for finding in result["findings"]}
 
-    def test_default_mode_omits_blanket_craft_rules_and_draft_first(self):
+    def test_default_mode_omits_blanket_craft_rules_but_keeps_draft_first(self):
         (self.project / "project.md").write_text("---\ntitle: Fixture\n---\n")
         code, result = self.run_cli(
-            "register", self.write(base_matrix()), "--project", self.project,
-            *UNIT_COSTS, *VIDEO_FLAGS, "--final-resolution", "720p",
+            "register",
+            self.write(base_matrix()),
+            "--project",
+            self.project,
+            *UNIT_COSTS,
+            *VIDEO_FLAGS,
+            "--final-resolution",
+            "720p",
         )
         self.assertEqual(code, 0, result)
         self.assertEqual(result["review_mode"], "default")
-        self.assertEqual(result["stage"], "production")
+        self.assertEqual(result["stage"], "draft")
         for operations in result["operations"].values():
             for operation in operations:
                 command = operation["register_command"]
-                self.assertIn("resolution=720p", params(command))
+                self.assertIn("resolution=480p", params(command))
+                self.assertNotIn("draft=true", params(command))
                 self.assertFalse(SHOT_RULES & required_rules(command))
                 self.assertNotIn("video.text_free", required_rules(command))
                 self.assertNotIn("ad.variant_budget_gate", required_rules(command))
-                self.assertTrue({
-                    "ad.claims_supported", "ad.no_fabricated_testimonial",
-                    "brand.copy_rules", "library.pin_current",
-                } <= required_rules(command))
+                self.assertTrue(
+                    {
+                        "ad.claims_supported",
+                        "ad.no_fabricated_testimonial",
+                        "brand.copy_rules",
+                        "library.pin_current",
+                    }
+                    <= required_rules(command)
+                )
 
-    def test_default_mode_requires_delivery_target_not_an_implicit_draft(self):
+    def test_default_mode_can_draft_before_delivery_target_is_known(self):
         (self.project / "project.md").write_text("# Legacy brief\n")
         code, result = self.run_cli(
-            "register", self.write(base_matrix()), "--project", self.project,
-            *UNIT_COSTS, *VIDEO_FLAGS,
+            "register",
+            self.write(base_matrix()),
+            "--project",
+            self.project,
+            *UNIT_COSTS,
+            *VIDEO_FLAGS,
         )
-        self.assertEqual(code, 1, result)
-        self.assertNotIn("operations", result)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result["stage"], "draft")
+
+    def test_seedance_native_draft_flags_reach_every_emitted_video_command(self):
+        for mode in ("default", "strict"):
+            (self.project / "project.md").write_text(f"---\nreview_mode: {mode}\n---\n")
+            for model in ("seedance-2.5", "dreamina-seedance-2-5-premium-261001"):
+                flags = [
+                    model if flag == "video-model-a" else flag for flag in VIDEO_FLAGS
+                ]
+                code, result = self.register(
+                    base_matrix(), *UNIT_COSTS, *flags, "--final-resolution", "1080p"
+                )
+                self.assertEqual(code, 0, result)
+                for operations in result["operations"].values():
+                    for operation in operations:
+                        for key in ("hash_command", "register_command"):
+                            self.assertIn("resolution=480p", params(operation[key]))
+                            self.assertIn("draft=true", params(operation[key]))
+
+    def test_seedance_non_draft_stages_require_native_promotion_handoff(self):
+        flags = [
+            "seedance-2-5" if flag == "video-model-a" else flag for flag in VIDEO_FLAGS
+        ]
+        for stage in ("production", "final"):
+            code, result = self.register(
+                base_matrix(),
+                *UNIT_COSTS,
+                *flags,
+                "--stage",
+                stage,
+                "--final-resolution",
+                "1080p",
+            )
+            self.assertEqual(code, 1, result)
+            self.assertIn("seedance.draft_promotion", self.rule_ids(result))
+            self.assertNotIn("operations", result)
+
+    def test_native_matrix_hash_command_prepares_boolean_draft_without_provider(self):
+        (self.project / "project.md").write_text("---\nreview_mode: default\n---\n")
+        flags = [
+            "seedance-2-5" if flag == "video-model-a" else flag for flag in VIDEO_FLAGS
+        ]
+        code, result = self.register(base_matrix(), *UNIT_COSTS, *flags)
+        self.assertEqual(code, 0, result)
+        _, operation = self.hook_operation(result)
+        command = operation["hash_command"]
+        prompt = self.project / option_values(command, "--prompt")[0]
+        prompt.parent.mkdir(parents=True, exist_ok=True)
+        prompt.write_text("A plain ceramic cup turns slowly.\n")
+        prepared = subprocess.run(
+            [sys.executable, str(ROOT / command[3]), *command[4:]],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(prepared.returncode, 0, prepared.stdout + prepared.stderr)
+        request = json.loads(prepared.stdout)["request"]
+        self.assertEqual(request["params"]["resolution"], "480p")
+        self.assertIs(request["params"]["draft"], True)
+        self.assertEqual(request["params"]["duration"], 4)
+        self.assertFalse((self.project / "task_ids.json").exists())
+
+    def test_native_recast_and_swap_use_draft_but_audio_has_no_video_parameters(self):
+        flags = [
+            "seedance-2-5" if flag == "video-model-a" else flag for flag in VIDEO_FLAGS
+        ]
+        costs = [
+            item
+            for axis in (
+                "talent",
+                "location",
+                "product",
+                "outfit",
+                "language",
+                "motion-recast",
+            )
+            for item in ("--unit-cost", f"{axis}=1")
+        ]
+        code, result = self.register(
+            swap_matrix(budget_usd=1000), *costs, *flags, *AUDIO_FLAGS
+        )
+        self.assertEqual(code, 0, result)
+        routes = set()
+        for operations in result["operations"].values():
+            for operation in operations:
+                routes.add(operation["route"])
+                for key in ("hash_command", "register_command"):
+                    values = params(operation[key])
+                    if operation["route"] == "language-dub":
+                        self.assertEqual(values, [])
+                    else:
+                        self.assertIn("resolution=480p", values)
+                        self.assertIn("draft=true", values)
+        self.assertTrue({"motion-recast", "object-swap", "language-dub"} <= routes)
 
     def test_invalid_review_mode_refuses_variant_commands(self):
         (self.project / "project.md").write_text("---\nreview_mode: quick\n---\n")
         code, result = self.run_cli(
-            "register", self.write(base_matrix()), "--project", self.project,
-            *UNIT_COSTS, *VIDEO_FLAGS,
+            "register",
+            self.write(base_matrix()),
+            "--project",
+            self.project,
+            *UNIT_COSTS,
+            *VIDEO_FLAGS,
         )
         self.assertEqual(code, 1, result)
         self.assertNotIn("operations", result)

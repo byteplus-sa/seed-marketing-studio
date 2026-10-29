@@ -190,8 +190,12 @@ Use playback for pause/camera behavior and listening for delivery/sound.
 Report pass, fail or untested with evidence; a frame cannot prove comic timing.
 Audience amusement remains a hypothesis until tested, not a QA pass claim.
 
-Honor review_mode independently of approval_mode; default adds no mandatory
-draft or approval gate. Strict checks and production are caller-owned.
+Honor review_mode independently of approval_mode. Prompt-only work generates
+nothing; checks and production remain caller-owned.
+Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
+`draft: true` in both review modes. Promote only selected native Drafts.
+Surface source-count conflicts before generation; never bypass drafts or
+silently expand scope.
 Optional caller composition may use film-production for execution,
 seedance-prompt-25 for model grammar, and acting, camera or exact-graphics
 specialists. These are prose hints, never sibling commands or dependencies.

@@ -153,8 +153,9 @@ parallax in the correct direction, coherent occlusion, known bottle views and
 clear product ending. Still images cannot prove the continuous geometry.
 All output and audio criteria remain untested.
 
-The hypothetical default/approve-for-me project needs no automatic draft;
-later agent selection requires actual inspection. Strict retains detailed review
-and draft-first unless explicitly overridden, without silently expanding source
-count. Paid-ad disclosure remains the user's separate decision. This exercise
+The hypothetical default/approve-for-me project requires actual inspection
+before agent selection. New Seedance 2.5 production uses `resolution: "480p"` and
+boolean `draft: true` in both review modes, promoting only selected native Drafts.
+Resolve source-count conflicts before generation without bypassing drafts or
+silently expanding scope. Paid-ad disclosure is the user's decision. This exercise
 does not prove a physically feasible rig or real capture.

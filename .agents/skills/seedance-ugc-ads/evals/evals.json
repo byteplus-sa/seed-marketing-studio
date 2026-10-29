@@ -86,7 +86,7 @@
         "Returns reusable packaging-discovery texture, handling, camera and audio direction without inventing package contents or personal first-use testimony.",
         "Does not expand into a full ad, named preset, forced CTA, prompt-review report, 480p draft or paid generation.",
         "Does not claim user approval or infer approval from default review mode.",
-        "If mentioning strict mode, distinguishes its detailed review and draft-first defaults from approval_mode without running them."
+        "If mentioning production, preserves native 480p boolean draft:true in both review modes and distinguishes review depth from approval_mode without running production."
       ]
     },
     {

@@ -163,6 +163,29 @@ class AdSkillLibraryTests(unittest.TestCase):
                         (skill / "SKILL.md").read_text(),
                     )
 
+    def test_format_handoffs_preserve_native_drafts_in_both_review_modes(self):
+        for name in sorted(AD_SKILLS):
+            with self.subTest(skill=name):
+                text = (SKILLS / name / "SKILL.md").read_text()
+                self.assertIn('resolution: "480p"', text)
+                self.assertIn("draft: true", text)
+                self.assertIn("both review modes", text)
+
+    def test_format_references_do_not_allow_review_mode_draft_bypasses(self):
+        bypasses = (
+            r"draft-first unless",
+            r"draft default unless",
+            r"no mandatory draft",
+            r"explicit draft override",
+            r"default.{0,100}no automatic draft",
+        )
+        for name in sorted(AD_SKILLS):
+            for path in (SKILLS / name).rglob("*.md"):
+                with self.subTest(path=path.relative_to(ROOT)):
+                    text = " ".join(path.read_text().split())
+                    for pattern in bypasses:
+                        self.assertNotRegex(text, pattern)
+
 
 if __name__ == "__main__":
     unittest.main()

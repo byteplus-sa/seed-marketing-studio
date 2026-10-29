@@ -213,7 +213,11 @@ Do not claim frame-exact placement or acceptable product identity from the
 prompt, a contact sheet or provider success.
 
 Current `review_mode` and `approval_mode` govern downstream review and
-selection; this leaf adds no forced drafts, samples or approval gates.
+selection. Prompt-only work generates nothing and adds no approval gates.
+Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
+`draft: true` in both review modes. Promote only selected native Drafts.
+Surface source-count conflicts before generation; never bypass drafts or
+silently expand scope.
 Rights, supported claims, budget and paid-ad disclosure remain separate.
 
 Optional prose hints for the caller: `seedance-kinetic-ads` covers a broader

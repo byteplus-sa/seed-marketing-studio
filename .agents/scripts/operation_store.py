@@ -165,11 +165,13 @@ def prepare_operation(
     capabilities: dict[str, Any],
     review: dict[str, Any] | None,
     required_rule_ids: list[str],
+    *,
+    existing_submission: bool = False,
 ) -> None:
-    findings = validate_request(root, request, capabilities)
-    findings.extend(
-        request_review_findings(root, request, review, required_rule_ids)
+    findings = validate_request(
+        root, request, capabilities, existing_submission=existing_submission
     )
+    findings.extend(request_review_findings(root, request, review, required_rule_ids))
     if findings:
         raise ValueError("; ".join(finding.message for finding in findings))
     with selection_lock(root), registry_lock(root) as path:
@@ -207,10 +209,19 @@ def adopt_submitted_operation(
         raise ValueError(
             "Adopting a submitted job needs its provider task ID and status"
         )
-    prepare_operation(root, request, capabilities, review, required_rule_ids)
+    prepare_operation(
+        root,
+        request,
+        capabilities,
+        review,
+        required_rule_ids,
+        existing_submission=True,
+    )
     operation_id = request["operation_id"]
     try:
-        transition_operation(root, operation_id, "prepared", "submitting")
+        transition_operation(
+            root, operation_id, "prepared", "submitting", existing_submission=True
+        )
         transition_operation(
             root,
             operation_id,
@@ -242,6 +253,8 @@ def transition_operation(
     new_status: str,
     provider_task_id: str | None = None,
     provider_status: str | None = None,
+    *,
+    existing_submission: bool = False,
 ) -> None:
     if new_status not in TRANSITIONS.get(expected_status, set()):
         raise ValueError(
@@ -260,7 +273,9 @@ def transition_operation(
         if record is None or record["submission_status"] != expected_status:
             raise ValueError("Operation missing or stale expected state")
         if new_status == "submitting":
-            evidence_findings = prepared_evidence_findings(root, record)
+            evidence_findings = prepared_evidence_findings(
+                root, record, existing_submission=existing_submission
+            )
             if evidence_findings:
                 raise ValueError(
                     "; ".join(finding.message for finding in evidence_findings)

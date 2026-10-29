@@ -30,8 +30,8 @@ brand and talent pins from the [shared library](../../contracts/shared-library.m
 This skill does not relax any of them.
 
 Read and copy `review_mode` independently of `approval_mode`. Default uses
-minimal preflight and actual final sanity, one image and no automatic
-draft-first pass; strict retains detailed review and sampling. Do not load
+minimal preflight and actual final sanity, one image and draft-first video;
+strict retains detailed review and sampling. Do not load
 strict craft checklists in default. Applicable claims, rights, disclosure and
 native-human evidence remain required in both modes. Never fabricate a user
 quote or reviewer approval to complete a record.
@@ -168,8 +168,11 @@ records each element's level and lets one element sit below the default.
 8. **Produce through the routed skills** in the order text, voice, talent,
    cultural, transcreation, as the plan needs. Every generation-bound prompt
    is frozen, checked with mode-appropriate preflight and registered with
-   `prepare_request.py --register`. Strict uses inline `prompt-review` and
-   480p drafts first; default goes directly to the requested supported target.
+   `prepare_request.py --register`. Strict uses inline `prompt-review`.
+   Both modes start every new Seedance 2.5 generation with explicit
+   `resolution: "480p"` and boolean `draft: true`; no skip-draft exception
+   applies. Resolve schema or transport conflicts without dropping the flag.
+   Other models without native Draft use a plain 480p test.
    Run
    `market_card.py gate --level <L> [--element <id>] --stage final` before any
    final-resolution request; the gate uses the stricter of `--level` and the

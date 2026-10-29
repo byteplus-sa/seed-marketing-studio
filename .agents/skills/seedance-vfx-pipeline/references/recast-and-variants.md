@@ -163,12 +163,14 @@ stable; it does not wait for unrelated rows.
    probe and for the final. The probe and final differ in reference video,
    duration or resolution, so each request hash needs a complete review.
    Resolve CRITICAL and MAJOR findings.
-4. **Probe.** Submit the 480p key-beat probe (4–5 s). Inspect it for the route
+4. **Probe.** Submit the key-beat probe (4–5 s) with explicit
+   `resolution: "480p"` and boolean `draft: true` for Seedance 2.5 in both modes.
+   Resolve schema or transport conflicts without dropping the flag. Inspect it for the route
    evidence and the QA list below. A failed probe blocks the final; revise the
    prompt or elements and re-review.
 5. **Full duration, then final.** Submit the full duration at 480p after the
-   probe passes, then the final resolution after that take passes QA and the
-   cost preview is confirmed. Each rung is a separately reviewed request.
+   probe passes, with `draft: true` for 2.5, then promote the selected native
+   Draft after QA and cost confirmation. Each rung is a separately reviewed request.
 6. **Side-by-side.** Render the final against the source with
    `ffmpeg-side-by-side-comparison`: a simultaneous `hstack` for visual
    changes, the staggered split when the rows differ mainly in audio.
@@ -227,8 +229,9 @@ confirmed scope needs a new confirmation.
   confirmed task. State the source of the rate.
 - Batch total = variants × (probe + final). Include the Motion Transfer route
   probe and a stated allowance for revision takes.
-- Use the lowest suitable resolution: 480p for probes, 720p for finals unless
-  the delivery needs 1080p.
+- Use 480p for probes and the verified native promotion target for 2.5 finals;
+  derive smaller delivery copies in post. Other models without native Draft
+  use a plain 480p test and a new final request at the lowest suitable target.
 - Keep the estimated cost separate from confirmed billing. Record the confirmed
   cost per task in `task_ids.json` and the row's `shot.md` when available, and
   report actual totals against the preview.

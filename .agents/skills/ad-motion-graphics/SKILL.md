@@ -71,8 +71,12 @@ Workspace adapters, resolved from the repository root:
 
 The production policy overrides vendored install, upgrade, usage, feedback,
 publish and unconditional approval instructions. Read `review_mode` and
-`approval_mode` independently; invalid values block execution. Default mode
-has no forced draft-first generation. Strict mode follows its actual gates.
+`approval_mode` independently; invalid values block execution.
+Prompt-only and fully deterministic work require no Seedance generation.
+Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
+`draft: true` in both review modes. Promote only selected native Drafts.
+Surface source-count conflicts before generation; never bypass drafts or
+silently expand scope. Review depth follows the selected review mode.
 Neither mode supplies rights, extra spend or a paid-ad disclosure decision.
 
 ## 1. Plan the explanation

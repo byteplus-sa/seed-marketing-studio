@@ -46,10 +46,11 @@ Add audio-performance-camera only for applicable dialogue, sound, acting, UI, or
 camera detail.
 
 When packaging generation parameters, read the parameter reference: a Seedance
-2.5 clip is drafted first (`draft: true`, 480p) and the selected draft is
+2.5 clip is drafted first (boolean `draft: true`, explicit `resolution: "480p"`)
+in both review modes and the selected draft is
 promoted by `draft_task_id`, so every prompt, reference, duration and audio
-decision is final before the draft. Honor user overrides and verified
-operation constraints.
+decision is final before the draft. There is no skip-draft exception. Resolve
+schema or transport conflicts without dropping the flag.
 
 Read only the mode-specific resources needed for the request. Reference paths
 mentioned in prose are relative to this skill directory unless a link says otherwise.
@@ -279,8 +280,8 @@ Before handing the package to review, confirm:
 8. For blockouts, coarse, fine or video-lock is identified and a manifest's
    hashes match the package; camera movement cannot stand in for required
    subject movement.
-9. The request is a draft (`draft: true`, 480p) unless a recorded override
-   applies, and the final will be promoted from the selected draft.
+9. Every new generation sets boolean `draft: true` and explicit
+   `resolution: "480p"`; the final will be promoted from the selected draft.
 
 ## Usage limitations
 

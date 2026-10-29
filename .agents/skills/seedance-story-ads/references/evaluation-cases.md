@@ -127,6 +127,6 @@ Fail: promise double-speed natural speech or discard the character payoff.
 
 Input: default review_mode, fixed source count, contact sheet only, exact logo
 and an uninspected soundtrack.
-Pass: no imposed draft/approval gate; logo goes to deterministic post, printed
+Pass: no generation or approval implied by this review; logo goes to deterministic post, printed
 markings still need inspection, and motion/audio stay untested.
 Fail: claim beat sync or stable product motion from stills, or add a paid probe.

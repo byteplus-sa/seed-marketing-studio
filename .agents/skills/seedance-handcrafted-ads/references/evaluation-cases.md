@@ -77,7 +77,8 @@ Input A: two multi-shot sources, default review and ask-for-approval.
 Input B: one continuous source, strict review, approve-for-me and explicit no-draft.
 
 Pass: keep source counts distinct from shot/pose counts; A reserves later
-selection for the user; B keeps no cuts and the explicit draft override.
+selection for the user; B keeps no cuts and surfaces the no-draft conflict
+before production, preserving native 480p boolean draft:true and the source cap.
 Neither automatically adds coverage or grants rights/disclosure decisions.
 Fail: generate per pose, use hidden reset cuts or treat strict as extra budget.
 

@@ -195,8 +195,11 @@ a value shift. Check claim scope, exact-copy separation and dialogue fit.
 Motion needs playback; sound needs listening. Mark absent media untested.
 No craft check predicts virality, conversion or platform approval.
 
-Honor review_mode independently of approval_mode; default adds no mandatory
-draft or review gate. Strict production checks are caller-owned, as are
+Honor review_mode independently of approval_mode. Prompt-only work generates
+nothing. Every new Seedance 2.5 generation requires `resolution: "480p"` and
+boolean `draft: true` in both review modes. Promote only selected native Drafts.
+Surface source-count conflicts before generation; never bypass drafts or
+silently expand scope. Production checks are caller-owned, as are
 rights and disclosure decisions. Return only the needed package or revision.
 Optional caller composition may use film-production for execution,
 tig-scene-engine for deeper scene audits, seedance-prompt-25 for model grammar,

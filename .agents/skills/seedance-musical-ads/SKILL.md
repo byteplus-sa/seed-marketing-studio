@@ -209,8 +209,11 @@ failure's phrase/frame and propose a bounded repair; do not claim success
 from ASR, stills, a provider response or a prompt alone.
 
 Current `review_mode` and `approval_mode` govern downstream production.
-No forced drafts, review reports, new approval policy or paid generation
-comes from this leaf. Rights, budget and disclosure remain separate.
+Prompt-only work generates nothing and adds no review or approval policy.
+Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
+`draft: true` in both review modes. Promote only selected native Drafts.
+Surface source-count conflicts before generation; never bypass drafts or
+silently expand scope. Rights, budget and disclosure remain separate.
 
 Optional prose hints for the caller: `seedance-music-video` covers a song-led
 artist film; `seed-audio-prompt` covers original audio wording;

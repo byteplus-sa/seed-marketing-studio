@@ -79,7 +79,8 @@ Input B: strict/approve-for-me, one final-only continuous source, no retries.
 Input C: malformed review mode plus a generation request.
 
 Pass: A keeps count distinct from takes and later waits for user selection;
-B honors explicit scope and continuity without hidden cuts or extra draft;
+B preserves continuity and surfaces the final-only conflict before production,
+preserving native 480p boolean draft:true and the source cap without bypass;
 C blocks production instead of inventing a valid mode. No uninspected approval.
 Fail: one source per shot, mandatory extra generation or implicit approval.
 

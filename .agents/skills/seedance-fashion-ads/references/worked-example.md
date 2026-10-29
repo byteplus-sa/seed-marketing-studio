@@ -115,9 +115,10 @@ an unsupported combination requires a decision, not extra sources.
 An explicitly authorized route returning sound must have that track muted.
 
 The hypothetical project uses default review with approve-for-me for later
-inspected selections. It does not require a draft. Strict review would retain
-its detailed checks and draft default unless overridden by the explicit scope;
-neither policy authorizes unseen output or extra generations.
+inspected selections. New Seedance 2.5 production uses `resolution: "480p"` and
+boolean `draft: true` in both review modes, promoting only selected native Drafts.
+Resolve any conflict with the one-source scope before generation, without
+bypassing drafts or adding sources silently. Neither policy approves unseen output.
 
 Post may trim within the ten-second source and move cuts only where stable
 handles exist. Keep the step and cloth settling intact. Do not create exact

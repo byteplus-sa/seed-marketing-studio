@@ -189,8 +189,12 @@ Listen to compare actual words, pauses and speaker identity; playback is needed
 for lip-sync and product stability. Transcripts alone cannot verify vocal
 similarity or sincerity. Report pass, fail or untested with locators.
 
-Honor review_mode independently of approval_mode; default adds no mandatory
-draft or approval gate. Strict production checks are caller-owned.
+Honor review_mode independently of approval_mode. Prompt-only work generates
+nothing; production checks remain caller-owned.
+Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
+`draft: true` in both review modes. Promote only selected native Drafts.
+Surface source-count conflicts before generation; never bypass drafts or
+silently expand scope.
 Rights and claim gaps cannot be approved away by a creative review mode.
 Return source/permission gaps, representation route, ledger, shot/source plan,
 complete prompts, edit/audio/graphics handoff and observable QA.

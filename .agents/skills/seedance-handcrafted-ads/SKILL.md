@@ -188,9 +188,12 @@ dependencies before changing the canonical product or other locked direction.
 
 Inherit current independent `review_mode` and `approval_mode`. Absent fields
 mean `default` and `approve_for_me` for new actions only; invalid values block
-production. Default has minimal preflight and actual final sanity, no automatic
-drafts. Strict retains detailed review and Seedance 480p draft-first unless
-explicitly overridden. Preserve explicit generation count and surface conflicts.
+production. Default has minimal preflight and actual final sanity; strict
+retains detailed review. Every new Seedance 2.5 generation requires
+`resolution: "480p"` and boolean `draft: true` in both review modes.
+Promote only selected native Drafts. Surface source-count conflicts before
+generation; never bypass drafts or silently expand scope. Prompt-only work
+generates nothing.
 Inspected in-scope agent selection belongs to `approve_for_me`;
 `ask_for_approval` waits for the user. Neither grants consent, budget or release.
 Paid-ad disclosure remains a user-recorded decision. Prompt drafts need no

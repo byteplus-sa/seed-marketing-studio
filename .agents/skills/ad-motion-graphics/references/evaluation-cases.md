@@ -69,10 +69,12 @@ No installs or publishing."
 
 Expected: reuse the existing project, preserve sourced UI/copy, perform
 registry discovery without installing, keep the insert text-free and distinct
-from exact post layers. Maintain one registered provider source and actual
-review; no automatic draft or final regeneration. Scope parallel workers to
+from exact post layers. Maintain actual review; a new Seedance 2.5 source uses
+native 480p boolean draft:true in both review modes. Resolve any promotion/count
+conflict before production without bypassing drafts or expanding scope.
+Reuse selected existing footage without regeneration. Scope parallel workers to
 different files and keep shared integration serial. Delivery check remains.
-Fail: add a draft by habit, write a second project or infer external permission.
+Fail: bypass native drafts, write a second project or infer external permission.
 
 ## MG7 - Routing, missing specialized workflow
 

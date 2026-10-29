@@ -175,9 +175,11 @@ report any contact or timing dependency that crosses the requested boundary.
 Follow the caller's current independent `review_mode` and `approval_mode`.
 Absent fields mean `default` and `approve_for_me` for new actions only;
 invalid values block production. Default needs minimal preflight and actual
-final sanity, not an automatic draft. Strict keeps detailed review and Seedance
-480p draft-first unless explicitly overridden. Honor explicit generation counts
-and surface conflicts. Inspected in-scope agent selection is permitted under
+final sanity; strict keeps detailed review. Every new Seedance 2.5 generation
+requires `resolution: "480p"` and boolean `draft: true` in both review modes.
+Promote only selected native Drafts. Surface source-count conflicts before
+generation; never bypass drafts or silently expand scope. Prompt-only work
+generates nothing. Inspected in-scope agent selection is permitted under
 `approve_for_me`; `ask_for_approval` waits for the user's choice.
 Neither grants consent, budget or publication. Paid-ad disclosure remains a
 user-recorded decision. This prompt-only leaf does not demand production locks.

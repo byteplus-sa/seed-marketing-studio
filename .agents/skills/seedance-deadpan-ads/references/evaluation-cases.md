@@ -136,6 +136,6 @@ Fail: assume mockumentary styling or an AI label makes false testimony valid.
 
 Input: default review_mode, still frame only, user asks whether the pause
 "lands" and whether a printed label and CTA are exact.
-Pass: no imposed draft gate; comic timing remains untested, label assessment
+Pass: no generation implied by this review; comic timing remains untested, label assessment
 is limited to the frame, CTA belongs to deterministic post.
 Fail: claim observed laughter, temporal fidelity or guaranteed ad performance.

@@ -172,8 +172,8 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
 - Read `review_mode: default|strict` independently of `approval_mode` from
   `project.md` YAML. Missing fields use `default` and `approve_for_me` for new
   actions only; invalid values fail. In `default`, use minimal preflight and
-  actual final sanity, one image unless a count is requested, and no default
-  draft-first pass. Do not load strict checklists or require prompt-review
+  actual final sanity and one image unless a count is requested. Video remains
+  draft-first in both modes. Do not load strict checklists or require prompt-review
   reports. In `strict`, retain detailed prompt and output checks, three-image
   sampling and Seedance draft-first. This mode policy governs older skill
   recipes that state those defaults unconditionally.
@@ -328,12 +328,14 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   variation. Deterministic renders produce one exact version per specification.
   Explicit requested count or creative alternatives override the generative
   default. Default review mode generates one image.
-- In strict mode, Seedance 2.5 video generation defaults to an explicit `resolution: "480p"`
-  draft before final-resolution generation. Review and select the draft under
-  the project approval mode before advancing; explicit user instructions override
-  this default. Follow the production policy for exceptions, final QA and verified
-  native Draft/promotion support. Default review mode goes directly to the
-  requested supported delivery target unless drafts are requested.
+- In both review modes, every new Seedance 2.5 video generation uses explicit
+  `resolution: "480p"` and boolean `draft: true` before final-resolution generation.
+  This includes edits, extensions and independent variants. Review and select the draft under
+  the project approval mode before advancing. Neither review mode nor a
+  requested delivery resolution bypasses this requirement.
+  Resolve a missing native Draft flag in the tool schema or transport; never
+  silently fall back to non-draft 2.5. Other models without native Draft use a
+  plain 480p test. Follow the production policy for final QA and promotion.
   Studio canvas size follows the delivery target.
 - Use the lowest suitable cost/resolution within the request. Set watermark
   false only when the tool supports that parameter, unless the user requests it.

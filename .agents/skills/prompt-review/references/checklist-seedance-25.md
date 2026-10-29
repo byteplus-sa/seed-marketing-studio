@@ -9,16 +9,16 @@ states CRITICAL or MINOR when it differs.
 ## Request and parameters
 
 1. **Draft first and promotion (`seedance.draft_promotion`).** An initial or
-   revised draft is `draft: true` at 480p (or an explicit `resolution: "480p"`
-   where native Draft is unavailable), unless a recorded user override or
-   verified operation constraint applies. A final is promoted with
+   revised generation sets boolean `draft: true` and explicit `resolution: "480p"`
+   in both review modes, without a skip-draft exception. Resolve schema or
+   transport conflicts without dropping the flag. A final is promoted with
    `draft_task_id` from a passing, hash-bound draft selection under the
    project's approval mode, and carries only output settings (resolution,
    watermark, return_last_frame, expiry, priority). A final call that also
    sends prompt, references, duration, ratio, audio or task type is CRITICAL:
    those are reused from the draft and any change must happen before the
-   draft. Without native Draft support the final is a new reviewed request with
-   its own registry entry. Multi-shot work also needs a reviewed draft assembly
+   draft. Other models without native Draft use a plain 480p test and a new
+   reviewed final request, not a fallback for 2.5. Multi-shot work also needs a reviewed draft assembly
    and picture/audio decisions. Final outputs need fresh playback and audio QA:
    the final soundtrack is not byte-identical to the draft's. Prompt-only work
    needs no generated draft.

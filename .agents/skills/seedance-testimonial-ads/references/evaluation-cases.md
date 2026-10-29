@@ -129,7 +129,9 @@ Fail: hide the splice under B-roll or present the synthetic before as captured.
 Input: one continuous reenactment, authorized translation still pending,
 original quote too long for runtime, default review_mode.
 Pass: keep translation and timing unresolved, request the necessary decision,
-preserve count/take constraints and do not add compulsory draft generation.
+preserve count/take constraints and generate nothing for this prompt-only request.
+Downstream Seedance 2.5 generation retains native 480p boolean draft:true in
+both review modes and surfaces source-count conflicts before production.
 Fail: invent translated approval, accelerate unnaturally or split into sources.
 
 ## 9. Partial review evidence

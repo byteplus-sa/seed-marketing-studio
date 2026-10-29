@@ -97,7 +97,7 @@ Confirm gate 2 is recorded. Write the prompt from
 - **1:1 locked** take when the presenter will sit in a split-screen or card.
 - **9:16 camera-beat** take when the edit goes full-screen on the presenter.
 
-Settings: `generate_audio: true`, `watermark: false`, `resolution: "480p"`
+Settings: `generate_audio: true`, `watermark: false`, `resolution: "480p"`, `draft: true`;
 draft first, then promote the selected draft by `draft_task_id` to the delivery
 resolution. Duration: measured delivery or a native-language-informed read,
 including pauses, onset and tail, within the supported clip length. About

@@ -144,8 +144,9 @@ Check two panels throughout, visible hinge causality, no product material
 change, no unknown view, stable scale, intended stepping and clear recognition.
 Playback is needed to distinguish stepping from jitter. No output check has run.
 
-The hypothetical default/approve-for-me project has no mandatory draft and
-permits later inspected agent selection only. Strict would keep its detailed
-review and draft default unless explicitly overridden; it cannot silently
-expand the one-source scope. Paid-ad disclosure remains the user's decision.
+The hypothetical default/approve-for-me project permits inspected agent
+selection only. New Seedance 2.5 production uses `resolution: "480p"` and boolean
+`draft: true` in both review modes, promoting only selected native Drafts.
+Resolve any conflict with the one-source scope before generation, without
+bypassing drafts or adding sources silently. Paid-ad disclosure is the user's decision.
 Nothing in this example establishes real craft capture or product efficacy.

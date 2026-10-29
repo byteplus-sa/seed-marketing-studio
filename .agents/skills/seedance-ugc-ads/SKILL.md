@@ -238,10 +238,12 @@ Current AGENTS.md governs older recipe lore. `review_mode` and `approval_mode`
 are independent. Missing values mean `default` and `approve_for_me` for new
 actions only; invalid values need correction.
 
-- `default` uses minimal preflight and actual final sanity, with no mandatory
-  prompt-review report or draft-first pass.
-- `strict` retains detailed prompt/output checks and Seedance draft-first unless
-  explicit instructions override that default.
+- `default` uses minimal preflight and actual final sanity without a mandatory
+  prompt-review report; `strict` retains detailed prompt/output checks.
+- Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
+  `draft: true` in both review modes. Promote only selected native Drafts.
+  Surface source-count conflicts before generation; never bypass drafts or
+  silently expand scope. Prompt-only work generates nothing.
 - `approve_for_me` permits the caller's inspected, recorded agent decision.
   `ask_for_approval` waits for the user's explicit selection in either review mode.
 
