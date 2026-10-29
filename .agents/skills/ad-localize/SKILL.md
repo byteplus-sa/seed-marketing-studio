@@ -119,7 +119,7 @@ changes, what stays and QA per level.
 | L2 Voice | Dub keeping voices, or new voice-over or line-scoped re-voice; source soundtrack kept; plus L1 | `audio-dubbing`, `seed-audio-prompt`, `ark-mcp` | audio per line or segment |
 | L3 Talent | Presenter or cast replaced; plus L2 or L1 as chosen | `seedance-object-swap` (one character), `seedance-motion-recast` (whole cast), `seedance-virtual-portrait` | one edit per shot, 480p draft then final |
 | L4 Cultural | Settings, props, wardrobe, product SKU or packaging, soundtrack | swaps or recast, `product-intake`, `seed-audio-prompt` | one edit per changed element per shot |
-| L5 Transcreation | New script, angle and shots from the same brand and product facts | `brief-intake`, `ugc-ad-modes`, `seedance-prompt-25`, `seedance-prompt-25-dialogue` | a full new production, draft first |
+| L5 Transcreation | New script, angle and shots from the same brand and product facts | `brief-intake`, `seedance-ugc-ads`, `seedance-prompt-25`, `seedance-prompt-25-dialogue` | a full new production, draft first |
 
 L1 is a first-class option, not a fallback. **Re-rendered on-screen text with
 market values (price, currency, CTA, legal lines) is L1**, still subject to
@@ -254,7 +254,7 @@ shots where Seedance speaks and writes dialogue direction, and its market pack
 template describes optional language-specific packs; `seedance-object-swap` and `seedance-motion-recast`
 replace talent, props, products and settings; `seedance-virtual-portrait`
 binds authorized identities; `product-intake` sources the market's facts;
-`brief-intake`, `ugc-ad-modes` and `seedance-prompt-25` write an L5 ad;
+`brief-intake`, `seedance-ugc-ads` and `seedance-prompt-25` write an L5 ad;
 `ad-delivery-formats` cuts ratios; `ad-creative-check` runs the pre-spend
 check; `prompt-review` handles strict or explicitly required/requested review.
 

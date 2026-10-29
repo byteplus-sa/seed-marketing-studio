@@ -164,15 +164,16 @@
     },
     {
       "id": 14,
-      "prompt": "Plan a 30-second cinematic TV spot for a sports drink: a sprinter trains alone in an empty stadium at dawn and breaks her own record. I want it to feel like a film, not stock footage.",
-      "expected_output": "A cinematic plan with justified shot count and duration, readable training and record-breaking beats, motivated moves or holds, and declared light. Sequence splitting and standout images are optional within budget; exact pack graphics and copy remain deterministic.",
+      "prompt": "Plan a 30-second cinematic TV spot for a fictional sports drink: a sprinter trains alone in an empty stadium at dawn and chooses to try again after a hesitant start. No performance-benefit claims are supplied. Exactly one source generation, native cuts allowed. Make the determination readable, not stock footage.",
+      "expected_output": "One source with internal shots derived from hesitation, choice and renewed action, supported product appearance, per-shot direction and a memorable moment without a performance claim.",
       "files": [],
       "assertions": [
-        "Sequence count follows readable beats and authorized budget, not a mandatory six-clip recipe.",
-        "Every shot has a readable action, lens intent, motivated move or hold and a named light source with a key side.",
-        "Standout images are proposed only when useful, with no required count.",
-        "Durations fit performance and verified generation limits; regular lengths are accepted and assembly is offered for precise editorial cuts without automatically retiming source beats.",
-        "Product packs, logos and copy are left to post rather than planned into a generated shot."
+        "Keeps exactly one provider source and allows its internal cuts rather than imposing one continuous take or extra sources.",
+        "Every shot contributes to the determination arc and has an action, lens intent, purposeful move or hold and named light.",
+        "Any memorable moment belongs to the character's choice, not an unsupported product-caused record; no standout count is required.",
+        "Shot density fits the supported runtime; timestamps remain approximate and crowding is surfaced without adding sources.",
+        "Regular lengths and sustained holds remain valid; assembly is offered for exact timing without automatically retiming source beats.",
+        "Added graphic logos and copy belong to post; any depicted product appearance uses its actual reference and does not imply efficacy."
       ]
     },
     {

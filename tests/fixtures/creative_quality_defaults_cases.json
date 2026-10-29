@@ -5,7 +5,7 @@
   "cases": [
     {
       "id": "quiet_polished_hold",
-      "skill": "ugc-ad-modes",
+      "skill": "seedance-ugc-ads",
       "prompt": "Write one product-showcase prompt, no generation. Approved 20-second locked eye-level shot of a ceramic bowl, constant diffuse studio light, silence. Viewers should gradually notice the supplied asymmetric rim. No cuts, turn, camera movement or new product claim. CTA exactly 'Explore the shape.' in post. Do not expand the brief.",
       "criteria": {
         "intent": "The framing gives attention to the supplied rim and makes quiet observation a meaningful payoff without an invented transformation.",
@@ -45,7 +45,7 @@
     },
     {
       "id": "scoped_hook",
-      "skill": "ugc-ad-modes",
+      "skill": "seedance-ugc-ads",
       "prompt": "Only replace the opening hook with a closer view of the supplied swiveling lamp head. Keep the approved body, locked line 'Swivel the head toward your notebook', CTA 'See the lamp.', silent final hold, camera after the hook, runtime and product pin. One variant, no generation or new claim.",
       "criteria": {
         "scope": "Changes the hook only and identifies actual dependencies without reopening the premise, demanding alternatives or adding a production workflow.",
@@ -75,7 +75,7 @@
     },
     {
       "id": "localized_variant_locks",
-      "skill": "ugc-ad-modes",
+      "skill": "seedance-ugc-ads",
       "prompt": "Suggest only a hook-framing repair for one L3 localized talent variant, no generation. Exact Spanish line {Mira la forma.}, CTA 'Ver detalles', supported geometry-only claim, product identity, campaign pins, body timing, camera after hook and one-axis budget are locked. Native human sign-off is missing. Do not alter action, language or the source campaign.",
       "criteria": {
         "scope": "Proposes only a framing repair and preserves performance, without using creative defaults to justify a new scene or extra variants.",

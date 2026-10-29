@@ -30,7 +30,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-localize/SKILL.md",
-      "computedHash": "9a24000dc3add5b1eeb8abe4696585c8be3d1b30fd45ca63f2dcb7c86a19a7f7",
+      "computedHash": "6662ae286fd8d6d27bdcde64e9c23a9b485f5e7cff7d75c8c2f44be107e1205b",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "ad-performance-loop": {
@@ -43,7 +43,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-variant-matrix/SKILL.md",
-      "computedHash": "ba7c558b74feeb6a362a2a2a4015849732120a94f64954a6b123432be8feab68",
+      "computedHash": "9c45d46b423d47748b71ae24996c75328d8e305661278bf69e87156dd4888bfe",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "ark-mcp": {
@@ -74,7 +74,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/brief-intake/SKILL.md",
-      "computedHash": "522ba43b5b5081d2908c3b888622025f84f80aa8462964675a0757766ffa9f7f",
+      "computedHash": "4ff3fd389667f2f7c2fe4ff695b978368122a48208bfa393b891471f4ebcd4c0",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "color-grade-palettes": {
@@ -105,7 +105,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/film-production/SKILL.md",
-      "computedHash": "f858f545fd6da8c7dedf2b357ab94ce5b3fc2e72298df0e811916848f16d6109",
+      "computedHash": "526a86789346fa6819cb01dfaeaa4fa7c2a200fd522170d50813218ecaade801",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "general-video": {
@@ -272,6 +272,12 @@
       "skillPath": ".agents/skills/seedance-frame-break/SKILL.md",
       "computedHash": "45fc45958472e2ed04fc9e5b6fdd1c2e951ed34943aa846397a9ae3ff50e704e"
     },
+    "seedance-cinematic-broll-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-cinematic-broll-ads/SKILL.md",
+      "computedHash": "ea8211bb2d267221aeeba675eaaf293706a75b6920abd9cb75afaad22a75ad5d"
+    },
     "seedance-kinetic-ads": {
       "source": "./local",
       "sourceType": "local",
@@ -356,7 +362,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-shot-design/SKILL.md",
-      "computedHash": "df1d257326c13c5f967c15eabc5d07c2658f08a9dcd77e8971f6ecfa4553ceae",
+      "computedHash": "0417126ba3a70c953bcf5b42ecc6652e26e30064ca67553e938cebeab407f467",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "seedance-vfx-pipeline": {
@@ -460,7 +466,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/static-ad-batch/SKILL.md",
-      "computedHash": "9f4698eee612917137ac79d94cfdc1c7e72605a3311b5bc83dcfd77e5b337903"
+      "computedHash": "2d6efd7580c7cc22dcd86c792782538d7672cc60293e5f375f476f8026a43d06"
     },
     "template-factory": {
       "source": "./local",
@@ -482,17 +488,77 @@
       "computedHash": "08de9c1e85e0195262982f88a9e539d555cdee1d07c65768a04e3e78385ea04e",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
-    "ugc-ad-modes": {
+    "seedance-ugc-ads": {
       "source": "./local",
       "sourceType": "local",
-      "skillPath": ".agents/skills/ugc-ad-modes/SKILL.md",
-      "computedHash": "92f8327e506be114674a4426a1a69ed51af1471fd76830a278effa73f0a856d5"
+      "skillPath": ".agents/skills/seedance-ugc-ads/SKILL.md",
+      "computedHash": "11d15313ba9695f5115e1eece92f88562c8594f21a3ac14e6db6ceb58d0f5655"
     },
-    "ugc-motion-presets": {
+    "seedance-product-demo-ads": {
       "source": "./local",
       "sourceType": "local",
-      "skillPath": ".agents/skills/ugc-motion-presets/SKILL.md",
-      "computedHash": "0904fcb4ec72773692752084318be55b4ad6f2d5812e4f8e1f30decdd22b835b"
+      "skillPath": ".agents/skills/seedance-product-demo-ads/SKILL.md",
+      "computedHash": "7dd6fdbacd79d695a34f0ed0a676b3aaf3c1cd05385197ea433e2a5718941bb6"
+    },
+    "seedance-story-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-story-ads/SKILL.md",
+      "computedHash": "bc135fc5caccf774f5023955ddd9cd6908843038e71a57133ede86cc5ecc7a88"
+    },
+    "ad-motion-graphics": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/ad-motion-graphics/SKILL.md",
+      "computedHash": "6d563eac4aedd1b7fd26e2653186859f35391c0545fe7d9da4ba215a75842bd3"
+    },
+    "seedance-testimonial-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-testimonial-ads/SKILL.md",
+      "computedHash": "c2c0c8337de24b7880a8c608c498182a9a398e463d36b23b9501a17c02e48320"
+    },
+    "seedance-musical-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-musical-ads/SKILL.md",
+      "computedHash": "f15dc5f371984b01e13d175cc655038d1b7ce11c364586a325b93877e86c649b"
+    },
+    "seedance-match-cut-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-match-cut-ads/SKILL.md",
+      "computedHash": "11b9e366339cf022c886ff276de083803c468d01f1572d6c9b1b8850193b7b9b"
+    },
+    "seedance-fashion-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-fashion-ads/SKILL.md",
+      "computedHash": "5c85e9bb73e954a7117621111045baa80ce89a52e86dd3a8f33349f7850acd42"
+    },
+    "seedance-pov-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-pov-ads/SKILL.md",
+      "computedHash": "a5b1fbfd1572bd967cc1409feabd8eec0ff7b3056968e479b72a2b3f8a22f5e9"
+    },
+    "seedance-deadpan-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-deadpan-ads/SKILL.md",
+      "computedHash": "a84dde3bc746eaff78b642f9a14110cfd804dedeb2a5f88bd50a58674d303093"
+    },
+    "seedance-handcrafted-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-handcrafted-ads/SKILL.md",
+      "computedHash": "92a716c6da4ecb7376b598d92945d73ad2e60509099d654f90303200bc07a6ce"
+    },
+    "seedance-practical-illusion-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-practical-illusion-ads/SKILL.md",
+      "computedHash": "27869d7587d3da5b955a2123f65b65e1649e468dc88d925af33f57cfda682123"
     },
     "update": {
       "source": "./local",

@@ -107,7 +107,7 @@ class PerformanceAdoptionTests(unittest.TestCase):
         cases = workspace.load_evaluations(ROOT / directory / "evals/evals.json")
         for case in cases:
             combined = " ".join([case["expected_output"], *case["assertions"]]).lower()
-            self.assertNotIn("exactly one", combined)
+            self.assertNotRegex(combined, r"exactly one (?:turn|wow|burst|standout)")
             self.assertNotIn("at least two of", combined)
             self.assertNotIn("within 20%", combined)
         quiet = [case for case in cases if "performance_hold" in case["prompt"]]

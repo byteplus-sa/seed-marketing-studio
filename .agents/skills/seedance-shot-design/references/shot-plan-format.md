@@ -162,7 +162,9 @@ No turn, timing contrast or standout-image count is required for review.
 ## Sequences in a long spot
 
 A spot planned under the cinematic sequence bar records its sequences above the
-shots, and each sequence becomes one generated clip:
+shots. Map sequences to provider sources explicitly; they need not each become
+a separate generation. The following two-source mapping applies only when that
+count is authorized, not to a one-generation multi-scene request:
 
 ```yaml
 sequences:
@@ -180,11 +182,15 @@ sequences:
     wow: s01_sh020_c
 ```
 
-In this optional example, each sequence has 2-3 shots and a standout image.
-Choose actual shot count and lengths from the approved beats, source locks and
-budget; holds, equal lengths and no standout annotation are valid. Joins between
-sequences are assembly cuts, so a sequence may end on a held frame that the edit
-trims without losing required performance evidence.
+Sequence lengths and internal shot counts follow the idea and runtime.
+For a single-generation request, assign all internal shot IDs to one source
+and describe its allowed native cuts in one prompt. Only joins across separate
+sources require assembly. Native cuts and prompt times remain approximate;
+exact edit control requires inspected handles. Never create a provider request
+per internal shot or silently expand the source budget.
+The example's 2-3 shots and standout image are optional. Holds, equal lengths
+and no standout annotation are valid. Trimming must retain required performance
+evidence.
 
 ## Carrying the plan into the prompt
 

@@ -16,14 +16,17 @@ description: >-
 
 # Seedance Shot Design
 
-A Seedance prompt reads flat when nobody decided what the camera and the light
-do for each beat. This skill makes those decisions explicit, one shot at a
+A Seedance prompt may read flat because the idea does not develop, even when
+camera and light are specified. Establish what changes for the viewer first,
+then make coverage decisions explicit, one shot at a
 time, before the prompt is written. It is planning only: it never calls a tool,
 never generates media, and never replaces the grammar owned by the prompt
 skill.
 
 ## Why clips read flat
 
+Diagnose the actual missing contribution before applying these craft heuristics.
+Camera variety alone cannot rescue an empty premise.
 These are coverage problems to investigate, not proven causes of every flat
 performance. A held setup, soft light or subtle action can be intentional.
 Preserve the approved scene and its performance plan; more cuts or camera
@@ -31,12 +34,19 @@ movement cannot substitute for acting intent.
 
 | Cause | What the plan does instead |
 | --- | --- |
+| An object is handled but nothing develops | Identify curiosity, motivation and payoff; return a weak premise for development rather than disguise it with moves |
 | A setup hides the intended beat | Adjust framing or staging; add coverage only when the beat needs it (V1) |
 | No camera-move statement, so the model holds a neutral frame | Every shot states its move with a start and an end, or records a `static_reason` (V3, V6) |
 | Vague movement with no purpose or speed | Name the intended movement or hold; gentle and abrupt choices are both valid |
 | Camera, lens and light presets used only when the user names them | The plan assigns them by default at the chosen energy level; a user lock still wins |
 
 ### Cinematic sequence bar
+
+Separate editorial structure from provider source count. One generation can
+contain several native shots; one continuous take cannot. Preserve both the
+authorized generation count and any no-cuts lock. Derive internal shots from
+the hook, development and payoff within the supported duration. Separate
+short sources offer independent edit control only when that scope is available.
 
 When an approved ad, trailer or showcase benefits from segmented coverage,
 one optional structure builds the piece as
@@ -113,11 +123,13 @@ instead of changing timing, product demonstrations, copy or CTA.
    input, not a suggestion. A confirmed project axis must reach the shots, and
    the plan records where. Fill only the gaps.
 2. **Choose the energy level** from the intended reaction and format, never
-   from genre alone.
+   from genre alone. Separately describe performance intensity, action density,
+   camera energy, editing rhythm and sound dynamics when they differ. These
+   are creative choices, not numerical scores or new required schema fields.
 
    | Level | Fits | Typical shot length | Camera | Light |
    | --- | --- | --- | --- | --- |
-   | Restrained | Naturalistic, documentary, brand-safe realism, quiet drama | 3-10 s | Purposeful holds or slow motivated push, drift or pan | Motivated window or practical light; constant light is valid |
+   | Restrained | Attention, intimacy, anticipation or deliberate understatement | 3-10 s | Purposeful holds or slow moves | Source and contrast chosen for the idea, not automatically soft daylight |
    | Standard | Moderate energy when the intended response calls for it | 2-6 s | Motivated moves or holds as the beat needs, with no moving-shot minimum | A named key side per shot; contrast only when useful |
    | Kinetic | Action, sport, chase, music video, high-energy ad | 1-3 s | Tracking, whip, handheld, crash zoom, orbit or FPV per beat | Hard contrast, rim or backlight, flicker, colored practicals |
 
@@ -247,6 +259,7 @@ Before returning a plan, confirm:
    Return genuine feasibility conflicts; do not promise exact in-prompt cuts.
 7. Sequence count and timing serve the approved beats and budget; the optional
    cinematic sequence example does not override holds or source-count locks.
+   A single generation is not mislabeled as a mandatory continuous take.
 8. No shot relies on a prompted focus pull away from a face; that defocus is
    planned for post.
 9. The plan names where it is stored and which prompt carries it.

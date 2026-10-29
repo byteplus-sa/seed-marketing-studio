@@ -51,7 +51,7 @@ and soundtrack changes. Never force a deeper level than the change needs.
 | Product SKU, packaging | L4 | `product-intake` for the market packshot, then `seedance-object-swap` (product class) |
 | Gesture, action, blocking | L5 for that beat (or a recast that maps the beat to new motion when the source motion is acceptable) | new shot through `seedance-prompt-25` |
 | Music bed | L4 | a new bed through `seed-audio-prompt`, or a licensed track the user supplies |
-| Script, hook, angle, structure | L5 | `brief-intake`, `ugc-ad-modes`, `seedance-prompt-25` |
+| Script, hook, angle, structure | L5 | `brief-intake`, `seedance-ugc-ads`, `seedance-prompt-25` |
 
 A swap keeps the source motion, so it cannot remove a gesture or an action.
 Performance is inherited at L1-L4 unless the inventoried change explicitly
@@ -231,7 +231,7 @@ for text and voice.
 product's identity and the market's supported facts.
 
 1. Write a new brief for the market with `brief-intake` from the same brand
-   and the market's facts; choose an angle and hook with `ugc-ad-modes`.
+   and the market's facts; choose an angle and hook with `seedance-ugc-ads`.
 2. The script is written in, or transcreated into, the target language and
    accepted by the user; register, claims and CTA follow the translation
    reference. Check native speech support for the language with

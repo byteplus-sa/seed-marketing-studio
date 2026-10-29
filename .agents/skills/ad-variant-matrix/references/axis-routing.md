@@ -45,7 +45,7 @@ not applicable; `--hook-performance non-performance` applies to all hooks
 planned in that invocation, not to swaps or localization. Retain the exact
 copy, CTA, supported claims, product identity and the hero's remaining body.
 
-- Take the hook entry by ID from the `ugc-ad-modes` hook library
+- Take the hook entry by ID from the `seedance-ugc-ads` hook library
   (`references/hooks.md`) and write the opening as a new Seedance 2.5 shot with
   `seedance-prompt-25` grammar, at the hero's ratio and with the same talent,
   wardrobe, product and setting references as the hero.

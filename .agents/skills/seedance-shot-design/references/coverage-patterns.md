@@ -8,6 +8,11 @@ guarantee of an outcome. Adapt the sizes and moves to the energy level, then
 check the take. Wording for a named move belongs to the camera preset skill;
 wording for a named light setup belongs to the lighting preset skill.
 
+Before choosing a pattern, name the viewer's question and what changes by the
+end. Coverage is not a substitute for an idea. These patterns may occupy native
+shots within one provider source; they do not authorize additional generations.
+Respect source count, runtime and continuous-take locks. Deliberate stillness
+or repetition can replace a pattern when it serves the brief.
 Intentional stillness, equal durations, repeated framing and scenes without a
 turn are valid. Preserve source count, timing, copy and campaign locks. Choose
 a pattern only for the approved beat; no motion, contrast or turn quota applies.
@@ -220,6 +225,7 @@ kneeling, a child and an adult) and the height gap is the story.
 | "Hold steady" as the default camera line | The static choice is unrecorded and applied everywhere | Record a `static_reason` or give the shot a move |
 | One global lighting sentence for a multi-shot clip | Source and direction are unclear in individual shots | Name source and direction per shot; unchanged lighting is valid |
 | A project axis promising dolly and crane work that no shot line uses | The plan was written but never carried | Copy the axis into the shot lines or record the override |
+| Many unrelated beats in a long source | New framings do not create development | Refine hook, progression and payoff; separate internal shots from provider source count rather than prescribing more generations |
 | More than about seven shots in one clip, or shots under about 0.8 s | Provisional generation-planning heuristics from workspace reviews, not provider limits; inspect for actual missing or unreadable beats | Preserve requested rhythm and source timing, with no automatic retiming or shot removal. Offer assembly for frame-accurate precision or omitted action; return genuine feasibility conflicts rather than silently changing locks |
 | A shot with combined camera moves | Incompatible simultaneous directions, unclear handoffs or demonstrated readability failure | Repair only the conflicting span within source locks; one or two moves is a planning heuristic, not a cap on coherent requested choreography |
 | Equal shot lengths around a selected turn | The intended change is not readable in performance or composition | Clarify that change; timing contrast is optional and locked timing stays unchanged |

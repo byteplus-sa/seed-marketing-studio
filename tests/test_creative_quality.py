@@ -74,6 +74,44 @@ class CreativeQualityEvaluationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             quality.summarize(self.pack, self.key, self.judgments)
 
+    def test_ad_development_cases_can_be_blinded_without_losing_the_brief(self):
+        scenarios = json.loads(
+            (ROOT / 'tests/fixtures/ad_development_cases.json').read_text()
+        )
+        before = {'outputs': {case['id']: 'Synthetic baseline output.'
+                              for case in scenarios['cases']}}
+        after = {'outputs': {case['id']: 'Synthetic revised output.'
+                             for case in scenarios['cases']}}
+        pack, key = quality.blind_pairs(scenarios, before, after, 17)
+        self.assertEqual(key['pack_sha256'], quality.digest(pack))
+        self.assertEqual(len(pack['cases']), len(scenarios['cases']))
+        for original, blinded in zip(scenarios['cases'], pack['cases'], strict=True):
+            with self.subTest(case=original['id']):
+                self.assertEqual(blinded['prompt'], original['prompt'])
+                self.assertEqual(blinded['criteria'], original['criteria'])
+                self.assertEqual(set(blinded['candidates'].values()),
+                                 {'Synthetic baseline output.', 'Synthetic revised output.'})
+                self.assertTrue(
+                    (ROOT / '.agents/skills' / original['skill'] / 'SKILL.md').is_file()
+                )
+
+    def test_ad_development_suite_covers_every_requested_format_and_regression(self):
+        scenarios = json.loads(
+            (ROOT / 'tests/fixtures/ad_development_cases.json').read_text()
+        )
+        indexed = quality.indexed_cases(scenarios)
+        formats = {'seedance-ugc-ads', 'seedance-product-demo-ads',
+                   'seedance-story-ads', 'ad-motion-graphics',
+                   'seedance-testimonial-ads', 'seedance-musical-ads',
+                   'seedance-match-cut-ads', 'seedance-fashion-ads',
+                   'seedance-pov-ads', 'seedance-deadpan-ads',
+                   'seedance-handcrafted-ads', 'seedance-practical-illusion-ads'}
+        self.assertTrue(formats <= {case['skill'] for case in indexed.values()})
+        self.assertTrue({'quiet_but_compelling', 'one_source_native_cuts',
+                         'batch_repetition', 'technical_camouflage',
+                         'missing_evidence', 'narrow_revision'} <= set(indexed))
+        self.assertEqual(scenarios['scope'], 'offline_prompt_quality')
+
     def test_defaults_fixture_runs_through_existing_cli_without_media_or_judgments(self):
         cases_path = ROOT / 'tests/fixtures/creative_quality_defaults_cases.json'
         scenarios = json.loads(cases_path.read_text())

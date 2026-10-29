@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / ".agents" / "skills" / "ugc-ad-modes"
+SKILL = ROOT / ".agents" / "skills" / "seedance-ugc-ads"
 REFERENCES = SKILL / "references"
 ENTRY = re.compile(r"^### (?P<name>.+?) <!-- id: (?P<id>[a-z0-9-]+) -->$")
 FIELD = re.compile(r"^- \*\*(?P<field>[^:*]+):\*\*\s*(?P<value>.*)$")

@@ -55,6 +55,12 @@ Record one audio route in the brief and carry it into every shot request:
 | Separate lip-sync audio | Only when the user asks for it | Audio reference bound per the alignment contract | Before the shot |
 | Silent | The deliverable is silent | `generate_audio: false` | None |
 
+An explicit request for an original native soundscape, musical ad or
+one-generation audiovisual draft uses native audio when supported. Preserve
+that scope; do not substitute silent footage or add separate audio generation.
+Choose sound density, contrast and recurrence for the idea, not "no music"
+as a default for fictional or claim-free products.
+
 With native audio on, a "no music, no spoken words" line often does not hold:
 in observed ambient-only runs, speech, chants or score leaked into about two
 thirds of clips. Do not rely on a negative audio line for a piece whose sound
@@ -71,14 +77,15 @@ or spend authorization.
 
 ## 3. Cinematic structure for ads and TVCs
 
-A long pass can overload readable beats. The following sequence recipe is
-optional, not a motion, timing, turn or standout-image quota. Preserve
-intentional stillness, source count, exact copy and budget. For a spot whose
-approved intent benefits from segmented coverage:
+A long source is not inherently a continuous take or stock footage. Distinguish
+provider generations from internal shots and honor the user's count. For an ad:
 
-- Consider a 30 s spot as about **six sequences of about 5 s**, each with **2–3
-  shots** and **one action per shot**.
-- Give every shot a lens intent, a motivated camera move or hold, a named light source
+- Establish the hook, viewer motivation, development, payoff and product
+  connection. New camera angles without new meaning are not development.
+- Choose internal shot count from that argument and the runtime. One source
+  may contain native cuts. Separate short sequences are an option for
+  independent edit control only within the approved source budget.
+- Give every shot a lens intent, a purposeful move or hold, a named light source
   and depth layers (foreground, subject, background), carried from the
   `seedance-shot-design` plan.
 - A sequence may include a standout image if useful; no `wow` count is required.
@@ -185,3 +192,9 @@ Run these checks before a take passes, and use the narrowest fix.
 - **Retakes:** fix hard-gate failures within the run budget with one targeted
   change per retake, written as a revision (locked decisions, delta,
   acceptance, known rejections, invalidation scope).
+
+Compare the actual take to its creative argument as well as its technical
+contract. A decoded file with stable props may still miss its reveal, contain
+blank performance or repeat an empty action. Record that limitation; technical
+success is not creative acceptance. Missing perception stays untested, and a
+weak take never authorizes an automatic retry or upscaling.

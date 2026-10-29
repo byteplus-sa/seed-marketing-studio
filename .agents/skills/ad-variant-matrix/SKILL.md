@@ -54,7 +54,7 @@ requiring new acting. A market row delegates scope to `ad-localize`.
 | --- | --- |
 | "Make variants of this approved ad", "test three hooks and two talents" | this skill |
 | Several different hero concepts compared against each other | a concept test (see [testing guidance](references/testing-guidance.md)); build each hero first, then one matrix per concept |
-| Write or revise the hero ad itself | `ugc-ad-modes` or `film-production` |
+| Write or revise the hero ad itself | `seedance-ugc-ads` or `film-production` |
 | Rank exported results and plan the next round | compose with `ad-performance-loop` |
 
 ## Inputs and preconditions
@@ -65,7 +65,7 @@ requiring new acting. A market row delegates scope to `ad-localize`.
    campaign project. A candidate in `review` is not a hero.
 2. **The hero's current value for every axis** that will vary (for example
    `hook: hook-demo-first`, `talent: vp-a`, `ratio: 9:16`). Values are IDs:
-   hook IDs from the `ugc-ad-modes` hook library, element IDs for talent,
+   hook IDs from the `seedance-ugc-ads` hook library, element IDs for talent,
    product, outfit and location, language codes, market IDs (kebab-case, the
    folder name of the market card), ratios.
 3. **Approved references for every new value**: Virtual Portrait `asset://`
@@ -197,7 +197,7 @@ prompt. Summary:
 
 | Axis | Route | Specialists | Provider step |
 | --- | --- | --- | --- |
-| `hook` | Regenerate the opening beat at the 4 s minimum duration, trim it to the hero's opening span and splice it onto the hero in Studio | `ugc-ad-modes` hook library, `seedance-prompt-25` | yes |
+| `hook` | Regenerate the opening beat at the 4 s minimum duration, trim it to the hero's opening span and splice it onto the hero in Studio | `seedance-ugc-ads` hook library, `seedance-prompt-25` | yes |
 | `talent`, `product`, `outfit`, `location` | Object Swap on the muted hero master; keeps motion, framing, cuts and timing | `source-subject-map`, then `seedance-object-swap` | yes |
 | `talent` + `location` in one row | One Motion Transfer instead of two swaps; costs one `motion-recast` unit | `seedance-motion-recast` | yes |
 | `language` | Re-voice the locked script, then per-language captions | `audio-dubbing`, `seedance-prompt-25-dialogue`, `ad-captions` | yes (audio) |

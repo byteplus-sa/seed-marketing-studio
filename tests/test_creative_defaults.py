@@ -13,7 +13,23 @@ def normalized(path: Path) -> str:
     return " ".join(path.read_text().lower().split())
 
 
+def evaluation_cases(name: str) -> list[dict]:
+    return [
+        case
+        for path in sorted((SKILLS / name / "evals").glob("*.json"))
+        for case in json.loads(path.read_text())["evals"]
+    ]
+
+
 class CreativeDefaultsTests(unittest.TestCase):
+    def test_broll_preserves_source_limits_without_creative_quotas(self):
+        text = normalized(SKILLS / "seedance-cinematic-broll-ads/SKILL.md")
+        self.assertNotIn("required turn and wow", text)
+        self.assertNotIn("give one dominant camera move per shot", text)
+        self.assertIn("optional", text)
+        self.assertIn("preserve an explicit generation cap", text)
+        self.assertIn("continuous-take request", text)
+
     def test_action_frequency_checks_use_feasibility_not_count_alone(self):
         paths = (
             "seedance-prompt-25/references/scene-action.md",
@@ -105,7 +121,7 @@ class CreativeDefaultsTests(unittest.TestCase):
 
     def test_entrypoints_and_references_do_not_reintroduce_coverage_quotas(self):
         paths = [
-            SKILLS / "ugc-ad-modes/SKILL.md",
+            SKILLS / "seedance-ugc-ads/SKILL.md",
             SKILLS / "film-production/SKILL.md",
             SKILLS / "film-production/references/stage-contracts.md",
             SKILLS / "film-production/references/production-defaults.md",
@@ -142,7 +158,7 @@ class CreativeDefaultsTests(unittest.TestCase):
         self.assertNotIn("missing move or light on the shot flagged as the turn", policy)
 
     def test_creative_intake_resolves_open_premise_without_expanding_scoped_work(self):
-        for name in ("brief-intake", "ugc-ad-modes"):
+        for name in ("brief-intake", "seedance-ugc-ads"):
             with self.subTest(skill=name):
                 text = normalized(SKILLS / name / "SKILL.md")
                 for term in ("premise", "attention", "payoff", "alternatives", "scoped"):
@@ -168,9 +184,9 @@ class CreativeDefaultsTests(unittest.TestCase):
 
     def test_evaluation_expectations_do_not_reward_blanket_activity(self):
         names = ("brief-intake", "film-production", "seedance-prompt-25", "seedance-prompt-20",
-                 "seedance-shot-design", "seedance-acting-console", "ugc-ad-modes")
+                 "seedance-shot-design", "seedance-acting-console", "seedance-ugc-ads")
         for name in names:
-            cases = json.loads((SKILLS / name / "evals/evals.json").read_text())["evals"]
+            cases = evaluation_cases(name)
             for case in cases:
                 with self.subTest(skill=name, case=case["id"]):
                     text = " ".join([case["expected_output"],
@@ -241,7 +257,7 @@ class CreativeDefaultsTests(unittest.TestCase):
         paths = [
             SKILLS / "seedance-shot-design/SKILL.md",
             SKILLS / "seedance-prompt-25/references/shot-staging.md",
-            SKILLS / "ugc-ad-modes/SKILL.md",
+            SKILLS / "seedance-ugc-ads/SKILL.md",
             SKILLS / "prompt-review/references/checklist-seedance-25.md",
             ROOT / ".agents/contracts/rules.json",
         ]
@@ -400,13 +416,13 @@ class CreativeDefaultsTests(unittest.TestCase):
         self.assertIn("post", text)
 
     def test_motion_flags_distinguish_creative_advice_from_provider_constraints(self):
-        text = normalized(SKILLS / "ugc-motion-presets/SKILL.md")
+        text = normalized(SKILLS / "seedance-ugc-ads/SKILL.md")
         self.assertNotIn("flags encode real provider constraints", text)
         self.assertIn("creative", text)
         self.assertIn("provider", text)
         self.assertIn("optional", text)
         text = normalized(
-            SKILLS / "ugc-motion-presets/references/execution-constraints.md"
+            SKILLS / "seedance-ugc-ads/references/execution-constraints.md"
         )
         self.assertNotIn("moderate dynamics", text)
         self.assertIn("optional repair", text)
@@ -426,7 +442,7 @@ class CreativeDefaultsTests(unittest.TestCase):
             "seedance-prompt-25/references/shot-staging.md",
             "film-production/references/production-defaults.md",
             "film-production/references/stage-contracts.md",
-            "ugc-ad-modes/SKILL.md",
+            "seedance-ugc-ads/SKILL.md",
             "seedance-vfx-prompt/SKILL.md",
             "seedance-motion-design/SKILL.md",
             "seedance-animation-styles/SKILL.md",
@@ -479,10 +495,10 @@ class CreativeDefaultsTests(unittest.TestCase):
         )
         for name in (
             "seedance-pacing-presets", "seedance-shot-design", "seedance-prompt-25",
-            "film-production", "seedance-music-video", "ugc-ad-modes",
+            "film-production", "seedance-music-video", "seedance-ugc-ads",
             "seedance-motion-design", "seedance-animation-styles", "template-factory",
         ):
-            cases = json.loads((SKILLS / name / "evals/evals.json").read_text())["evals"]
+            cases = evaluation_cases(name)
             for case in cases:
                 with self.subTest(skill=name, case=case["id"]):
                     text = " ".join([

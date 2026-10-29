@@ -119,9 +119,15 @@ paid video submission and again at assembly. In short:
 2. **Audio route from the brief.** Native dialogue keeps native audio.
    Ambience-only, score-driven and wordless pieces generate picture with
    `generate_audio: false` and build the bed in post, because a "no music" line
-   does not reliably hold.
-3. **Intent-led coverage for ads and TVCs.** Choose count and duration from
-   readable action, listening and the approved budget. Each shot carries lens
+   does not reliably hold. Explicit native soundscape or single-generation
+   sound-led requests override that preference without adding audio tasks.
+3. **Idea-led coverage for ads and TVCs.** Develop the hook, viewer motivation,
+   progression, payoff and product connection before shot detail. Record
+   internal shots separately from source generations; preserve an explicit
+   one-generation request while allowing native cuts unless a continuous take
+   is locked. Each shot contributes new information, feeling or sensory detail.
+   Choose count and duration from readable action, listening and the approved
+   budget. Each shot carries lens
    intent, a motivated move or hold and named light. Short sequences, variety,
    turns and standout images are optional, not cadence or hold quotas.
 4. **Storyboards plan; they are never bound** as Seedance references. Bind
@@ -171,6 +177,12 @@ or requested exploration. Scoped specialist prompts do not gain a mandatory
 development workflow. Plan sound and editorial intent before generation,
 without requiring final audio assets early. Persist the
 mode-authorized confirmed set as a `locked` block in `project.md`.
+For a batch, compare the concepts before prompt expansion: hook, setting,
+performer intention, product role, development and sound should differ where
+the formats demand it. Preserve intentional campaign unity; do not accept
+the same object-handling exercise under different format names.
+Keep this brief-level reasoning compact in default mode, not a new report or
+approval gate. Never improve apparent creativity by inventing product claims.
 
 At scene breakdown, run `acting-direction` before shot design for new or
 materially revised character performance. Store `## Performance plan` in the

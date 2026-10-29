@@ -81,12 +81,16 @@ brief also records:
   Final assets are not required early; timing is provisional until measured;
 - **artistic acceptance** tied to the brief, using a small relevant set of
   observable criteria rather than generic "cinematic" polish or activity counts;
-- the **audio route**: native dialogue, picture only with score, ambience and
+- the **audio route**: native dialogue or explicitly requested native soundscape,
+  picture only with score, ambience and
   SFX built in post, opt-in separate lip-sync audio, or silent;
 - the **look intent**: ungraded original model colours unless a grade or a
   capture-format look is requested, in which case it is a post treatment;
 - the **on-screen copy** (titles, captions, CTA, end card) that post will add,
   and any label the user or platform requires;
+- for ads and TVCs, the **creative argument**: hook, viewer motivation,
+  development, payoff and product connection; internal shot timing separately
+  from authorized provider source count, and any intended memorable moment;
 - for ads and TVCs, the **coverage intent**: sequence count and length fitted
   to approved beats and budget, including purposeful holds. Standout images,
   timing contrast and turns are optional, not per-sequence requirements.
@@ -133,8 +137,10 @@ For every narrative, ad, micro-drama, music-video or showcase scene it also
 requires a shot plan from `seedance-shot-design` in the scene file's
 `## Shot plan` section: per shot, duration, size, angle, camera move, lens
 intent and a named light source with key side, the energy level, and where each
-confirmed project axis appears. Ads and TVCs choose coverage from the approved
-intent, readability and budget; short sequences are optional, with no required
+confirmed project axis appears. Ads and TVCs derive internal shots from their
+creative argument and source budget. One generation may contain native cuts;
+an explicit continuous take may not. Coverage follows approved intent,
+readability and budget; short sequences are optional, with no required
 cadence, variety, turn, hold or standout count. About 0.8 s per shot and about
 7 shots per clip are provisional generation heuristics, not provider limits
 or guaranteed merge/drop thresholds. Preserve requested rhythm and source

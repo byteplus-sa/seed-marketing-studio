@@ -29,6 +29,33 @@ prompt or provider operation. A hybrid retains normal generation evidence for
 its synthesized image layer and a separate deterministic render record for its
 exact graphic layer.
 
+## Ad creative ownership
+
+Choose the ad's primary communication job before adding a visual treatment.
+Formats can combine; one specialist owns the sequence and the others supply
+scoped direction. Prompt-only requests stop at the requested writing artifact.
+Production requests retain the existing project, registry and review policy.
+
+| Requested job | Creative owner | Boundary |
+| --- | --- | --- |
+| Creator-led UGC, unboxing, casual try-on, hook or named motion preset | `seedance-ugc-ads` | One consolidated mode and motion library; preserve preset IDs and only load the requested recipe |
+| Show a product mechanism solving a problem | `seedance-product-demo-ads` | Demonstration is not proof of unsupported efficacy; exact software UI belongs to motion graphics |
+| Entertain through a short story or twist | `seedance-story-ads` | Product-linked story; general screenplay structure remains scene craft |
+| Explain through exact graphics, UI or data | `ad-motion-graphics` | Declared orchestrator for agent-authored HyperFrames, optional Seedance plates and hypermotion inserts; `seedance-motion-design` remains the prompt-layer specialist |
+| Present a real customer's authorized experience | `seedance-testimonial-ads` | Source testimony owns facts; a synthetic presenter cannot invent customer history |
+| Sell through song or product sounds | `seedance-musical-ads` | Ad message owns the sequence; a song-led artist video remains `seedance-music-video` |
+| Link scenes by shape, action or transformation | `seedance-match-cut-ads` | Own matched endpoints and edit handoff; general pacing remains an axis |
+| Editorial garment-led fashion film | `seedance-fashion-ads` | Campaign coverage, not a single outfit-reference change |
+| First-person embodied product experience | `seedance-pov-ads` | Own viewpoint continuity, not just a POV camera preset |
+| Understated comedy or fictional mockumentary | `seedance-deadpan-ads` | Own documentary grammar and reaction timing; no fabricated real interviews |
+| Tactile stop-motion-look advertising | `seedance-handcrafted-ads` | Own the ad concept and product treatment; `seedance-animation-styles` remains the medium vocabulary |
+| Viewpoint-dependent practical-looking trick | `seedance-practical-illusion-ads` | Own sightline and geometry; impossible world changes belong to CGI/VFX |
+
+Kinetic energy and CGI treatment can accompany these formats without replacing
+the message owner. None of these routes is a performance ranking. Do not load
+every ad skill for a generic request; resolve the primary job or offer distinct
+treatments first.
+
 ## Capability evidence
 
 Resolve the actual tool schema/model binding before selecting operation, resolution, duration, reference roles/counts, or optional flags. A capability record contains model, source, verified_at, operations, parameter JSON Schemas, required_parameters, reference_roles, max_references, and supports_first_frame_with_reference_images. Recheck when the tool, binding, or operation changes; cached evidence is historical, not a live guarantee.

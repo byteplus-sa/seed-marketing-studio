@@ -582,6 +582,17 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertEqual(step["generate_duration_s"], 4)
         self.assertIn("trim", step["studio_note"].lower())
 
+    def test_hook_rows_use_the_consolidated_ugc_skill(self):
+        code, result = self.run_cli("plan", self.write(base_matrix()))
+        self.assertEqual(code, 0, result)
+        rows = [row for row in result["rows"] if row["changed_axes"] == ["hook"]]
+        self.assertTrue(rows)
+        for row in rows:
+            self.assertEqual(
+                row["steps"][0]["skills"],
+                ["seedance-ugc-ads", "seedance-prompt-25"],
+            )
+
     def test_ratio_change_is_not_a_provider_operation(self):
         code, result = self.run_cli("plan", self.write(base_matrix()))
         self.assertEqual(code, 0)
