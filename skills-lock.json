@@ -259,6 +259,12 @@
       "skillPath": ".agents/skills/seedance-frame-break/SKILL.md",
       "computedHash": "45fc45958472e2ed04fc9e5b6fdd1c2e951ed34943aa846397a9ae3ff50e704e"
     },
+    "seedance-cinematic-broll-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-cinematic-broll-ads/SKILL.md",
+      "computedHash": "397cb2ce38dce3519e60e034237bda6c02bd519445aec53c13abaeffd90341b0"
+    },
     "seedance-kinetic-ads": {
       "source": "./local",
       "sourceType": "local",

@@ -388,6 +388,15 @@
       "upstream_hash": null,
       "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in."
     },
+    "seedance-cinematic-broll-ads": {
+      "kind": "leaf",
+      "description": "Write Seedance cinematic B-roll ad treatments and prompts. Use for product montages, lifestyle, craft or voiceover-led B-roll ads, not kinetic ads, UI explainers or source edits.",
+      "readme_summary": "Design cinematic B-roll ads through product detail, lifestyle, craft or voiceover-led coverage, with complete source prompts and edit/sound handoffs.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
     "seedance-kinetic-ads": {
       "kind": "leaf",
       "description": "Write Seedance fast-cut, multi-angle vertical ad prompts across products, with cinematic realism, CGI or hybrid treatments. Use for kinetic or hypermotion ads, not UI explainers or source edits.",
