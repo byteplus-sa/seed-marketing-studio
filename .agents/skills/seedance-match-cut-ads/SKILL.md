@@ -218,7 +218,7 @@ Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
 `draft: true` in both review modes. Promote only selected native Drafts.
 Surface source-count conflicts before generation; never bypass drafts or
 silently expand scope.
-Rights, supported claims, budget and paid-ad disclosure remain separate.
+Rights, supported claims, generation scope and paid-ad disclosure remain separate.
 
 Optional prose hints for the caller: `seedance-kinetic-ads` covers a broader
 fast-cut sequence; `seedance-object-swap` covers a kept source with one

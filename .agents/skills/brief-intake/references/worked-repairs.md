@@ -72,7 +72,7 @@ judgments, not observed generated-media results.
 - **Tradeoff:** Fewer ideas, a clearer progression; native cuts and sound remain
   approximate. Separate source control costs additional work and needs scope.
 - **Acceptance:** A viewer can trace hesitation to chosen play. The plan honors
-  the actual source/audio budget and does not invent garment performance.
+  the actual source/audio scope and does not invent garment performance.
   Actual playback and listening must establish attention and payoff; a written
   premise or technically joined edit cannot establish them.
 

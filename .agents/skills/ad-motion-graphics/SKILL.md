@@ -39,7 +39,7 @@ Read the current brief and supplied material before asking. Resolve:
 | Data with sources, units and dates | Which chart relationships are truthful |
 | Duration, ratio, fps, placement | Time budget, canvas and verified safe zone |
 | Existing project and locks | What must remain unchanged |
-| Audio and optional generation scope | Native/post ownership, budget and count |
+| Audio and optional generation scope | Native/post ownership, authorization and count |
 | Requested endpoint and project modes | Spec, build, preview or local render |
 
 Ask about consequential gaps. Without sources, produce a clearly provisional
@@ -77,7 +77,7 @@ Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
 `draft: true` in both review modes. Promote only selected native Drafts.
 Surface source-count conflicts before generation; never bypass drafts or
 silently expand scope. Review depth follows the selected review mode.
-Neither mode supplies rights, extra spend or a paid-ad disclosure decision.
+Neither mode supplies rights, extra generation scope or a paid-ad disclosure decision.
 
 ## 1. Plan the explanation
 
@@ -219,7 +219,7 @@ intent and endpoint / project and effective modes / unresolved decisions
 evidence ledger / approved exact-copy inventory / UI and data limitations
 beat table / design tokens / registry discoveries and dependency decisions
 layer map / composition IDs and files / optional source-to-edit insert map
-audio ownership / generation count and budget / scoped worker ownership
+audio ownership / generation count and authorization / scoped worker ownership
 preview and check evidence / render path and hashes when actually produced
 acceptance against sources, legibility, timing and delivery / next action
 ```

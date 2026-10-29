@@ -187,7 +187,7 @@ For a single-generation request, assign all internal shot IDs to one source
 and describe its allowed native cuts in one prompt. Only joins across separate
 sources require assembly. Native cuts and prompt times remain approximate;
 exact edit control requires inspected handles. Never create a provider request
-per internal shot or silently expand the source budget.
+per internal shot or silently expand the source count.
 The example's 2-3 shots and standout image are optional. Holds, equal lengths
 and no standout annotation are valid. Trimming must retain required performance
 evidence.

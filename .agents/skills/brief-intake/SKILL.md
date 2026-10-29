@@ -34,7 +34,7 @@ Read the supplied brief and existing confirmed decisions first. Extract:
 | Intended reaction | What should the viewer feel, understand, remember, or do? |
 | Central visual idea | What specific event, contrast, image, or recurring action carries that reaction? |
 | Story/product truth | Which supplied facts, characters, relationships, and claims must remain accurate? |
-| Constraints | Runtime, format, available references, budget posture, delivery needs, forbidden changes |
+| Constraints | Runtime, format, available references, delivery needs, forbidden changes |
 | Tone/genre references | What useful quality is being borrowed, and which convention should be avoided? |
 | Confirmed decisions | Which axes and identities are already accepted? |
 | Where the feeling lives | Which channel carries the inner state (performance, sound, light, framing, edit) rather than literal effects? |
@@ -52,8 +52,8 @@ decodable local media via `template-factory` for full reverse-engineering or
 native host-agent video/image inspection for a lighter pass, with local timing
 measurements and timestamped evidence. Do not require an analysis upload or
 cloud LLM call when native inspection suffices. Available MCP understanding,
-ASR and separation tools may fill capability gaps under privacy and cost
-constraints; local-only tools are not required. Audio needs verified
+ASR and separation tools may fill capability gaps under privacy and capability
+constraints; local-only tools and known cost estimates are not required. Audio needs verified
 audio perception or human listening. Transcripts, scripts and article write-ups may note claims or dialogue
 but must not replace watching the video.
 
@@ -138,11 +138,11 @@ question; static images and sound-only briefs skip the ones that do not apply.
   halation or vignette. Record a grade or a capture-format look (camcorder,
   film stock) only when the brief asks for one, and treat it as a post
   treatment rather than a prompt word.
-- **Editorial structure and source budget.** Record provider generations
+- **Editorial structure and source count.** Record provider generations
   separately from internal shots. One generation may contain native cuts;
   only a continuous-take instruction forbids them. Derive shot count and
   duration from development and payoff, within the supported runtime and
-  authorized source budget. Separate short sources can offer edit control
+  authorized source count. Separate short sources can offer edit control
   when requested, but are not the definition of cinematic quality. Each shot
   needs an action, purposeful view, named light and an observable contribution.
   Short sequences can help crowded spots, but six clips, unequal durations, moves and standout images
@@ -317,5 +317,5 @@ images, and omits irrelevant axes. Alternatives address genuinely open premises
 or requested exploration and differ in mechanism; settled scoped work does not
 need them. Unknowns remain labeled; recommendations remain unapproved until a
 mode-authorized decision is recorded. Evaluate the reasoning and usefulness,
-not exact headings. For ads, check the creative argument and source budget
+not exact headings. For ads, check the creative argument and source count
 before accepting technical completeness as readiness.

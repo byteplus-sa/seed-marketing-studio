@@ -265,7 +265,7 @@ actions only; invalid values need correction.
   `ask_for_approval` waits for the user's explicit selection in either review mode.
 
 This leaf performs none of those production operations and never turns a
-recommendation into approval. Rights, consent, reference locks, budget, supported
+recommendation into approval. Rights, consent, reference locks, generation scope, supported
 claims and required human evidence remain independent boundaries.
 Paid-ad disclosure is the user's per-deliverable decision before delivery,
 not implied by creative approval. Do not burn an "AI-generated" or "fictional"

@@ -25,7 +25,7 @@ Read supplied material and existing decisions. Resolve only consequential gaps:
 - Selected identity references, available views and fidelity requirements.
 - Runtime, ratio, placement, recognition deadline and finishing hold.
 - People, setting, treatment, music, voiceover and silence constraints.
-- Source-generation count/budget, permitted native cuts and post work.
+- Source-generation count, permitted native cuts and post work.
 - Exploration, full prompt package or a bounded revision.
 
 Do not invent claims, durations, market, language, prices, reference bindings

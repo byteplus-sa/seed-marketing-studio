@@ -170,7 +170,7 @@ stable; it does not wait for unrelated rows.
    prompt or elements and re-review.
 5. **Full duration, then final.** Submit the full duration at 480p after the
    probe passes, with `draft: true` for 2.5, then promote the selected native
-   Draft after QA and cost confirmation. Each rung is a separately reviewed request.
+   Draft after QA and selection under the project approval mode. Each rung is a separately reviewed request.
 6. **Side-by-side.** Render the final against the source with
    `ffmpeg-side-by-side-comparison`: a simultaneous `hstack` for visual
    changes, the staggered split when the rows differ mainly in audio.
@@ -213,10 +213,10 @@ Apply the parallel production rules in AGENTS.md.
 
 ## Cost preview
 
-Before the first paid submission, present a cost preview and obtain user
-confirmation for the batch unless the user has already authorized that exact
-scope and budget. A change in row count, duration or resolution beyond the
-confirmed scope needs a new confirmation.
+Report a cost preview when prices are available; otherwise report unknown.
+No price lookup, budget or spending confirmation is required for in-scope
+generation. A change in row count, duration or resolution beyond the requested
+scope still needs a scope decision under the project approval mode.
 
 | Row | Route | Probe (s × res) | Final (s × res) | Estimated probe | Estimated final |
 | --- | --- | --- | --- | --- | --- |

@@ -23,7 +23,7 @@ and approve_for_me for new actions; invalid values fail. Default uses minimal
 preflight and final sanity, draft-first video, and no mandatory
 prompt-review craft reports or strict checklist loading. The detailed QA below
 applies in strict mode or when requested; retain actual compliance, rights,
-reference locks, capabilities, budget, hashes and registry safety in both.
+reference locks, capabilities, hashes and registry safety in both.
 Record the effective modes,
 decision actor, reason, review outcome, current selection or stage lock, and
 unresolved gaps in the relevant manifest. `status` checks takes and Studio
@@ -66,7 +66,7 @@ Entry: user intent or an existing `project.md`.
 
 Required output: `review_mode`, `approval_mode`, audience, format, runtime, aspect ratio,
 delivery resolution, story objective, tone, creative constraints, known rights
-constraints, run budget, and unresolved questions recorded in `project.md`.
+constraints and unresolved questions recorded in `project.md`.
 Confirmed directorial defaults (structure, energy level, camera and light
 stance, lens, grade, pacing, acting, staging, medium, audio) from
 `brief-intake` persisted as a `locked` block in `project.md` frontmatter. The
@@ -92,7 +92,7 @@ brief also records:
   development, payoff and product connection; internal shot timing separately
   from authorized provider source count, and any intended memorable moment;
 - for ads and TVCs, the **coverage intent**: sequence count and length fitted
-  to approved beats and budget, including purposeful holds. Standout images,
+  to approved beats and generation scope, including purposeful holds. Standout images,
   timing contrast and turns are optional, not per-sequence requirements.
 
 The brief is the `brief-development` stage source; `stage complete` checks that
@@ -104,7 +104,7 @@ visual or motion inspiration, record the reference URL or local path and treat
 local media acquisition and native video/image inspection as unresolved until
 decodable media and a capable reviewer are available. Prefer native/local
 inspection; use available MCP understanding tools when needed, under privacy
-and cost constraints. No upload or cloud call is required when native
+and explicit offline constraints. No upload or cloud call is required when native
 inspection suffices. Scripts and
 article text alone do not satisfy that gap.
 
@@ -138,14 +138,14 @@ requires a shot plan from `seedance-shot-design` in the scene file's
 `## Shot plan` section: per shot, duration, size, angle, camera move, lens
 intent and a named light source with key side, the energy level, and where each
 confirmed project axis appears. Ads and TVCs derive internal shots from their
-creative argument and source budget. One generation may contain native cuts;
+creative argument and source count. One generation may contain native cuts;
 an explicit continuous take may not. Coverage follows approved intent,
-readability and budget; short sequences are optional, with no required
+readability and generation scope; short sequences are optional, with no required
 cadence, variety, turn, hold or standout count. About 0.8 s per shot and about
 7 shots per clip are provisional generation heuristics, not provider limits
 or guaranteed merge/drop thresholds. Preserve requested rhythm and source
 timing without automatic retiming or shot removal. Offer assembly for precise
-cuts or omitted action within authorization and budget; return genuine
+cuts or omitted action within generation authorization; return genuine
 feasibility conflicts rather than changing locks. A long action with
 people that would need extension is planned as short single passes held by a
 blocking map unless `asset://` Virtual Portrait identities are available. The plan is `draft` until the scene's locations
@@ -258,7 +258,7 @@ plan and request evidence in both review modes. Default checks this scoped rule
 without loading blanket craft checklists. Actual-take acceptance includes
 registration, listening, response, exact delivery and product/prop continuity.
 Missing critical performance blocks selection or promotion; no passing take
-means a bounded revision within budget or an unresolved stage.
+means a bounded revision within generation scope or an unresolved stage.
 
 Entry: shot objective, the scene's revalidated shot plan (or recorded exemption), selected
 video mode, approved inputs, reference roles, prompt snapshot target, duration,
@@ -300,7 +300,7 @@ project instead lists them in one `kind: "takes"` group using
 
 Exit: a passing take has a hash-bound, mode-authorized selection. In
 `ask_for_approval`, the recommendation remains pending until the user chooses.
-If no take passes, make a bounded correction within the run budget or leave the
+If no take passes, make a bounded correction within the requested scope or leave the
 shot blocked.
 
 ## 7. Assembly and review
@@ -318,7 +318,7 @@ work passes merely for matching a movement count. Check sound hierarchy,
 anticipation, silence and release against the intended response, then align
 final cues to measured picture. Unavailable playback/listening is unresolved,
 not a pass. Critical artistic failures need a bounded repair within locks and
-budget or a blocked selection, not promotion of the least-bad take.
+generation scope or a blocked selection, not promotion of the least-bad take.
 Default mode keeps this evidence concise; strict retains detailed review.
 No new runtime, rule ID, report format or approval gate is introduced.
 

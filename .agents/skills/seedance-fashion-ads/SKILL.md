@@ -185,7 +185,7 @@ boolean `draft: true` in both review modes. Promote only selected native Drafts.
 Surface source-count conflicts before generation; never bypass drafts or
 silently expand scope. Prompt-only work generates nothing.
 `approve_for_me` permits inspected in-scope agent selections;
-`ask_for_approval` waits for the user. Neither grants rights, budget or release.
+`ask_for_approval` waits for the user. Neither grants rights, generation scope or release.
 Paid-ad disclosure remains the user's recorded decision, not an automatic label.
 Prompt-only drafting does not require production locks or fabricated approvals.
 

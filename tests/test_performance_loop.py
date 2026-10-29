@@ -73,7 +73,6 @@ MATRIX = {
     "axes": {"hook": ["hook-callout"], "talent": ["vp-b"]},
     "strategy": "one_axis_at_a_time",
     "max_variants": 6,
-    "budget_usd": 30,
 }
 
 
@@ -623,6 +622,19 @@ class PerformanceLoopTests(unittest.TestCase):
         self.assertEqual(result["winner"], CALLOUT)
         self.assertEqual(result["winner_fatigue"]["status"], "stable")
         self.assertFalse(any("fatigued" in w for w in result["warnings"]))
+        self.assertNotIn("budget_usd", result["matrix"])
+        code, forecast = self.variant_cli("cost", result["draft"])
+        self.assertEqual(code, 0, forecast)
+        self.assertIsNone(forecast["total_estimated_usd"])
+
+    def test_next_matrix_does_not_propagate_legacy_budget(self):
+        path, _ = self.ingest()
+        code, result = self.next_matrix_cli(
+            path, "--matrix", self.write("legacy.json", {**MATRIX, "budget_usd": 0})
+        )
+        self.assertEqual(code, 0, result)
+        self.assertNotIn("budget_usd", result["matrix"])
+        self.assertEqual(result["matrix"]["max_variants"], MATRIX["max_variants"])
 
     def test_next_matrix_rejects_a_window_shorter_than_one_day(self):
         path, _ = self.ingest()

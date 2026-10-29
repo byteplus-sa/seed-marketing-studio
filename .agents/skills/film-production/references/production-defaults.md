@@ -15,7 +15,7 @@ Default mode uses minimal preflight and actual final sanity, one generated
 image and draft-first video. Do not load strict checklists or create
 mandatory craft reports. The detailed review procedures below are strict-mode
 or explicitly requested guidance; preserve capability, hash, reference, rights,
-claims, disclosure, native-human, budget and registry requirements in both.
+claims, disclosure, native-human and registry requirements in both.
 
 ## 1. Draft first, then final
 
@@ -84,7 +84,7 @@ provider generations from internal shots and honor the user's count. For an ad:
   connection. New camera angles without new meaning are not development.
 - Choose internal shot count from that argument and the runtime. One source
   may contain native cuts. Separate short sequences are an option for
-  independent edit control only within the approved source budget.
+  independent edit control only within the approved source count.
 - Give every shot a lens intent, a purposeful move or hold, a named light source
   and depth layers (foreground, subject, background), carried from the
   `seedance-shot-design` plan.
@@ -96,7 +96,7 @@ provider generations from internal shots and honor the user's count. For an ad:
   heuristics, not provider limits or guaranteed merge/drop thresholds. Preserve
   requested rhythm and source timing without automatic retiming or shot removal.
   Offer assembly for precise cuts or omitted action, within authorization and
-  budget; return genuine feasibility conflicts rather than changing locks.
+  generation scope; return genuine feasibility conflicts rather than changing locks.
 - Set ratio as a request parameter, never as a sentence in the prompt. 21:9 is
   an accepted Seedance 2.5 ratio for a scope look.
 
@@ -185,11 +185,11 @@ Run these checks before a take passes, and use the narrowest fix.
   picture (copy the video stream and confirm its hash is unchanged). Measure the
   original first: loudness over time, its own transcript and its non-voice
   sounds, then confirm they survive.
-- **Music beds:** provider audits reject a share of music generations; budget
-  spare samples. Tempo and arc timing are only roughly obeyed, so measure and
+- **Music beds:** provider audits reject a share of music generations; diagnose
+  each rejection before revising or retrying. Tempo and arc timing are only roughly obeyed, so measure and
   pad or splice in assembly. Short lines truncate unless the prompt states the
   clip length and trailing silence.
-- **Retakes:** fix hard-gate failures within the run budget with one targeted
+- **Retakes:** fix hard-gate failures within the requested scope with one targeted
   change per retake, written as a revision (locked decisions, delta,
   acceptance, known rejections, invalidation scope).
 

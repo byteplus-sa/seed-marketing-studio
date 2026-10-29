@@ -230,6 +230,6 @@ kneeling, a child and an adult) and the height gap is the story.
 | A shot with combined camera moves | Incompatible simultaneous directions, unclear handoffs or demonstrated readability failure | Repair only the conflicting span within source locks; one or two moves is a planning heuristic, not a cap on coherent requested choreography |
 | Equal shot lengths around a selected turn | The intended change is not readable in performance or composition | Clarify that change; timing contrast is optional and locked timing stays unchanged |
 | A move that decorates but has no story reason | Movement without meaning adds noise | State what the move reveals or emphasizes |
-| A 30 s spot written as one pass with many beats | Actual review shows missing or unreadable beats | Consider separate clips within authorization and budget; six sequences and `wow` shots are optional, not quotas |
+| A 30 s spot written as one pass with many beats | Actual review shows missing or unreadable beats | Consider separate clips within generation authorization; six sequences and `wow` shots are optional, not quotas |
 | A focus pull away from a face asked of the prompt | Drafts keep the face sharp | Generate with ordinary focus and add the defocus in post |
 | A multi-character scene covered by clean singles only | Required relationships or listener responses are unreadable | Adjust the affected coverage; a shared frame is optional when singles already communicate the relationship |

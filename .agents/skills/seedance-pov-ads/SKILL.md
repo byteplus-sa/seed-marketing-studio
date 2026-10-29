@@ -181,7 +181,7 @@ Promote only selected native Drafts. Surface source-count conflicts before
 generation; never bypass drafts or silently expand scope. Prompt-only work
 generates nothing. Inspected in-scope agent selection is permitted under
 `approve_for_me`; `ask_for_approval` waits for the user's choice.
-Neither grants consent, budget or publication. Paid-ad disclosure remains a
+Neither grants consent, generation scope or publication. Paid-ad disclosure remains a
 user-recorded decision. This prompt-only leaf does not demand production locks.
 
 Acceptance checks cover viewpoint attachment, reachable action, stable anatomy,

@@ -118,7 +118,7 @@ folder name of its market card at
 | Adaptation level (captions only, voice, talent, cultural, full transcreation) | Never chooses it | Records the user's per-element levels in `projects/<campaign>/markets/<market-id>/inventory.md`; the market card holds the market facts and only `level_default` |
 | Language | Refuses a row that also changes `language` (`matrix.market_language`) | Sets the market's language and script from the card |
 | Prompts, review, registry | Prints no command; lists the row under `localize` with the card, the inventory and a reminder | Plans, reviews and registers its own paid operations per element level |
-| Cost | Requires an explicit `market` unit cost and labels it an estimate | Estimates the real cost for the chosen levels |
+| Cost | Reports an optional `market` unit cost as an estimate, or unknown | Reports available estimates for the chosen levels |
 | Project | Names the localized project in the row's `localize` entry (see [Project paths](#project-paths)) | Builds that localized project |
 | Delivery | Names the per-ratio project in the row's `delivery` entry | Hands the localized master to `ad-delivery-formats` |
 
@@ -128,9 +128,9 @@ folder name of its market card at
   localized project.
 - Claims, offers and CTAs that differ by market are script changes with their
   own support and approval inside `ad-localize`; the matrix never varies them.
-- Set the `market` unit cost from the level the user expects to choose. When the
-  level changes in `ad-localize`, re-run `cost` with the new figure before
-  spending against the budget.
+- When known, set the `market` unit cost from the expected level. When the
+  level changes in `ad-localize`, update the forecast with the available figure;
+  unknown prices do not block the work.
 
 ## Ratio
 
@@ -138,7 +138,7 @@ folder name of its market card at
 
 - A reframe in Studio is not a provider step and has no registry entry. The
   `ratio` unit cost defaults to `0` and `cost` prints a `ratio_cost_note`
-  saying so; set `--unit-cost ratio=<usd>` only to budget native
+  saying so; set `--unit-cost ratio=<usd>` only to estimate native
   regeneration. It is charged once per delivery project.
 - Native regeneration per ratio is a new generation for composition-critical
   hero shots; the planner prints no command for it, so prepare, review and
@@ -226,6 +226,7 @@ talent swap. The planner registers and charges that work once.
   localized project, a reframe once per delivery project. A row's
   `estimated_cost_usd` counts only what it owns; `operations_estimate` lists
   every unique operation with its owner, unit cost and `used_by` rows; the
-  total and the budget gate use these deduplicated figures.
+  total uses these deduplicated figures. Missing prices yield unknown forecasts,
+  not a generation gate.
 - **Localize hand-off.** `register` lists each localized project once, under
   its owning row; rows that reuse it only reframe the localized master.

@@ -195,7 +195,7 @@ Promote only selected native Drafts. Surface source-count conflicts before
 generation; never bypass drafts or silently expand scope. Prompt-only work
 generates nothing.
 Inspected in-scope agent selection belongs to `approve_for_me`;
-`ask_for_approval` waits for the user. Neither grants consent, budget or release.
+`ask_for_approval` waits for the user. Neither grants consent, generation scope or release.
 Paid-ad disclosure remains a user-recorded decision. Prompt drafts need no
 production locks and never constitute approval of unseen output.
 

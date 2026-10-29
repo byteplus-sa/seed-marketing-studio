@@ -617,7 +617,6 @@ def next_matrix(args: argparse.Namespace) -> dict[str, Any]:
         "axes": {axis: levels},
         "strategy": "one_axis_at_a_time",
         "max_variants": matrix["max_variants"],
-        "budget_usd": matrix["budget_usd"],
         "version": min(int(matrix.get("version", 1)) + 1, 99),
         "notes": (
             f"Draft from the performance loop: {winner} ranked first by {args.kpi} within "

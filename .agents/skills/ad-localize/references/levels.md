@@ -27,7 +27,7 @@ stated.
 | Prices, currency, CTA or legal lines differ in the market | L1 with the market's values |
 | Settings, props, wardrobe, product variant or music differ in the market | L4 for those elements, plus the lower levels the rest need |
 | The angle, joke, hook or story does not travel; the user wants a native-feeling ad | L5 |
-| Budget is tight, the language is not natively supported, or no reviewer is available | L1 now, upgrade later |
+| The language is not natively supported, or no reviewer is available | L1 now, upgrade later |
 
 Mixing is normal: L1 for every string including the market price card, L2
 for the voice-over, L4 for one setting shot. Record the reason per element.
@@ -90,7 +90,8 @@ free:
 
 ## Cost estimate
 
-Estimate per element before any spend and show the total against the budget.
+Report available per-element estimates and their total. Missing prices stay
+unknown and do not block generation; no budget or spending approval is required.
 
 | Level | Provider steps | Unit cost source |
 | --- | --- | --- |
@@ -100,10 +101,10 @@ Estimate per element before any spend and show the total against the budget.
 | L4 | one swap per changed element class per shot, drafts and finals; product intake is free | as L3 |
 | L5 | a full production: element sheets, shots, drafts, finals, audio | sum of the production plan |
 
-Never guess a price. A retake is a new scoped decision with its own estimate.
+Never guess a price. A retake is a new scoped decision with its own available estimate.
 When `ad-variant-matrix` planned the market row with a single `market` unit,
-replace that estimate with this per-element one and tell the user if it
-exceeds the matrix budget.
+replace that estimate with this per-element one when known and report the
+change without comparing it to a legacy budget.
 
 ## L1 Captions and text
 

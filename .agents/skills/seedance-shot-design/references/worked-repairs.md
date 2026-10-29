@@ -8,7 +8,7 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
 
 These examples select contrast as one possible repair, not a universal gate.
 Intentional stillness, equal timing and no-turn scenes remain valid. Preserve
-source locks, exact copy and budget; diagnose unreadable beats before changing
+source locks, exact copy and generation scope; diagnose unreadable beats before changing
 coverage, and retain a working hold instead of adding motion for variety.
 
 ## Equal-length size ladder with no move or light change

@@ -127,7 +127,7 @@ paid video submission and again at assembly. In short:
    one-generation request while allowing native cuts unless a continuous take
    is locked. Each shot contributes new information, feeling or sensory detail.
    Choose count and duration from readable action, listening and the approved
-   budget. Each shot carries lens
+   generation scope. Each shot carries lens
    intent, a motivated move or hold and named light. Short sequences, variety,
    turns and standout images are optional, not cadence or hold quotas.
 4. **Storyboards plan; they are never bound** as Seedance references. Bind
@@ -190,7 +190,7 @@ scene file, then use `seedance-acting-console` to encode the relevant beats.
 Follow the [performance contract](../../contracts/performance-direction.md):
 require `acting.plan_bound` when applicable in both review modes, using focused
 evidence in default. Preserve exact ad copy, CTA, supported claims, product
-identity, campaign pins, budget, source-preserving edits and localization gates.
+identity, campaign pins, generation scope, source-preserving edits and localization gates.
 Inspect registration, listening, response and exact delivery in actual takes
 and again in the final edit. Static assets need no acting plan; sustained
 attention and intentional stillness need no new emotional turn.
@@ -208,20 +208,20 @@ not a motion quota. Quiet holds and sustained performance can carry a sequence.
 The cinematic cadence above is an optional planning heuristic; preserve approved
 coverage, intentional stillness and the authorized generation count.
 
-## Approval and spending gates
+## Approval and cost reporting
 
 Approval modes, decision evidence and lock rules are defined once in the
 production policy. The orchestration-specific rules are:
 
-- Declare a run budget (generated seconds or currency) before the first paid
-  submission, and stop and report before exceeding it. When using drafts,
-  promote only selected drafts.
+- Do not require a run budget, known price or spending approval before
+  in-scope generation. Promote only selected drafts.
 - A tie between passing candidates uses stable operation ID and
   variation-index order. Do not promote the least-bad output merely to advance.
-- Rights, real-person likeness or voice consent, new spending beyond the
-  declared budget, external delivery and publishing need their own scope in
+- Rights, real-person likeness or voice consent, external delivery and
+  publishing need their own scope in
   either mode. An approval to generate never approves its result.
-- Record estimated and confirmed cost separately.
+- Record estimated and confirmed cost separately; report unknown when
+  unavailable without blocking generation. Legacy budget fields are inert.
 - In default mode, keep candidate/final sanity evidence short and factual when
   the selection or stage-lock writer needs it. Auto-approve passing in-scope
   work as the agent under `approve_for_me`; never invent a user quote, rights

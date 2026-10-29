@@ -14,7 +14,7 @@ never submit generation, acquire assets, render, publish, or invoke siblings.
 
 Own the CGI creative layer: product-to-world metaphor, material behavior,
 scale, camera choreography, transition endpoints and sound relationships.
-The caller owns production, current tool capabilities, budget, approvals and
+The caller owns production, current tool capabilities, approvals and
 delivery. No fixed runtime, ratio, generation count, resolution, market or
 loudness target is built in.
 

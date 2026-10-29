@@ -659,13 +659,13 @@
       "exceptions": []
     },
     {
-      "id": "ad.variant_budget_gate",
+      "id": "ad.variant_count_gate",
       "severity": "error",
       "applies_to": [
         "preflight"
       ],
       "owner_path": ".agents/skills/ad-variant-matrix/SKILL.md",
-      "summary": "No variant production proceeds after variant_matrix.py cost refuses the matrix for budget or variant count.",
+      "summary": "Reject matrices exceeding max_variants before expansion as a resource cardinality guard, independently of cost forecasts.",
       "exceptions": []
     },
     {

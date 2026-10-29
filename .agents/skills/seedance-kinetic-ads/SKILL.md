@@ -9,7 +9,7 @@ Design an ad whose energy comes from relationships between shots, not a list
 of impressive camera names. Own the product-led creative treatment, sequence
 design, prompt package and edit/sound handoff. Remain a prompt-only leaf:
 never generate, acquire media, invoke sibling skills, render or publish.
-The caller owns production, current model capabilities, approvals and budget.
+The caller owns production, current model capabilities and approvals.
 
 ## Scope and inputs
 

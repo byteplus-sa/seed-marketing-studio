@@ -26,7 +26,7 @@ Performance direction cannot invent a testimonial, product benefit or proof.
 On-screen text remains deterministic post work, not generated lettering.
 An acting repair does not authorize rewriting ad copy or changing the offer.
 Return duration conflicts for authorized retiming or splitting, not silent
-shortening, speeding up or extra generations beyond the budget.
+shortening, speeding up or extra generations beyond the authorized generation scope.
 
 Localization changes only inventoried elements at the selected level. L1 text
 and L2 voice preserve picture performance; L3 talent and L4 source-preserving
@@ -36,7 +36,7 @@ new plan in the localized project. Locked target-language wording remains
 verbatim. L3 to L5 final generation and delivery still require genuine
 `localize.native_review`; an acting check never replaces human sign-off.
 The source campaign remains untouched except its existing `markets/` records.
-Variant rows retain the one-axis boundary, hero body, copy, CTA and budget.
+Variant rows retain the one-axis boundary, hero body, copy, CTA and generation scope.
 
 ## Durable Handoff
 
@@ -112,7 +112,7 @@ state and continuity across cuts without inventing new action.
 Missing a critical response, speaking assignment or required interaction is a
 hard failure. Equivalent readable performance may pass without a particular
 blink, tears or cue count. No passing take means a bounded revision within
-budget or a blocked stage, never selection of the least-bad output. Unavailable
+generation scope or a blocked stage, never selection of the least-bad output. Unavailable
 playback/listening remains unresolved. Recheck the final output and actual edit
 so trimming does not remove the accepted beat.
 
@@ -124,7 +124,7 @@ or deliberate ambiguity, and sound/editorial rhythm as well as technical
 legibility. A correct transcript, schema or clean join is not artistic evidence.
 Do not reward extra motion, cuts, turns or holds by count. Unavailable perception
 or a missing critical artistic beat remains unresolved; keep repairs within
-locks and budget. Default evidence stays focused and concise, strict review
+locks and generation scope. Default evidence stays focused and concise, strict review
 stays detailed, and existing human approvals remain authoritative.
 
 ## Provenance and Limits

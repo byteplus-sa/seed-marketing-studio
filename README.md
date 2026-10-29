@@ -194,7 +194,7 @@ Both modes default variant registration to `--stage draft`, emitting
 `resolution=480p` and, for Seedance 2.5, `draft=true`. The generic final pass is
 for other models; prepare 2.5 promotions individually from selected
 `draft_task_id` values and supported output settings.
-Rights, capabilities, reference locks, budget, registry and duplicate safety
+Rights, capabilities, reference locks, registry and duplicate safety
 remain. Paid-ad disclosure decisions need your actual words, platform-required
 disclosures remain required, and L3-L5 localization still needs explicit native
 human sign-off before final generation and delivery.
@@ -228,7 +228,7 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 | **film-production** | Orchestrates multi-scene, multi-modality production one stage at a time while keeping one HyperFrames Studio project synchronized for review and handoff. |
 | **template-factory** | Native-first ad reference analysis and quick structure clones mapped to sourced product facts, preserving campaign rights and review gates. |
 | **prompt-review** | Review prompts for strict mode, explicit review requests or required rules; routine default production skips full checklists. Sub-agent review requires an explicit request. |
-| **ad-variant-matrix** | Plan approved-ad variants with cost and budget gates; both modes retain compliance and applicable acting evidence, strict adds broader craft review, and all operations register. |
+| **ad-variant-matrix** | Plan approved-ad variants with optional cost forecasts and variant-count guards; both modes retain compliance and applicable acting evidence, strict adds broader craft review, and all operations register. |
 | **ad-localize** | Adapt an approved ad to another market at the depth chosen per element: captions/text, voice, talent, cultural adaptation or full transcreation, with native review gates. |
 
 ### Campaign layer
@@ -264,7 +264,7 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 | **seedance-kinetic-ads** | Design generalized kinetic ads with cinematic realism, CGI or hybrid treatments, varied coverage, product continuity, and explicit edit/sound handoffs. |
 | **seedance-effects-studio** | Select a named effect recipe for the current source, preserve observed identity and wardrobe, and validate supported generation in the owning project's workflow. |
 | **seedance-frame-break** | Write and QA Seedance 2.5 frame-break pop-out prompts where the subject is drawn over two fixed black bars, with a locked camera, staged break-outs, a product-hero variant, failure repairs and an all-frames pixel check of bar motion and overlap. |
-| **reference-edit-rebuild** | Plans a reference edit rebuilt with your own characters, products or clothing: measured edit list, beat grid and motion inventory, varied generated shots for people-led formats or animated asset layers for product formats, a code-built type-and-effects layer, a credit budget and per-segment refinement. |
+| **reference-edit-rebuild** | Plans a reference edit rebuilt with your own characters, products or clothing: measured edit list, beat grid and motion inventory, varied generated shots for people-led formats or animated asset layers for product formats, a code-built type-and-effects layer, optional cost forecasts and per-segment refinement. |
 
 ### Seedance video prompting
 
@@ -401,6 +401,7 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 - **Secrets** come from environment variables or a gitignored `.env`. Never hard-code or commit credentials or signed URLs.
 - **Watermark** is off by default where the tool supports the parameter.
 - **Cost:** lowest suitable cost within the requested target; default uses one image, strict uses three samples, and both use selected 480p video drafts before final generation (native `draft: true` for Seedance 2.5).
+- **No monetary gates:** budgets, known prices and spending approvals are not prerequisites. Legacy budget fields are inert; missing forecasts stay unknown. Variant-count guards and provider limits remain.
 - **Reproducibility:** every element, scene and shot has a manifest with the prompt snapshot, references, model, parameters, task IDs, hashes and cost.
 - **Rights:** real people, voices, brands and logos need authorization; creative approval never implies it.
 - **Local-first:** `projects/`, `library/`, `docs/`, `plans/` and `specs/` stay local and are never committed.

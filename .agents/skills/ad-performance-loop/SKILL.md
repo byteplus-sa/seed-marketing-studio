@@ -32,7 +32,7 @@ vendor benchmarks disagree and none is official.
 | Results CSV exported by the user | yes | Comma, semicolon or tab separated; UTF-8 with or without BOM |
 | Column mapping (`map.json`) | yes | Maps fields to the export's own header names; see [column mapping](references/column-mapping.md) |
 | Variant plan (`plan.json` from `variant_matrix.py plan`) | for joins and the next matrix | Supplies variant names and their axis values |
-| The matrix that produced the variants | for `next-matrix` | Campaign, concept, budget and cap carry over |
+| The matrix that produced the variants | for `next-matrix` | Campaign, concept and `max_variants` carry over; legacy budgets do not |
 | KPI | yes | `hook_rate`, `ctr`, `cvr` or `cpa`; ask when the user has not chosen |
 
 Ask which KPI matters when the user has not said. Suggest `cpa` for a

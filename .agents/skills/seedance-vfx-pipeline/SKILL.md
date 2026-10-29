@@ -256,9 +256,10 @@ Guidelines:
 - **Use a supported variation tool for the resolved model/operation** when the user
   requests multiple takes and current capability evidence supports that model,
   operation, and resolution. Prepare and track each variation independently;
-  choose concurrency within the transport limits and authorized budget.
-- **Never submit 4K VFX shots without explicit user confirmation** of the cost.
-  State the expected per-take cost before submitting.
+  choose concurrency within the transport limits.
+- **Cost reporting is informational.** Report available per-take estimates
+  or unknown, including for 4K. Do not require cost confirmation or a spending
+  authorization for in-scope generation; preserve the project approval mode.
 - **Cache and reuse** — if a take is approved, mark `status: approved` in the
   manifest. Do not regenerate approved takes.
 

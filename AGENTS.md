@@ -182,7 +182,7 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   of takes and the final edit, with timestamps in existing review evidence.
   Unavailable perception is unresolved, not a pass; offline checks do not prove
   artistic quality. Keep default evidence concise and preserve strict review,
-  existing approval modes, all locks and budget boundaries.
+  existing approval modes, all locks and generation scope.
 - New or materially revised character performance uses `acting-direction`
   before shot design, then `seedance-acting-console` to encode relevant beats.
   Store `## Performance plan` in the existing scene or variant shot file.
@@ -208,7 +208,7 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   sanity record: record only what was actually inspected, with limitations.
   No fake passes, fabricated user quotes or invented reviewer sign-offs.
   `ask_for_approval` still waits for the user's explicit choice in either
-  review mode. Rights, budget, reference locks, claims, platform-required
+  review mode. Rights, reference locks, claims, platform-required
   disclosure and explicit native human evidence remain separate boundaries.
 - Draft breakdown may precede canon. Dependent production generation requires
   the relevant approved recurring, branded or story-critical elements.
@@ -224,8 +224,8 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   with timestamped evidence and local timing measurements. Use permitted MCP
   understanding tools when capabilities are insufficient; no upload is required
   when native inspection suffices. Audio requires actual native/tool perception
-  or documented human listening, not just ASR or a waveform. Honor privacy,
-  budget and explicit offline constraints. Transcripts and article write-ups
+  or documented human listening, not just ASR or a waveform. Honor privacy
+  and explicit offline constraints. Transcripts and article write-ups
   are not visual evidence. Route full reverse-engineering or quick ad structure
   clones through `template-factory`; preserve product facts, campaign pins and
   disclosure decisions. See
@@ -313,6 +313,11 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   SHA-256, actual media properties and separate estimated/confirmed costs. Save
   deterministic static source and render records beside their raster outputs;
   they do not enter the provider task registry.
+- Project and generation budgets are not prerequisites or runtime limits.
+  Do not require a cap, price lookup or spending approval to proceed with
+  in-scope generation. Legacy budget fields are inert. Report unknown costs
+  honestly without blocking; preserve `max_variants` resource controls,
+  provider/API limits, native drafts, rights, approval modes and state locks.
 - Create the project's HyperFrames Studio project with `studio_project.py init`
   (or `sync` once shots exist) and keep it synchronized with the breakdown, shot
   manifests, takes, selections and assemblies after every material stage change

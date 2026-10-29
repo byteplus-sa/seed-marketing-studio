@@ -56,7 +56,7 @@ carries its action or sustained task, lens intent, a motivated move or hold and
 a named light source. Depth layers are optional when they serve the idea, and each
 sequence may have a `wow` shot if a standout image serves the brief. A single
 30 s pass with many beats can overload a prompt. Choose count from readable
-beats, source locks and budget, not a mandatory six-clip or standout quota.
+beats, source locks and generation scope, not a mandatory six-clip or standout quota.
 
 ## Boundary
 
@@ -257,7 +257,7 @@ Before returning a plan, confirm:
    not trigger automatic retiming. Offer assembly for precision or omitted
    action, naming source clips at natural lengths when that route is selected.
    Return genuine feasibility conflicts; do not promise exact in-prompt cuts.
-7. Sequence count and timing serve the approved beats and budget; the optional
+7. Sequence count and timing serve the approved beats and generation scope; the optional
    cinematic sequence example does not override holds or source-count locks.
    A single generation is not mislabeled as a mandatory continuous take.
 8. No shot relies on a prompted focus pull away from a face; that defocus is

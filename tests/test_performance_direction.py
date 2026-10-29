@@ -79,13 +79,32 @@ class PerformanceAdoptionTests(unittest.TestCase):
         contract = " ".join(read(".agents/contracts/performance-direction.md").split())
         for token in ("may_change", "must_preserve", "exact copy", "CTA", "supported",
                       "library.pin_current", "L3", "L5", "localize.native_review",
-                      "budget", "deterministic", "review_mode", "approval_mode",
+                      "generation scope", "deterministic", "review_mode", "approval_mode",
                       "not_applicable", "--required-rule", "SHA-256"):
             self.assertIn(token, contract)
         self.assertIn("Source-preserving edits inherit performance", contract)
         self.assertIn("intentional stillness", contract)
         self.assertIn('resolution: "480p"', contract)
         self.assertIn("draft: true", contract)
+
+    def test_integrated_guidance_does_not_restore_financial_gates(self):
+        paths = [
+            ROOT / "AGENTS.md",
+            ROOT / ".agents/contracts/performance-direction.md",
+            ROOT / ".agents/contracts/production-policy.md",
+            *(ROOT / ".agents/skills").glob("*/SKILL.md"),
+        ]
+        prohibited = (
+            "locks and budget", "pins, budget", "copy, CTA and budget",
+            "grants consent, budget", "grants rights, budget",
+            "Rights, budget", "claims, budget", "reference locks, budget",
+            "beyond the budget",
+        )
+        for path in paths:
+            text = " ".join(path.read_text().split())
+            for phrase in prohibited:
+                with self.subTest(path=path.relative_to(ROOT), phrase=phrase):
+                    self.assertNotIn(phrase, text)
 
     def test_source_evals_cover_preservation_quiet_work_and_conditional_optics(self):
         for name, terms in {

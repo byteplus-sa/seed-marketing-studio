@@ -48,7 +48,7 @@ Diagnose flat video before prescribing moves: a weak premise, absent motivation
 or missing payoff needs development, not more camera vocabulary. Give each shot
 an observable contribution and a purposeful move or hold with named light.
 Performance, action, camera, editing and sound need not share one intensity.
-Respect deliberate restraint and source budgets: one generation can contain
+Respect deliberate restraint and source counts: one generation can contain
 several native shots, while a continuous-take lock prohibits cuts.
 A flat-performance diagnosis needs evidence of intent, encoding and actual
 playback. Camera movement cannot replace a missing pursuit or response.

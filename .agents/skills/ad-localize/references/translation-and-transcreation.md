@@ -134,8 +134,8 @@ prices are re-checked within the freshness window before delivery.
 
 Recommend L1 when most viewers meet the ad with the sound off, the spoken
 part is short or not the main carrier of the message, the audience is used to
-subtitles, the target language is not natively supported for speech, the
-budget is small, or no reviewer is available yet. Recommend L2 or higher when
+subtitles, the target language is not natively supported for speech,
+or no reviewer is available yet. Recommend L2 or higher when
 the voice carries the persuasion (testimonial-style presenter, voice-over-led
 demo), when sound-on placements dominate, or when the user asks for spoken
 audio. The user decides.

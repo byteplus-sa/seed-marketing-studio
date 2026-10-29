@@ -78,7 +78,7 @@ MARKET_ESTIMATE_NOTE = (
 )
 RATIO_COST_NOTE = (
     "Ratio rows default to 0 USD because a Studio reframe is not a provider "
-    "operation; set a ratio unit cost only to budget native per-ratio regeneration"
+    "operation; set a ratio unit cost only to estimate native per-ratio regeneration"
 )
 REGISTER_PROCEDURE = [
     "Write the variant shot manifest at studio.manifest with studio.frontmatter",
@@ -109,7 +109,7 @@ COMPLIANCE_RULES = (
 COMMON_RULES = (
     *COMPLIANCE_RULES,
     "ad.variant_one_axis",
-    "ad.variant_budget_gate",
+    "ad.variant_count_gate",
 )
 VIDEO_RULES = ("video.text_free",)
 SHOT_RULES = ("shot.plan_bound", "shot.variety", "shot.axis_carry")
@@ -150,6 +150,21 @@ def default_naming(axes: list[str]) -> str:
 
 def semantic_findings(matrix: dict[str, Any]) -> list[Finding]:
     findings: list[Finding] = []
+    for key, value in matrix.get("unit_cost_usd", {}).items():
+        if value is None:
+            continue
+        try:
+            finite = math.isfinite(value)
+        except OverflowError:
+            finite = False
+        if not finite:
+            findings.append(
+                Finding(
+                    "cost.unit_invalid",
+                    "Unit cost must be finite or null for unknown",
+                    f"unit_cost_usd.{key}",
+                )
+            )
     axes = active_axes(matrix)
     hero_values = matrix["hero"]["values"]
     for axis in axes:
@@ -499,7 +514,7 @@ def parse_unit_costs(items: list[str]) -> dict[str, float]:
 
 
 def unique_operations(
-    rows: list[dict[str, Any]], units: dict[str, float]
+    rows: list[dict[str, Any]], units: dict[str, float | None]
 ) -> list[dict[str, Any]]:
     operations: dict[str, dict[str, Any]] = {}
     for row in rows:
@@ -512,12 +527,22 @@ def unique_operations(
                     "route": step["route"],
                     "axes": step["axes"],
                     "cost_key": step["cost_key"],
-                    "unit_cost_usd": units[step["cost_key"]],
+                    "unit_cost_usd": units.get(step["cost_key"]),
                     "used_by": [],
                 },
             )
             operation["used_by"].append(row["name"])
     return list(operations.values())
+
+
+def estimated_total(amounts: list[float | None]) -> float | None:
+    if any(amount is None for amount in amounts):
+        return None
+    try:
+        total = sum(amount for amount in amounts if amount is not None)
+        return round(total, 2) if math.isfinite(total) else None
+    except OverflowError:
+        return None
 
 
 def apply_costs(
@@ -530,7 +555,7 @@ def apply_costs(
             step["cost_key"]
             for row in rows
             for step in row["steps"]
-            if step["cost_key"] not in units
+            if units.get(step["cost_key"]) is None
         },
         key=COST_KEYS.index,
     )
@@ -538,30 +563,31 @@ def apply_costs(
         findings.append(
             Finding(
                 "cost.unit_missing",
-                f"No unit cost for: {', '.join(missing)}",
+                f"Unknown unit cost for: {', '.join(missing)}; forecast is informational",
                 "unit_cost_usd",
+                "warning",
             )
         )
-        return {}, findings
     operations = unique_operations(rows, units)
     for row in rows:
-        row["estimated_cost_usd"] = round(
-            sum(units[step["cost_key"]] for step in owned_steps(row)), 2
+        row["estimated_cost_usd"] = estimated_total(
+            [units.get(step["cost_key"]) for step in owned_steps(row)]
         )
-    total = round(sum(operation["unit_cost_usd"] for operation in operations), 2)
-    if total > matrix["budget_usd"]:
+    total = estimated_total([operation["unit_cost_usd"] for operation in operations])
+    if total is None and not missing:
         findings.append(
             Finding(
-                "matrix.budget",
-                f"Estimated total {total:.2f} USD exceeds budget_usd {matrix['budget_usd']}",
-                "budget_usd",
+                "cost.total_unknown",
+                "Forecast exceeds numeric reporting range; total is unknown",
+                "unit_cost_usd",
+                "warning",
             )
         )
     routes = {operation["route"] for operation in operations}
     summary: dict[str, Any] = {
         "unit_cost_usd": {key: units[key] for key in COST_KEYS if key in units},
         "total_estimated_usd": total,
-        "budget_usd": matrix["budget_usd"],
+        "unknown_cost_keys": missing,
         "currency": "USD",
         "estimate_note": (
             "Estimate from supplied unit costs, one unit per unique operation (a "
@@ -570,7 +596,8 @@ def apply_costs(
             "operation adds nothing for it: each row's estimated_cost_usd counts "
             "only the operations it owns, and operations_estimate lists every "
             "unique operation with the rows that use it. Confirmed cost is recorded "
-            "per operation after completion"
+            "per operation after completion. Null means unknown, not free; "
+            "forecasts never gate generation"
         ),
         "operations_estimate": operations,
     }
