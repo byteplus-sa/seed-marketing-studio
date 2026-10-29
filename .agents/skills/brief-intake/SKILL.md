@@ -84,6 +84,29 @@ State the creative spine in one sentence: **For [audience/context], show
 not mandatory output syntax. A static asset can use a visual contrast rather
 than a narrative event; a sound-only brief can use a sonic idea.
 
+### Develop the ad before its coverage
+
+For a full ad treatment, establish a compact creative argument before lenses
+or continuity ledgers: **hook / viewer motivation / development / payoff /
+product connection**. Use concrete events, not headings filled with adjectives.
+State what becomes newly understood, desired, surprising or emotionally different
+after the opening. A sensory or contemplative ad can develop through texture,
+anticipation or sound; it need not acquire a plot or a fast cut.
+
+If the entire argument is "place an object, inspect it, hold," improve the
+premise before polishing camera language, unless that observation is the actual
+brief. Ask whether replacing the product with an unrelated object would leave
+the idea unchanged. Strengthen its supported role rather than adding a slogan.
+Keep authorized fiction and metaphor available without inventing capabilities,
+customer history or evidence. A missing claim is not a ban on imagination.
+
+For a format batch, compare opening event, setting, performer intention, product
+role, progression and sound across concepts. Repeated quiet rooms, tabletop
+handling and product holds need a brief-driven reason. A shared campaign identity
+is valid; changing only lenses or labels is not format differentiation.
+This is brief development, not a new approval gate, numerical quality score or
+prediction of advertising performance. A narrow revision keeps its existing idea.
+
 ## 2. Settle the production-critical defaults early
 
 Three choices change how footage is generated, so record them in the first
@@ -100,15 +123,22 @@ question; static images and sound-only briefs skip the ones that do not apply.
   a "no music, no speech" line on native audio often does not hold, and speech
   or score leaks in. Say that a post bed is laid to the cut rather than
   frame-synced to action.
+  An explicitly requested original native soundscape or one-generation
+  sound-led draft uses `native`; do not silently mute it or add an audio
+  generation. Design the sound's role, including purposeful silence, instead
+  of defaulting all claim-free ads to quiet room tone.
 - **Look.** Default to the model's original colours with no grade, grain,
   halation or vignette. Record a grade or a capture-format look (camcorder,
   film stock) only when the brief asks for one, and treat it as a post
   treatment rather than a prompt word.
-- **Cinematic bar for ads and TVCs.** Unless the format is static by design
-  (selfie UGC, talking head), propose a sequence structure: about six 5 s
-  sequences of 2–3 shots for a 30 s spot, one action per shot, each shot with a
-  camera move, a motivated light and depth, and one standout "wow" image per
-  sequence. A single pass carrying many beats reads as stock footage.
+- **Editorial structure and source budget.** Record provider generations
+  separately from internal shots. One generation may contain native cuts;
+  only a continuous-take instruction forbids them. Derive shot count and
+  duration from development and payoff, within the supported runtime and
+  authorized source budget. Separate short sources can offer edit control
+  when requested, but are not the definition of cinematic quality. Each shot
+  needs an action, purposeful view, named light and an observable contribution.
+  Choose a memorable moment without forcing spectacle or movement in every shot.
 
 Also list the on-screen copy as post overlays: generated footage stays
 text-free, and no "AI-generated" or "fictional" label is added unless the user,
@@ -144,6 +174,11 @@ exhaustive preset stack: fewer axes are fine, but a moving-image brief is never
 left without a camera and light stance. A static or locked camera is a proposal
 that needs a reason tied to the idea (a held reaction, a revealed contradiction,
 a format that is static by design), not a neutral default.
+
+Separate performance intensity, action density, camera energy, edit rhythm
+and sound dynamics when they differ. A locked wide can contain exuberant action;
+a fast edit can include a quiet performance. Restrained is not shorthand for
+brand-safe, lifeless or inactive. Do not force equal intensity across channels.
 
 | Axis | Derivation | Composition hint for a calling agent |
 | --- | --- | --- |
@@ -262,4 +297,5 @@ choices and any source bible, records the audio route and look for moving
 images, and omits irrelevant axes. Two treatments appear only when exploration is wanted, and differ in
 mechanism. Unknowns remain labeled; recommendations remain unapproved until a
 mode-authorized decision is recorded. Evaluate the reasoning and usefulness,
-not exact headings.
+not exact headings. For ads, check the creative argument and source budget
+before accepting technical completeness as readiness.

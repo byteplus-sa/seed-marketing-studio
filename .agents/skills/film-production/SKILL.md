@@ -116,10 +116,13 @@ paid video submission and again at assembly. In short:
 2. **Audio route from the brief.** Native dialogue keeps native audio.
    Ambience-only, score-driven and wordless pieces generate picture with
    `generate_audio: false` and build the bed in post, because a "no music" line
-   does not reliably hold.
-3. **Cinematic sequences for ads and TVCs.** About six 5 s sequences of 2–3
-   shots for a 30 s spot, one action per shot, each shot with lens, camera move,
-   motivated light and depth, and one wow image per sequence.
+   does not reliably hold. Explicit native soundscape or single-generation
+   sound-led requests override that preference without adding audio tasks.
+3. **Idea-led coverage for ads and TVCs.** Develop the hook, viewer motivation,
+   progression, payoff and product connection before shot detail. Record
+   internal shots separately from source generations; preserve an explicit
+   one-generation request while allowing native cuts unless a continuous take
+   is locked. Each shot contributes new information, feeling or sensory detail.
 4. **Storyboards plan; they are never bound** as Seedance references. Bind
    element references and write staging in the prompt.
 5. **People in video inputs** (extension, video-to-video) need `asset://`
@@ -163,6 +166,12 @@ brief must also record the audio route, the look intent (ungraded original
 colours unless a look is requested), the on-screen copy that will be added in
 post, and, for ads and TVCs, the cinematic sequence bar. Persist the
 mode-authorized confirmed set as a `locked` block in `project.md`.
+For a batch, compare the concepts before prompt expansion: hook, setting,
+performer intention, product role, development and sound should differ where
+the formats demand it. Preserve intentional campaign unity; do not accept
+the same object-handling exercise under different format names.
+Keep this brief-level reasoning compact in default mode, not a new report or
+approval gate. Never improve apparent creativity by inventing product claims.
 
 At the scene breakdown stage, run `seedance-shot-design` for every narrative,
 ad, micro-drama, music-video or showcase scene before any shot prompt is

@@ -36,7 +36,7 @@ Do this once per hero, before any row prompt:
 
 **Route:** regenerate the opening beat only, then splice it onto the hero.
 
-- Take the hook entry by ID from the `ugc-ad-modes` hook library
+- Take the hook entry by ID from the `seedance-ugc-ads` hook library
   (`references/hooks.md`) and write the opening as a new Seedance 2.5 shot with
   `seedance-prompt-25` grammar, at the hero's ratio and with the same talent,
   wardrobe, product and setting references as the hero.

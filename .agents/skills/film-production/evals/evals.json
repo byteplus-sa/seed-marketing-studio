@@ -4,12 +4,12 @@
     {
       "id": 1,
       "prompt": "Make a cinematic 30-second TVC for a running shoe: dawn city streets, one runner, a score. Take it to the first Seedance drafts.",
-      "expected_output": "A staged plan that records the audio route, look and cinematic bar in the brief, plans sequences, and submits 480p native Drafts with picture-only generation.",
+      "expected_output": "A staged plan that develops the product-linked idea, records the source budget and audio route, and takes only authorized sources to requested 480p drafts.",
       "files": [],
       "expectations": [
         "Runs brief-intake first and records a picture_only audio route, ungraded original colours and the logo/end card as post overlays in project.md.",
-        "Plans about six 5 s sequences of 2-3 shots with one action per shot, each shot carrying lens intent, camera move, a named light and depth, and one wow image per sequence.",
-        "Submits each sequence as a 480p native Draft with generate_audio false after prompt-review and registration, with a declared run budget.",
+        "Develops hook, motivation, progression, payoff and product role before coverage; records internal shots separately from authorized source generations.",
+        "Submits only authorized sources as requested 480p drafts with verified native Draft support and picture-only audio, after registration and mode-appropriate review, within a declared run budget.",
         "Does not bind any storyboard image as a Seedance reference."
       ]
     },

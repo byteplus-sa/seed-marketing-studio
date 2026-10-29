@@ -23,7 +23,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-localize/SKILL.md",
-      "computedHash": "c86354970f735e29c986e6608916e4b29a7c03683465eedecc454f11edb98d9d"
+      "computedHash": "6beccd0eca32a35c550f7c729303ef0fb85175083f133eb95e4f5c99c99a4a81"
     },
     "ad-performance-loop": {
       "source": "./local",
@@ -35,7 +35,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-variant-matrix/SKILL.md",
-      "computedHash": "b21cad69b0b7fa76f37fd287b5adfe578f00651330f730a907cb49a262ea7fe5"
+      "computedHash": "6eee6e074b9d2192249d271135a17838c35f25ae69bddfa94f4dc079051d0ec4"
     },
     "ark-mcp": {
       "source": "./local",
@@ -65,7 +65,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/brief-intake/SKILL.md",
-      "computedHash": "3a8f05f2700320f8ef9aea0a0bcd48605f27adee12c2bdd293407d6e24ad8f3f"
+      "computedHash": "1fc043e931565a63ee5ca35c7ff8f48905d0405ef2af9982f810f237d831b308"
     },
     "color-grade-palettes": {
       "source": "./local",
@@ -95,7 +95,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/film-production/SKILL.md",
-      "computedHash": "05d52a2ecc2a7b40dfab04161ebd81c85d255ef6981380ce8cec90d972d1e0e1"
+      "computedHash": "bcd84576c98e7e88bf30c04d634c2978a697dbf526c7eae8e562497834276f6b"
     },
     "general-video": {
       "source": "heygen-com/hyperframes",
@@ -347,7 +347,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-shot-design/SKILL.md",
-      "computedHash": "8ce72a5ee6cc076d15de91a97b9f84a7e3c8ad253a572a39b069329ceaa9a283"
+      "computedHash": "899bc86444bd2fd06251df20e0ae6e50003cc83e8964c4def3cd0f9edc5f5a29"
     },
     "seedance-vfx-pipeline": {
       "source": "./local",
@@ -449,7 +449,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/static-ad-batch/SKILL.md",
-      "computedHash": "9f4698eee612917137ac79d94cfdc1c7e72605a3311b5bc83dcfd77e5b337903"
+      "computedHash": "2d6efd7580c7cc22dcd86c792782538d7672cc60293e5f375f476f8026a43d06"
     },
     "template-factory": {
       "source": "./local",
@@ -469,17 +469,77 @@
       "skillPath": ".agents/skills/tig-scene-engine/SKILL.md",
       "computedHash": "764fd3439018ffde17a30006c8e356e725c1a08b2772d279b6b19d17704a79d9"
     },
-    "ugc-ad-modes": {
+    "seedance-ugc-ads": {
       "source": "./local",
       "sourceType": "local",
-      "skillPath": ".agents/skills/ugc-ad-modes/SKILL.md",
-      "computedHash": "de01c52af35d909b162677e3bb38191fc1b17c12abae72858b1788ca5076fa6c"
+      "skillPath": ".agents/skills/seedance-ugc-ads/SKILL.md",
+      "computedHash": "2f4b72338baca9b0fb6ccd8dba3999eb7beb2e02306a9bddc86990c82858004b"
     },
-    "ugc-motion-presets": {
+    "seedance-product-demo-ads": {
       "source": "./local",
       "sourceType": "local",
-      "skillPath": ".agents/skills/ugc-motion-presets/SKILL.md",
-      "computedHash": "a697538b4b49898d42d5ce56339756b8d3b4ec98191f9be7b6aab838ee3f82f9"
+      "skillPath": ".agents/skills/seedance-product-demo-ads/SKILL.md",
+      "computedHash": "7dd6fdbacd79d695a34f0ed0a676b3aaf3c1cd05385197ea433e2a5718941bb6"
+    },
+    "seedance-story-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-story-ads/SKILL.md",
+      "computedHash": "a607ff37682c596108a49137ffb54c860916a28d07a4d0b3ff619b385c68f6e4"
+    },
+    "ad-motion-graphics": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/ad-motion-graphics/SKILL.md",
+      "computedHash": "6d563eac4aedd1b7fd26e2653186859f35391c0545fe7d9da4ba215a75842bd3"
+    },
+    "seedance-testimonial-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-testimonial-ads/SKILL.md",
+      "computedHash": "c2c0c8337de24b7880a8c608c498182a9a398e463d36b23b9501a17c02e48320"
+    },
+    "seedance-musical-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-musical-ads/SKILL.md",
+      "computedHash": "f15dc5f371984b01e13d175cc655038d1b7ce11c364586a325b93877e86c649b"
+    },
+    "seedance-match-cut-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-match-cut-ads/SKILL.md",
+      "computedHash": "11b9e366339cf022c886ff276de083803c468d01f1572d6c9b1b8850193b7b9b"
+    },
+    "seedance-fashion-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-fashion-ads/SKILL.md",
+      "computedHash": "5c85e9bb73e954a7117621111045baa80ce89a52e86dd3a8f33349f7850acd42"
+    },
+    "seedance-pov-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-pov-ads/SKILL.md",
+      "computedHash": "a5b1fbfd1572bd967cc1409feabd8eec0ff7b3056968e479b72a2b3f8a22f5e9"
+    },
+    "seedance-deadpan-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-deadpan-ads/SKILL.md",
+      "computedHash": "a84dde3bc746eaff78b642f9a14110cfd804dedeb2a5f88bd50a58674d303093"
+    },
+    "seedance-handcrafted-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-handcrafted-ads/SKILL.md",
+      "computedHash": "92a716c6da4ecb7376b598d92945d73ad2e60509099d654f90303200bc07a6ce"
+    },
+    "seedance-practical-illusion-ads": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/seedance-practical-illusion-ads/SKILL.md",
+      "computedHash": "27869d7587d3da5b955a2123f65b65e1649e468dc88d925af33f57cfda682123"
     },
     "update": {
       "source": "./local",

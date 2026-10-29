@@ -703,23 +703,113 @@
       "upstream_hash": null,
       "overlay_notes": null
     },
-    "ugc-ad-modes": {
+    "seedance-ugc-ads": {
       "kind": "leaf",
-      "description": "Write Seedance video ad prompts for nine UGC, demonstration, review, showcase, broadcast, experimental, and try-on modes. Ground hooks in supplied product facts, audience objections, and the requested CTA; develop distinct persuasive angles with coherent visual direction. Includes a hook library (stunt and subtle openings), a setting library and script formulas timed for 6, 15 and 30 s placements. Use for branded video prompts, hook or setting swaps and scoped revisions. Does not generate media or invoke other skills.",
-      "readme_summary": "Write hooks, scripts and Seedance prompts for nine ad modes using supplied product facts, audience objections, supported claims and accurate CTAs.",
+      "description": "Write Seedance UGC ad prompts joining nine modes, 45 motion presets, hooks, settings and formulas. Use for creator ads, named presets or narrow revisions. Not for generation or non-UGC specialist ads.",
+      "readme_summary": "Combine nine ad modes, hooks, settings, script formulas and 45 motion presets into grounded Seedance UGC prompts or scoped direction blocks.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in."
+      "overlay_notes": "Consolidated the local UGC modes and motion-preset bundles, retaining recipe IDs, reference libraries and evaluation coverage."
     },
-    "ugc-motion-presets": {
+    "seedance-product-demo-ads": {
       "kind": "leaf",
-      "description": "Turn a named UGC motion preset into a canonical Seedance 2.5 prompt block. Use when the user names one of the 45 presets (Atomic, Outfit Switch, Eating Zoom, Group Photo, Yacht, ...) or asks for preset-style UGC motion \u2014 reaction, selfie, fashion, eating, VFX spectacle, action, timelapse, or multi-shot formats. Persuasion angle, claims, and CTA belong to ugc-ad-modes; prompt grammar belongs to seedance-prompt-25. Presets with a locked-off camera block record `format_static_by_design`; multi-shot presets take a shot plan. Never generates media.",
-      "readme_summary": "Turn a named UGC motion preset (Atomic, Outfit Switch, Eating Zoom, Yacht, ...) into a canonical Seedance 2.5 prompt block with reference bindings, duration, and constraint flags.",
+      "description": "Write Seedance product demo and problem-solution ad prompts. Use for visible mechanisms and use steps, not exact UI explainers, testimonials or source-preserving edits.",
+      "readme_summary": "Design product demonstrations with supported mechanisms, visible action and result, continuity records and honest evidence boundaries.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in."
+      "overlay_notes": null
+    },
+    "seedance-story-ads": {
+      "kind": "leaf",
+      "description": "Write Seedance entertainment-first short story ad prompts. Use for character-led branded narratives, not deadpan mockumentary, real testimonials or exact UI explainers.",
+      "readme_summary": "Develop entertainment-first short-story ads with a product-linked payoff, clear staging and a prompt/edit handoff.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "ad-motion-graphics": {
+      "kind": "orchestrator",
+      "description": "Orchestrator for explainer and motion-graphics ads using agent-authored HyperFrames with optional Seedance plates or hypermotion inserts. Use for ad plan/design/code/preview/check/render, not generic animation or isolated Seedance wording.",
+      "readme_summary": "Orchestrate agent-authored HyperFrames explainers and motion-graphics ads with exact UI, copy and data, optional Seedance plates and hypermotion inserts.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-testimonial-ads": {
+      "kind": "leaf",
+      "description": "Write Seedance real testimonial and customer story ad prompts from authorized evidence. Use for sourced customer accounts, not invented reviews, synthetic UGC or UI explainers.",
+      "readme_summary": "Adapt authorized customer testimony into ads while preserving quotations, consent, qualifiers and the distinction between evidence and illustration.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-musical-ads": {
+      "kind": "leaf",
+      "description": "Write prompt-only musical and sound-led Seedance ads built around sonic product identity, authorized music and cue ownership. Use for jingles or product-sound choreography, not general music videos, dubbing or generation.",
+      "readme_summary": "Design musical and sound-led ads around a sonic product motif, authorized soundtrack, cue map and picture/audio handoff.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-match-cut-ads": {
+      "kind": "leaf",
+      "description": "Write prompt-only Seedance match-cut and metamorphosis ad sequences with matched endpoints and explicit edit ownership. Use for shape or action matches and literal morphs, not generic montages, source swaps or execution.",
+      "readme_summary": "Design match-cut ad sequences with paired endpoints, explicit cut versus morph intent, source handles and deterministic edit timing.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-fashion-ads": {
+      "kind": "leaf",
+      "description": "Write Seedance editorial fashion film ad prompts with garment-led movement and continuity. Use for fashion campaigns, not sizing advice, wardrobe swaps in footage or generic camera presets.",
+      "readme_summary": "Design editorial fashion ads with garment-led coverage, silhouette and fit continuity, material movement and identity constraints.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-pov-ads": {
+      "kind": "leaf",
+      "description": "Write Seedance POV and first-person ad prompts with embodied camera and hand continuity. Use for viewer-as-participant ads, not selfie testimonials, UI tutorials or source-preserving edits.",
+      "readme_summary": "Design first-person ads with a declared viewpoint, camera and hand geometry, product interaction and spatial continuity.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-deadpan-ads": {
+      "kind": "leaf",
+      "description": "Write Seedance deadpan comedy and mockumentary ad prompts. Use for understated performance and documentary-style jokes, not generic story ads, real testimonials or exact UI explainers.",
+      "readme_summary": "Write understated comedy and fictional mockumentary ads with sincere objectives, documentary camera logic and controlled reaction timing.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-handcrafted-ads": {
+      "kind": "leaf",
+      "description": "Write Seedance stop-motion and handcrafted ad prompts with material-led product staging. Use for tactile craft ads, not true physical capture, generic animation style blocks or footage restyling.",
+      "readme_summary": "Design material-led stop-motion-look ads with coherent construction, pose cadence, product fidelity and finishing instructions.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
+    },
+    "seedance-practical-illusion-ads": {
+      "kind": "leaf",
+      "description": "Write Seedance practical illusion ad prompts with locked viewpoint and geometry. Use for forced-perspective or occlusion reveals, not magical morphs, actual shoot certification or footage edits.",
+      "readme_summary": "Design practical-looking ad illusions through viewpoint, scale, parallax, occlusion and a planned reveal without claiming real capture.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": null
     },
     "update": {
       "kind": "leaf",

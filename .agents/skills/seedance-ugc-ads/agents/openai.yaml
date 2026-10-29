@@ -1,0 +1,4 @@
+interface:
+  display_name: "Seedance UGC Ads"
+  short_description: "Join 9 ad modes and 45 motion presets"
+  default_prompt: "Use $seedance-ugc-ads to write a full UGC ad, mode-only direction or named motion preset prompt while preserving supplied facts and creative constraints."

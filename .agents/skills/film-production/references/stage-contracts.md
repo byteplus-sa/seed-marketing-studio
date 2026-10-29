@@ -72,14 +72,16 @@ stance, lens, grade, pacing, acting, staging, medium, audio) from
 `brief-intake` persisted as a `locked` block in `project.md` frontmatter. The
 brief also records:
 
-- the **audio route**: native dialogue, picture only with score, ambience and
+- the **audio route**: native dialogue or explicitly requested native soundscape,
+  picture only with score, ambience and
   SFX built in post, opt-in separate lip-sync audio, or silent;
 - the **look intent**: ungraded original model colours unless a grade or a
   capture-format look is requested, in which case it is a post treatment;
 - the **on-screen copy** (titles, captions, CTA, end card) that post will add,
   and any label the user or platform requires;
-- for ads and TVCs, the **cinematic bar**: sequence count and length, one action
-  per shot, and the wow image each sequence must deliver.
+- for ads and TVCs, the **creative argument**: hook, viewer motivation,
+  development, payoff and product connection; internal shot timing separately
+  from authorized provider source count, and the memorable moment.
 
 The brief is the `brief-development` stage source; `stage complete` checks that
 `project.md` is a valid record.
@@ -114,9 +116,11 @@ For every narrative, ad, micro-drama, music-video or showcase scene it also
 requires a shot plan from `seedance-shot-design` in the scene file's
 `## Shot plan` section: per shot, duration, size, angle, camera move, lens
 intent and a named light source with key side, the energy level, and where each
-confirmed project axis appears. Ads and TVCs group shots into sequences of
-about 5 s with 2–3 shots each; no planned shot is shorter than about 0.8 s, and
-faster cuts, flashes or intercuts are marked as edit work. A long action with
+confirmed project axis appears. Ads and TVCs derive internal shots from their
+creative argument and source budget. One generation may contain native cuts;
+an explicit continuous take may not. About 0.8 s is a provisional lower shot
+length heuristic, and faster cuts, flashes or intercuts are marked as edit work
+using authorized sources, not automatic extra generations. A long action with
 people that would need extension is planned as short single passes held by a
 blocking map unless `asset://` Virtual Portrait identities are available. The plan is `draft` until the scene's locations
 are approved in Stage 3 and is revalidated before Stage 6. A scene that is exempt
