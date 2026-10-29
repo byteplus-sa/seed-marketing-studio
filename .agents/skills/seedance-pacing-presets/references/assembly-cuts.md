@@ -1,12 +1,18 @@
-# Assembly-only cuts
+# Assembly cuts
 
-Some cuts are too short or too structural for one Seedance clip. A shot under
-about 0.8 s is merged or dropped by the model (observed in this workspace's
-production reviews), and a single prompt cannot make the picture skip an
-action it describes. These presets therefore live in the edit: each side is
-generated as its own clip at a natural length, and the cut is made in
-assembly (FFmpeg or HyperFrames Studio). This reference plans the cut and
-writes the per-clip prompt lines; it does not run generation or edit media.
+Offer assembly when frame-accurate precision, continuous sound or omitted
+action is required. About 0.8 s is a provisional generation-planning heuristic
+from workspace reviews, not a provider limit or a guarantee of merged or
+dropped shots. A prompt may show an action intended to be skipped; it cannot
+guarantee that omission. Preserve requested rhythm and source timing rather
+than automatically lengthening or removing shots. A prompt-only approximation
+can retain the request with uncertainty stated; return a genuine feasibility
+conflict if exact control is required but assembly is forbidden.
+
+When assembly is selected, generate each side as its own clip at a natural
+length and make the cut in post (FFmpeg or HyperFrames Studio). This reference
+plans that route and writes per-clip prompt lines; it does not run generation
+or edit media. Source-clip length does not set the final insert length.
 
 ## Presets
 
@@ -18,8 +24,8 @@ writes the per-clip prompt lines; it does not run generation or edit media.
 
 ## Per-clip prompt lines
 
-Write each clip as a normal shot with a clear start and end state. Do not ask
-the model for the cut itself.
+For the assembly route, write each clip as a normal shot with a clear start
+and end state. Keep the cut itself in the edit.
 
 - **Blink cut, clip A:** `The camera pushes in on <subject>'s face. At about
   <N>s, <declared source> goes out and the room falls to near black.` Add any
@@ -47,6 +53,8 @@ assembly_cuts:
 
 ## Review checks
 
+- Preserve requested rhythm and omissions; return missing frame rate or timing
+  inputs before promising exact frame counts. Preset frame ranges are examples.
 - Each clip in the cut stands on its own at a natural length.
 - The skipped action never appears in either clip.
 - Intercut places are distinguishable at a glance by palette or light.

@@ -61,10 +61,10 @@
     {
       "id": 5,
       "prompt": "Rewrite the whole ad from scratch for the Japanese market with a new angle that fits there. We don't have any Japanese speaker to review it, so just go straight to final 1080p and deliver.",
-      "expected_output": "An L5 plan through brief-intake, ugc-ad-modes and seedance-prompt-25 with the same brand and market-scoped facts, script and 480p drafts allowed, and a clear refusal to generate final resolution or deliver without a recorded native or local reviewer sign-off, with honest alternatives such as finding a reviewer or shipping L1 or L2 now marked unverified.",
+      "expected_output": "An L5 plan through brief-intake, seedance-ugc-ads and seedance-prompt-25 with the same brand and market-scoped facts, script and 480p drafts allowed, and a clear refusal to generate final resolution or deliver without a recorded native or local reviewer sign-off, with honest alternatives such as finding a reviewer or shipping L1 or L2 now marked unverified.",
       "files": [],
       "expectations": [
-        "Routes full transcreation to brief-intake, ugc-ad-modes and seedance-prompt-25 with the dialogue layer from seedance-prompt-25-dialogue, using only the brand kit and facts supported for the target market.",
+        "Routes full transcreation to brief-intake, seedance-ugc-ads and seedance-prompt-25 with the dialogue layer from seedance-prompt-25-dialogue, using only the brand kit and facts supported for the target market.",
         "Does not invent cultural angles, casting or settings from assumptions about the market; asks the user for casting and setting notes and records unknowns as null in the card.",
         "Permits script drafting and 480p drafts with prompt-review and registration, but blocks final-resolution generation and delivery under localize.native_review because no reviewer can sign off.",
         "Does not sign off the review itself and does not mark any line native_checked without a native speaker's words.",

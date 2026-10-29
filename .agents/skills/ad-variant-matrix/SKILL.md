@@ -34,13 +34,27 @@ existing review. Variant-count and one-axis checks run in code in both modes.
 **Key rule: change one axis per variant unless the user explicitly asks for a
 full factorial.** One change per row is what makes a result attributable.
 
+Character-performance hooks use `acting-direction` before coverage and
+`seedance-acting-console` before prompt composition. Store `## Performance plan`
+in the variant's existing `shot.md`; preserve exact copy, CTA, supported claims,
+product identity, hero body, campaign pins and generation scope. The
+[performance contract](../../contracts/performance-direction.md) adds
+`acting.plan_bound` in both review modes, including static-camera UGC.
+`register --hook-performance character` is the conservative default. Use
+`--hook-performance non-performance` only when every generated hook in that
+invocation is non-performance work, with a concrete reason in review evidence.
+Mixed hooks keep the default and resolve applicability per operation before
+registration; omit the rule only for a documented non-performance operation.
+Swaps, recasts and audio-only dubs inherit source performance rather than
+requiring new acting. A market row delegates scope to `ad-localize`.
+
 ## When to use
 
 | Request | Use |
 | --- | --- |
 | "Make variants of this approved ad", "test three hooks and two talents" | this skill |
 | Several different hero concepts compared against each other | a concept test (see [testing guidance](references/testing-guidance.md)); build each hero first, then one matrix per concept |
-| Write or revise the hero ad itself | `ugc-ad-modes` or `film-production` |
+| Write or revise the hero ad itself | `seedance-ugc-ads` or `film-production` |
 | Rank exported results and plan the next round | compose with `ad-performance-loop` |
 
 ## Inputs and preconditions
@@ -51,7 +65,7 @@ full factorial.** One change per row is what makes a result attributable.
    campaign project. A candidate in `review` is not a hero.
 2. **The hero's current value for every axis** that will vary (for example
    `hook: hook-demo-first`, `talent: vp-a`, `ratio: 9:16`). Values are IDs:
-   hook IDs from the `ugc-ad-modes` hook library, element IDs for talent,
+   hook IDs from the `seedance-ugc-ads` hook library, element IDs for talent,
    product, outfit and location, language codes, market IDs (kebab-case, the
    folder name of the market card), ratios.
 3. **Approved references for every new value**: Virtual Portrait `asset://`
@@ -146,8 +160,8 @@ flowchart LR
      Swap and Motion Transfer steps record the source-preserving-edit
      exemption and dub steps the no-video-shot exemption in
      `shot_rule_exemption`; the reviewer cites that exemption. Default retains
-     only the four compliance rules above. Do not load universal or shot-craft
-     checklists for those focused records.
+     the four compliance rules above plus applicable `acting.plan_bound`.
+     Do not load universal or shot-craft checklists for those focused records.
    - **Asset IDs** are `<name>_<take>_production`, `<name>_<take>_draft`,
      `<name>_<take>_final` or `<name>_<take>_audio`, so stages and retakes get a distinct
      registry identity. A row registers at most its own last step; `after`
@@ -185,7 +199,7 @@ prompt. Summary:
 
 | Axis | Route | Specialists | Provider step |
 | --- | --- | --- | --- |
-| `hook` | Regenerate the opening beat at the 4 s minimum duration, trim it to the hero's opening span and splice it onto the hero in Studio | `ugc-ad-modes` hook library, `seedance-prompt-25` | yes |
+| `hook` | Regenerate the opening beat at the 4 s minimum duration, trim it to the hero's opening span and splice it onto the hero in Studio | `seedance-ugc-ads` hook library, `seedance-prompt-25` | yes |
 | `talent`, `product`, `outfit`, `location` | Object Swap on the muted hero master; keeps motion, framing, cuts and timing | `source-subject-map`, then `seedance-object-swap` | yes |
 | `talent` + `location` in one row | One Motion Transfer instead of two swaps; costs one `motion-recast` unit | `seedance-motion-recast` | yes |
 | `language` | Re-voice the locked script, then per-language captions | `audio-dubbing`, `seedance-prompt-25-dialogue`, `ad-captions` | yes (audio) |

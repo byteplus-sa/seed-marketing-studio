@@ -36,7 +36,12 @@ slightly before or after the stated boundary, so write beats with margin and
 never promise exact frame sync. Some timed events land closely in workspace
 480p drafts (a light cue within about 0.1 s, a staged body-part progression),
 while cuts inside one clip may merge, and shots shorter than about 0.8 s are
-merged or dropped.
+potentially less reliable. About 0.8 s is a provisional generation-planning
+heuristic from workspace observations, not a provider limit or a guarantee
+that shorter shots merge or drop. Preserve requested rhythm and source timing;
+do not lengthen, remove or merge shots automatically. Offer assembly for
+frame-accurate precision or omitted action, and return a genuine feasibility
+conflict rather than silently changing the brief.
 
 ## Source authority
 
@@ -87,7 +92,7 @@ of stacking it with a conflicting speed ramp.
 |---|---|---|
 | Time-lapse / timelapse | Compressed event, visible progression, framing, end state | `From <start>s to <end>s, show a time-lapse of <event>: <visible changes> progress rapidly from <initial state> to <final state>, with <subject or landmark> consistently framed.` |
 | Freeze frame | Exact visible pose, hold window, resume or cut | `At <N>s, freeze the entire picture on <subject's visible pose>; hold that same still image until <M>s, then <resume the action / cut to the next shot>.` |
-| Progressive change | The part that changes first, timed stages by body part or region, a slowed crossing, unbroken motion | See [Progressive change](#progressive-change) |
+| Progressive change | The part that changes first, timed stages by body part or region, readable progression, unbroken motion | See [Progressive change](#progressive-change) |
 
 A freeze frame holds the entire picture, including camera and background.
 Bullet time instead allows camera motion around near-frozen action. Time-lapse
@@ -103,11 +108,12 @@ doorway, a shadow edge), a surface that freezes or rusts from one end, a
 material that spreads across an object. This section is the one home for the
 technique; other skills point here.
 
-1. Slow the movement so the crossing takes about 1.5 s (a slow walk past the
-   line, not a stride).
-2. Write the stages by timestamp and body part or region, about 0.4 s apart:
-   the leading edge first, then a quarter, half, three quarters, then fully
-   changed.
+1. Preserve source speed and stride. A crossing of about 1.5 s is an optional
+   repair for demonstrated readability failure, not a requirement for an
+   already readable action; obtain authorization before changing locked timing.
+2. Write stages by timestamp and body part or region at the intended speed.
+   The leading edge, quarter, half, three quarters and fully changed sequence
+   below is an example, not a fixed stage count or 0.4 s spacing requirement.
 3. Keep the motion and the place continuous, and rule out transition effects
    that the model otherwise adds.
 
@@ -137,13 +143,14 @@ It supplies prompt-only boundary templates and audio relationships. Choose one
 picture transition per boundary; an audio J-cut or L-cut may accompany it.
 These are directed visual/audio targets, not frame-accurate editing controls.
 
-### Assembly-only cuts
+### Assembly cuts
 
-A blink cut (a lost moment), an intercut between two places, or a vision
-flash needs cuts shorter than one clip can hold. Plan them with
-[Assembly-only cuts](references/assembly-cuts.md): each side is generated as
-its own clip at a natural length, and the cut is made in post. Never ask a
-single prompt for these cuts.
+For a blink cut (a lost moment), an intercut between two places, or a vision
+flash, offer [Assembly cuts](references/assembly-cuts.md) when precise timing,
+continuous sound or omitted action matters. Each side can be generated as its
+own clip at a natural length and trimmed in post. A prompt-only approximation
+may retain the requested rhythm, but cannot guarantee exact cuts or omissions;
+the cut's name or duration alone does not require assembly.
 
 ### Montage pacing
 
@@ -153,7 +160,7 @@ Edge cases.
 
 | Pacing | Intent | Canonical block template |
 |---|---|---|
-| Chaotic | Fast, hard cuts; high-energy sequence | `Cut fast and hard: rapid-fire shots of <A>, <B>, <C>, and <D>, each about one to two seconds, with a jagged, high-energy rhythm.` Shots shorter than about 0.8 s merge inside one clip; make faster strobing as an assembly cut. |
+| Chaotic | Fast, hard cuts; high-energy sequence | `Cut fast and hard: rapid-fire shots of <A>, <B>, <C>, and <D>, each <requested duration>, with a jagged, high-energy rhythm.` One to two seconds is an example, not a minimum; the provisional 0.8 s heuristic does not override requested rhythm. Offer assembly for precise strobing. |
 | Dynamic | Rhythmic medium cuts; momentum | `Cut on the beat: quick medium shots alternating between <A> and <B>, each 2-3 seconds, building momentum toward <climax>.` |
 | Calm | Slow, even pacing; held shots | `Cut slowly and evenly: hold each of <A>, <B>, and <C> for several seconds with gentle, unhurried transitions and no jump cuts.` |
 | Single Shot | No cuts; one continuous take | `No cuts: one continuous, unbroken shot that follows <subject> through <spaces and events in order> at an even pace from start to finish.` |
@@ -168,7 +175,7 @@ Fill these knobs when composing a pacing block. At least one of `ramp`, `pacing`
 | `ramp` | Speed ramp from the bank | Optional when another pacing knob is set. Pick exactly one per stage: Linear, Auto, Slow Motion, Bullet Time, Flash In, Flash Out, Impact, Ramp Up, Ramp Down. |
 | `time_treatment` | Time-lapse, Freeze Frame or Progressive Change | One per stage; specify visible progression, held pose or timed body-part stages, and the end state. |
 | `transition` | Named picture cut/transition or audio bridge | Use the same-skill reference; identify outgoing/incoming shots and the boundary time. J-cut/L-cut also name the sound source and overlap window. |
-| `assembly_cut` | Blink Cut, Intercut or Vision Flash | Planned outside the prompt block in the same-skill assembly reference, so it does not count toward the required pacing knobs; generate each side as its own clip, never in one prompt. |
+| `assembly_cut` | Blink Cut, Intercut or Vision Flash | When assembly is selected, plan it outside the prompt block in the same-skill reference, so it does not count toward the required pacing knobs; generate each side as its own clip and trim in post. |
 | `pacing` | Montage cut rhythm from the bank | Required for multi-shot scenes; one per prompt: Chaotic, Dynamic, Calm, Single Shot. |
 | `beat` | What lands on the beat (optional) | The action, moment, or object that must land at the timestamp. Name it explicitly so the model can place it. |
 | `duration` | Total clip length in seconds | Right-size to the scene's natural length, **4-30s** for 2.5. Do not pad to 30s. Pass to the generation interface, not the prompt. |
@@ -221,11 +228,13 @@ list before generation.
 ## Edge cases and guardrails
 
 - **Timestamps are a time budget, not frame-accurate.** Never promise exact
-  frame sync, and never demand impossible frequencies (e.g. "complete three
-  actions in one second"). Write beats with margin and verify in review.
-- **Keep 1-2 camera moves per shot.** Pacing blocks describe timing, not camera
-  gymnastics. Compose the camera treatment with `seedance-camera-presets` and
-  keep simultaneous moves to at most two per shot.
+  frame sync. Check the actual actions and available time, not an action-count
+  threshold. Return genuine feasibility conflicts or missing timing inputs;
+  preserve locked rhythm and verify provisional timing in review.
+- **Camera count is a planning heuristic.** Pacing blocks describe timing;
+  camera phrasing belongs to `seedance-camera-presets`. Preserve coherent
+  requested choreography, including multiple simultaneous components or ordered
+  phases. Check readability and incompatible directions, not count alone.
 - **Pacing needs a shot list.** When the scene has multiple cuts, prefer
   `seedance-shot-design` for the shot plan (or `seedream-storyboard` /
   `film-production` for the storyboard) rather than one raw prompt. A montage without an ordered cut list lets the model cut or
@@ -235,8 +244,9 @@ list before generation.
   dialogue where seamless motion across scene boundaries matters more than
   per-scene iteration. Otherwise right-size each scene to its natural
   duration. A 30 s spot packed into one pass with nine or more beats read as
-  stock footage in workspace reviews; the shot-design skill's cinematic
-  sequence bar plans it as about 5 s clips of 2-3 shots cut together.
+  stock footage in workspace reviews; the shot-design skill's optional
+  cinematic sequence pattern can repair demonstrated overload. It is not a
+  fixed clip-length or shot-count quota and does not override source locks.
 - **Per-scene natural duration 4-30s — do not pad.** Set `duration` to the
   length the scene actually needs (7s for a single beat, 12s for a short
   dialogue exchange, 20s for a multi-stage action). 30s is the ceiling, not the
@@ -270,9 +280,11 @@ Before a pacing block is submitted as part of a Seedance 2.5 prompt, verify:
    the prompt text.
 9. Picture transitions define outgoing/incoming shots; audio bridges define
    the sound source, overlap window, and end state, and do not promise exact sync.
-10. No shot inside one clip is shorter than about 0.8 s; faster cuts are
-    assembly cuts. A progressive change is written as timed stages by body
-    part or region, with the motion continuing unbroken.
+10. Shot lengths preserve requested rhythm; about 0.8 s is a provisional
+    generation heuristic, not a provider minimum or automatic retiming rule.
+    Offer assembly for precision or omitted action; return genuine feasibility
+    conflicts. A progressive change uses timed stages by body part or region,
+    with the motion continuing unbroken.
 
 A pacing block that passes all ten checks is ready to be composed into the
 full prompt by `seedance-prompt-25`.

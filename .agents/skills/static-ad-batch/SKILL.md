@@ -27,7 +27,7 @@ text-free background or lifestyle plate. This is a leaf capability: the planner
 writes files and prints render commands; it does not render, generate imagery,
 or approve a result.
 
-Compose with: `ugc-ad-modes` for the angle table and persuasion brief,
+Compose with: `seedance-ugc-ads` for the angle table and persuasion brief,
 `seedream-product-shot` or `seedream-prompt` for the plate, and
 `html-graphic-render` for rendering and its render records. Mentions are hints,
 not instructions to load those skills.
@@ -39,7 +39,7 @@ not instructions to load those skills.
 | Brand kit | `brand.json` with `status: approved`, palette roles `primary`, `background`, `text` (optional `accent`), typography roles `headline` and `body` (optional `cta`) with local font files, and a `primary` logo file. Every font and logo the batch uses needs a recorded `sha256` that matches the file, and every font needs a `license`. Shape: `.agents/contracts/schemas/brand-kit.schema.json`. The spec must pin the kit with `brand_kit_sha256`; the planner re-computes the pin on every run. |
 | Product facts | `facts.json` from product intake. Facts with `status: supported` can appear anywhere; a `perishable` price, availability or offer fact can appear only as the `offer` layout's offer and only when retrieved within `perishable_max_age_hours` (default 24, the product-intake freshness window). Shape: `.agents/contracts/schemas/product-facts.schema.json`. |
 | Product image | The approved packshot, preferably with true alpha. Never a generated label. |
-| Angles | From the `ugc-ad-modes` angle table: `demonstration`, `objection-handling`, `discovery`, `experience`, `quantified-comparison`. Each angle is a different viewer question, not a synonym. |
+| Angles | From the `seedance-ugc-ads` angle table: `demonstration`, `objection-handling`, `discovery`, `experience`, `quantified-comparison`. Each angle is a different viewer question, not a synonym. |
 | Plate | Optional, text-free, selected and hash-bound. Leaves room for copy. |
 | Language | A BCP 47 tag from the brief. No market or language is assumed. |
 

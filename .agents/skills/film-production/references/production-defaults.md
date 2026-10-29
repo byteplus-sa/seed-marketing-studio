@@ -55,6 +55,12 @@ Record one audio route in the brief and carry it into every shot request:
 | Separate lip-sync audio | Only when the user asks for it | Audio reference bound per the alignment contract | Before the shot |
 | Silent | The deliverable is silent | `generate_audio: false` | None |
 
+An explicit request for an original native soundscape, musical ad or
+one-generation audiovisual draft uses native audio when supported. Preserve
+that scope; do not substitute silent footage or add separate audio generation.
+Choose sound density, contrast and recurrence for the idea, not "no music"
+as a default for fictional or claim-free products.
+
 With native audio on, a "no music, no spoken words" line often does not hold:
 in observed ambient-only runs, speech, chants or score leaked into about two
 thirds of clips. Do not rely on a negative audio line for a piece whose sound
@@ -62,23 +68,35 @@ must stay ambient or score-led; generate the picture silent and build the bed
 in post. Say in the brief that post beds are laid to the cut and are not
 frame-synced to on-screen action unless SFX are placed by timestamp.
 
+Plan sound and editorial intent before generation in the existing brief or
+scene notes: anticipation, what a cut reveals or withholds, and the purpose of
+silence, texture or an accent. A sound-led reveal can guide picture without
+requiring finished audio early. Final assets and cue positions follow the
+measured edit and actual listening; this does not change audio-route, rights
+or spend authorization.
+
 ## 3. Cinematic structure for ads and TVCs
 
-A single long pass carrying nine or more beats reads as stock footage. For a
-cinematic spot:
+A long source is not inherently a continuous take or stock footage. Distinguish
+provider generations from internal shots and honor the user's count. For an ad:
 
-- Build a 30 s spot as about **six sequences of about 5 s**, each with **2–3
-  shots** and **one action per shot**.
-- Give every shot a lens intent, a camera move, a motivated named light source
+- Establish the hook, viewer motivation, development, payoff and product
+  connection. New camera angles without new meaning are not development.
+- Choose internal shot count from that argument and the runtime. One source
+  may contain native cuts. Separate short sequences are an option for
+  independent edit control only within the approved source count.
+- Give every shot a lens intent, a purposeful move or hold, a named light source
   and depth layers (foreground, subject, background), carried from the
   `seedance-shot-design` plan.
-- Give every sequence **one "wow" image**: the frame that would sell the spot
-  as a still.
-- Use dynamic verbs over soft mood words, and state the camera move for every
-  shot. A static shot carries its recorded reason.
-- Keep every planned shot at least about 0.8 s; Seedance merges shorter shots.
-  Blink cuts, intercuts and vision flashes are built in the edit, not the
-  prompt.
+- A sequence may include a standout image if useful; no `wow` count is required.
+- Use concrete action and intent instead of mood words alone; state the
+  motivated move or hold. Gentle or abrupt performance can be appropriate.
+  A static shot carries its recorded reason.
+- About 0.8 s per shot and about 7 shots per clip are provisional generation
+  heuristics, not provider limits or guaranteed merge/drop thresholds. Preserve
+  requested rhythm and source timing without automatic retiming or shot removal.
+  Offer assembly for precise cuts or omitted action, within authorization and
+  generation scope; return genuine feasibility conflicts rather than changing locks.
 - Set ratio as a request parameter, never as a sentence in the prompt. 21:9 is
   an accepted Seedance 2.5 ratio for a scope look.
 
@@ -115,7 +133,17 @@ one only when the user, platform or brief requires it.
 
 ## 7. Assembly defaults
 
-Default assembly does **conform, trim, crop, overlays, end card and mix only**.
+Technical assembly uses **conform, trim, crop, overlays, end card and mix**.
+It also needs artistic acceptance against the brief, not just clean joins.
+Inspect full-speed playback and listen when audio is in scope. In existing
+review evidence, cite timestamps for the intended attention, revealed or
+withheld information, rhythm and payoff (including a deliberate unresolved
+ending). Recheck sound hierarchy, silence, anticipation and release, and ensure
+trims preserve accepted performance and exact copy. Neither movement nor
+stillness is a quality proxy. Unavailable playback/listening stays unresolved;
+a critical artistic failure blocks selection until a scoped repair passes.
+Keep evidence short in default mode and detailed in strict; no new runtime or
+mandatory report is required.
 
 - **No grade.** Keep the original Seedance colours that matched the approved
   drafts. Add a grade, grain, halation, vignette or a capture-format look only
@@ -164,3 +192,9 @@ Run these checks before a take passes, and use the narrowest fix.
 - **Retakes:** fix hard-gate failures within the requested scope with one targeted
   change per retake, written as a revision (locked decisions, delta,
   acceptance, known rejections, invalidation scope).
+
+Compare the actual take to its creative argument as well as its technical
+contract. A decoded file with stable props may still miss its reveal, contain
+blank performance or repeat an empty action. Record that limitation; technical
+success is not creative acceptance. Missing perception stays untested, and a
+weak take never authorizes an automatic retry or upscaling.

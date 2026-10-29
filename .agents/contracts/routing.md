@@ -16,7 +16,7 @@
 | Production stage review | HyperFrames Studio project through `studio_project.py` (`sync`, `stage complete` with its `status` and `check`) at every stage; pre-Studio canvas projects with `showcase.json` keep the `showcase-html` canvas |
 | Interactive editing, assembly and final render of a production | HyperFrames Studio; `studio_project.py render` is the only authority for final files and writes the hash-bound render record; post work made elsewhere is placed in Studio and rendered. Skills stay local; no `hyperframes skills` installs; `publish`, `cloud`, `lambda`, `cloudrun` and other account commands only on explicit request |
 | Ad-hoc media comparison, also an optional look at a Studio project's elements, audio or candidate takes (never a gate) | `showcase-html --quick`; `media-review` only for an explicitly requested OS player or unavailable browser |
-| Mermaid system/process diagram | `design-doc-mermaid` when available; cinematic blocking requests use `tig-blocking-map` |
+| Mermaid system/process diagram | `design-doc-mermaid` when available; cinematic blocking requests use `blocking-map` |
 | Brand-ad / reference-video inspiration | Obtain decodable local media first. Full reverse-engineering → `template-factory`; lighter analysis → native host-agent/local LLM video/image inspection with timestamped evidence and FFmpeg measurements. When native perception is insufficient, use available visual/motion tools such as `ark-mcp` `seed_understand`, subject to privacy and capability constraints. Scripts and article text are not visual evidence |
 | Reference soundtrack analysis | Native audio input or capable local audio model first; available audio-understanding tools such as `ark-mcp` `seed_audio_understand`, or documented human listening, when needed. MCP or local ASR/separation may assist; neither is mandatory or a substitute for soundscape perception. Honor explicit offline constraints; record tool provenance and leave only unsupported claims unresolved |
 
@@ -28,6 +28,33 @@ transparent geometry are the primary fidelity risk. It does not create a model
 prompt or provider operation. A hybrid retains normal generation evidence for
 its synthesized image layer and a separate deterministic render record for its
 exact graphic layer.
+
+## Ad creative ownership
+
+Choose the ad's primary communication job before adding a visual treatment.
+Formats can combine; one specialist owns the sequence and the others supply
+scoped direction. Prompt-only requests stop at the requested writing artifact.
+Production requests retain the existing project, registry and review policy.
+
+| Requested job | Creative owner | Boundary |
+| --- | --- | --- |
+| Creator-led UGC, unboxing, casual try-on, hook or named motion preset | `seedance-ugc-ads` | One consolidated mode and motion library; preserve preset IDs and only load the requested recipe |
+| Show a product mechanism solving a problem | `seedance-product-demo-ads` | Demonstration is not proof of unsupported efficacy; exact software UI belongs to motion graphics |
+| Entertain through a short story or twist | `seedance-story-ads` | Product-linked story; general screenplay structure remains scene craft |
+| Explain through exact graphics, UI or data | `ad-motion-graphics` | Declared orchestrator for agent-authored HyperFrames, optional Seedance plates and hypermotion inserts; `seedance-motion-design` remains the prompt-layer specialist |
+| Present a real customer's authorized experience | `seedance-testimonial-ads` | Source testimony owns facts; a synthetic presenter cannot invent customer history |
+| Sell through song or product sounds | `seedance-musical-ads` | Ad message owns the sequence; a song-led artist video remains `seedance-music-video` |
+| Link scenes by shape, action or transformation | `seedance-match-cut-ads` | Own matched endpoints and edit handoff; general pacing remains an axis |
+| Editorial garment-led fashion film | `seedance-fashion-ads` | Campaign coverage, not a single outfit-reference change |
+| First-person embodied product experience | `seedance-pov-ads` | Own viewpoint continuity, not just a POV camera preset |
+| Understated comedy or fictional mockumentary | `seedance-deadpan-ads` | Own documentary grammar and reaction timing; no fabricated real interviews |
+| Tactile stop-motion-look advertising | `seedance-handcrafted-ads` | Own the ad concept and product treatment; `seedance-animation-styles` remains the medium vocabulary |
+| Viewpoint-dependent practical-looking trick | `seedance-practical-illusion-ads` | Own sightline and geometry; impossible world changes belong to CGI/VFX |
+
+Kinetic energy and CGI treatment can accompany these formats without replacing
+the message owner. None of these routes is a performance ranking. Do not load
+every ad skill for a generic request; resolve the primary job or offer distinct
+treatments first.
 
 ## Capability evidence
 
@@ -51,4 +78,12 @@ New requests set `operation` to the short verb, not the provider tool name: `gen
 
 ## Directorial axes
 
-Read [seedance-reference.md](seedance-reference.md) when composing a generation-bound shot. Plan the shots first with `seedance-shot-design` (per-shot camera, lens intent and light, with a recorded reason for any static camera or constant light), then load only the preset skills the plan or the user's request needs for camera, lens, lighting, grade, acting, pacing, blocking or medium. Keep one grade per clip, one dominant lighting direction per shot and one or two camera moves per shot unless the explicitly requested choreography needs more.
+Read [seedance-reference.md](seedance-reference.md) when composing a generation-bound shot.
+For character performance, orchestrators coordinate `acting-direction` before
+`seedance-shot-design`, then `seedance-acting-console` for concise cue encoding.
+Follow [performance direction](performance-direction.md) for source locks,
+applicability and actual-take acceptance. Use `scene-craft` for an explicitly
+selected scene framework and `blocking-map` for geometry. Load only the axes the
+plan needs; anamorphic requests use the conditional reference in the lens skill.
+Keep one grade per clip and coherent motivated light. A held camera is valid;
+do not add moves or cuts merely to meet a quota.

@@ -46,8 +46,9 @@ states CRITICAL or MINOR when it differs.
 
 6. **Action granularity.** The Action slot describes motion at the body-part
    level with range, speed and force, grounded in weight, balance, momentum and
-   contact — not as bare verbs. High-burst actions appear only when the shot or
-   energy level requires them.
+   contact, including recovery where relevant, not as bare verbs. Body intensity
+   follows intent; stillness and repeated bursts are valid. Assess readability
+   at the planned framing and speed, not a preferred low-energy style.
 
 ## References
 
@@ -97,6 +98,11 @@ states CRITICAL or MINOR when it differs.
 
 ## Shot plan and structure
 
+Coverage thresholds below are optional craft heuristics, not motion quotas.
+Preserve intentional stillness, approved repeated framing and quiet holds.
+Record the scene-specific purpose; do not manufacture a move, cut, light
+change or turn to pass. Authorized source count and timing remain locked.
+
 16. **Shot plan bound (`shot.plan_bound`).** A narrative, ad, micro-drama,
     music-video or showcase shot carries a recorded shot plan: per shot,
     duration, size, angle, camera move (or a recorded `static_reason`), lens
@@ -107,26 +113,28 @@ states CRITICAL or MINOR when it differs.
     reports `not_applicable` with that exemption. A missing plan without an
     exemption is MAJOR.
 
-17. **Shot density.** A spot is built from short sequences of 2-3 shots with
-    one action per shot (a 30 s spot as about six 5 s sequences), not one pass
-    of many beats. A 30 s single pass with nine or more beats, or a single-setup
-    clip with no stated camera move, reads as stock footage (MAJOR). About 7
-    shots per clip at most, none shorter than about 0.8 s; shorter cuts merge.
-    Each shot or stage has one primary state change and a clear end state.
+17. **Shot density.** Check that the intended action and listening fit the
+    clip. Short sequences are an optional repair for overloaded prompts, not
+    a six-clip or 2-3-shot quota. Sustained performance and unchanged states
+    are valid. About 7 shots per clip and 0.8 s per shot are provisional
+    generation-planning heuristics, not provider limits or automatic retiming
+    rules. Preserve requested rhythm and source timing; offer assembly for
+    precision or omitted action. Flag actual unreadable or conflicting beats,
+    not count alone or a missing camera move.
 
-18. **Neighbor contrast and angle range (`shot.variety`).** Adjacent shots
-    differ in at least two of size family, angle class, camera move and key
-    side. The scene has a non-eye-level shot, moving shots at its energy level,
-    uneven shot lengths and one turn shot, or a recorded reason. A continuous
-    take shows a motivated camera path, a named light at each stage and a
-    distinct payoff. MAJOR when the clip repeats one framing, MINOR when one
-    dimension is thin.
+18. **Coverage intent (`shot.variety`).** Evaluate framing, angle, motion or
+    holds and timing against the selected scene and performance plan.
+    Neighbor contrast, uneven timing and turn emphasis are optional. Repeated
+    framing, constant light and a no-turn scene pass when purposeful and
+    readable. A continuous take records its camera path or hold and named
+    lighting; no invented payoff is required.
 
 19. **Light sources declared (`shot.plan_bound`).** One set of declared sources
     across the scene's cuts; a new source has a motivating event. A light that
     changes inside a shot is a timed cue on a declared source ("at 3.2 s the
     overhead lamp clicks off"); timed cues are honoured closely, vague ones
-    drift. No silhouette on a shot with spoken lines.
+    drift. Silhouette may accompany speech when speaker attribution and the
+    required performance remain readable; visible lip-sync needs visible lips.
 
 20. **Axis carried (`shot.axis_carry`).** Each confirmed camera, lens, lighting,
     pacing or energy axis appears on a named shot, or the scene records an
@@ -134,27 +142,38 @@ states CRITICAL or MINOR when it differs.
 
 21. **Static locks carry a reason (`shot.plan_bound`).** "Locked-off" or "no
     camera movement" appears with a recorded `static_reason`, not as
-    boilerplate. A scene has at most one `performance_hold` and one
-    `contrast_hold`; a `contrast_hold` follows a moving shot; in a scene of four
-    or more shots, one reason on more than a third of the shots is MAJOR.
-    Quiet moves are fine during a spoken line; large moves there are MINOR.
+    boilerplate. A `performance_hold` may recur when sustained attention serves
+    the approved scene; a `contrast_hold` follows a moving shot.
+    Dialogue does not set a camera-energy ceiling. Check readability of the
+    speaker, required lip-sync and listening at the planned speed and framing;
+    flag obscured critical evidence, not motion amplitude alone.
 
-22. **Post-only effects stay in the edit (`shot.plan_bound`).** Blink cuts,
-    intercuts and vision flashes shorter than about 0.8 s are assembly cuts,
-    never requested inside one prompt; asking the model to skip an action it
-    describes is MAJOR. A rack focus that leaves the subject soft ("focus left
+22. **Editorial precision and omissions (`shot.plan_bound`).** Offer assembly
+    for precise blink cuts, intercuts, vision flashes or omitted action.
+    A prompt-only approximation may preserve requested rhythm, but cannot
+    guarantee exact cuts or omission. Neither a short duration nor a cut name
+    alone is a finding; return a genuine feasibility conflict if required
+    control cannot be assured through the permitted route. Do not silently
+    retime source material or remove approved actions.
+    A rack focus that leaves the subject soft ("focus left
     behind", subject sharp to background) mostly fails because the model keeps
-    the face sharp: plan the defocus in post (MINOR). A sudden burst action
-    appears at most once per shot with a still hold before and after (MINOR).
+    the face sharp: plan the defocus in post (MINOR). Burst count and holds are
+    not acceptance quotas. Slowing or isolating an action is an optional repair
+    for a demonstrated readability or physical-continuity failure; preserve
+    intended speed, interruptions and recovery unless an authorized repair
+    changes them.
 
-23. **Camera direction coherent.** One primary move plus at most one secondary
-    per shot, each with subject, start and end; no competing simultaneous
-    moves; a requested static camera is preserved. Uncommon terms follow Term +
+23. **Camera direction coherent.** One or two moves is a planning heuristic,
+    not a pass/fail cap. Preserve coherent requested choreography, with subject,
+    start, end and clear phases; flag incompatible simultaneous directions,
+    unclear handoffs or demonstrated readability failures, not count alone.
+    A requested static camera is preserved. Uncommon terms follow Term +
     Target Subject + Visual Change + Foreground/Background + Direction or Speed.
 
 24. **Timestamps.** Ranges are consecutive and non-overlapping, treated as a
-    time budget, and never demand impossible densities ("three actions in one
-    second"). The last stage ends at the requested duration.
+    time budget. Check actual actions against available time, not a fixed
+    action-count threshold; return genuine timing conflicts or missing inputs.
+    The last stage ends at the requested duration.
 
 25. **Natural duration.** Each scene runs at its natural length (4-30 s); a 30 s
     single pass or native extension is a recorded exception.
@@ -186,10 +205,12 @@ states CRITICAL or MINOR when it differs.
 
 29. **Progressive or partial change.** A change that crosses the body or frame
     over time (an outfit changing only past a line) is staged by timestamp and
-    body part, slow enough that the crossing lasts about 1.5 s, with the motion
-    continuing unbroken and no glow, flash, sparkle, dissolve or particle
-    effect. Wording that makes it instantaneous ("swaps at the pole", "changes
-    in place", "the pole is the boundary", a bare wipe) is MAJOR. It is pure
+    body part, with the motion continuing unbroken and no glow, flash, sparkle,
+    dissolve or particle effect. A crossing of about 1.5 s is an optional repair
+    for demonstrated readability failure, not an acceptance threshold; preserve
+    source speed and locked timing unless an authorized repair changes them.
+    Wording that contradicts the requested progressive change by making it
+    instantaneous is MAJOR; a fast but readable crossing is not. It is pure
     reference-to-video; an I2I-edited first frame recomposes the scene (MAJOR).
 
 30. **Known drift points (MINOR).** Hair covered by a shawl, blanket or high
@@ -215,18 +236,29 @@ states CRITICAL or MINOR when it differs.
     and locked text; propose retiming or splitting before authorized rewrites.
     A demonstrated duration conflict is MAJOR; an English word-count estimate
     alone cannot establish one. Without delivery evidence, timing is provisional.
-    Direct unused gaps and keep the final 3 s to at most two state changes;
-    trimming the clip head does not lengthen the tail.
+    Judge closing beats by readability of the intended words, action and
+    response, not a state-change count. Simplifying a crowded ending is an
+    optional repair for demonstrated failure within source locks; trimming the
+    clip head does not lengthen the tail.
 
 34. **Same dialogue in both prompts.** When separate audio is in scope, the Seed
     Audio text matches the `{}` text exactly: no paraphrase, reorder or omission.
 
 ## Emotion, motion and space
 
-35. **Visible or audible cues.** Abstract emotions are paired with 2-4 readable
-    cues (eyes, brows, mouth, breathing, gaze, hands) grounded in the tactic and
-    framing; masked wide shots use posture, spacing or hand action. Bare labels
-    such as "very sad" fail.
+35. **Performance handoff (`acting.plan_bound`).** For new or revised character
+    performance, collect the source-bound performance plan or equivalent
+    isolated-prompt input. Trace critical beat IDs to intention, trigger,
+    registration, maintained/changed tactic and readable consequence. Relevant
+    listeners have a task or intentional non-response. Missing material input
+    is incomplete; dropping a critical beat or substituting a generic mood or
+    gesture list is MAJOR. Cues fit framing, occlusion, scale and delivery time.
+    Two to four cues is a heuristic, not a minimum; sustained attention need
+    not change emotion. Preserve exact ad copy, CTA, claims and product identity.
+    Static/non-performance assets and preservation-only edits record
+    `not_applicable` with a concrete reason outside the required-rule list;
+    source performance still needs preservation review. Actual playback and
+    listening, not this prompt check, establish take acceptance.
 
 36. **Motion grammar.** Each moving element in stylized or reverse-engineered
     takes states motion type, direction, speed, amplitude, easing and loop

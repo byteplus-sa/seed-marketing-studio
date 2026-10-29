@@ -6,6 +6,11 @@ for the procedure and the variety rules.
 All cases are **hypothetical**. The failure descriptions are simulated editorial
 judgments drawn from recurring prompt shapes, not measured generation outcomes.
 
+These examples select contrast as one possible repair, not a universal gate.
+Intentional stillness, equal timing and no-turn scenes remain valid. Preserve
+source locks, exact copy and generation scope; diagnose unreadable beats before changing
+coverage, and retain a working hold instead of adding motion for variety.
+
 ## Equal-length size ladder with no move or light change
 
 - **Brief:** A 12-second kitchen scene. A mother opens the door, her son peeks
@@ -13,10 +18,9 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
 - **Initial prompt shape:** Shot 1 (0-3 s) wide shot of the room. Shot 2 (3-6 s)
   medium shot at the door. Shot 3 (6-9 s) medium two-shot. Shot 4 (9-12 s) wide
   shot. One lighting sentence at the top: "soft late-afternoon daylight".
-- **Simulated failure:** Every shot is eye level and static, the shots are the
-  same length, and the light never changes. The scene plays as one framing cut
-  four times.
-- **Hypothesis:** Only size varies, and the cuts carry no other change.
+- **Simulated failure:** The child's tap and the mother's response are not
+  readable. Static camera, equal timing and constant light alone are not defects.
+- **Hypothesis:** The framing does not expose the relevant action and response.
 - **Smallest repair:** Keep the four beats and plan them with two declared
   sources (the window at screen-left, the front door that opens at about 5 s) and
   uneven lengths. Shot a (3.0 s): high wide, slow crane down, window sun from
@@ -28,9 +32,9 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
 - **Tradeoff:** More facts for the model to honor in 12 seconds. One primary move
   per shot, one room and two fixed sources keep the plan within what a clip can
   hold.
-- **Acceptance:** Adjacent shots differ in at least two of size family, angle
-  class, move and key side; lengths are uneven; the child's tap lands on the one
-  shot flagged as the turn; no shot uses a source the scene did not declare.
+- **Acceptance:** The child's tap and the mother's response read clearly in
+  the selected coverage; no undeclared source appears. A simpler held setup
+  passes too if it preserves these beats and the approved intent.
 
 ## A recorded axis that never reaches the shots
 
@@ -60,9 +64,8 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
   answers {Wouldn't miss it.}
 - **Initial prompt shape:** "Hold a steady medium shot at eye level" for the whole
   clip, with "natural light".
-- **Simulated failure:** The brief's calm is honored, but the clip is one framing
-  for twelve seconds and the light is flat.
-- **Hypothesis:** The restrained level was read as "no variety".
+- **Simulated failure:** The listener is hidden when the answer registers.
+- **Hypothesis:** Framing obscures the exchange, not that restraint lacks variety.
 - **Smallest repair:** Keep restrained energy and declare two sources: cool light
   from the freezer doors above the aisle, and warm shop-floor fill. Shot a (4 s):
   medium two-shot at eye level, very slow drift left to right, the shopper's line
@@ -73,9 +76,9 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
   `contrast_hold` after the push, warm floor fill rising on her face.
 - **Tradeoff:** More cuts than a single hold; every move stays slow, and each
   line sits inside one shot with room for the late start of speech.
-- **Acceptance:** Size family, angle class and key side change between shots
-  while every move stays slow and motivated, each line fits its shot, and no
-  large move lands during speech. For this fictional English exchange only,
+- **Acceptance:** Both lines and listening responses remain readable; a held
+  two-shot or the proposed cuts may pass. Each line fits its shot and no
+  large move hides speech. For this fictional English exchange only,
   words / 2.2 plus 1 s onset and 0.4 s tail is a provisional planning estimate,
   not a rejection threshold. Measured or native-language-informed delivery
   determines fit; retime or split if needed, without rewriting approved text.
@@ -95,31 +98,46 @@ judgments drawn from recurring prompt shapes, not measured generation outcomes.
   a short insert before the key line, and light both speakers from the same
   declared dinner lamp seen from opposite camera sides.
 - **Tradeoff:** Less kinetic feel; clearer speech and a visible power shift.
-- **Acceptance:** No large move is planned during a spoken line, the key line
-  sits in a single shot, and the speakers' lit sides differ without a second
-  source appearing.
+- **Acceptance:** The key line, speaker attribution and listener response
+  remain readable at playback speed, with no invented light source. This
+  hypothetical repair uses quiet moves; a tracking or other energetic version
+  can pass the same readability check. Speech alone does not prohibit it.
 
-## A 30-second spot written as one pass
+## One source is not one continuous take
 
-- **Brief:** A 30-second cinematic ad for a hair-care product: a rider crosses a
-  rain-soaked neon city at night and arrives with her hair still flowing.
-- **Initial prompt shape:** One 30-second prompt with nine timestamped beats
-  (street, traffic, rain, close-up, product, wind, arrival, smile, pack shot),
-  one global "cinematic lighting" sentence and no camera move per beat.
-- **Observed shape:** Workspace reviews of single 30-second passes like this
-  one judged them stock footage: each beat gets about three seconds, the camera
-  defaults to neutral framing, and nothing is designed to be remembered.
-- **Hypothesis:** Too many beats per clip, no per-shot camera or light, and no
-  image built to land.
-- **Smallest repair:** Six sequences of about 5 s, each its own clip of 2-3
-  shots with one action per shot. Sequence 1: a low tracking shot beside the
-  wheel through puddles, then a crash zoom onto her eyes under the helmet
-  visor, magenta sign light from frame-right, rain in the foreground, the
-  street receding behind. The `wow` shot of each sequence is planned first
-  (sequence 3: her hair lifting in slow motion against a wall of signs). The
-  pack shot and all copy are post layers.
-- **Tradeoff:** Six generations and an assembly instead of one; each clip can
-  be drafted, reviewed and replaced alone.
-- **Acceptance:** Each sequence has 2-3 shots with a lens intent, a move, a
-  named source and depth layers, one `wow` shot, and lengths that vary between
-  sequences; the edit, not one prompt, carries the 30-second structure.
+- **Brief:** One 15-second generation, native cuts and original native sound,
+  fictional footwear ad. Show a dancer deciding to join a rehearsal. Supplied
+  references establish appearance only, not comfort or performance benefits.
+- **Weak plan:** Three separate five-second sources, each an isolated shoe
+  view, justified as a cinematic requirement.
+- **Repair:** One source with three internal shots: foot pauses at the rehearsal
+  threshold; dancer responds to the room's rhythm with a short step phrase;
+  the phrase joins the ensemble's final step. Give each shot a readable action,
+  motivated framing and named rehearsal-room light. Keep footwear visible
+  without implying it improves dancing. Native music is original as requested.
+- **Tradeoff:** Native cuts are less independently controllable. Simplify action
+  if it cannot fit rather than ordering additional sources.
+- **Acceptance:** One request intent, three internal shots, meaningful
+  development, no extra audio task, no assertion of frame-exact native cuts.
+
+## Technical variety hiding an empty idea
+
+- **Brief:** An open ad concept should make a fictional storage product relevant
+  to packing art supplies; only documented opening and storage are supported.
+- **Weak plan:** Overhead, low angle, orbit, backlight, macro; product does
+  nothing except sit still while a hand points at it.
+- **Repair:** Establish the packing question and a supported arrangement that
+  answers it before revising coverage. Do not invent capacity or protection.
+- **Acceptance:** Each view helps the viewer understand the answer; changing
+  key sides alone is not development or proof of creative quality.
+
+## Compelling stillness must survive the variety check
+
+- **Brief:** Locked wide of a performer waiting for a partner's hand before
+  beginning a duet. No camera move, cut, lighting cue or added music.
+- **Wrong repair:** Add a push solely to satisfy V3.
+- **Correct decision:** Retain the lock and the pause. Direct attention to the
+  offered hand and the answering step, which changes waiting into participation.
+  Record the lock; optional variety heuristics need no waiver.
+- **Acceptance:** Stillness supports anticipation; no gratuitous motion or
+  fabricated claim about an observed audience response.

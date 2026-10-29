@@ -72,14 +72,28 @@ stance, lens, grade, pacing, acting, staging, medium, audio) from
 `brief-intake` persisted as a `locked` block in `project.md` frontmatter. The
 brief also records:
 
-- the **audio route**: native dialogue, picture only with score, ambience and
+- the **creative premise, attention and payoff** for new vague work: what the
+  viewer notices or feels, what sustains attention, and why the ending matters.
+  Offer compact alternatives when materially different premises remain open;
+  preserve a settled idea for scoped work instead of expanding its workflow;
+- **sound and editorial intent before generation**: what is heard before seen,
+  what the edit reveals or withholds, and the role of silence or a sound accent.
+  Final assets are not required early; timing is provisional until measured;
+- **artistic acceptance** tied to the brief, using a small relevant set of
+  observable criteria rather than generic "cinematic" polish or activity counts;
+- the **audio route**: native dialogue or explicitly requested native soundscape,
+  picture only with score, ambience and
   SFX built in post, opt-in separate lip-sync audio, or silent;
 - the **look intent**: ungraded original model colours unless a grade or a
   capture-format look is requested, in which case it is a post treatment;
 - the **on-screen copy** (titles, captions, CTA, end card) that post will add,
   and any label the user or platform requires;
-- for ads and TVCs, the **cinematic bar**: sequence count and length, one action
-  per shot, and the wow image each sequence must deliver.
+- for ads and TVCs, the **creative argument**: hook, viewer motivation,
+  development, payoff and product connection; internal shot timing separately
+  from authorized provider source count, and any intended memorable moment;
+- for ads and TVCs, the **coverage intent**: sequence count and length fitted
+  to approved beats and generation scope, including purposeful holds. Standout images,
+  timing contrast and turns are optional, not per-sequence requirements.
 
 The brief is the `brief-development` stage source; `stage complete` checks that
 `project.md` is a valid record.
@@ -95,6 +109,15 @@ inspection suffices. Scripts and
 article text alone do not satisfy that gap.
 
 ## 2. Scene and production breakdown
+
+New or materially revised character performance needs `acting-direction`
+before coverage and a source-bound `## Performance plan` in the scene file.
+Carry beat IDs, intentions, listening tasks, registration/response timing and
+critical acceptance into shot notes, then `seedance-acting-console` encoding.
+The [performance contract](../../../contracts/performance-direction.md) owns
+applicability: source-preserving edits inherit performance; static assets do
+not acquire acting requirements. Quiet holds and intentional stillness override
+the optional cinematic cadence below without adding paid generations.
 
 Entry: an accepted brief and available story or script material. Draft scene
 and shot breakdown may precede canonical asset generation; it identifies which
@@ -114,9 +137,16 @@ For every narrative, ad, micro-drama, music-video or showcase scene it also
 requires a shot plan from `seedance-shot-design` in the scene file's
 `## Shot plan` section: per shot, duration, size, angle, camera move, lens
 intent and a named light source with key side, the energy level, and where each
-confirmed project axis appears. Ads and TVCs group shots into sequences of
-about 5 s with 2–3 shots each; no planned shot is shorter than about 0.8 s, and
-faster cuts, flashes or intercuts are marked as edit work. A long action with
+confirmed project axis appears. Ads and TVCs derive internal shots from their
+creative argument and source count. One generation may contain native cuts;
+an explicit continuous take may not. Coverage follows approved intent,
+readability and generation scope; short sequences are optional, with no required
+cadence, variety, turn, hold or standout count. About 0.8 s per shot and about
+7 shots per clip are provisional generation heuristics, not provider limits
+or guaranteed merge/drop thresholds. Preserve requested rhythm and source
+timing without automatic retiming or shot removal. Offer assembly for precise
+cuts or omitted action within generation authorization; return genuine
+feasibility conflicts rather than changing locks. A long action with
 people that would need extension is planned as short single passes held by a
 blocking map unless `asset://` Virtual Portrait identities are available. The plan is `draft` until the scene's locations
 are approved in Stage 3 and is revalidated before Stage 6. A scene that is exempt
@@ -215,7 +245,20 @@ may be prepared here so shot durations can be planned to it. Score and ambience
 for a picture-only project are otherwise built after picture lock, at
 assembly, to the cut's measured length.
 
+Skipping audio preparation does not skip early sound intent. Use the existing
+brief/scene notes to reserve meaningful sound events and silence; no extra
+generation or separate lip-sync track is implied. For sound-led work, use the
+supplied cue structure to guide picture and refine final cues against the
+measured edit rather than discovering the entire sound idea after picture lock.
+
 ## 6. Shot generation
+
+Applicable performance prompts require `acting.plan_bound` with real source,
+plan and request evidence in both review modes. Default checks this scoped rule
+without loading blanket craft checklists. Actual-take acceptance includes
+registration, listening, response, exact delivery and product/prop continuity.
+Missing critical performance blocks selection or promotion; no passing take
+means a bounded revision within generation scope or an unresolved stage.
 
 Entry: shot objective, the scene's revalidated shot plan (or recorded exemption), selected
 video mode, approved inputs, reference roles, prompt snapshot target, duration,
@@ -262,11 +305,28 @@ shot blocked.
 
 ## 7. Assembly and review
 
+Recheck accepted performance beats in the actual edit: trimming must not remove
+registration, the listener's response, exact copy or the intended held duration.
+Inspect playback and listen; transcript correctness alone is insufficient.
+
+Apply the brief's artistic acceptance to actual full-speed playback with sound
+when in scope. Record timestamps and beat IDs in existing review evidence for
+what captures attention, what the edit reveals or withholds, and whether the
+intended payoff, sustained observation or unresolved ending lands. Assess actor
+intensity, camera energy and edit rhythm separately; neither quiet nor energetic
+work passes merely for matching a movement count. Check sound hierarchy,
+anticipation, silence and release against the intended response, then align
+final cues to measured picture. Unavailable playback/listening is unresolved,
+not a pass. Critical artistic failures need a bounded repair within locks and
+generation scope or a blocked selection, not promotion of the least-bad take.
+Default mode keeps this evidence concise; strict retains detailed review.
+No new runtime, rule ID, report format or approval gate is introduced.
+
 Entry: approved takes and any requested audio assets exist.
 
 Required output: ordered edit, review render, transition and continuity review,
-audio presence check, technical decode QA, and outstanding notes. Assembly
-defaults to conform, trim, crop, overlays, end card and mix with no grade, from
+audio presence check, technical decode QA, artistic playback evidence and
+outstanding notes. Technical assembly uses conform, trim, crop, overlays, end card and mix with no grade, from
 exact-length intermediates encoded once; post beds for picture-only projects
 are built here to the measured cut. Audio defects are fixed word by word, and
 re-voicing keeps the source soundtrack (see
@@ -293,3 +353,6 @@ Exit: inspect the actual local master, then record a mode-authorized final
 master lock bound to its file and review hashes. In `ask_for_approval`, wait for
 the user's explicit acceptance. Publishing, sending, or external delivery needs
 separate authorization in either mode.
+Recheck the brief's artistic criteria in this final master, including sound,
+exact copy and accepted performance after trims and overlays; prior draft
+acceptance or successful render status does not establish final quality.

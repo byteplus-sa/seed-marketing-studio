@@ -84,6 +84,36 @@ State the creative spine in one sentence: **For [audience/context], show
 not mandatory output syntax. A static asset can use a visual contrast rather
 than a narrative event; a sound-only brief can use a sonic idea.
 
+### Develop the ad before its coverage
+
+For a full ad treatment, establish a compact creative argument before lenses
+or continuity ledgers: **hook / viewer motivation / development / payoff /
+product connection**. Use concrete events, not headings filled with adjectives.
+State what becomes newly understood, desired, surprising or emotionally different
+after the opening. A sensory or contemplative ad can develop through texture,
+anticipation or sound; it need not acquire a plot or a fast cut.
+
+If the entire argument is "place an object, inspect it, hold," improve the
+premise before polishing camera language, unless that observation is the actual
+brief. Ask whether replacing the product with an unrelated object would leave
+the idea unchanged. Strengthen its supported role rather than adding a slogan.
+Keep authorized fiction and metaphor available without inventing capabilities,
+customer history or evidence. A missing claim is not a ban on imagination.
+
+For a format batch, compare opening event, setting, performer intention, product
+role, progression and sound across concepts. Repeated quiet rooms, tabletop
+handling and product holds need a brief-driven reason. A shared campaign identity
+is valid; changing only lenses or labels is not format differentiation.
+This is brief development, not a new approval gate, numerical quality score or
+prediction of advertising performance. A narrow revision keeps its existing idea.
+
+For a new vague or underspecified moving-image brief, resolve a compact creative
+premise before execution: what the viewer is invited to notice or feel, what
+carries attention, and what payoff makes the ending matter. A held observation,
+recognition or unresolved question can be the payoff; no twist or escalation is
+required. A mood or a preset stack alone is not a premise. Keep material gaps
+explicit rather than inventing product truth, testimony or character intent.
+
 ## 2. Settle the production-critical defaults early
 
 Three choices change how footage is generated, so record them in the first
@@ -100,19 +130,35 @@ question; static images and sound-only briefs skip the ones that do not apply.
   a "no music, no speech" line on native audio often does not hold, and speech
   or score leaks in. Say that a post bed is laid to the cut rather than
   frame-synced to action.
+  An explicitly requested original native soundscape or one-generation
+  sound-led draft uses `native`; do not silently mute it or add an audio
+  generation. Design the sound's role, including purposeful silence, instead
+  of defaulting all claim-free ads to quiet room tone.
 - **Look.** Default to the model's original colours with no grade, grain,
   halation or vignette. Record a grade or a capture-format look (camcorder,
   film stock) only when the brief asks for one, and treat it as a post
   treatment rather than a prompt word.
-- **Cinematic bar for ads and TVCs.** Unless the format is static by design
-  (selfie UGC, talking head), propose a sequence structure: about six 5 s
-  sequences of 2–3 shots for a 30 s spot, one action per shot, each shot with a
-  camera move, a motivated light and depth, and one standout "wow" image per
-  sequence. A single pass carrying many beats reads as stock footage.
+- **Editorial structure and source count.** Record provider generations
+  separately from internal shots. One generation may contain native cuts;
+  only a continuous-take instruction forbids them. Derive shot count and
+  duration from development and payoff, within the supported runtime and
+  authorized source count. Separate short sources can offer edit control
+  when requested, but are not the definition of cinematic quality. Each shot
+  needs an action, purposeful view, named light and an observable contribution.
+  Short sequences can help crowded spots, but six clips, unequal durations, moves and standout images
+  are optional techniques. Intentional stillness, repeated framing and a
+  sustained take remain valid; do not add generations to meet a quota.
 
 Also list the on-screen copy as post overlays: generated footage stays
 text-free, and no "AI-generated" or "fictional" label is added unless the user,
 platform or brief requires it.
+
+Plan sound and editorial intent before generation alongside the premise:
+what the audience hears before seeing, what the edit reveals or withholds,
+and where silence, texture or an accent supports attention and payoff. Use the
+existing brief or scene notes; no final audio asset or extra workflow is needed.
+Final cues follow the measured edit and actual listening. Keep audio route,
+rights and spend authorization separate from this early intent.
 
 ## 3. Choose the appropriate depth
 
@@ -122,8 +168,11 @@ platform or brief requires it.
   (restrained, standard or kinetic), the audio route and the look, because
   those carry the reaction and decide how footage is generated. Do not
   produce alternatives or a questionnaire merely because a project is new.
+  Resolve a missing premise compactly; scoped prompts inherit the settled idea
+  and change only the requested axis.
 - **Exploration:** when the user asks for directions, alternatives, or help
-  choosing a concept, offer two materially different treatments. Distinguish
+  choosing a concept, or materially different premises remain open, offer
+  concise alternatives (normally two). Distinguish
   them by central idea, viewpoint, or emotional strategy, not a lens or palette
   swap. Each names its idea, key visible/sonic moment, rationale, and tradeoff.
   Do not generate either or treat a recommendation as selection.
@@ -145,16 +194,21 @@ left without a camera and light stance. A static or locked camera is a proposal
 that needs a reason tied to the idea (a held reaction, a revealed contradiction,
 a format that is static by design), not a neutral default.
 
+Separate performance intensity, action density, camera energy, edit rhythm
+and sound dynamics when they differ. A locked wide can contain exuberant action;
+a fast edit can include a quiet performance. Restrained is not shorthand for
+brand-safe, lifeless or inactive. Do not force equal intensity across channels.
+
 | Axis | Derivation | Composition hint for a calling agent |
 | --- | --- | --- |
-| Structure | Narrative development needs an event and progression; one-off static assets do not | `tig-scene-engine` |
-| Acting | Specify an observable reaction/tactic only if a performer matters; match detail to framing | `seedance-acting-console` |
-| Camera | Choose viewpoint, framing, and the movement that reveals the central idea; vary size and angle across a scene | `seedance-shot-design`, then `seedance-camera-presets` |
+| Structure | Preserve the source under the selected framework; do not invent a turn for observational or static work | `scene-craft` |
+| Acting | Bind intentions, triggers and listening to the source before encoding readable shot cues | `acting-direction` for planning; `seedance-acting-console` for encoding |
+| Camera | Choose viewpoint, framing, movement or holds that reveal the central idea; variety is optional | `seedance-shot-design`, then `seedance-camera-presets` |
 | Lens | Describe perspective, separation, and context; add optical terms only when useful | `seedance-lens-presets` |
 | Lighting | Motivate a source and its direction, and let it change meaning across the scene | `seedance-shot-design`, then `seedance-lighting-presets` |
 | Grade | Default ungraded original colours; propose a grade or look only when requested or when reference fidelity needs it, as a post treatment | `color-grade-palettes` |
 | Pacing | Give the action enough time; stillness, repetition, contrast, and escalation are choices | `seedance-pacing-presets` |
-| Staging | Define geography only when action or relationships depend on it | `tig-blocking-map` |
+| Staging | Define geography only when action or relationships depend on it | `blocking-map` |
 | Medium | Preserve requested medium; propose only when the idea benefits from that choice | `seedance-animation-styles` |
 | Audio | Record the audio route (native, picture only, lip-sync audio, silent); separate lip-sync audio remains opt-in | `seed-audio-prompt` / `seed-audio-commercial` |
 
@@ -259,7 +313,9 @@ These are hypothetical teaching cases, not measured generation outcomes.
 Before returning, check that the proposal serves the stated reaction, names a
 specific idea, says where the feeling lives, respects constraints, accepted
 choices and any source bible, records the audio route and look for moving
-images, and omits irrelevant axes. Two treatments appear only when exploration is wanted, and differ in
-mechanism. Unknowns remain labeled; recommendations remain unapproved until a
+images, and omits irrelevant axes. Alternatives address genuinely open premises
+or requested exploration and differ in mechanism; settled scoped work does not
+need them. Unknowns remain labeled; recommendations remain unapproved until a
 mode-authorized decision is recorded. Evaluate the reasoning and usefulness,
-not exact headings.
+not exact headings. For ads, check the creative argument and source count
+before accepting technical completeness as readiness.

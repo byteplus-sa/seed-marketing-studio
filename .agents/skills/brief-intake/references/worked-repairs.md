@@ -53,19 +53,46 @@ judgments, not observed generated-media results.
 ## An ad brief that leaves sound and structure to the edit
 
 - **Brief:** A 30-second wordless spot for a rain jacket. Viewers should feel
-  the jacket turns a storm into play.
+  the storm becomes an occasion for play. No waterproofing or protection
+  evidence is supplied; do not imply those results.
 - **Initial proposal:** One 30 s pass following a cyclist through the city in
   the rain, native audio with "no music, rain only", warm teal grade.
-- **Simulated failure:** One pass carries nine beats at one framing, so it
-  reads as stock footage; native audio is likely to add a score or voices the
-  edit cannot remove; the grade was never requested.
-- **Smallest repair:** Six 5 s sequences of 2–3 shots, one action per shot
-  (the hood snaps up, a puddle jump in low-angle slow motion, a grin under a
-  streetlamp), each with a camera move, a named light and one wow image.
-  Audio route `picture_only`: generate silent picture and build rain, footsteps
-  and score in post. Keep original colours; list the logo end card as a post
-  overlay.
-- **Tradeoff:** More shots to plan and assemble, and a post sound pass; in
-  return each sequence has a visible idea and the sound is controlled.
-- **Acceptance:** The proposal names the sequence structure, the audio route
-  with its reason, the look default, and the on-screen copy as post overlays.
+- **Simulated failure:** Nine unrelated beats offer no progression. The problem
+  is not one provider source; it is a missing organizing idea. The grade was
+  never requested, and audio ownership is unresolved.
+- **Smallest repair:** Open with the rider hesitating at a puddle, develop a
+  playful change of route, and finish with a deliberate splash, without claiming
+  the garment keeps anyone dry. Plan only the internal shots those events need.
+  Record source count separately: native cuts can fit one authorized source.
+  Propose picture-only plus post audio when that control is wanted; preserve
+  native rain/music if explicitly requested. Keep original colours and post copy.
+  Plan rain's change from interruption to playful rhythm before generation;
+  final accents follow the measured cut.
+  Segmented coverage and standout images are optional; preserve purposeful holds.
+- **Tradeoff:** Fewer ideas, a clearer progression; native cuts and sound remain
+  approximate. Separate source control costs additional work and needs scope.
+- **Acceptance:** A viewer can trace hesitation to chosen play. The plan honors
+  the actual source/audio scope and does not invent garment performance.
+  Actual playback and listening must establish attention and payoff; a written
+  premise or technically joined edit cannot establish them.
+
+## A quiet ad mistaken for a weak ad
+
+- **Brief:** Fixed wide, no music. An adult keeps rearranging a dinner table
+  around an empty chair, then leaves an extra place ready for someone.
+- **Wrong repair:** Add a crane, warm backlight cue and a dramatic score.
+- **Better decision:** Preserve the locks. The repeated rearrangement creates
+  anticipation; the final place setting changes its meaning. Refine readable
+  hand action only if needed. Emotional activity does not require camera motion.
+- **Check:** State why the pause and final gesture matter, without inventing
+  measured audience emotion or declaring all slow ads effective.
+
+## A batch with twelve labels and one idea
+
+- **Weak proposal:** Every format opens on a small object in a quiet room,
+  changes camera size, and ends with a hand withdrawing.
+- **Repair:** Compare viewer question, environment, performance, product role,
+  development and sound. Make a musical concept develop through sound,
+  a deadpan concept through incongruity and a demo through a useful answer.
+- **Check:** Preserve shared brand identity where requested, but do not count
+  different lenses, colors or format names as distinct concepts.

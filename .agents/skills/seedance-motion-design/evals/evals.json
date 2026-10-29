@@ -17,12 +17,12 @@
     {
       "id": 2,
       "prompt": "Write a 12-second hypermotion product ad prompt for a perfume bottle: macro orbit, glints on the glass, a splash of liquid, then the bottle lands on a plinth. Make it feel premium and cinematic.",
-      "expected_output": "A footage-led prompt with per-shot size, angle, camera move with start and end, lens intent and a named light source with key side, shots of at least about 0.8 s, and no default grade.",
+      "expected_output": "A footage-led prompt with per-shot size, angle, camera move with start and end, lens intent and a named light source with key side, intent-led timing without a minimum-shot-length gate, and no default grade.",
       "files": [],
       "expectations": [
         "Each generated shot states a shot size or angle, a camera move with a start and an end, a lens intent as a visible result, and a named light source with its key side.",
         "The bottle's shape is described positively by its visible form rather than by excluding unwanted shapes.",
-        "No shot inside the clip is shorter than about 0.8 s.",
+        "Shot lengths serve readable action and requested rhythm; about 0.8 s is a provisional generation heuristic, not a provider limit or automatic retiming rule.",
         "No grade, grain or film look is added unless requested, and any label or logo on the bottle is reserved for an approved asset or post.",
         "The prompt names the moment the message lands and the final resting state on the plinth."
       ]
@@ -42,10 +42,10 @@
     {
       "id": 4,
       "prompt": "Write a 30-second motion-on-footage explainer for a fintech app as one single Seedance prompt with eleven beats.",
-      "expected_output": "A response that splits the piece into several short clips cut together in assembly instead of one 30-second pass with eleven beats, with graphics timed to speech as post layers.",
+      "expected_output": "A response preserving the requested single-prompt eleven-beat plan provisionally, with graphics timed to speech as post layers. Offers assembly for precision or demonstrated overload rather than splitting automatically by beat count, and returns genuine timing conflicts.",
       "files": [],
       "expectations": [
-        "The output explains that one pass with many beats reads as stock footage and proposes several short clips of a few shots each, cut in assembly.",
+        "The output assesses the actual beats and speech timing; eleven beats alone do not justify rejecting the requested single pass or silently adding clips.",
         "Lower-thirds, stat cards and callouts are deterministic post layers timed to the speech beats.",
         "Each generated clip states its camera and a named light source.",
         "The response returns prompts rather than an unrelated production workflow."

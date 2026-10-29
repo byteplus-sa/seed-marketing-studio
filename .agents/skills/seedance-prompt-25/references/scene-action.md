@@ -94,7 +94,9 @@ Rules:
 - Time ranges must be **consecutive and non-overlapping**.
 - They are a **time budget**, not a precise edit point — actions may occur slightly before or after a boundary.
 - Too little content gives the model too much freedom; too much causes excessive cutting or omitted events.
-- **Never** demand impossible frequencies (e.g., "complete three actions in one second").
+- Check actual actions against available time and physical continuity, not a fixed
+  action-count threshold. Preserve requested speed and source timing; return
+  genuine timing conflicts or missing inputs rather than rejecting count alone.
 
 ## Action description
 
@@ -108,15 +110,17 @@ front foot, and scans the room left to right" is testable.
 - **Physics grounding.** State where weight and balance sit, what stays planted,
   and what the body pushes against or reacts to: ground contact, momentum
   through a turn, inertia carried between actions.
-- **Prefer slow, gentle, continuous motion for the performer's body.** "Slowly
-  raise a hand," "gently lower the head," "naturally sit down." This guidance
-  protects physical plausibility. It does not set the camera's energy or the cut
-  rate; those come from the shot plan.
-- **Avoid high-burst, large-dynamic actions** — sprinting, big jumps, violent
-  rolls — unless the shot explicitly requires them. A kinetic brief, a chase or a
-  music-video beat requires them; state them with grounded physics. A single
-  sudden strike in an otherwise still performance (an ambush, a lunge) also
-  qualifies: write one burst with a still hold before and after it.
+- **Match body energy to intent.** Speed, amplitude, interruptions and recovery
+  follow the approved action and performance plan, not a slow-body default.
+  Quiet stillness, abrupt withdrawal, excited interruption and repeated bursts
+  are all valid when physically grounded and readable. Actor energy, camera
+  energy and edit rhythm are separate decisions.
+- **Repair demonstrated readability failures narrowly.** If actual playback
+  loses contact, balance or an action boundary, adjust the affected staging or
+  timing within source locks. Slowing motion or isolating one burst with holds
+  is an optional repair for that failure, not a universal cap or acceptance
+  condition. Missing evidence calls for a provisional proposal, not softening
+  the approved performance.
 - **Describe transitions between actions** for continuity: "use the inertia of
   turning around to naturally raise a hand."
 - **Externalize emotions as physical detail**, never bare emotion labels. Use
@@ -126,9 +130,10 @@ front foot, and scans the room left to right" is testable.
 
 ### Motion grammar (why a shot reads "static")
 
-A prompt that names *what* moves but not *how* it moves produces a static take.
-For every moving element — subjects, props, effects, light, background — write
-the full motion grammar, not a bare verb:
+When intended movement is underspecified, use the relevant motion grammar
+below for subjects, props, effects, light or background. Describe only the
+axes needed for readability; intentional stillness needs no invented motion,
+loop or light change. A missing motion term alone does not prove a failed take:
 
 | Axis | Question to answer |
 |---|---|
@@ -185,9 +190,12 @@ only on the part of the body that has crossed a line) is staged by timestamp
 and body part, not as an instant swap. Observed working pattern, pure
 reference-to-video with no edited first frame:
 
-- Slow the movement so the crossing lasts about 1.5 s.
+- Preserve source speed and stride. A crossing of about 1.5 s is an optional
+  repair for demonstrated readability failure, not a mandate for readable
+  action; changing locked timing needs authorization.
 - Write the stages by timestamp and body part: front hand and boot first, then
-  a quarter, half, the rear quarter, the full figure.
+  a quarter, half, the rear quarter, the full figure. These are example stages,
+  not required counts or fixed spacing.
 - Add "no glow, flash, sparkle, dissolve or particle effect" and "position,
   stride and direction continue unbroken".
 

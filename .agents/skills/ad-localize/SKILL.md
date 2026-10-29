@@ -96,6 +96,17 @@ sign-off never covers another variant or the market's own record.
 
 ## Adaptation levels
 
+Follow the [performance contract](../../contracts/performance-direction.md)
+without expanding the selected level. L1 text and L2 voice retain picture
+performance. L3 talent and L4 source-preserving swaps inherit action, expression,
+pauses and blocking; do not add acting improvements. Newly authored or materially
+changed character performance, normally L5 for that beat, uses
+`acting-direction` before coverage and `seedance-acting-console` for cue encoding.
+Store `## Performance plan` in the localized scene or shot, preserve locked
+target copy/CTA and supported market claims, and require `acting.plan_bound`
+when applicable in both review modes. This never replaces
+`localize.native_review`, campaign pins or the budget gate.
+
 The user picks one level for the whole ad or a level per element. **Recommend
 the cheapest level that satisfies the user's goal; never force one.** Levels
 compose: L3 talent with L2 voice and L1 text is a normal plan. Read
@@ -108,7 +119,7 @@ changes, what stays and QA per level.
 | L2 Voice | Dub keeping voices, or new voice-over or line-scoped re-voice; source soundtrack kept; plus L1 | `audio-dubbing`, `seed-audio-prompt`, `ark-mcp` | audio per line or segment |
 | L3 Talent | Presenter or cast replaced; plus L2 or L1 as chosen | `seedance-object-swap` (one character), `seedance-motion-recast` (whole cast), `seedance-virtual-portrait` | one edit per shot, 480p draft then final |
 | L4 Cultural | Settings, props, wardrobe, product SKU or packaging, soundtrack | swaps or recast, `product-intake`, `seed-audio-prompt` | one edit per changed element per shot |
-| L5 Transcreation | New script, angle and shots from the same brand and product facts | `brief-intake`, `ugc-ad-modes`, `seedance-prompt-25`, `seedance-prompt-25-dialogue` | a full new production, draft first |
+| L5 Transcreation | New script, angle and shots from the same brand and product facts | `brief-intake`, `seedance-ugc-ads`, `seedance-prompt-25`, `seedance-prompt-25-dialogue` | a full new production, draft first |
 
 L1 is a first-class option, not a fallback. **Re-rendered on-screen text with
 market values (price, currency, CTA, legal lines) is L1**, still subject to
@@ -244,7 +255,7 @@ shots where Seedance speaks and writes dialogue direction, and its market pack
 template describes optional language-specific packs; `seedance-object-swap` and `seedance-motion-recast`
 replace talent, props, products and settings; `seedance-virtual-portrait`
 binds authorized identities; `product-intake` sources the market's facts;
-`brief-intake`, `ugc-ad-modes` and `seedance-prompt-25` write an L5 ad;
+`brief-intake`, `seedance-ugc-ads` and `seedance-prompt-25` write an L5 ad;
 `ad-delivery-formats` cuts ratios; `ad-creative-check` runs the pre-spend
 check; `prompt-review` handles strict or explicitly required/requested review.
 

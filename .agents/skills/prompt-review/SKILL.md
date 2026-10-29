@@ -17,6 +17,9 @@ Missing means `default` for new actions; invalid values fail.
 - **Explicit required rules in default:** check only the requested applicable
   rules with real request-bound evidence. For ad rules, load only
   `references/checklist-ad-compliance.md`; do not stack craft checklists.
+  For `acting.plan_bound`, read only the performance handoff item in
+  `references/checklist-seedance-25.md` and the
+  [performance contract](../../contracts/performance-direction.md).
   Missing evidence blocks. An omitted report is permitted only when no rules
   require it; a supplied failing, stale or incomplete report always blocks.
 - **Strict or explicitly requested detailed review:** follow the full workflow
@@ -82,6 +85,13 @@ override. The request hash covers
 the semantic submitted request, not just its prompt. Missing review input or request
 evidence leaves a production review `incomplete`; request it from the caller.
 Filename/content inference is a draft-only fallback with an explicit warning.
+
+Applicable character-performance prompts also supply the source-bound
+`## Performance plan` or equivalent isolated intent, relevant beat IDs,
+listener tasks, exact copy and current source/plan hashes. Missing material
+evidence is incomplete. Review `acting.plan_bound` even if the caller omitted
+it; preservation-only edits and non-performance assets record a concrete
+`not_applicable` reason outside the required-rule list.
 
 For the same request, use generation rules for generate, 2.5 edit rules for a
 2.5 edit, legacy VFX rules for a supported 2.0 edit, and extension rules for

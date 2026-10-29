@@ -134,9 +134,19 @@ travel axis, subject order, boundary behavior, end state and forbidden
 transitions first, using physical locations ("forest interior → inland tree
 line → white sand"), and repeat the invariants that matter in every shot.
 
+Body speed, amplitude, interruptions and recovery follow the approved intent.
+Stillness and repeated energetic actions are valid; do not impose slow motion
+or a single-burst cap. Evaluate readability, contact and balance at the planned
+framing and speed. A slower action or burst separated by holds is an optional
+repair for a demonstrated failure, not a default. Spoken dialogue does not cap
+actor or camera energy: preserve exact delivery and verify actual playback.
+
 Per shot, in this order:
 
-1. Camera movement or transition (one primary move), with any `@Video N`.
+1. Camera movement or transition, with any `@Video N`. One or two moves is a
+   planning heuristic, not a cap on coherent requested choreography; preserve
+   endpoints and ordered phases, check readability and flag incompatible
+   simultaneous directions.
 2. Subject action at body-part level, with the subject's `@Image N`.
 3. Position or spatial change, with the environment's `@Image N`.
 4. Light: the plan's source and key side ("warm dusk window light from

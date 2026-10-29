@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "scope": "offline_creative_defaults",
+  "rubric_revision": 1,
+  "cases": [
+    {
+      "id": "quiet_polished_hold",
+      "skill": "seedance-ugc-ads",
+      "prompt": "Write one product-showcase prompt, no generation. Approved 20-second locked eye-level shot of a ceramic bowl, constant diffuse studio light, silence. Viewers should gradually notice the supplied asymmetric rim. No cuts, turn, camera movement or new product claim. CTA exactly 'Explore the shape.' in post. Do not expand the brief.",
+      "criteria": {
+        "intent": "The framing gives attention to the supplied rim and makes quiet observation a meaningful payoff without an invented transformation.",
+        "coverage": "Retains the sustained hold, regular timing and constant light without six-clip, variety, turn, hold or standout quotas.",
+        "preservation": "Keeps product geometry, exact CTA in post, silence, runtime and scoped prompt-only boundary."
+      }
+    },
+    {
+      "id": "energetic_dialogue",
+      "skill": "seedance-prompt-25",
+      "prompt": "Write only an approved 12-second shot: two designers hurry beside a moving display, A points twice to separate samples and says {Look at these!}, B keeps pace and replies {Both of them?}. Preserve both quick gestures, tracking medium two-shot, constant window light and product identities. No cuts, added holds, slow motion or generation. Delivery has not been recorded.",
+      "criteria": {
+        "intent": "Excited shared discovery remains energetic without replacing the physical task with mood adjectives.",
+        "readability": "Checks words, required lip-sync, contact, recovery and relevant listening at the planned speed; treats unverified delivery provisionally rather than banning kinetic dialogue.",
+        "preservation": "Keeps exact lines and speaking assignments, repeated gestures, tracking, light, products, timing and no-generation scope."
+      }
+    },
+    {
+      "id": "legacy_repeated_bursts",
+      "skill": "seedance-prompt-20",
+      "prompt": "Legacy Seedance 2.0 prompt only, no generation. Ten-second physical-comedy demo: presenter quickly reaches twice for a rolling plain spool, recovers balance between attempts, says {Not that one!}, then catches it. Locked wide camera and window light. Keep both attempts and pace; no new claims, cuts or inserted holds.",
+      "criteria": {
+        "intent": "Retains the repeated attempts and comic rhythm through grounded physical action rather than a slow-body default.",
+        "readability": "Describes contact, balance and recovery; an optional repair addresses demonstrated unreadability, not burst count or the presence of speech.",
+        "preservation": "Uses legacy grammar without invented native Draft capability and preserves exact line, action, ending, light, wide frame and budget scope."
+      }
+    },
+    {
+      "id": "missing_premise",
+      "skill": "brief-intake",
+      "prompt": "New 15-second lamp ad, no concept selected: make it premium. Known fact: swiveling head. Audience: small-desk users. CTA exactly 'See the lamp.' No other product evidence. Help settle a compact idea, no generation and no full questionnaire.",
+      "criteria": {
+        "premise": "Identifies what the audience notices or feels, what carries attention and why the ending matters; premium adjectives or a preset list are insufficient.",
+        "alternatives": "Offers concise materially different directions or a focused question for the open idea, with tradeoffs rather than mandatory lengthy development.",
+        "preservation": "Does not invent brightness, health, productivity, price or testimony; preserves audience, fact, CTA and no-generation scope."
+      }
+    },
+    {
+      "id": "scoped_hook",
+      "skill": "seedance-ugc-ads",
+      "prompt": "Only replace the opening hook with a closer view of the supplied swiveling lamp head. Keep the approved body, locked line 'Swivel the head toward your notebook', CTA 'See the lamp.', silent final hold, camera after the hook, runtime and product pin. One variant, no generation or new claim.",
+      "criteria": {
+        "scope": "Changes the hook only and identifies actual dependencies without reopening the premise, demanding alternatives or adding a production workflow.",
+        "attention": "The closer view makes the supported mechanism readable without inventing a new payoff or effect.",
+        "preservation": "Keeps both exact lines, body, hold, runtime, product pin, variant count and authorized one-axis change."
+      }
+    },
+    {
+      "id": "sound_led_reveal",
+      "skill": "film-production",
+      "prompt": "Plan only, no generation: a 12-second product-only lamp reveal. A supplied usable click sound should make viewers search before the lamp appears; the ending answers where it came from. Picture-only generation, final audio in post, no speech. Product geometry and CTA 'See the lamp.' are locked. No audio file has yet been measured.",
+      "criteria": {
+        "sound_editorial": "Plans what is heard before seen, withholding and payoff before picture generation, without requiring finished audio early or discovering sound only after picture lock.",
+        "acceptance": "Leaves cue times provisional until the measured edit and requires actual full-speed playback/listening with timestamped evidence for attention, hierarchy and reveal timing.",
+        "preservation": "Keeps picture-only route, no speech, product identity, exact post CTA, runtime and spend boundary; invents no listening result."
+      }
+    },
+    {
+      "id": "unavailable_playback",
+      "skill": "film-production",
+      "prompt": "Review decision only, no generation: our final 12-second lamp reveal decodes and has the correct transcript. Nobody can play or listen to it today. Approved intent is an offscreen click attracting attention before the closing reveal. Default review mode, approve_for_me. Can we lock the master based on the successful render?",
+      "criteria": {
+        "evidence": "Leaves artistic acceptance unresolved; successful decode, transcript and schema do not establish actual playback or listening.",
+        "acceptance": "Names the missing full-speed attention, sound hierarchy, timing and payoff checks with timestamped evidence needed before selection.",
+        "preservation": "Does not fabricate approval, lock a failed or uninspected master, add strict reports, build a runtime or authorize extra spend."
+      }
+    },
+    {
+      "id": "localized_variant_locks",
+      "skill": "seedance-ugc-ads",
+      "prompt": "Suggest only a hook-framing repair for one L3 localized talent variant, no generation. Exact Spanish line {Mira la forma.}, CTA 'Ver detalles', supported geometry-only claim, product identity, campaign pins, body timing, camera after hook and one-axis budget are locked. Native human sign-off is missing. Do not alter action, language or the source campaign.",
+      "criteria": {
+        "scope": "Proposes only a framing repair and preserves performance, without using creative defaults to justify a new scene or extra variants.",
+        "authorization": "Keeps L3 native human approval unresolved before final generation/delivery; an agent creative decision cannot substitute for it.",
+        "preservation": "Retains exact Spanish copy and CTA, claim limits, identity, campaign pins, source campaign, timing, localization level and budget."
+      }
+    }
+  ]
+}

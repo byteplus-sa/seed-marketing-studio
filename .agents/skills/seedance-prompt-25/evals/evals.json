@@ -82,7 +82,7 @@
     {
       "id": 7,
       "prompt": "Write a Seedance 2.5 prompt where a chef tastes an overcooked dish and shifts from confidence to quiet disappointment. The emotion must be shown through observable physical cues, not abstract words.",
-      "expected_output": "An emotional direction prompt using the single emotional transition template with 2-4 observable physical cues.",
+      "expected_output": "An emotional direction prompt with readable consequences of tasting; a transition template and cue count are optional.",
       "files": [],
       "expectations": [
         "The tasting event causes an understandable emotional transition with a readable final state; no named template is required.",
@@ -130,12 +130,12 @@
     {
       "id": 11,
       "prompt": "I need a 30-second cinematic spot for a running shoe. Write it as one Seedance 2.5 prompt with about ten beats.",
-      "expected_output": "A recommendation to build the spot from several short sequences of 2-3 shots each, generated separately and assembled, with per-shot camera, lens intent and light, rather than one ten-beat pass.",
+      "expected_output": "A scoped assessment of whether ten beats fit one requested prompt, preserving the single-generation scope unless a split is authorized; coverage follows intent and readability.",
       "files": [],
       "expectations": [
-        "The output explains that a single 30-second pass with many beats tends to read flat and proposes about five or six shorter sequences.",
-        "Each proposed shot has one action, a size and angle, a camera move, a lens intent as a visible result and a named light source.",
-        "Adjacent shots differ in at least two of size, angle, move and key side.",
+        "The output identifies potential overload without claiming every long take is flat; any split is a conditional alternative requiring source-count and budget authorization.",
+        "Each proposed shot has an action or sustained task, size and angle, a motivated move or hold, lens intent and named light.",
+        "Repeated framing, equal timing, no turn and no standout image are valid when readable; no variety quota overrides the requested scope.",
         "No caption, tagline, logo or end card is requested inside the footage; those are left to post."
       ]
     },
@@ -160,6 +160,18 @@
         "The final request carries the draft_task_id and output settings only (resolution, watermark false, optional return_last_frame), without prompt, references, duration, ratio or audio fields.",
         "The output explains that a dialogue change cannot ride on the promotion and needs a revised prompt, a new review and a new draft.",
         "The output asks for the final's playback and audio to be checked again before it replaces the draft."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Write only a 10-second Seedance 2.5 prompt. Approved action: two excited designers hurry toward a display; A points twice at separate samples while saying exactly {Look at these!}, B keeps pace and answers {Both of them?}. Keep the tracking medium two-shot, repeated quick gestures, product identities and window light. No extra cuts, holds, slow motion or generation.",
+      "expected_output": "Energetic dialogue with grounded repeated gestures and tracking coverage, checked for readable delivery without a burst cap.",
+      "files": [],
+      "expectations": [
+        "Preserves the repeated points, hurried pace and tracking two-shot rather than softening the body or imposing pre/post holds.",
+        "Keeps both exact lines, speaker assignments, product identity, window light and no-extra-cuts scope.",
+        "Separates actor energy, camera energy and edit rhythm; dialogue does not exclude kinetic coverage.",
+        "Budgets readable words, listening, contact and recovery within the shot, leaving unmeasured fit provisional and making no observed-quality claim."
       ]
     }
   ],
