@@ -10,6 +10,8 @@
         "Runs brief-intake first and records a picture_only audio route, ungraded original colours and the logo/end card as post overlays in project.md.",
         "Develops hook, motivation, progression, payoff and product role before coverage; records internal shots separately from authorized source generations.",
         "Submits only authorized sources as requested 480p drafts with verified native Draft support and picture-only audio, after registration and mode-appropriate review, within a declared run budget.",
+        "Plans shot count, holds or moves and timing around readable beats and budget; no cadence, variety, turn or wow quota applies.",
+        "Plans sound/editorial attention and payoff before generation and defines brief-specific artistic criteria for actual playback.",
         "Does not bind any storyboard image as a Seedance reference."
       ]
     },
@@ -56,6 +58,18 @@
         "Does not submit an extension of a clip with people unless the identities are registered asset:// Virtual Portrait assets.",
         "Offers a new single-pass shot with matching first frame and a blocking map, assembled at a cut.",
         "Does not submit a paid request before the user chooses the route."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Review only: the assembled 12-second lamp reveal decodes and its transcript is correct, but no one has played or listened to it. The approved premise is that an offscreen click makes the viewer look for the lamp, revealed only at the end. Default review mode, approve_for_me. Can we lock it? No generation or extra spend.",
+      "expected_output": "An unresolved artistic review, with actual playback/listening required before selection and no fabricated pass.",
+      "files": [],
+      "expectations": [
+        "Does not lock based only on decode, transcript, schema or agent approval authority.",
+        "Requests actual full-speed playback and listening with timestamps for attention, reveal timing and the click's audibility.",
+        "Checks that the final cut preserves the approved withholding and payoff without treating motion or a wow frame as mandatory.",
+        "Uses concise existing default-mode review evidence and existing lock writers, with no new runtime, paid generation or strict checklist mandate."
       ]
     }
   ]

@@ -54,6 +54,12 @@ and soundtrack changes. Never force a deeper level than the change needs.
 | Script, hook, angle, structure | L5 | `brief-intake`, `seedance-ugc-ads`, `seedance-prompt-25` |
 
 A swap keeps the source motion, so it cannot remove a gesture or an action.
+Performance is inherited at L1-L4 unless the inventoried change explicitly
+authorizes new acting at the appropriate level. For new L5 character beats,
+derive a source-bound performance plan before coverage and encode only the
+authorized delta. Keep target copy, CTA, product identity and market facts
+locked. Apply `acting.plan_bound` when relevant; L3-L5 human sign-off remains
+a separate final-generation and delivery gate.
 
 ## Recording levels in inventory.md
 
@@ -144,8 +150,9 @@ Pick one route per voice:
    using `audio-dubbing` (its preparation checklist, language reference and the
    current Seed Audio API reference), and record the result. An unsupported
    language is told to the user before any spend; offer L1 instead.
-2. Fit each translated line to its window at natural speed; shorten rather
-   than speed up.
+2. Fit each translated line to its window at natural speed. Preserve locked
+   target words and pauses; return overruns for authorized retiming, splitting
+   or a separately approved text revision, never silent shortening or speeding up.
 3. Keep the source soundtrack: use the source project's separate music and
    effects stems when they exist, otherwise separate the delivered mix with
    the audio separation tool and keep the background stem. Never ship a

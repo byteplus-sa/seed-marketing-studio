@@ -75,7 +75,7 @@ the movement begins, and **where** it ends.
 | Crane down | `Crane down from a <high angle or overhead> view of <scene> to <subject level>.` |
 | Jib up | `Jib arc up over <subject>, <left-to-right or right-to-left>.` |
 | Jib down | `Jib arc down over <subject>, <left-to-right or right-to-left>.` |
-| Static / locked-off | `Locked-off static camera on a tripod, no camera movement — only <subject> moves within the frame.` |
+| Static / locked-off | `Locked-off static camera on a tripod, no camera movement; <subject's intended action or stillness> remains within the held composition.` |
 
 ### Technique presets
 
@@ -140,8 +140,8 @@ additions — safe to use, but not in the official vocabulary list.
 **Dutch angle template:** `Dutch angle on <subject>: hold the camera rolled
 <clockwise/counterclockwise> so the horizon stays visibly diagonal, framing
 <shot size>.` State a mild or pronounced cant when relevant. A held cant is an
-orientation, not a rolling camera move; describe a changing roll separately and
-count it toward the move limit. It may accompany one compatible move, such as
+orientation, not a rolling camera move; describe a changing roll separately as
+part of the choreography. It may accompany compatible movement, such as
 a slow dolly in. These additions are prompt-authoring heuristics, not verified
 model controls or guarantees of simulated optics.
 
@@ -160,12 +160,12 @@ before relying on one.
 |---|---|
 | Single | `Single shot of <subject>, <shot size>, <angle>; only <subject> is in frame.` |
 | Dirty single / over-the-shoulder | `Over-the-shoulder shot from behind <foreground character>: their shoulder and the back of their head sit soft and dark at frame-<left/right>, while <subject> is sharp and facing the camera, <shot size>.` |
-| Over-the-hip | `Over-the-hip shot: the hip and hand of <standing character> sit soft in the frame-<left/right> foreground, while <lower character> is sharp in the middle distance, <shot size>, <angle>.` Use only when the two characters are at different heights. |
+| Over-the-hip | `Over-the-hip shot: the hip and hand of <foreground character> sit soft in the frame-<left/right> foreground, while <featured character> is sharp in the middle distance, <shot size>, <angle>.` Preserve source blocking; do not invent a height difference or power imbalance. |
 | Two-shot | `Two-shot: <A> frame-left and <B> frame-right, both fully in frame and in focus, <shot size>, <angle>.` |
 | Three-shot | `Three-shot: <A> frame-left, <B> in the center and <C> frame-right, all in focus, <shot size>.` |
 | Group shot | `Group shot of <group> arranged <layout>, with <front subject> nearest the camera, <shot size>.` |
-| Point of view | `Point-of-view shot from <character>'s eyes: we see <what they see>, <shot size>; none of <character> is visible except <hands or limbs they would see>.` For an object, `Point-of-view shot from <object> as it <moves>`. Cover it with a shot of the looker before it and the reaction after it. |
-| Insert | `Insert shot: <detail> fills the frame, <shot size>, <held or one named move>; no face is in the frame.` |
+| Point of view | `Point-of-view shot from <character>'s eyes: we see <what they see>, <shot size>; none of <character> is visible except <hands or limbs they would see>.` For an object, `Point-of-view shot from <object> as it <moves>`. Looker/reaction coverage is optional; establish readable ownership through source context or coverage without adding unrequested shots. |
+| Insert | `Insert shot: <detail> fills the frame, <shot size>, <held or named camera path>; no face is in the frame.` |
 
 ## Parameter schema
 
@@ -174,14 +174,14 @@ required; everything else is optional.
 
 | Parameter | Meaning | Rules |
 |---|---|---|
-| `move` | Named preset from the bank | Required; one preset. If `style` is also set, `move` may be "auto" or omitted. |
+| `move` | Named preset or coherent camera path from the bank | Required; name the requested movement and any compatible components. If `style` is also set, `move` may be "auto" or omitted. |
 | `style` | Camera style (10 above) | Optional; one per prompt. Sets the camera personality for the whole clip. |
 | `subject` | What the camera follows, plus where the move starts and ends | State a named subject whenever one exists (`@gloria`, `Gloria`, `the courier`). For technique presets, state which subject the camera follows and where the movement begins and ends. |
 | `shot_size` | From the shot-size vocabulary | Optional; e.g. `medium close-up`. |
 | `angle` | From the angle vocabulary | Optional; e.g. `low angle`. |
 | `framing` | From the framing templates | Optional; one per shot. Name each featured subject and its screen side. |
 | `timestamp` | Optional `At Ns` moment for a transition or beat | Use only for critical handoffs or transitions. A time budget, not frame-accurate. |
-| `stack` | Number of simultaneous moves in one shot | **At most 2 per shot.** Default to one move. Add one secondary move (e.g. `dolly in` + `tilt up`) only when the shot requires it and the motions remain compatible; more than 2 risks instability. A clip that cuts has one Camera block per shot, so the clip as a whole may carry more moves. |
+| `stack` | Number of simultaneous moves in one shot | One or two moves is a planning heuristic, not a hard cap or provider limit. Preserve coherent requested choreography with more components; assess compatibility and readability, not count alone. Distinguish simultaneous components from ordered phases. A clip that cuts has one Camera block per shot. |
 | `speed` | Pace of the move | Optional; use directional words (`slow`, `fast`, `rapid`, `leisurely`) rather than numeric fps. |
 
 ## Output grammar
@@ -199,7 +199,7 @@ Audio includes <audio>.
 **Camera-block template:**
 
 ```
-Use [At <N>s, ] <move 1> [then <move 2>], <shot size>, <angle>, <speed> [; <timestamped transition>].
+Use [At <N>s, ] <camera path with compatible components and ordered phases>, <shot size>, <angle>, <speed> [; <timestamped transition>].
 ```
 
 **Worked example (T2V, dolly-in preset):**
@@ -227,7 +227,7 @@ starts and ends, its speed, its timing, and the hold after it.
 
 - State a move for every moving shot, with an active verb and a speed: the
   camera drives in fast, sweeps left, rises over, snaps to, glides behind.
-  Reserve `gentle` and `subtle` for a shot whose stillness is the point.
+  Choose speed from intent; gentle movement and sustained stillness are valid.
 - Give a timed beat to the move only where it matters (`At 3s, crash-zoom in on
   <subject>`); otherwise the start and end states carry it.
 - In a clip that cuts, each shot carries its own Camera block. The shot plan
@@ -242,17 +242,20 @@ starts and ends, its speed, its timing, and the hold after it.
 - **Timestamps are a time budget.** `At Ns` allocates time to a beat; it is not
   a frame-accurate edit point, and actions may land slightly before or after
   the boundary.
-- **At most 1-2 moves per shot.** A shot with more simultaneous moves becomes
-  unstable and cuts erratically. `stack` defaults to 1; allow 2 only when the
-  second move is a natural continuation (e.g. `dolly in, then tilt up`). In a
-  clip that cuts, write one Camera block per shot so each cut can carry its own
-  move.
+- **Move count is a planning heuristic.** Start with a simple path when none
+  is specified; preserve coherent requested choreography, including more than
+  two simultaneous components or ordered phases. Flag incompatible simultaneous
+  directions, unclear handoffs or demonstrated readability failures, not count
+  alone. Simplify only the affected span within source locks; a lower count
+  does not prove compatibility. In a clip that cuts, write one Camera block per
+  shot. Actual playback is needed to verify motion; a prompt is not evidence
+  of a stable take.
 - **A locked-off shot is a recorded choice.** State the static camera in the
   Camera block and record its `static_reason` in the shot plan (the
   shot-design skill owns the allowed values). The Seedance 2.5 MCP tool exposes no `camera_fixed`
   field (checked 2026-10-06; the legacy `seedance-prompt-20` skill documents it
-  for the 2.0 REST API), so the prompt carries the lock. A hold lands best after
-  motion.
+  for the 2.0 REST API), so the prompt carries the lock. A hold can sustain
+  attention throughout; preceding motion is optional.
 - **One-take needs explicit order.** A one-take shot must list the subjects,
   spaces, and events the camera passes through **in order**; an unordered list
   lets the model cut or reorder the passage.
@@ -275,10 +278,12 @@ Before a Camera block is submitted as part of a Seedance 2.5 prompt, verify:
 1. The `move` is from the preset bank, or follows the Cinematography-Term +
    Subject + Visual Change + Foreground/Background + Direction recipe for
    uncommon terms.
-2. `stack` is 2 or fewer simultaneous moves per shot.
-3. The Camera block names the subject the camera follows whenever a subject
-   exists, and states where the move starts and ends with an active verb and a
-   speed.
+2. The choreography has no incompatible simultaneous directions; phases and
+   handoffs are clear, and readability is checked at the intended speed and
+   framing. Move count alone is not a pass/fail threshold.
+3. The Camera block names the subject whenever one exists. A moving shot
+   states where the move starts and ends with an active verb and a speed;
+   a static shot states the held composition without inventing movement.
 4. No numeric aperture or focal value appears alone without a visible result.
 5. Shot size and angle come from the listed vocabulary when specified; common
    cinematography additions are not presented as official model controls.

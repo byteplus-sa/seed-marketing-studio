@@ -32,6 +32,10 @@ space, so sound direction in the prompt shapes the final result.
 Input: a video brief, resolved model/operation, duration policy, ordered input
 roles, approved relevant Elements, and any current motion/blockout manifest
 selected for intentional conditioning.
+For new or revised character performance, consume the caller's performance
+plan and encoded beat cues. Missing intentions, listener tasks, triggers or
+end states remain unresolved, not replaced by emotion adjectives. Preserve
+exact ad copy, CTA, supported claims and product identity.
 
 Output: a six-part prompt, reference bindings, applicable mode parameters,
 explicit appearance and motion authorities, and observable acceptance criteria
@@ -271,7 +275,10 @@ Before handing the package to review, confirm:
    references are selected by scene.
 3. Every shot or stage carries its planned size, angle, move and named light,
    or a recorded static reason; shot count and lengths fit the duration.
-4. Emotions and cinematography terms are paired with visible or audible cues.
+4. Supplied performance intentions, triggers, registration and listener
+   responses reach the prompt with readable consequences (`acting.plan_bound`).
+   Intentional stillness and non-response remain valid. Source-preserving edits
+   inherit acting; do not rewrite locked action to add cues.
 5. The hygiene items above hold: positive wording, counts, frame-side hands,
    text-free frames, no parameters in the text.
 6. Spoken lines fit the speech budget; the audio route matches the piece.
@@ -290,7 +297,11 @@ Before handing the package to review, confirm:
 - Multi-reference goal is to select and combine correct materials, **not** to make every material appear at once.
 - For subtitles, formulas, signs, product specs, or frame-level timing that must be completely accurate, keep the footage text-free and add the exact layer in post.
 - Mismatched first/last-frame ratios may stretch the last frame (auto-lock rules above).
-- Shots shorter than about 0.8 s merge; blink cuts, intercuts and vision flashes are assembly cuts.
+- About 0.8 s per shot and about 7 shots per clip are provisional generation
+  heuristics, not provider limits or guaranteed merge/drop thresholds. Preserve
+  requested rhythm and source timing without automatic retiming or shot removal.
+  Offer assembly for precise cuts or omitted action; return genuine feasibility
+  conflicts rather than promising exact control from a prompt.
 - A rack focus that leaves the subject soft mostly fails; the model keeps the face sharp. Add that defocus in post.
 - For one-click video, specify image order and character mapping explicitly if they matter.
 - Seamless transitions aim for visual/audio continuity; they do not guarantee pixel-identical preservation.

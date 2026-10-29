@@ -1,5 +1,8 @@
 import importlib.util
 import json
+import subprocess
+import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -108,6 +111,36 @@ class CreativeQualityEvaluationTests(unittest.TestCase):
                          'batch_repetition', 'technical_camouflage',
                          'missing_evidence', 'narrow_revision'} <= set(indexed))
         self.assertEqual(scenarios['scope'], 'offline_prompt_quality')
+
+    def test_defaults_fixture_runs_through_existing_cli_without_media_or_judgments(self):
+        cases_path = ROOT / 'tests/fixtures/creative_quality_defaults_cases.json'
+        scenarios = json.loads(cases_path.read_text())
+        outputs = {'outputs': {case['id']: f"Synthetic harness input: {case['id']}"
+                               for case in scenarios['cases']}}
+        with tempfile.TemporaryDirectory(prefix='creative-defaults-') as directory:
+            root = Path(directory)
+            writer = root / 'writer.json'
+            writer.write_text(json.dumps(outputs))
+            destination = root / 'pack'
+            command = [
+                sys.executable, '-B', str(ROOT / '.agents/scripts/evaluate_skill_quality.py'),
+                'pack', '--cases', str(cases_path), '--before', str(writer),
+                '--after', str(writer), '--out', str(destination),
+            ]
+            result = subprocess.run(command, capture_output=True, text=True, check=False)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(json.loads(result.stdout)['cases'], 8)
+            pack = json.loads((destination / 'blind.json').read_text())
+            key = json.loads((destination / 'key.json').read_text())
+            self.assertEqual(key['pack_sha256'], quality.digest(pack))
+            self.assertEqual([case['criteria'] for case in pack['cases']],
+                             [case['criteria'] for case in scenarios['cases']])
+            original = (destination / 'blind.json').read_bytes()
+            repeated = subprocess.run(command, capture_output=True, text=True, check=False)
+            self.assertEqual(repeated.returncode, 1)
+            self.assertEqual((destination / 'blind.json').read_bytes(), original)
+            with self.assertRaises(ValueError):
+                quality.summarize(pack, key, {'pack_sha256': quality.digest(pack), 'cases': []})
 
 
 if __name__ == '__main__':

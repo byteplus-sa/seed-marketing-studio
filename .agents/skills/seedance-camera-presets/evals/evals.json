@@ -23,7 +23,7 @@
         "The output specifies which subject's size must be preserved (Marcus or @marcus).",
         "The output states whether the background moves closer or farther (compresses).",
         "The output pairs any numeric lens value (e.g. '50mm') with a visible result such as shallow depth of field or bokeh, never a bare number (per the skill's advisory rule).",
-        "The output keeps simultaneous moves at or below 2."
+        "The requested dolly and counter-zoom remain compatible and keep the subject readable; no move-count cap is imposed."
       ]
     },
     {
@@ -36,7 +36,7 @@
         "The output states the camera direction (rapidly to the left).",
         "The output names the foreground occluding element that fills the frame (bookshelf).",
         "The output specifies the continuation (continue moving left at a similar speed in the next scene).",
-        "The output keeps simultaneous moves at or below 2."
+        "The requested transition retains coherent direction and readable handoffs without a move-count cap."
       ]
     },
     {
@@ -49,7 +49,7 @@
         "The output describes the flight path through named spaces (towers, plaza, cathedral).",
         "The output specifies the speed (fast) of the flight.",
         "The output specifies turns or direction changes (bank right, climb).",
-        "The output keeps simultaneous moves at or below 2."
+        "The output preserves all requested ordered path phases instead of truncating them to meet a move-count cap."
       ]
     },
     {
@@ -62,7 +62,7 @@
         "The output names the subject the camera follows (the courier).",
         "The output lists the spaces the camera passes through in order (lobby, reception desk, elevator, 12th floor corridor).",
         "The output orders the events (enters, passes, rides up, arrives) rather than presenting them unordered.",
-        "The output keeps simultaneous moves at or below 2."
+        "The output preserves the full ordered one-take path without adding cuts or dropping phases to meet a move-count cap."
       ]
     },
     {
@@ -75,7 +75,7 @@
         "The output uses close-up or near-subject framing from the Intimate Observer block.",
         "The output keeps the camera near the subject with gentle or handheld movement.",
         "The output does not combine a second camera style in the same prompt.",
-        "The output keeps simultaneous camera moves at or below 2."
+        "Camera movement serves the requested intimate style and readable gestures, without adding unrelated moves or imposing a count cap."
       ]
     },
     {
@@ -94,10 +94,10 @@
     {
       "id": 8,
       "prompt": "Write the Camera blocks for a 12-second Seedance 2.5 clip with three shots: a slow crane down on a kitchen, a slow push-in on a door handle, and a static low-angle close-up. Keep to the camera move rules.",
-      "expected_output": "Three Camera blocks, each with at most two moves for that shot, including a crane-down, a push-in and a static hold, each stating subject, start and end.",
+      "expected_output": "Three Camera blocks preserving the requested crane-down, push-in and static hold, with named subjects and movement endpoints; move count is a planning heuristic, not an acceptance cap.",
       "files": [],
       "expectations": [
-        "Each shot has its own Camera block with one primary move and at most one secondary move.",
+        "Each shot has its own Camera block carrying the requested movement or hold without adding unrelated choreography.",
         "The clip as a whole is not capped at two moves because the moves belong to different shots.",
         "Every move names the subject it follows and where it starts and ends.",
         "The static hold is stated as a deliberate hold, not left as a missing camera line."
@@ -117,13 +117,13 @@
     {
       "id": 10,
       "prompt": "Write Camera blocks for a three-shot of Ana, Bo and Cy at a bus stop, then a point-of-view shot from Ana's eyes of a letter in her hands.",
-      "expected_output": "A three-shot block naming left-to-right order and a point-of-view block from Ana's eyes showing only her hands, with advice to cover the POV with a looker and a reaction shot.",
+      "expected_output": "A three-shot block naming left-to-right order and a point-of-view block from Ana's eyes showing the letter and only her hands. Extra looker/reaction coverage is optional, not a required expansion of the two requested blocks.",
       "files": [],
       "expectations": [
         "The three-shot names Ana, Bo and Cy in left-to-right order, all in focus, with a shot size.",
         "The point-of-view block is from Ana's eyes, shows the letter, and has nothing of Ana visible except her hands.",
-        "The output says the point-of-view shot should sit beside a shot of Ana looking and a reaction shot, or records why it stands alone.",
-        "Neither block has more than two simultaneous moves."
+        "The output establishes readable POV ownership from Ana's source context; looker/reaction coverage is optional and no extra shots are required.",
+        "Both blocks preserve the requested framing and readable subject relationships without imposing a move-count cap."
       ]
     },
     {
@@ -136,7 +136,7 @@
         "The move names the chef or the dish and states where it starts and where it ends.",
         "The block gives a shot size and an angle.",
         "The output explains that a clip without a camera statement tends to return a neutral held frame.",
-        "The block has no more than two simultaneous moves."
+        "The block has coherent direction and readable action rather than a move-count acceptance threshold."
       ]
     },
     {
@@ -149,6 +149,40 @@
         "It recommends generating with ordinary focus and adding the defocus in post, or staging the attention shift with a move or a cut to an insert of the gun.",
         "It names the lens preset skill as the owner of rack focus wording rather than writing a rack focus template here.",
         "Any Camera block it gives names the subject, a start and an end."
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Word one Camera block for an approved 12-second product reveal with three simultaneous components: orbit clockwise around a stationary chair while craning upward and tilting down to keep its seat centered. Start at seat height in a medium shot and end high and wide with the whole chair visible. No cuts, no added holds, no generation.",
+      "expected_output": "Preserve the requested three-component choreography as one continuous camera path with clear start and end. Count is a planning heuristic; compatibility and readability determine whether a repair is needed, and actual output remains unverified.",
+      "files": [],
+      "expectations": [
+        "Preserves the clockwise orbit, upward crane and downward tilt together, with the stationary chair as the subject and the seat centered.",
+        "Keeps the seat-height medium start and high wide end, no cuts and no added holds; does not remove a component merely to reduce the count.",
+        "Checks compatibility and readability at the intended speed and framing without claiming that a prompt proves stable generated motion.",
+        "Generates nothing and preserves the product identity."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Write a Camera block that must pan left and pan right at the same time on the same axis for the whole shot, both directions locked. Keep both simultaneous; do not silently make them sequential. No generation.",
+      "expected_output": "Identify the incompatible simultaneous directions even though the count is only two. Return the conflicting locks for clarification, leaving choreography unresolved rather than silently changing it.",
+      "files": [],
+      "expectations": [
+        "Flags simultaneous left and right panning on the same axis as incompatible; a count of two does not establish coherence.",
+        "Asks which direction or authorized sequence is intended and does not silently drop a lock or convert the moves into phases.",
+        "Keeps the conflict unresolved and makes no generation or readability-pass claim."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Make a Camera block with three moves. I have not chosen the subject, start position, end position or whether the moves happen together. No generation.",
+      "expected_output": "Return the missing subject, endpoints and simultaneity as unresolved inputs. Ask focused questions or offer a clearly provisional path; neither reject nor invent choreography solely from the requested count.",
+      "files": [],
+      "expectations": [
+        "Identifies missing subject, start, end and simultaneous-versus-ordered intent instead of inventing approved facts.",
+        "Treats the count as insufficient to establish either coherence or failure; any proposed path is explicitly provisional.",
+        "Does not claim verified readability, a finished generation-ready path or generated output."
       ]
     }
   ]

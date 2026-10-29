@@ -415,7 +415,9 @@ vocabulary, and this skill owns when cuts land on the song. Plan what each shot
 is (size, angle, move, light source and key side) with `seedance-shot-design`
 inside those cuts, usually at kinetic energy; when the user names a specific
 axis, compose it with its owning preset skill. Keep exactly one grade per clip,
-one dominant lighting direction per shot and at most two camera moves per shot.
+one dominant lighting direction per shot. One or two camera moves is a planning
+heuristic, not a cap on coherent requested choreography; check readability,
+endpoints and incompatible simultaneous directions while preserving the beat contract.
 Do not stack a second grade or camera treatment on top of a genre recipe.
 
 ## Rights and safety

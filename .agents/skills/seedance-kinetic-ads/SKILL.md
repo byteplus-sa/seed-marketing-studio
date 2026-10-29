@@ -143,7 +143,9 @@ treatment / allowed departures from reality
 transition out / sound cue / native or post ownership
 ```
 
-Use one dominant camera move, with at most one compatible secondary move.
+One or two camera moves is a planning heuristic, not a cap on coherent
+requested choreography. Check readability and incompatible simultaneous
+directions; distinguish combined components from ordered phases.
 Give every move a destination and reason. Separate subject motion from camera
 motion; rotating both without intent can obscure geometry. Name a light
 source and its position rather than writing only "cinematic lighting."

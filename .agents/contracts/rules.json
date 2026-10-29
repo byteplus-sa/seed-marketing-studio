@@ -72,6 +72,17 @@
       "exceptions": []
     },
     {
+      "id": "acting.plan_bound",
+      "severity": "error",
+      "applies_to": ["narrative_video"],
+      "owner_path": ".agents/contracts/performance-direction.md",
+      "summary": "Character-performance prompts carry source-bound intentions, triggers, registration, listening and readable consequences without changing approved copy, claims, CTA or product identity.",
+      "exceptions": [
+        "Static assets, empty plates and non-performance work record not_applicable.",
+        "Preservation-only edits inherit performance and use edit-preservation checks."
+      ]
+    },
+    {
       "id": "shot.plan_bound",
       "severity": "error",
       "applies_to": [
@@ -90,9 +101,9 @@
         "narrative_video"
       ],
       "owner_path": ".agents/skills/seedance-shot-design/SKILL.md",
-      "summary": "Adjacent shots in a cutting clip differ in at least two of size family, angle class, camera move and key side; each scene has a non-eye-level angle, a motivated move at its energy level and uneven shot lengths, or a recorded reason.",
+      "summary": "Coverage, intensity and timing serve approved intent and readable beats. Repeated framing, eye-level shots, constant light, equal lengths and sustained holds are valid; contrast, turns and standout images are optional, not quotas.",
       "exceptions": [
-        "A single continuous take records its camera path and light progression instead of neighbor contrast.",
+        "A single continuous take records its camera path or purposeful hold and named lighting; no light progression is required.",
         "A shot plan derived from another skill's camera plan treats these checks as advisory."
       ]
     },
@@ -498,7 +509,7 @@
         "narrative_video"
       ],
       "owner_path": ".agents/skills/seedance-prompt-25/references/shot-staging.md",
-      "summary": "Each spoken line fits its shot using measured delivery or a native-language-informed read, including pauses and a 0.5-1.5 s late start; the last line ends at least 0.4 s before the clip end with at most two state changes in the final 3 s. About 2.2 words per second is an English planning estimate, not a universal gate; without delivery evidence, timing is provisional. Preserve requested language and locked words; propose retiming or splitting before an authorized wording revision.",
+      "summary": "Each spoken line fits its shot using measured delivery or a native-language-informed read, including pauses, onset and tail. About 2.2 words per second, 0.5-1.5 s onset and 0.4 s tail are initial planning estimates, not universal gates; without delivery evidence, timing is provisional. Judge closing beats by readability of intended words, action and response, not a state-change count. Simplify only for demonstrated failure within source locks. Preserve requested language and locked words; propose retiming or splitting before an authorized wording revision.",
       "exceptions": []
     },
     {

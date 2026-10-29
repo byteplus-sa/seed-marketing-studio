@@ -12,6 +12,13 @@ instead.
 
 ## Canon to storyboard
 
+For character-performance scenes, pass source and performance-plan paths with
+current SHA-256, beat IDs, exact words, listener disposition, visibility needs
+and critical acceptance criteria through coverage, cue encoding and review.
+Keep full interpretation in `## Performance plan`, not repeated in every prompt.
+Preserve product identity, approved copy/CTA, supported claims and campaign pins.
+Source-preserving edits inherit acting; only authorized deltas get new cues.
+
 Pass selected element paths, roles, approval states, hashes, and stable prompt
 tokens. If an element is not approved, keep the dependent board in `draft` or
 `review` and make video handoff ineligible.
@@ -79,7 +86,7 @@ before updating placed takes.
 
 ## Dependency invalidation
 
-When a selected element, audio file, storyboard anchor, shot plan, confirmed project axis, or exact prompt changes,
+When a selected element, audio file, storyboard anchor, performance plan, shot plan, confirmed project axis, or exact prompt changes,
 identify every dependent artifact. Return affected downstream artifacts to
 `review`; preserve their files, prompts, task IDs, hashes, and rejection history.
 Run `studio_project.py sync` and `stage <project> reopen <stage-id>` in the same

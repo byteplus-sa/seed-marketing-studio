@@ -66,10 +66,15 @@ judgments, not observed generated-media results.
   Record source count separately: native cuts can fit one authorized source.
   Propose picture-only plus post audio when that control is wanted; preserve
   native rain/music if explicitly requested. Keep original colours and post copy.
+  Plan rain's change from interruption to playful rhythm before generation;
+  final accents follow the measured cut.
+  Segmented coverage and standout images are optional; preserve purposeful holds.
 - **Tradeoff:** Fewer ideas, a clearer progression; native cuts and sound remain
   approximate. Separate source control costs additional work and needs scope.
 - **Acceptance:** A viewer can trace hesitation to chosen play. The plan honors
   the actual source/audio budget and does not invent garment performance.
+  Actual playback and listening must establish attention and payoff; a written
+  premise or technically joined edit cannot establish them.
 
 ## A quiet ad mistaken for a weak ad
 

@@ -55,6 +55,15 @@ matched briefs (family drama, restrained brand, kinetic chase, dialogue argument
 and a locked selfie frame) scored on intent, camera and light, variety and
 preservation; run it through the same `pack` and `summarize` commands.
 
+`tests/fixtures/creative_quality_defaults_cases.json` covers quiet polished
+holds, energetic dialogue, legacy repeated bursts, missing premise, scoped
+hooks, sound-led work, unavailable playback and localized variant locks.
+Use the existing harness; no new runtime or production gate is needed.
+Contrast, cadence, turns, holds and standout counts are not quality criteria.
+Judge attention and payoff against the brief, including deliberate ambiguity.
+Keep prior packs and judgments tied to their original rubric; do not rescore
+historical results silently when a fixture changes.
+
 Include short briefs, awkward constraints and unconventional choices:
 soft shadowless product photography, a quiet repeated chorus, a masked wide-shot
 performance, locked literary-register dialogue, a product with no numerical
@@ -74,6 +83,20 @@ a live capability claim. For an observed result, identify the artifact and
 conditions; absent those, mark historical anecdotes unverified. Artistic advice
 should explain when it helps and when it does not apply. Do not turn a plausible
 technique or a single failed take into a universal prohibition or guarantee.
+
+## Actual artistic acceptance
+
+Before selection, define a small brief-specific set of artistic criteria in
+existing scene/review notes: what invites attention, what should register,
+and why the ending matters. Plan sound/editorial intent before generation;
+final cues follow measured picture. Inspect full-speed playback and listen
+when audio is in scope, citing artifact hashes, timestamps and relevant beat
+IDs for the take and final edit. Evaluate actor energy, camera energy and edit
+rhythm independently; a quiet hold and kinetic dialogue can both pass.
+Check sound hierarchy, anticipation, silence and release against the brief.
+Unavailable perception or failed critical intent remains unresolved, not a
+pass inferred from a transcript, correct schema or clean join. Default-mode
+evidence stays concise; strict and human-approval requirements remain intact.
 
 ## Harness usage and judgment format
 

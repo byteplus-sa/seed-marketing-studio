@@ -4,29 +4,29 @@
     {
       "id": 1,
       "prompt": "Plan a 12-second Seedance 2.5 clip for a kitchen scene: a mother opens the front door, her young son peeks out from behind a visiting aunt and taps the door frame, and she smiles. No camera or lighting has been chosen. It is a warm family drama, so keep it natural.",
-      "expected_output": "A shot plan with 3 to 4 shots of uneven length, each with a job, size, angle, move with start and end, lens intent, and a named light source and key side from sources declared for the scene. The plan states an energy level, flags one turn shot, passes the neighbor-contrast rule, includes a non-eye-level angle, and puts the child's reveal on the turn.",
+      "expected_output": "An intent-led plan that makes the child's reveal and the mother's response readable, with shot count and timing justified by those beats, named light sources, framing and motivated moves or holds. Contrast and a turn annotation are optional.",
       "files": [],
       "assertions": [
-        "The plan has 3 to 4 shots and every shot names a size, an angle, and a move or a recorded static_reason.",
-        "Shot lengths are uneven (not all within 20% of each other) and the turn shot's length differs from its neighbors'.",
+        "Shot count serves the supplied beats and every shot names a size, an angle, and a move or a recorded static_reason.",
+        "Durations fit the action and response; equal lengths are allowed when purposeful.",
         "The plan declares the scene's light sources with positions (for example the window and the front door) and every shot names one of them and a key side relative to the lens.",
-        "Adjacent shots differ in at least two of size family, angle class, camera move and key side.",
-        "At least one shot is not plain eye level and at least one shot has a motivated move with a start and an end.",
-        "Exactly one shot is flagged as the turn and it is the child's reveal.",
+        "Neighbor contrast is justified where used, not added to satisfy a quota.",
+        "Eye-level holds are valid; any move names its purpose, start and end.",
+        "The child's reveal is readable without inventing a dramatic turn.",
         "The energy level is restrained or standard and every move is slow and motivated."
       ]
     },
     {
       "id": 2,
       "prompt": "Here is my draft for a 16-second Seedance clip: 'Shot 1 (0-4 s): wide shot of the room. Shot 2 (4-8 s): medium shot at the door. Shot 3 (8-12 s): medium two-shot. Shot 4 (12-16 s): wide shot. Soft late-afternoon daylight.' It looks boring in review. Fix the coverage without changing the story.",
-      "expected_output": "A repaired shot plan that diagnoses the equal-length size ladder, keeps the four beats, and changes angle, move and light direction across the shots while keeping one room and one light source.",
+      "expected_output": "A scoped diagnosis of why the supplied beats fail to read, followed by the smallest justified coverage repair without changing the story, room or light source. Equal timing and stillness alone are not defects.",
       "files": [],
       "assertions": [
-        "The diagnosis names that only shot size varies and that the cuts carry no other change.",
+        "The diagnosis distinguishes an unreadable beat from merely regular timing or a held camera.",
         "The repaired plan keeps the original four beats and the story events unchanged.",
-        "The repaired plan changes light direction between shots while keeping one physical light source and one room.",
-        "The repaired plan adds at least one non-eye-level angle and at least one planned camera move.",
-        "No shot stacks more than one primary and one secondary move."
+        "The repaired plan names light direction while keeping one physical light source and one room; a direction change is optional.",
+        "Any angle or move change has a beat-specific purpose; a readable held setup can pass.",
+        "Camera choreography preserves source intent and readable beats without incompatible simultaneous directions; move count alone does not require repair."
       ]
     },
     {
@@ -56,25 +56,25 @@
     {
       "id": 5,
       "prompt": "A client wants a calm, naturalistic supermarket ad: a shopper meets a neighbor at the freezer aisle and they exchange two lines. The camera should feel unforced and real. Plan the shots for a 12-second clip.",
-      "expected_output": "A restrained-energy plan that still varies size, angle and light direction between shots, keeps every move slow and motivated, keeps the large moves out of the spoken lines, and fits both lines inside single shots.",
+      "expected_output": "A restrained-energy plan that preserves the natural exchange and readable listening. A held two-shot or motivated cuts can pass; dialogue timing is checked without rewriting approved lines.",
       "files": [],
       "assertions": [
         "The energy level is recorded as restrained and the moves are slow and motivated.",
-        "The plan still varies size, angle and light direction between shots rather than holding one framing.",
+        "A sustained hold is accepted when both speakers and their listening responses remain readable.",
         "No large camera move is planned during a spoken line, and each line sits in one shot.",
-        "The speaker shots use different key directions or a distinct light fact each."
+        "Each shot names the source and key direction; unchanged light is valid."
       ]
     },
     {
       "id": 6,
       "prompt": "Plan an 8-second kinetic motorbike chase through a night market for a music-video clip. The editor wants hard cuts on the beat.",
-      "expected_output": "A kinetic-energy plan of short shots within the shot ceiling, with hard cuts on the beat, per-shot moves, a stated travel axis and screen direction, and colored practical lighting from declared sources, without stacking competing moves inside one shot.",
+      "expected_output": "A kinetic-energy plan preserving the requested hard-cut rhythm, with shot count and timing chosen for readable chase beats rather than a shot ceiling, per-shot moves, a stated travel axis and screen direction, and colored practical lighting from declared sources, without stacking competing moves inside one shot.",
       "files": [],
       "assertions": [
         "The plan records kinetic energy and uses shots of roughly one to three seconds each.",
-        "The plan has at most about 7 shots and none shorter than about 0.8 s.",
+        "About 7 shots and 0.8 s per shot are provisional generation heuristics, not provider limits or automatic retiming rules; offer assembly for precise cuts and return genuine feasibility conflicts.",
         "The travel axis and screen direction are stated and restated after each cut.",
-        "Every shot has one primary move and at most one secondary move.",
+        "Each shot's camera choreography has clear endpoints and compatible directions; readability, not move count, determines whether it needs repair.",
         "Every shot names a declared light source or practical and its key side."
       ]
     },
@@ -92,13 +92,13 @@
     {
       "id": 8,
       "prompt": "The music-video skill's song-section map says the chorus runs 0-12 s with cuts on beats at 3 s, 6 s and 9 s. Plan the shots for this 12-second chorus clip.",
-      "expected_output": "A plan that keeps the song map's cut timing and fills each of the four shots with size, angle, move and a declared light source at kinetic energy.",
+      "expected_output": "A plan that keeps the song map's four equal-length shots, with per-shot framing, motivated moves or holds and declared lighting. Energy follows the supplied intent rather than the presence of a chorus.",
       "files": [],
       "assertions": [
         "The shot boundaries land at 3 s, 6 s and 9 s exactly as the song map says, and the plan does not move them.",
-        "Each shot has a size, an angle, a move and a named light source with a key side.",
-        "Adjacent shots differ in at least two of size family, angle class, camera move and key side.",
-        "The plan records kinetic energy and flags one shot as the turn."
+        "Each shot has a size, an angle, a move or purposeful hold and a named light source with a key side.",
+        "Regular rhythm and repeated framing are accepted; no contrast quota shifts the locked boundaries.",
+        "The plan does not invent kinetic energy or a dramatic turn from the song map alone."
       ]
     },
     {
@@ -128,38 +128,38 @@
     {
       "id": 11,
       "prompt": "A two-character interrogation: a seated elder dominates a kneeling young man for the first half, then he starts resisting and takes control. Plan the coverage so the power shift reads without dialogue explaining it.",
-      "expected_output": "A Power-shift plan: dirty over-the-shoulder shots with the elder as a dark foreground mass while she dominates, a high angle on him before the turn, and a push-in held back until he takes control.",
+      "expected_output": "An intent-led plan making the seated elder's initial dominance and the kneeling young man's supplied resistance and control shift readable without explanatory dialogue. The Power-shift pattern is optional; framing, movement and timing serve the source beats.",
       "files": [],
       "assertions": [
-        "While the elder dominates, his coverage keeps her in the foreground as a soft dark mass (a dirty over-the-shoulder).",
-        "The angle changes at the turn, high on him before and low or level after, and only once rather than every shot.",
-        "A push-in is given only to the young man as he takes control, and not to both characters.",
-        "Exactly one shot is flagged as the turn, and it falls where he starts resisting."
+        "Preserves the seated elder dominating the kneeling young man for the first half, then makes it readable that he starts resisting and takes control.",
+        "Every shot names framing and featured subjects that expose the relevant relationship and responses without inventing new blocking or dialogue.",
+        "Dirty over-the-shoulder framing, angle contrast and a push-in are optional techniques, not required coverage or change-count recipes; held or repeated framing may carry the shift.",
+        "Any turn annotation corresponds to the supplied resistance beat, not an invented event."
       ]
     },
     {
       "id": 12,
       "prompt": "Plan the coverage for a 14-second Seedance 2.5 scene: a detective sees a bloodied glove in a locker and her two partners react behind her. Make the discovery land for the viewer.",
-      "expected_output": "A plan that uses a look, point-of-view and reaction sandwich, an insert or POV on the glove, and a three-shot for the two partners and her, with framing and featured subjects named per shot.",
+      "expected_output": "A 14-second plan that makes the detective's discovery of the bloodied glove in the locker and her two partners' reactions behind her readable. Look/POV/reaction coverage and a three-shot are optional patterns, not a required shot order or framing mix.",
       "files": [],
       "assertions": [
-        "The glove discovery is covered as a looker shot, a point-of-view or insert shot of the glove, then a reaction shot, in that order.",
-        "Every shot names a framing and its featured subjects, and the point-of-view or insert shot has no featured face.",
-        "The detective and her two partners reacting together are covered by one three-shot rather than three singles.",
-        "Adjacent shots still differ in at least two of size family, angle class, camera move and key side, and exactly one shot is flagged as the turn.",
-        "The plan notes that point-of-view and insert wording are heuristics to check in a 480p draft."
+        "Preserves the detective seeing the bloodied glove in the locker and her two partners reacting behind her, without adding a new clue, confrontation or resolution.",
+        "Every shot names framing and featured subjects; a POV, if selected, identifies whose view it is, and an insert identifies the relevant detail.",
+        "A shared frame, singles or another justified setup may convey the discovery and reactions within 14 seconds; no three-shot or look/POV/reaction sandwich is required.",
+        "Coverage makes the discovery and reactions readable without mandatory neighbor contrast or a turn count.",
+        "Any selected framing wording is a heuristic to check in a 480p draft, not evidence that the generated discovery already reads."
       ]
     },
     {
       "id": 13,
       "prompt": "A grandmother stands over her seated grandson at the dinner table and lectures him; halfway through he stands up and answers back. Cover it in four shots without dialogue explaining the shift.",
-      "expected_output": "A plan using an over-the-hip shot over the standing grandmother onto the seated boy, a single on him at the turn, and framing named per shot, with the foreground mass leaving the frame at the turn.",
+      "expected_output": "A plan in four shots preserving the standing grandmother lecturing her seated grandson at the dinner table, then making his standing and answer halfway through readable without explanatory dialogue. Over-the-hip framing and angle or foreground changes are optional techniques.",
       "files": [],
       "assertions": [
-        "While she stands and he sits, the coverage uses an over-the-hip or dirty single with her as a soft, unfeatured foreground mass.",
-        "The over-the-hip framing is used only while their heights differ, and an over-the-shoulder replaces it once he stands.",
-        "Every shot names a framing and featured subjects; at least one shot is a clean single and one holds both characters.",
-        "The angle or foreground mass changes once at the turn rather than every shot."
+        "Keeps four shots and the supplied blocking: the grandmother stands over her seated grandson at the dinner table, then he stands up and answers back halfway through.",
+        "Preserves the source height change without inventing a new action, power outcome or explanatory dialogue to justify a framing pattern.",
+        "Every shot names framing and featured subjects that make the height relationship and response readable, without a required mixture of singles and shared frames.",
+        "Held or repeated framing may show the change; no over-the-hip to over-the-shoulder switch, push-in or fixed number of angle or foreground changes is required."
       ]
     },
     {
@@ -170,21 +170,46 @@
       "assertions": [
         "Keeps exactly one provider source and allows its internal cuts rather than imposing one continuous take or extra sources.",
         "Every shot contributes to the determination arc and has an action, lens intent, purposeful move or hold and named light.",
-        "Names a memorable moment that belongs to the character's choice, not an unsupported product-caused record.",
+        "Any memorable moment belongs to the character's choice, not an unsupported product-caused record; no standout count is required.",
         "Shot density fits the supported runtime; timestamps remain approximate and crowding is surfaced without adding sources.",
+        "Regular lengths and sustained holds remain valid; assembly is offered for exact timing without automatically retiming source beats.",
         "Added graphic logos and copy belong to post; any depicted product appearance uses its actual reference and does not imply efficacy."
       ]
     },
     {
       "id": 15,
       "prompt": "In my 6-second shot plan the camera pushes in on a woman's face, the focus slides off her face onto the wall behind her as she loses her grip, and at 4 s a half-second flash of her childhood bedroom cuts in. Plan it.",
-      "expected_output": "A plan that keeps the push-in with ordinary focus, marks the defocus away from the face as a post treatment, and makes the half-second flash an assembly cut generated as its own clip.",
+      "expected_output": "A plan that keeps the push-in with ordinary focus, marks the defocus away from the face as a post treatment, and offers assembly for the half-second flash at 4 s while preserving the six-second rhythm. A prompt-only cut remains provisional rather than prohibited by its duration.",
       "files": [],
       "assertions": [
         "The focus pull away from the face is not planned as prompt wording; it is marked for post, and the push-in keeps ordinary focus.",
-        "The half-second flash is planned as an assembly cut whose image is generated as its own clip at a natural length.",
+        "Assembly is offered for precise half-second timing at 4 s, using a source clip at a natural length trimmed to the requested insert; it does not silently lengthen the flash or authorize extra generation.",
         "The plan names a light source and key side for the push-in and states its start and end.",
         "The plan does not promise frame-accurate timing for the cut."
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Plan an approved 12-second observational product demo in three equal 4-second shots. Each is a locked eye-level performance_hold with unchanged window light. The presenter silently waits for the listener to inspect the product. There is no turn, no new claim, no dialogue and no authorization for extra clips. Preserve the exact CTA as a post overlay.",
+      "expected_output": "A plan retaining all three equal holds, the source count and constant light, with readable waiting and listener inspection. No move, turn, timing contrast or standout shot is added.",
+      "files": [],
+      "assertions": [
+        "The three 4-second shots, locked eye-level framing and unchanged window source remain intact.",
+        "Each performance_hold has a readable task and listener evidence, not an invented gesture or response.",
+        "No camera move, dramatic turn, extra clip or unequal timing is required to pass.",
+        "Product identity, absence of new claims and exact CTA in deterministic post remain preserved."
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Plan an approved energetic 12-second dialogue ad: two designers hurry beside a moving display, point repeatedly to two samples and exchange the locked lines {Look at these!} and {Both of them?}. Tracking medium two-shot, no cuts, no added holds, no new product claims. Window light stays constant. Preserve the kinetic pace; no generation.",
+      "expected_output": "A kinetic one-take plan retaining the repeated actions and dialogue, with readability assessed at the planned framing and speed.",
+      "files": [],
+      "assertions": [
+        "Keeps tracking, repeated quick actions, exact lines, constant light and the no-cuts/no-added-holds locks.",
+        "Does not exclude kinetic energy because of speech or impose a single-burst rule.",
+        "Distinguishes actor intensity, camera energy and edit rhythm and checks speaker, listener, product and lip-sync visibility.",
+        "Unverified delivery remains provisional; any necessary repair is returned within scope rather than silently slowing or splitting."
       ]
     }
   ]

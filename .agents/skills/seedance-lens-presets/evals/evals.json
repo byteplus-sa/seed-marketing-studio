@@ -68,7 +68,7 @@
     {
       "id": 6,
       "prompt": "Write a Seedance 2.5 prompt for a handheld found-footage clip of a diner at night, shot on a VHS sensor — scanlines, color bleed, soft low-fi look.",
-      "expected_output": "A Seedance prompt that stages handheld found-footage behaviour in the diner and keeps the VHS tape markers (scanlines, color bleed, soft low-fi image) as a post treatment, explaining that a tape or camcorder word in a Seedance prompt returned clean footage.",
+      "expected_output": "A Seedance prompt that stages handheld found-footage behaviour in the diner and keeps the VHS tape markers (scanlines, color bleed, soft low-fi image) as a post treatment, explaining that a tape or camcorder word in a Seedance prompt tends to return clean footage.",
       "files": [],
       "expectations": [
         "The output does not rely on a VHS or camcorder word in the Seedance prompt to produce the tape look.",
@@ -105,13 +105,37 @@
     {
       "id": 9,
       "prompt": "Write the lens line for a push-in where her face drifts out of focus while the camera keeps moving, to show she is losing control.",
-      "expected_output": "An explanation that prompted focus loss did not hold in testing, with a lens line using ordinary focus and the defocus moved to post.",
+      "expected_output": "An explanation that prompted focus loss tends not to hold, with a lens line using ordinary focus and the defocus moved to post.",
       "files": [],
       "expectations": [
         "It does not present the drifting focus as a reliable prompt preset.",
         "It recommends generating with ordinary focus and adding a defocus ramp in post, or using light and the edit instead.",
         "It does not stack extra blur or a second move in the prompt.",
         "It keeps the push-in as the camera move."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "The guide says 24mm is always 84 degrees diagonal, 21:9 equals 2.39:1, and every anamorphic shot needs blue flare and film grain. Apply it to our locked deep-focus 9:16 illustrated scene with no light sources in frame.",
+      "expected_output": "Rejects the fixed conversion and exact aspect equivalence while preserving the illustrated medium, vertical frame, focus and lighting locks.",
+      "files": [],
+      "expectations": [
+        "Does not treat focal length as a universal field of view.",
+        "Distinguishes 21:9 from 2.39:1 and preserves 9:16.",
+        "Does not add flare, grain, blur, a lamp, photorealism or letterboxing.",
+        "Treats anamorphic as a conditional look, not an API parameter package."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Keep the locked warm practical and my explicitly requested subtle blue horizontal anamorphic flare. The defocused bulbs should look oval. No grain, new lights or camera relocation.",
+      "expected_output": "Uses the supplied source for the requested blue streak and vertically elongated defocused highlights without imposing a warm flare correction.",
+      "files": [],
+      "expectations": [
+        "Keeps the requested blue horizontal streak rather than declaring it physically impossible.",
+        "Places vertical oval highlights only in defocused areas.",
+        "Does not change camera position, lights or texture locks.",
+        "Makes no claim of exact optical simulation."
       ]
     },
     {

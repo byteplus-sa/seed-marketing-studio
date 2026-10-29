@@ -109,6 +109,8 @@
         "Proposes the picture_only audio route (silent generation, ambience and score built in post) with the reason that a negative audio line on native audio often leaks speech or music.",
         "Connects hook, viewer motivation, development and payoff to the product without inventing efficacy; internal shot count follows the idea rather than a six-source formula.",
         "Separates provider source count from internal shots; any proposed multiple-source plan remains a budget decision, not a quality requirement.",
+        "Chooses coverage from readable beats and budget; sustained holds, equal timing and no standout image are valid, without a six-clip recipe.",
+        "States how sound and picture carry attention and payoff before generation; final cues follow the measured edit rather than invented listening evidence.",
         "Defaults the look to ungraded original colours and treats any requested look as a post treatment.",
         "Lists the logo or end card as a post overlay and adds no AI label."
       ]
@@ -122,6 +124,18 @@
         "Sets the audio route to native because lip sync matters.",
         "Records the camcorder look as a requested post treatment and does not rely on the prompt word to produce it.",
         "Still names a camera and light stance and an energy level tied to the argument."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "New project, no concept yet: make a 15-second premium lamp video. Known fact: swiveling head. Audience: small-desk users. CTA locked to 'See the lamp.' No new claims, no generation. Help settle the idea without a full questionnaire.",
+      "expected_output": "A compact premise with attention and payoff, with conditional alternatives for materially open ideas and clearly unresolved facts.",
+      "files": [],
+      "expectations": [
+        "Proposes a specific viewer question and supported visible payoff rather than premium adjectives or a preset stack.",
+        "Offers concise materially different ideas or a focused clarifying question because the premise is open, without a mandatory expanded workflow.",
+        "Plans sound or deliberate silence and editorial intent early without requiring final assets or paid work.",
+        "Preserves the swiveling-head fact, exact CTA, audience and no-generation boundary; invents no brightness, health or productivity benefit."
       ]
     }
   ]

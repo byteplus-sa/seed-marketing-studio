@@ -41,6 +41,7 @@ Load only the contract relevant to the current stage:
 | Requested dialogue synchronization and assembly | [Audio-video alignment](.agents/contracts/audio-video-alignment.md) |
 | Video-to-video identity references, muted source and post audio | [Video-to-video inputs](.agents/contracts/video-to-video-inputs.md) |
 | Shot plan, camera, lens, lighting, acting and other axes | [Directorial axes](.agents/contracts/seedance-reference.md) |
+| Source-bound acting, cue encoding and actual-take acceptance | [Performance direction](.agents/contracts/performance-direction.md) |
 | Ad claims, testimonials, brand copy rules, placement safe zone and paid-ad AI disclosure | [Ad compliance](.agents/contracts/ad-compliance.md) |
 | Ad placement specs, ratios, durations and safe zones (dated) | [Ad platforms](.agents/contracts/ad-platforms.md) |
 | Shared brand kits, talent roster and campaign pins | [Shared library](.agents/contracts/shared-library.md) |
@@ -169,6 +170,30 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
 
 ## Production invariants
 
+- For new vague moving-image briefs, resolve a compact creative premise,
+  attention and payoff before execution. Offer alternatives when materially
+  different ideas remain open; settled single-prompt and scoped edits do not
+  acquire an expanded workflow. Plan sound and editorial intent before generation
+  in existing brief/scene notes, without requiring final audio assets early.
+  Intensity and coverage follow intent and actual readability, not cadence,
+  variety, turn, hold or standout quotas. Actor energy, camera energy and edit
+  rhythm are separate; dialogue is not an automatic kinetic exclusion.
+  Use brief-specific artistic acceptance and actual full-speed playback/listening
+  of takes and the final edit, with timestamps in existing review evidence.
+  Unavailable perception is unresolved, not a pass; offline checks do not prove
+  artistic quality. Keep default evidence concise and preserve strict review,
+  existing approval modes, all locks and budget boundaries.
+- New or materially revised character performance uses `acting-direction`
+  before shot design, then `seedance-acting-console` to encode relevant beats.
+  Store `## Performance plan` in the existing scene or variant shot file.
+  Require `acting.plan_bound` in both review modes for applicable prompts,
+  with focused evidence in default mode. Source-preserving edits inherit
+  performance; static assets and product-only work do not gain acting gates.
+  Preserve exact copy, CTA, supported claims, product identity, campaign pins,
+  one-axis changes, localization levels and genuine L3-L5 human sign-off.
+  Intentional stillness, quiet holds and non-response remain valid without
+  motion quotas. Inspect actual playback/listening and the final edit before
+  take acceptance; the performance contract owns applicability and evidence.
 - Read `review_mode: default|strict` independently of `approval_mode` from
   `project.md` YAML. Missing fields use `default` and `approve_for_me` for new
   actions only; invalid values fail. In `default`, use minimal preflight and

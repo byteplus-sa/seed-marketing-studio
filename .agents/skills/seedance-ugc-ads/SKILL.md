@@ -81,6 +81,11 @@ and interaction carry personality. A steady phone is compatible with lively
 behavior; neutral feature recitation is not the default voice.
 Do not impose this development pass on preset-only or narrow revision requests.
 
+For new vague or underspecified work, resolve a compact creative premise:
+what carries attention and why the payoff matters. Offer concise alternatives
+only when materially different ideas remain open. Do not expand settled scoped
+work into a mandatory alternatives workflow or invent product truth.
+
 Read the requested section of [mode recipes](references/mode-recipes.md), or its
 custom recipe when none fits. Preserve these mode IDs:
 
@@ -101,6 +106,12 @@ a selected moving preset or requested coverage overrides that default.
 Polished modes and multi-shot presets carry a per-shot plan with duration,
 size, angle, camera move, lens intent, named light source and visible action.
 A static camera or constant light needs a reason, not gratuitous movement.
+Coverage follows readable action, listening and source timing. Turns, variety,
+standout images and segmented coverage are optional, with no hold or `wow` quota.
+About 0.8 s per shot and about 7 shots per clip are provisional heuristics, not
+provider limits or guaranteed merge/drop thresholds. Preserve requested rhythm
+without automatic retiming or shot removal; surface genuine feasibility conflicts.
+Offer assembly for precise cuts or omitted action within authorized source count.
 
 Choose an angle that pays off the viewer's question:
 
@@ -138,7 +149,8 @@ then the resolved category section only:
 
 Each recipe retains its ID, grammar, references, motion block, camera block,
 audio, suggested duration, flags and optional persuasion hint. A hint is not a
-supported claim. Preserve the defining motion and all applicable flags while
+supported claim. Preserve the defining motion, applicable provider constraints
+and Marketing safeguards; label creative cautions as optional advice while
 adapting incidental setting, props, hands and timing to explicit instructions.
 If the core effect cannot fit a lock, surface the conflict instead of pretending
 it is the unchanged preset.
@@ -201,7 +213,9 @@ in the prompt. A proposed fresh UGC ratio is 9:16 unless specified otherwise.
   0.5-1.5 s), pauses and at least 0.4 s tail; use measured or
   native-language-informed delivery to establish fit. Without it, timing is
   provisional. Retiming or splitting precedes authorized copy rewrites.
-  Keep the final three seconds to one or two state changes.
+  Judge closing beats by readability of words, action and response, not a
+  state-change count. Simplification is an optional repair for demonstrated
+  failure within source locks.
 - **Counts:** For a fixed inventory, show every item from frame one and restate
   count, identity and position at each beat, including held or inserted items.
   For intentional entrances or multiplication, state starting count, exact
@@ -217,6 +231,9 @@ in the prompt. A proposed fresh UGC ratio is 9:16 unless specified otherwise.
   casual UGC. Do not stack a preset camera move with an incompatible mode default.
   Preserve product, garment and face identity through movement.
 - **Audio:** Honor silence, native dialogue, voiceover or supplied music.
+  Plan sound and editorial intent before generation: what is heard before seen,
+  what a cut reveals or withholds, and how silence or accents carry the payoff.
+  Final cues follow the measured edit and listening; planning changes no audio route.
   Keep speech intelligible; optional music needs a usable source, not invented
   licensing. Separate lip-sync audio is opt-in; drafts keep identical dialogue
   and the caller checks actual timing before video. Do not prescribe universal
@@ -254,6 +271,12 @@ Paid-ad disclosure is the user's per-deliverable decision before delivery,
 not implied by creative approval. Do not burn an "AI-generated" or "fictional"
 label into footage by default, and do not infer that a platform labels it.
 
+For new or materially revised character performance, the caller uses
+`acting-direction` before coverage and `seedance-acting-console` for encoding.
+Store the source-bound performance plan in existing scene or shot notes and
+require `acting.plan_bound` in both review modes, including static-camera hooks.
+Source-preserving edits inherit acting; product-only work records non-applicability.
+
 The caller may compose this output with `seedance-prompt-25` for extended grammar
 or an axis specialist for deeper direction. These are optional prose hints only;
 the ordinary mode, preset and full-ad requests are self-contained here.
@@ -263,7 +286,9 @@ the ordinary mode, preset and full-ad requests are self-contained here.
 - Correct requested scope, exact locks, IDs and count of alternatives.
 - Every spoken or visible claim within evidence; no invented testimonial or con.
 - Hook, setting, mode and preset form one feasible action and persuasion timeline.
-- Counted items, hands, props, identity bindings and defining preset flags retained.
+- Counted items, hands, props and identity bindings retained. Applicable provider
+  constraints and Marketing safeguards survive; creative cautions are optional,
+  not provider requirements, and never override approved intensity.
 - Dialogue has plausible onset, pauses and tail; conflicts and unknowns explicit.
 - One accurate CTA when requested; all overlay text assigned to finishing.
 - No generation, sibling loading, fabricated inspection or assumed approval.
@@ -272,7 +297,8 @@ the ordinary mode, preset and full-ad requests are self-contained here.
 
 [Merged cases](evals/evals.json) cover full ads, preset-only work, unsupported
 testimony, missing inputs, narrow revisions, counts/timing, mode-only work and
-unknown presets. [Mode cases](evals/ad-modes.json) retain 15 legacy numeric IDs;
+unknown presets. [Mode cases](evals/ad-modes.json) retain legacy numeric IDs
+and add source-led coverage cases;
 [motion cases](evals/motion-presets.json) retain nine. IDs are suite-scoped.
 Use their semantic expectations for offline prompt assessment; structural checks
 alone do not establish creative quality or generated-media performance.

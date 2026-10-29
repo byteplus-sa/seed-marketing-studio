@@ -83,13 +83,16 @@ byte-identical to the draft's soundtrack.
 
 ## Emotional direction
 
-Emotion words communicate a direction but leave performance open to
-interpretation. For stable control, add **directly visible or audible cues**:
-eye movement, brow tension, mouth movement, breathing, gaze direction, hand
-movement.
+Consume the caller's `acting-direction` plan and `seedance-acting-console`
+encoding. Carry each beat's pursuit, trigger, registration and response once,
+including listener tasks or intentional non-response. Do not invoke those
+leaves. Missing material intent is a handoff gap; isolated mood studies remain
+provisional. Cues must fit camera side, subject scale, occlusion and the speaking
+window. Preserve exact copy, CTA, language, register and timing.
 
 > For a single emotional transition, **2–4 clear cues** are usually enough.
-> Use event-triggered stages only when emotion changes several times.
+> This is a heuristic, not a required minimum. Sustained attention, silence
+> and restraint can carry the whole shot.
 
 ### Single emotional transition
 
@@ -110,15 +113,14 @@ gradually becomes visible through <observable behavior>.
 Finally, <subject's final action, expression, or manner of speaking>.
 ```
 
-### Emotion externalization reference
+### Tactic-first encoding
 
-| Abstract emotion | Externalize as |
-|---|---|
-| Sadness | lowering the head, shoulders trembling slightly, eyes reddening, fingers unconsciously clutching clothing, tears welling but not falling |
-| Joy | corners of the mouth rising uncontrollably, brows relaxing, steps becoming light, unconsciously humming, spinning in place |
-| Nervousness / anxiety | frequently checking watch, fingers tapping tabletop, rapid breathing, eyes darting, unconsciously biting fingernails |
-| Anger | both fists clenched, jawline tense, chest heaving, eyes sharp, squeezing words through gritted teeth |
-| Relief | long exhale, tense shoulders relaxing completely, a faint smile appearing, looking up toward the distance |
+Hypothetical supplied intent: the presenter invites the viewer to inspect an
+approved product detail. At the supplied trigger, hold the product in its
+locked orientation and give the exact line room to finish. Preserve the
+demonstration, label, claim and CTA rather than adding a satisfied reaction
+that implies an unsupported result. Transition templates apply only when the
+supplied performance changes; do not manufacture an emotion arc.
 
 ## Scripted dialogue for all speaking characters
 

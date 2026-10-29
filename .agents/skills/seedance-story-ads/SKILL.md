@@ -41,6 +41,13 @@ worked package and when evaluating or changing this skill.
 
 ## 1. Establish the causal engine
 
+Confirm the selected framework before applying the five-element engine below.
+It is an option, not a universal story or production gate. Preserve supplied
+observational, episodic, non-causal and no-turn forms under their selected
+criteria. Missing framework choice calls for a focused question, not invented
+jeopardy or reversal. Engine definitions, ledgers and checks below apply only
+when that engine is selected; otherwise adapt them to the confirmed framework.
+
 Before coverage, connect hook, viewer motivation, development, payoff and
 product role. Test the engine through consequential behavior, not merely five
 correctly filled fields. A failed attempt must matter and change the next
@@ -202,5 +209,5 @@ Surface source-count conflicts before generation; never bypass drafts or
 silently expand scope. Production checks are caller-owned, as are
 rights and disclosure decisions. Return only the needed package or revision.
 Optional caller composition may use film-production for execution,
-tig-scene-engine for deeper scene audits, seedance-prompt-25 for model grammar,
+scene-craft for deeper scene audits, seedance-prompt-25 for model grammar,
 and acting, camera or exact-graphics specialists. These are prose hints only.

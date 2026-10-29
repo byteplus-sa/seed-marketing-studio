@@ -82,7 +82,10 @@ between modalities.
 | Exact static typography, poster, title/end card, UI, product grid, price/CTA treatment, or transparent overlay | `html-graphic-render` |
 | General image generation or edit | `seedream-prompt` or `seedream-edit` |
 | Storyboard for planning and review | `seedream-storyboard` |
-| Scene geography and crowd blocking | `tig-blocking-map` |
+| Scene geography and crowd blocking | `blocking-map` |
+| Scene writing under the selected framework | `scene-craft` |
+| Source-bound performance intent before coverage | `acting-direction` |
+| Seedance encoding of supplied performance beats | `seedance-acting-console` |
 | Score, ambience, SFX or dialogue audio | `seed-audio-prompt` |
 | Narrative audio commercial | `seed-audio-commercial` |
 | Per-shot coverage, camera, lens intent and light for a scene | `seedance-shot-design` |
@@ -123,6 +126,10 @@ paid video submission and again at assembly. In short:
    internal shots separately from source generations; preserve an explicit
    one-generation request while allowing native cuts unless a continuous take
    is locked. Each shot contributes new information, feeling or sensory detail.
+   Choose count and duration from readable action, listening and the approved
+   budget. Each shot carries lens
+   intent, a motivated move or hold and named light. Short sequences, variety,
+   turns and standout images are optional, not cadence or hold quotas.
 4. **Storyboards plan; they are never bound** as Seedance references. Bind
    element references and write staging in the prompt.
 5. **People in video inputs** (extension, video-to-video) need `asset://`
@@ -164,7 +171,11 @@ At the brief/development stage, run `brief-intake` before writing the brief's
 required output. It proposes directing defaults derived from the idea, and the
 brief must also record the audio route, the look intent (ungraded original
 colours unless a look is requested), the on-screen copy that will be added in
-post, and, for ads and TVCs, the cinematic sequence bar. Persist the
+post, and, for ads and TVCs, coverage intent. Resolve a new vague brief's compact
+premise, attention and payoff; offer alternatives only for genuinely open ideas
+or requested exploration. Scoped specialist prompts do not gain a mandatory
+development workflow. Plan sound and editorial intent before generation,
+without requiring final audio assets early. Persist the
 mode-authorized confirmed set as a `locked` block in `project.md`.
 For a batch, compare the concepts before prompt expansion: hook, setting,
 performer intention, product role, development and sound should differ where
@@ -172,6 +183,17 @@ the formats demand it. Preserve intentional campaign unity; do not accept
 the same object-handling exercise under different format names.
 Keep this brief-level reasoning compact in default mode, not a new report or
 approval gate. Never improve apparent creativity by inventing product claims.
+
+At scene breakdown, run `acting-direction` before shot design for new or
+materially revised character performance. Store `## Performance plan` in the
+scene file, then use `seedance-acting-console` to encode the relevant beats.
+Follow the [performance contract](../../contracts/performance-direction.md):
+require `acting.plan_bound` when applicable in both review modes, using focused
+evidence in default. Preserve exact ad copy, CTA, supported claims, product
+identity, campaign pins, budget, source-preserving edits and localization gates.
+Inspect registration, listening, response and exact delivery in actual takes
+and again in the final edit. Static assets need no acting plan; sustained
+attention and intentional stillness need no new emotional turn.
 
 At the scene breakdown stage, run `seedance-shot-design` for every narrative,
 ad, micro-drama, music-video or showcase scene before any shot prompt is
@@ -181,8 +203,10 @@ revalidated before shot generation. An exempt scene records its
 `static_reason`. The plan carries the project's confirmed camera, lens,
 lighting, pacing and energy axes into the shot lines or records a scene
 override. At shot generation, inspect each take against its plan: a missing
-planned cut, move or light change is a soft defect to record, and a missing
-move or light on the turn shot is a hard-gate failure.
+planned cut, move or light change is a defect only against the approved intent,
+not a motion quota. Quiet holds and sustained performance can carry a sequence.
+The cinematic cadence above is an optional planning heuristic; preserve approved
+coverage, intentional stillness and the authorized generation count.
 
 ## Approval and spending gates
 

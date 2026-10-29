@@ -34,6 +34,20 @@ existing review. Budget and one-axis checks run in code in both modes.
 **Key rule: change one axis per variant unless the user explicitly asks for a
 full factorial.** One change per row is what makes a result attributable.
 
+Character-performance hooks use `acting-direction` before coverage and
+`seedance-acting-console` before prompt composition. Store `## Performance plan`
+in the variant's existing `shot.md`; preserve exact copy, CTA, supported claims,
+product identity, hero body, campaign pins and budget. The
+[performance contract](../../contracts/performance-direction.md) adds
+`acting.plan_bound` in both review modes, including static-camera UGC.
+`register --hook-performance character` is the conservative default. Use
+`--hook-performance non-performance` only when every generated hook in that
+invocation is non-performance work, with a concrete reason in review evidence.
+Mixed hooks keep the default and resolve applicability per operation before
+registration; omit the rule only for a documented non-performance operation.
+Swaps, recasts and audio-only dubs inherit source performance rather than
+requiring new acting. A market row delegates scope to `ad-localize`.
+
 ## When to use
 
 | Request | Use |
@@ -144,8 +158,8 @@ flowchart LR
      Swap and Motion Transfer steps record the source-preserving-edit
      exemption and dub steps the no-video-shot exemption in
      `shot_rule_exemption`; the reviewer cites that exemption. Default retains
-     only the four compliance rules above. Do not load universal or shot-craft
-     checklists for those focused records.
+     the four compliance rules above plus applicable `acting.plan_bound`.
+     Do not load universal or shot-craft checklists for those focused records.
    - **Asset IDs** are `<name>_<take>_production`, `<name>_<take>_draft`,
      `<name>_<take>_final` or `<name>_<take>_audio`, so stages and retakes get a distinct
      registry identity. A row registers at most its own last step; `after`

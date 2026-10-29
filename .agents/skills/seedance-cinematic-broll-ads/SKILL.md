@@ -109,8 +109,10 @@ Label native cut timestamps approximate; exact final timing belongs in post.
 ## 3. Direct concrete cinematic images
 
 Name the visible event instead of writing only "beautiful cinematic B-roll."
-Specify material response, contact, focus and a camera destination. Give one
-dominant camera move per shot and keep its path physically accessible.
+Specify material response, contact, focus and a camera destination or hold.
+Keep camera choreography readable and physically accessible; move counts are
+planning heuristics, not quotas. Resolve incompatible paths without silently
+replacing the requested movement or intentional stillness.
 Do not move both camera and subject without stating which reveals the detail.
 
 Use named, positioned light sources. Preserve their world positions across
@@ -215,6 +217,7 @@ current shot_plan rather than create a second competing sequence. Preserve
 confirmed axes, source IDs and user overrides. Carry energy, axis_carry,
 world-positioned light sources, per-shot duration/job/size/framing/featured
 subject/angle/move/lens/depth/light/contrast and applicable static reasons.
-Fit required turn and wow fields to the real reveal or tactile payoff; do not
-add spectacle to satisfy a label. Keep source IDs distinct from edit-shot IDs.
+Treat turn and wow fields as optional: use them for a real reveal or tactile
+payoff when appropriate, never add spectacle to satisfy a label. Keep source IDs
+distinct from edit-shot IDs.
 The caller owns validation, review mode, approvals, rights and generation.

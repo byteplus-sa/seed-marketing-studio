@@ -1,6 +1,15 @@
 {
   "schema_version": 1,
   "skills": {
+    "acting-direction": {
+      "kind": "leaf",
+      "description": "Direct character objectives, tactics, listening and performance beats. Use for scene acting, dialogue delivery or flat performances. Not for generation or model-specific cue encoding.",
+      "readme_summary": "Plan source-bound character intentions, listening and performance beats before coverage, preserving approved copy and campaign scope.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": "Selective adoption from byteplus-sa/seed-cinema-studio PR #7 at e302ab982bc6714597983733d371e6bbbff0248c, identical tree to approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e. Marketing performance integration preserves copy, claims, CTA, pins, budgets, localization and independent review modes. No original third-party archive imported."
+    },
     "ad-captions": {
       "kind": "leaf",
       "description": "Write per-language ad captions (SRT, WebVTT) named <master-stem>.<language-code>.srt from the locked ad script and measured speech timing, and optionally a HyperFrames caption layer placed inside a placement's safe zone in brand typography for sound-off viewing. Caption text follows the locked script, never the heard words. Wraps by grapheme cluster so CJK, Indic, Thai with word breaks and right-to-left scripts are never split inside a word; enforces line length, reading speed and cue duration; resolves overlaps; refuses to invent margins for unpublished safe zones. Use for any market or language after speech QA on the cut. Does not translate, transcribe, generate media or render the master.",
@@ -33,7 +42,7 @@
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": null,
+      "overlay_notes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported.",
       "description": "Orchestrator that adapts an approved ad to another market at the depth the user chooses, per element: L1 translated captions and re-rendered on-screen text, L2 voice (dub keeping voices or a line-scoped re-voice that keeps the source soundtrack), L3 talent replaced through authorized Virtual Portraits, L4 cultural adaptation of settings, props, wardrobe, product and soundtrack, or L5 full transcreation into a new hero ad. Keeps a market card of user-supplied facts, an inventory of every spoken line and on-screen text, a translation sheet with review statuses, market-scoped claims, a recorded native or local reviewer sign-off before final generation at L3 to L5, an honest lip-sync verdict, and a new version in its own project without touching the source. No market is built in. Use to localize, translate, dub, recast or transcreate a finished ad for another market or language. Not for writing a first ad, a caption file alone (ad-captions) or ratio cuts alone (ad-delivery-formats).",
       "readme_summary": "Adapt an approved ad to another market at the depth chosen per element: captions/text, voice, talent, cultural adaptation or full transcreation, with native review gates."
     },
@@ -49,11 +58,11 @@
     "ad-variant-matrix": {
       "kind": "orchestrator",
       "description": "Orchestrator that turns one approved hero ad into a planned variant test matrix: one axis at a time by default (full factorial only on request) across hook, talent, product, outfit, location, language, market and ratio. Routes each axis to its specialist (new opening beat spliced in Studio, object swap, dubbing with captions, market adaptation, per-ratio delivery), names every variant {campaign}_{concept}_{axis-values}_v{nn}, previews cost, and refuses rows over the budget or variant cap. Every row still passes mode-appropriate review and registry registration; nothing is submitted by the planner. Use to multiply a winning ad into testable variants. Not for writing the hero ad, separate concept tests, or reading performance results.",
-      "readme_summary": "Plan approved-ad variants with routing, cost and budget gates; default keeps four focused compliance records, strict adds craft review, and all operations register.",
+      "readme_summary": "Plan approved-ad variants with cost and budget gates; both modes retain compliance and applicable acting evidence, strict adds broader craft review, and all operations register.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": null
+      "overlay_notes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "ark-mcp": {
       "kind": "tooling",
@@ -98,7 +107,7 @@
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": "Selective native-analysis port from byteplus-sa/ark-director PR #47 at 391d5c67718c9c8b0606368ee4ad552fea79678b. Preserve quick structure clone, campaign pins, supported facts, exact CTA, disclosure and native-review decisions, and capability-checked draft promotion."
+      "overlay_notes": "Selective native-analysis port from byteplus-sa/ark-director PR #47 at 391d5c67718c9c8b0606368ee4ad552fea79678b. Preserve quick structure clone, campaign pins, supported facts, exact CTA, disclosure and native-review decisions, and capability-checked draft promotion. Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "color-grade-palettes": {
       "kind": "leaf",
@@ -143,7 +152,7 @@
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": "Selective native-analysis port from byteplus-sa/ark-director PR #47 at 391d5c67718c9c8b0606368ee4ad552fea79678b. Preserve quick structure clone, campaign pins, supported facts, exact CTA, disclosure and native-review decisions, and capability-checked draft promotion."
+      "overlay_notes": "Selective native-analysis port from byteplus-sa/ark-director PR #47 at 391d5c67718c9c8b0606368ee4ad552fea79678b. Preserve quick structure clone, campaign pins, supported facts, exact CTA, disclosure and native-review decisions, and capability-checked draft promotion. Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "general-video": {
       "kind": "vendored",
@@ -287,7 +296,7 @@
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in."
+      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in. Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "reference-edit-rebuild": {
       "kind": "leaf",
@@ -318,12 +327,12 @@
     },
     "seedance-acting-console": {
       "kind": "leaf",
-      "description": "Turn a directing directive into a production-grade Seedance acting block. Two layers: (1) Scene-level acting analysis \u2014 read the whole scene, find the shared direction, each character's motive, goal, obstacle, and tactic with eye-work as purposeful action. (2) Cue encoding \u2014 map the tactic's visible footprint to directly observable physical cues at three intensity levels using a six-emotion bank. Use this skill when directing the performance, acting, emotional intensity, mood of the scene, facial expression, delivering a line, or when a character reads dead, glassy, flat, or over-acted. Composes with seedance-prompt-25 and optionally with seed-audio-prompt for dialogue reinforcement. Never calls generation tools itself.",
-      "readme_summary": "Turn playable motives and tactics into observable acting cues appropriate to framing, visibility and intensity.",
+      "description": "Encode supplied performance intent as Seedance cues. Use for acting blocks, delivery or cue repairs. Not for whole-scene analysis or generation.",
+      "readme_summary": "Encode supplied performance intent as concise shot-ready cues, preserving listening, source locks and intentional stillness.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in."
+      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in. Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "seedance-ai-avatar": {
       "kind": "orchestrator",
@@ -413,7 +422,7 @@
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": null
+      "overlay_notes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "seedance-lighting-presets": {
       "kind": "leaf",
@@ -485,7 +494,7 @@
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in."
+      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in. Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "seedance-prompt-25-dialogue": {
       "kind": "leaf",
@@ -517,11 +526,11 @@
     "seedance-shot-design": {
       "kind": "leaf",
       "description": "Design the shot plan for a Seedance scene before any prompt is written: shot count and duration, the job of each shot, size, framing (single, two-shot, group, over-the-shoulder, over-the-hip, point of view, insert), angle, camera move, lens intent, named light sources and key side, the contrast between neighboring shots, and a variety check (V1-V10) at a chosen energy level (restrained, standard, kinetic). Use for narrative, ad, micro-drama, music-video and showcase clips when camera and light are not already locked, when a scene reads flat or static, or when the user asks for a shot list, coverage, shot framing, or more dynamic camera work and lighting. Returns a shot plan record and the per-shot facts a Seedance 2.5 prompt carries. Not for static assets, source-preserving edits (object swap, restyle, recast), or task submission.",
-      "readme_summary": "Plan per-shot coverage for Seedance scenes: shot count and jobs, size, framing, angle, camera move, lens intent and light per shot, with variety rules and an energy level.",
+      "readme_summary": "Plan intent-led Seedance coverage with readable performance, purposeful moves or holds, declared lighting and optional contrast heuristics.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in."
+      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in. Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "seedance-vfx-pipeline": {
       "kind": "orchestrator",
@@ -638,7 +647,7 @@
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": null
+      "overlay_notes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "seedream-woodblock-poster": {
       "kind": "leaf",
@@ -685,23 +694,23 @@
       "upstream_hash": null,
       "overlay_notes": "Selective native-analysis port from byteplus-sa/ark-director PR #47 at 391d5c67718c9c8b0606368ee4ad552fea79678b. Preserve quick structure clone, campaign pins, supported facts, exact CTA, disclosure and native-review decisions, and capability-checked draft promotion. Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in."
     },
-    "tig-blocking-map": {
+    "blocking-map": {
       "kind": "leaf",
-      "description": "Tigran's project-agnostic method for giving Seedance character DISPOSITION via a color-coded outline schematic \u2014 a \"staging reference\" (blocking map). Use WHENEVER a user attaches a frame/still and asks for a blocking map / staging reference, whenever a video prompt needs precise multi-character staging (who is where, facing which way), whenever characters jump seats or swap places between shot sizes, when a clip with people must continue but Seedance cannot extend it, or when these terms clearly refer to cinematic staging. Do not trigger for generic software diagrams, architecture, charts, or maps. Figures are ALWAYS bound to letters A, B, C, D... in PROMPT TEXT ONLY \u2014 no letters are drawn on the map. The map is GEOMETRY ONLY \u2014 it must never bleed style, colors, wardrobe, or location into the shot.",
-      "readme_summary": "Tigran's project-agnostic method for giving Seedance character DISPOSITION via a color-coded outline schematic \u2014 a \"staging reference\" (blocking map).",
+      "description": "Project-agnostic method for giving Seedance character DISPOSITION via a color-coded outline schematic \u2014 a \"staging reference\" (blocking map). Use WHENEVER a user attaches a frame/still and asks for a blocking map / staging reference, whenever a video prompt needs precise multi-character staging (who is where, facing which way), whenever characters jump seats or swap places between shot sizes, when a clip with people must continue but Seedance cannot extend it, or when these terms clearly refer to cinematic staging. Do not trigger for generic software diagrams, architecture, charts, or maps. Figures are ALWAYS bound to letters A, B, C, D... in PROMPT TEXT ONLY \u2014 no letters are drawn on the map. The map is GEOMETRY ONLY \u2014 it must never bleed style, colors, wardrobe, or location into the shot.",
+      "readme_summary": "Plan character geometry with source-preserving blocking maps and text staging, retaining the approved medium.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": null
+      "overlay_notes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
-    "tig-scene-engine": {
+    "scene-craft": {
       "kind": "leaf",
-      "description": "Write and audit screenplay scenes and sequences using a five-element dramatic engine \u2014 Goal, Obstacle, Tactic, Reversal, Value Shift \u2014 with very specific custom definitions (see the body; these are NOT textbook definitions and must be applied exactly as written). Use whenever the user wants to write a new scene, draft scene options, develop a sequence, OR audit/test/diagnose an existing scene, sequence, outline, or full script for structural strength. Trigger on phrases like \"write this scene,\" \"give me an option for,\" \"audit my scene,\" \"test this against goal/obstacle/tactic/reversal/value shift,\" \"is this scene working,\" \"what's weak here,\" \"check my sequence,\" or when a screenplay/scene is pasted or a .docx/.pdf/Fountain/FD script is given for structural feedback. Also use proactively when the user is working on dramatic structure for thriller or psychological drama. Default to this skill for any scene-craft work rather than improvising generic story advice.",
-      "readme_summary": "Writes and audits screenplay scenes and sequences using a five-element dramatic engine \u2014 Goal, Obstacle, Tactic, Reversal, Value Shift \u2014 with custom definitions. Use to write new scenes, draft options, develop sequences, or audit/test/diagnose existing scenes for structural strength. Default scene-craft skill for thriller and psychological drama.",
+      "description": "Write and audit screenplay scenes using an explicitly selected craft framework. Use for scene drafts or structural feedback; the bespoke five-element engine is an option, not a universal defect gate.",
+      "readme_summary": "Write and audit source-preserving scenes under an explicitly selected framework; the five-element engine is optional.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": null
+      "overlay_notes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "seedance-ugc-ads": {
       "kind": "leaf",

@@ -182,6 +182,30 @@
         "Notes that setting-oversized-product does not list product-review as a valid mode and proposes a valid setting or mode.",
         "Does not invent lamp features, offers or a destination."
       ]
+    },
+    {
+      "id": 16,
+      "prompt": "Write one product-showcase prompt for an approved 20-second single locked shot of a ceramic bowl under constant diffuse studio light. The viewer should slowly notice the supplied asymmetric rim. No turn, camera movement, dialogue, music or extra generations. CTA 'Explore the shape.' is a post overlay. Keep all product details.",
+      "expected_output": "A polished quiet showcase retaining the sustained hold, with attention earned by the supplied shape rather than mandatory variety.",
+      "files": [],
+      "expectations": [
+        "Preserves the single locked 20-second shot, constant light and silence without a six-clip recipe or wow, turn or hold quota.",
+        "Explains how framing makes the rim readable without inventing a product benefit or changing geometry.",
+        "Keeps exact CTA in post and all product details, with no generation or unsupported claim.",
+        "Does not add alternatives or a production questionnaire to the settled scoped prompt."
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "New wild-card lamp ad, idea still open: known fact is a swiveling head, CTA 'See the lamp.' Make the sound lead our attention before the lamp appears. Twelve seconds, product-only. Propose a compact idea, not a production run; no generation.",
+      "expected_output": "A compact source-grounded premise with sound/editorial attention and payoff, and conditional alternatives if the idea remains open.",
+      "files": [],
+      "expectations": [
+        "Resolves what is heard before seen and why the eventual lamp reveal matters, rather than merely specifying premium visuals and a music bed.",
+        "Offers a focused question or genuinely different concise alternatives where the premise is materially open, not a mandatory expanded workflow.",
+        "Plans sound intent before picture and leaves final cue timing to measured edit and listening; no fabricated audio evidence.",
+        "Preserves product-only scope, swiveling-head fact and exact CTA without invented performance claims, voiceover, rights or spend."
+      ]
     }
   ]
 }
