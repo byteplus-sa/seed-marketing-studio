@@ -8,6 +8,10 @@ mode selection and caller responsibilities.
 
 ## Format-specific rules
 
+Use these format conventions within the brief, not as genre requirements.
+Custom treatments, coherent hybrids and section transitions are valid; retain
+source locks and the requested address mode, audio and lip-sync contract.
+
 - **Performance**: keep the performer on screen and the mouth in frame for
   lip-sync; vary shot size between close-ups (intimacy) and full-body (dance);
   a direct-address close-up reads as intimacy, a 3/4 angle as outward
@@ -31,10 +35,10 @@ mode selection and caller responsibilities.
 ### Vertical vs landscape
 
 - **9:16 (vertical)** is the discovery default for TikTok / Reels / Shorts:
-  center the subject, prefer close and medium shots, plan fast cuts (roughly
-  1–3s, faster ones made in the edit), open with the hook, and use vertical
-  motion (reveals, tilts, drops) over horizontal pans. Native 9:16 composition
-  beats cropping 16:9.
+  compose for the narrow frame and required subject readability. Shot timing,
+  holds, hook placement and camera direction follow the brief, not the aspect
+  ratio. Use assembly for authorized frame-exact cuts; no numeric shot minimum.
+  Native 9:16 composition avoids losing intended content to a crop.
 - **16:9 (landscape)** is the YouTube master: allow richer backgrounds,
   multi-subject staging, and continuity. Render one purpose-built 9:16 cut
   rather than stretching a 16:9 master.
@@ -42,13 +46,14 @@ mode selection and caller responsibilities.
 
 ## Custom-format procedure
 
-For an unlisted format or genre:
+For any custom treatment, whether or not a listed recipe also fits:
 
 1. Identify the format's address mode (direct, indirect, or none).
 2. Define the song map: which sections carry what visual energy.
 3. Choose native audio, supported master-timing reference or post-master
    assembly from the request, and define the beat contract.
-4. Name the genre lock: palette, lighting, camera grammar, and motion cadence.
+4. Define the brief-derived palette, lighting, camera and cadence, including
+   compatible hybrid ingredients or section transitions.
 5. Define the performance-to-atmosphere ratio per section.
-6. Write a format-first opening and a compact style seal.
-7. Add only exclusions that prevent likely drift or genre leakage.
+6. Write a format-first opening; a compact treatment summary is optional.
+7. Add only exclusions that protect the brief, source locks or technical contract.
