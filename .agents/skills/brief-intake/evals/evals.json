@@ -91,10 +91,10 @@
     {
       "id": 9,
       "prompt": "Brief: adapt the opening test scene of a classic science-fiction novel, where an old woman tests a boy with a box that causes pain. We have the novel's text. Keep it cinematic and faithful.",
-      "expected_output": "A compact proposal that says where the pain lives instead of VFX, treats the novel as the source bible, and names a quality bar.",
+      "expected_output": "A compact source-faithful proposal that chooses how to convey pain from the supplied text and authorized scope, and names a quality bar.",
       "files": [],
       "expectations": [
-        "It says where the feeling lives (performance, sound, light, framing) rather than relying on literal effects for the pain.",
+        "It chooses performance, sound, light, framing or effects according to the source and authorized direction, without treating restraint as inherently better or inventing missing source details.",
         "It treats the novel as a source bible and lists lines or details that must survive later stages.",
         "It names a quality bar or asks whose reaction it is only if the brief cannot answer it.",
         "It does not turn the questions into a long questionnaire, and it still gives a camera and light stance with an energy level."
@@ -103,15 +103,15 @@
     {
       "id": 10,
       "prompt": "A 30-second wordless TVC for a sparkling water: the city at dusk, rain, a bottle opening. Mood should be ambient, with a score. Give one compact direction.",
-      "expected_output": "A compact treatment with a product-linked creative argument, explicit source count, proposed picture-only audio route and original colours.",
+      "expected_output": "A compact treatment with a product-linked creative argument, explicit source count, resolved audio ownership and intent-led look.",
       "files": [],
       "expectations": [
-        "Proposes the picture_only audio route (silent generation, ambience and score built in post) with the reason that a negative audio line on native audio often leaks speech or music.",
+        "Asks about unresolved audio ownership: native sound remains valid for this wordless scene; picture_only with a post bed is a valid proposal when exact or separate sound control is wanted, not a requirement inferred from missing speech. Preserves any explicit route choice and explains unwanted-audio risk without claiming native exclusions guarantee control.",
         "Connects hook, viewer motivation, development and payoff to the product without inventing efficacy; internal shot count follows the idea rather than a six-source formula.",
         "Separates provider source count from internal shots; any proposed multiple-source plan remains a generation-scope decision, not a quality requirement.",
         "Chooses coverage from readable beats and generation scope; sustained holds, equal timing and no standout image are valid, without a six-clip recipe.",
         "States how sound and picture carry attention and payoff before generation; final cues follow the measured edit rather than invented listening evidence.",
-        "Defaults the look to ungraded original colours and treats any requested look as a post treatment.",
+        "May retain original colours or propose an in-scope custom look with a reason; preserves palette locks and identifies video texture as a post treatment.",
         "Lists the logo or end card as a post overlay and adds no AI label."
       ]
     },

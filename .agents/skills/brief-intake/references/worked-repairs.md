@@ -58,14 +58,16 @@ judgments, not observed generated-media results.
 - **Initial proposal:** One 30 s pass following a cyclist through the city in
   the rain, native audio with "no music, rain only", warm teal grade.
 - **Simulated failure:** Nine unrelated beats offer no progression. The problem
-  is not one provider source; it is a missing organizing idea. The grade was
-  never requested, and audio ownership is unresolved.
+  is not one provider source; it is a missing organizing idea. The grade has
+  no stated creative purpose or selection, and audio ownership is unresolved.
 - **Smallest repair:** Open with the rider hesitating at a puddle, develop a
   playful change of route, and finish with a deliberate splash, without claiming
   the garment keeps anyone dry. Plan only the internal shots those events need.
   Record source count separately: native cuts can fit one authorized source.
   Propose picture-only plus post audio when that control is wanted; preserve
-  native rain/music if explicitly requested. Keep original colours and post copy.
+  native rain/music if explicitly requested. Propose original colours because the
+  storm already carries this treatment; delegated authorship could instead
+  propose a justified custom look. Keep post copy separate.
   Plan rain's change from interruption to playful rhythm before generation;
   final accents follow the measured cut.
   Segmented coverage and standout images are optional; preserve purposeful holds.

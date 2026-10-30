@@ -1,0 +1,104 @@
+{
+  "status": "not_run",
+  "protocol": "Offline behavior-eval definitions, not model results. Compare old and new full skill contexts with the same prompts and model settings; review outputs blind for fidelity, specificity, range and coherence. Record outputs and evidence separately. Static schema checks do not establish creative quality. Preserve campaign pins, supported claims, exact copy and disclosure authority.",
+  "evals": [
+    {
+      "id": "maximalist",
+      "expected_output": "An in-scope fictional spectacle proposal that preserves product facts and locked copy.",
+      "skill": "brief-intake",
+      "prompt": "Invent a maximalist fictional lamp ad: paper streets unfold into a theatre around the lamp. I delegate staging and performance intentions. Several spectacular transformations, not one symbolic image. Only known product fact is a swiveling head; CTA 'See the lamp.' is locked. No generation.",
+      "expectations": ["Proposes several legible fictional transformations serving the concept without a one-image ceiling.", "Labels invention as metaphor and proposed staging, not product efficacy, testimony or user approval.", "Preserves product shape, swiveling-head fact and CTA; adds no mandatory fast/loud/saturated treatment."]
+    },
+    {
+      "id": "quiet",
+      "expected_output": "A quiet observational proposal retaining every explicit restraint.",
+      "skill": "brief-intake",
+      "prompt": "Invent a quiet observational ad of a potter waiting for clay to settle beside a desk lamp. Keep a locked wide, natural colours, silence and an unresolved ending. No spectacle or new product claim.",
+      "expectations": ["Preserves the wide, silence, natural colours and unresolved ending.", "May propose small fictional performance intentions without forcing a twist or spectacle.", "Does not add camera movement, a grade, extra generations or a productivity claim."]
+    },
+    {
+      "id": "source_edit",
+      "expected_output": "Only the authorized toolbox colour changes.",
+      "skill": "brief-intake",
+      "prompt": "Source-preserving campaign edit: a mechanic reads 'Ready.' and closes a blue toolbox. Only change the toolbox to green. Action, words, identity, camera, look and disclosure decision are locked. Be creative within that change.",
+      "expectations": ["Changes only the toolbox colour, preserving Ready. and the closing action.", "Does not invent backstory, new intentions, testimony or effects outside the edit scope.", "Keeps all campaign pins and locks; creative delegation does not expand may_change."]
+    },
+    {
+      "id": "custom_look",
+      "expected_output": "A purposeful custom look proposal protecting approved product colour.",
+      "skill": "color-grade-palettes",
+      "prompt": "Develop the look for a fictional salt-desert campaign film. I delegate art direction with no palette name chosen. Propose one custom look; the product's approved colour must stay accurate.",
+      "expectations": ["Proposes a descriptive custom palette with a visible purpose without requiring a bank selection.", "Discloses route and protects approved product colour rather than treating art direction as a global override.", "Does not invent a real film stock, claim approval or require saturation and grain."]
+    },
+    {
+      "id": "conform",
+      "expected_output": "An ungraded conform with no new look treatment.",
+      "skill": "color-grade-palettes",
+      "prompt": "Technical conform only: join approved ad clips and retain original colours. Earlier I delegated the campaign concept, but this delivery must be ungraded. No look change.",
+      "expectations": ["Adds no palette, grade sentence, grain, halation or vignette.", "Preserves the masters and applicable decode, tagging and dither requirements.", "Does not treat earlier creative delegation as permission to override ungraded delivery."]
+    },
+    {
+      "id": "locked_palette",
+      "expected_output": "The exact pinned palette remains unchanged as action energy changes.",
+      "skill": "color-grade-palettes",
+      "prompt": "The pinned brand palette is 'dusty rose highlights, neutral grey shadows, low contrast, no grain'. Preserve it exactly for the next two scenes as the action becomes more energetic.",
+      "expectations": ["Repeats the approved palette unchanged rather than mapping it to a preset.", "Adds no stronger contrast, grain or saturation to mirror action energy.", "Does not change campaign pins or claim rendered consistency without evidence."]
+    },
+    {
+      "id": "style_transition",
+      "expected_output": "One continuous path with the requested ordered style handoff.",
+      "skill": "seedance-camera-presets",
+      "prompt": "One continuous campaign shot: Silent Machine approach toward a dancer, then at the dropped baton become Raw Chaos handheld following her sprint. Keep the calm-to-frantic transition; no cuts or extra sources.",
+      "expectations": ["Preserves both ordered styles and the baton-drop handoff.", "Keeps early controlled movement and later fast handheld distinct.", "Adds no cut, source, style-purity rejection or verified-execution claim."]
+    },
+    {
+      "id": "compound",
+      "expected_output": "A compatible compound path with readable stages and no execution guarantee.",
+      "skill": "seedance-camera-presets",
+      "prompt": "Invent one continuous Epic Scale and Impossible Camera path for a fictional miniature set: rise while orbiting clockwise around its tower, tilting down to retain the roof, then pass through it into the hall. No cuts.",
+      "expectations": ["Combines compatible styles and retains the simultaneous rise, orbit and tilt before the passage.", "Proposes readable endpoints and pace without requiring technical names from the user.", "Does not reject by move/style count, add a generation or guarantee model execution."]
+    },
+    {
+      "id": "conflict",
+      "expected_output": "Clarification of contradictory simultaneous physical camera locks.",
+      "skill": "seedance-camera-presets",
+      "prompt": "During the same interval physically lock the camera to a tripod position and orbit it around the product. Both are locked; do not make them sequential.",
+      "expectations": ["Identifies the same-interval physical contradiction.", "Asks which lock may change and leaves the path unresolved.", "Does not drop a lock, rotate the product instead, or invent a cut."]
+    },
+    {
+      "id": "slow_style",
+      "expected_output": "The requested slow floating dolly and long static hold.",
+      "skill": "seedance-camera-presets",
+      "prompt": "Preserve Dreamy Flow: a slow dolly toward a seated performer, then a long static hold. No acceleration, cuts or new style.",
+      "expectations": ["Preserves the slow dolly, floating quality and final hold.", "Adds no frantic movement or style transition for ad engagement.", "Keeps the subject and path without inventing new performance action."]
+    },
+    {
+      "id": "empty_brief",
+      "expected_output": "Focused intake questions without inventing campaign facts or delegated authority.",
+      "skill": "brief-intake",
+      "prompt": "No campaign brief yet. Do not choose a product, audience, market or story for me. What do you need?",
+      "expectations": ["Asks focused questions about content, audience and intended reaction.", "Does not infer delegated authorship, product facts or market defaults from missing information.", "Invents no claims, approvals or finished treatment."]
+    },
+    {
+      "id": "missing_evidence",
+      "expected_output": "Unverified hypotheses and a request for evidence, not a claimed diagnosis.",
+      "skill": "seedance-camera-presets",
+      "prompt": "The ad take is unavailable. The prompt says 'slow crane toward the window'. Did camera speed cause the flatness?",
+      "expectations": ["States that the cause is unverified without the take and intended effect.", "Offers only labeled hypotheses, not a guaranteed fast-move repair or engagement prediction.", "Does not claim playback or require deleting slow motion."]
+    },
+    {
+      "id": "pace_by_intent",
+      "expected_output": "Urgent pan and dolly pace derived from the requested chase.",
+      "skill": "seedance-camera-presets",
+      "prompt": "Pan right to track a runner's sudden sprint past columns, then dolly out to keep pace with the widening pursuit. Make the chase urgent.",
+      "expectations": ["Derives urgent pace from the chase rather than slow pan/dolly templates.", "Keeps the ordered pan and dolly with a readable handoff.", "Does not force an unrelated crash zoom or a minimum move count."]
+    },
+    {
+      "id": "lens_authorship",
+      "expected_output": "A proposed optical treatment within the delegated campaign scope.",
+      "skill": "brief-intake",
+      "prompt": "I delegate the visual treatment for a fictional miniature railway ad. Propose lens character yourself; I know no lens names. Keep product identity and all supported claims.",
+      "expectations": ["Proposes concrete perspective or optical character tied to the miniature world.", "Does not block on a named preset or force numerical optics.", "Preserves identity and claims; labels the choice as proposed and adds no unsupported efficacy."]
+    }
+  ]
+}

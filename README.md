@@ -285,7 +285,7 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 | **seedance-lens-presets** | Translates a lens, focal length, aperture, focus or sensor request into a canonical visible-result phrase for Seedance prompts or Seedream style, and routes unreliable focus pulls and tape looks to post. |
 | **seedance-lighting-presets** | Translates a named lighting setup (rim light, backlight, golden hour, night and moonlight, soft/hard light, three-point, Rembrandt, practicals, silhouette, contre-jour) into a Seedream `Lighting:` recipe and a matching Seedance phrase, and words timed light cues inside a shot. |
 | **seedance-pacing-presets** | Compose prompt-only rhythm, speed ramps, time-lapse, freeze frame, progressive part-by-part changes and named picture/audio transitions, including match cuts, dissolves, wipes and J/L cuts. |
-| **color-grade-palettes** | Defaults to no grade (original Seedance colours); when a palette or film look is requested, maps it to a canonical grade sentence for Seedance or Seedream and/or a high-bit-depth-safe FFmpeg post look on the untouched master. |
+| **color-grade-palettes** | Compose requested or delegated custom looks as prompt palettes or high-bit-depth-safe post grades, preserving ungraded conform and source locks. |
 | **acting-direction** | Plan source-bound character intentions, listening and performance beats before coverage, preserving approved copy and campaign scope. |
 | **seedance-acting-console** | Encode supplied performance intent as concise shot-ready cues, preserving listening, source locks and intentional stillness. |
 | **scene-craft** | Write and audit source-preserving scenes under an explicitly selected framework; the five-element engine is optional. |

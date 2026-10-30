@@ -83,7 +83,18 @@ For character performance, orchestrators coordinate `acting-direction` before
 `seedance-shot-design`, then `seedance-acting-console` for concise cue encoding.
 Follow [performance direction](performance-direction.md) for source locks,
 applicability and actual-take acceptance. Use `scene-craft` for an explicitly
-selected scene framework and `blocking-map` for geometry. Load only the axes the
-plan needs; anamorphic requests use the conditional reference in the lens skill.
-Keep one grade per clip and coherent motivated light. A held camera is valid;
+selected scene framework and `blocking-map` for geometry. Load only installed
+skills needed for requested axes or in-scope delegated proposals;
+anamorphic requests use the conditional reference in the lens skill.
+A held camera is valid;
 do not add moves or cuts merely to meet a quota.
+
+Compose compatible source-motivated lighting, camera paths and custom looks
+within the same interval; ordered palette, light or camera changes name their
+scope and endpoints. Preserve approved continuity and explicit locks.
+One or two camera moves is a simplicity heuristic, not a cap on requested or
+delegated choreography. Clarify genuine simultaneous contradictions, not mere
+differences between scoped treatments. Source-preserving edits and conform
+change only authorized `may_change` axes, including any palette changes.
+Delegation supplies no rights, consent, generation approval or verified
+capabilities.
