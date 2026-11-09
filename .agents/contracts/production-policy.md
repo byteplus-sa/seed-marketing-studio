@@ -1,5 +1,13 @@
 # Production policy
 
+Apply [Generation access](generation-access.md) before starting this lifecycle.
+Without usable MCP or an explicitly requested usable alternative transport,
+deliver prompts in chat instead of initiating generation or production setup.
+Prompt handoff does not require Studio, manifests, registration or production
+locks. Existing submitted jobs retain their recovery and reconciliation rules.
+The production requirements below apply to authorized production, not to a
+writing-only handoff.
+
 ## Stage evidence and authorization
 
 Draft brief and scene breakdown can identify assets before canon exists. Before dependent production generation, require the appropriate approved recurring/critical elements and declared reference roles. Canon may be created by static sheet generation, deterministic HTML-entrypoint rendering, **or** by acquiring and approving real brand/product/logo assets; prompt-only authoring may deliver a draft without generating or downloading assets. When the brief borrows visual or motion grammar from a cited brand ad or other footage, obtain watchable media first (a `seed_understand`-usable public HTTPS URL, or a local download plus upload when that link is unusable); do not treat scripts or article text as the reference.

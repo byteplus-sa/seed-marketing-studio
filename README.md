@@ -8,6 +8,21 @@ The studio is a set of **agent skills** that an MCP-capable coding agent (Claude
 
 **No market is built in.** The target market, language, brand voice and cultural setting always come from the brief.
 
+## Prompts Without MCP
+
+No usable `ark-mcp` connected? Describe the content you want and receive
+paste-ready prompts, ordered reference bindings and separate model parameters
+in chat. No generation credentials, Studio project, asset locks or production
+setup are required; prompt files are saved only when requested.
+
+With usable MCP connected, say **"Generate this video"** to authorize generation
+for that task, or **"Prompts only"** to keep writing-only delivery. Connection
+alone does not authorize generation. To use an alternative, explicitly say
+**"Generate this with Ark CLI"**; the CLI must support the required operation
+and existing safeguards. There is no automatic CLI fallback, new mode flag or
+persistent toggle. After an interrupted submission, recover the same task
+instead of resubmitting. See [Generation access](.agents/contracts/generation-access.md).
+
 ---
 
 ## What it makes
@@ -115,8 +130,11 @@ flowchart TB
 ### Prerequisites
 
 - An agent runtime with MCP and skill support (Claude Code, opencode or similar).
-- A BytePlus ModelArk account with API access, and the [`ark-mcp`](https://github.com/byteplus-sa/ark-mcp) server configured.
-- Python 3.11+ and [uv](https://docs.astral.sh/uv/); FFmpeg for post.
+- For generation only: a BytePlus ModelArk account with API access and usable
+  [`ark-mcp`](https://github.com/byteplus-sa/ark-mcp), or an explicitly requested
+  usable alternative transport.
+- For production tooling: Python 3.11+ and [uv](https://docs.astral.sh/uv/);
+  FFmpeg for post. Prompt-only work needs neither production setup nor credentials.
 
 ```bash
 BYTEPLUS_MODELARK_API_KEY=your_modelark_key
@@ -126,6 +144,9 @@ BYTEPLUS_SEED_AUDIO_API_KEY=your_seed_audio_key
 Put these in a gitignored `.env`; never commit them.
 
 ### Quick start
+
+The steps below are for authorized production. For prompt-only work, open the
+repository in your agent and ask for prompts; skip credentials and Studio setup.
 
 1. Clone the repo, run `uv sync --locked`, and open it in your agent.
 2. Build or pin a brand kit (`brand-kit`), add the product card (`product-intake`), then create `projects/<campaign>/project.md` with the brief (or ask the agent to run `brief-intake`).
