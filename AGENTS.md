@@ -52,11 +52,16 @@ registry and review schemas live in `.agents/contracts/schemas/`.
 
 ## Routing and capability boundaries
 
-Use Ark CLI for platform administration and interactive generation. Prefer
-ModelArk MCP for in-agent durable generation. If MCP is unavailable before
-submission, use an equivalent available CLI surface with the same review,
-reference and persistence contracts. An ambiguous timeout is a reconciliation
-case, never a reason to submit through a second transport.
+Before generation or production setup, follow
+[Generation access](.agents/contracts/generation-access.md). Without usable
+`ark-mcp`, return paste-ready prompts, ordered references and parameters in chat;
+do not automatically fall back to Ark CLI or initialize a production project.
+Connected MCP still requires explicit generation scope. Prompt-only requests
+remain writing-only. Explicitly requested Ark CLI or securely configured
+HTTP/curl generation retains the same review, registry and persistence gates.
+Use Ark CLI for requested platform administration. Connection loss after possible
+submission requires recovery of the existing operation, never duplicate submission.
+This policy overrides older skill fallback and production-setup recipes.
 
 Skills never call the Ark REST API directly. Resolve tool availability and
 current model bindings before selecting parameters. Seedance 2.5 remains the
