@@ -15,13 +15,37 @@ paste-ready prompts, ordered reference bindings and separate model parameters
 in chat. No generation credentials, Studio project, asset locks or production
 setup are required; prompt files are saved only when requested.
 
-With usable MCP connected, say **"Generate this video"** to authorize generation
-for that task, or **"Prompts only"** to keep writing-only delivery. Connection
+With usable MCP connected and no saved prompt-only default, say
+**"Generate this video"** to authorize generation for that task, or **"Prompts
+only"** to keep writing-only delivery. Connection
 alone does not authorize generation. To use an alternative, explicitly say
 **"Generate this with Ark CLI"**; the CLI must support the required operation
-and existing safeguards. There is no automatic CLI fallback, new mode flag or
-persistent toggle. After an interrupted submission, recover the same task
-instead of resubmitting. See [Generation access](.agents/contracts/generation-access.md).
+and existing safeguards. There is no automatic CLI fallback. Use `/setup` to
+remember prompt-only mode and other local preferences. After an interrupted
+submission, recover the same task instead of resubmitting. See
+[Generation access](.agents/contracts/generation-access.md).
+
+## Setup And Updates
+
+Run **`/setup`** (or "run setup") for a short interview about prompt-only versus
+agent assistance, speed versus quality, verified model alternatives, independent
+review/approval preferences, prompt detail, language and creative style.
+Save workspace-wide defaults or overrides for a named production after confirming
+the summary. Preferences live in ignored `.agents/local/` files and are read in
+future sessions. "Use agent mode for this task" leaves a saved prompt-only default
+unchanged. Preferences never grant generation permission or bypass native drafts.
+Existing production briefs are not rewritten by setup.
+
+Run **`/update`** (or "update this repo") with either a Git checkout or a ZIP
+download. Git updates preview incoming commits before an approved fast-forward.
+ZIP updates use a pinned HTTPS download or a user-supplied local archive, staged
+outside the workspace. Preview conflicts before applying; first-time differing
+files without a baseline are conflicts. Preferences, production assets and local
+customizations are preserved, with replacement backups and revision tracking.
+The automated ZIP helper needs macOS/Linux Python 3.11+, not Git or uv;
+unsupported environments use the manual side-by-side fallback in the skill.
+No dependency installation, execution of received code, commits or pushes are
+implicit. Slash-command discovery depends on the host agent.
 
 ---
 
@@ -239,7 +263,7 @@ human sign-off before final generation and delivery.
 
 ## Skills
 
-The workspace ships **92 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
+The workspace ships **93 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
 
 ### Orchestration and review
 
@@ -401,7 +425,8 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 | **lark-showcase-aigc** | Orchestrates ffmpeg-scene-transitions, lark-demo-doc-builder, lark-doc, lark-wiki, lark-drive, and design-doc-mermaid to build enterprise-facing Lark documents that showcase AIGC (AI-generated content) with prompts, results, and inline media. |
 | **showcase-html** | Maintain the HTML production canvas of pre-Studio canvas projects and build ad-hoc comparison pages (optional for Studio projects). |
 | **media-review** | Emergency OS-player fallback when the required HTML/browser review surface is unavailable. |
-| **update** | Updates the repository from its remote, resolves merge conflicts while preserving local work, and re-runs validation and catalog refresh. |
+| **setup** | Interview users and remember safe workspace or production preferences across sessions without starting generation. |
+| **update** | Preview Git or staged ZIP updates, preserve local work and preferences, and apply only reviewed changes with backups. |
 
 ---
 
