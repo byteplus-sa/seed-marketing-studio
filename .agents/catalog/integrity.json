@@ -102,7 +102,7 @@
     ".agents/skills/ffmpeg-scene-transitions/agents/openai.yaml": "e4f62c5ecb8ffc568637b9293bd8e594cda0134fccdb390ff5ad271c0e6239bc",
     ".agents/skills/ffmpeg-side-by-side-comparison/SKILL.md": "5a45102540ad72b9cfe57d6afeb5a6db9abb3c39bf6c725f9d815a3cd3488c37",
     ".agents/skills/ffmpeg-side-by-side-comparison/agents/openai.yaml": "c2fa038c24add98ce20e1eebbad3ca4fa58a34c20df18e3ebc0e459eae0070f6",
-    ".agents/skills/film-production/SKILL.md": "bbb61bd0b14056a4d36c009c5a42999779d3fc79df19e8b7fa65259d4f87e61f",
+    ".agents/skills/film-production/SKILL.md": "85b9f581958107a4a3c70e3864610092511b68d3fe614b75ff3aab06fcb8d506",
     ".agents/skills/film-production/agents/openai.yaml": "2b219efe3f66c0bd66485ccd80c770e0a571226f67f87e2ce48b9aecf700cedb",
     ".agents/skills/film-production/evals/evals.json": "35502b01d7bfe7354a1e069a76d1c496608524ab67775bcae23f5c7b9c24c7a8",
     ".agents/skills/film-production/references/handoff-contracts.md": "4866daf2bc1438707829cb424d710f31e7d743180334763efa6de74284e365c9",
@@ -717,6 +717,8 @@
     ".agents/skills/seedream-woodblock-poster/agents/openai.yaml": "4d6ec2fe5d646110f961ed8ccd5a75157b75cc4cc26a64e7aa5b4efad94e951e",
     ".agents/skills/seedream-woodblock-poster/evals/evals.json": "75a82266821d97197529ce79ad47bf148ffc60570dfc2d4a07a8bfd6742d5fc3",
     ".agents/skills/seedream-woodblock-poster/references/folklore.md": "a9fdbf912db50fcc80fb0e9f474b89c57dabb611c775391d8dabc2fc3d9d41c5",
+    ".agents/skills/setup/SKILL.md": "ae09aacc23008922706f6d27217788a1f1ccb3b01c2d962826b074a2fb6ba2ab",
+    ".agents/skills/setup/evals/evals.json": "3e6e9b3777fd92287381aeedf9119a23f0f1210e5c5617d3609020078c3d5ba6",
     ".agents/skills/showcase-html/SKILL.md": "5ccbcbdbe25229c061dd9b92d052a66958be7369b78405ca9e11f9c2416d6c88",
     ".agents/skills/showcase-html/agents/openai.yaml": "8be865e104ec97475b96d879abc81fa2daf9ff797da4fb3fd9f24ddb53f00853",
     ".agents/skills/showcase-html/assets/byteplus-logo.svg": "a54ca43ac374a519e2889f90375a9ebce8da048c9b78af07321e874b1adeae95",
@@ -764,6 +766,7 @@
     ".agents/skills/template-factory/references/templates/psychedelic-neon-cosmic/template.json": "dbab5862976ffaaa5e9e56124c890b1cc20777ec064a69f92c7beae933ea084c",
     ".agents/skills/template-factory/references/templates/psychedelic-neon-cosmic/template.md": "891a5cadff23ef5e2e9d49b1e47ea5a2ad3c0b6c600e34d1a2c0d2119f8d11fe",
     ".agents/skills/template-factory/scripts/validate_breakdown.py": "af039a0ee8c6dbe837436280a20706f5ec1b0a03a38cef386efaea60d41e1b5c",
-    ".agents/skills/update/SKILL.md": "fc5136de5201734f1c45b962d67e5f8f0d4a5351a36c0be9e827294029f04b81"
+    ".agents/skills/update/SKILL.md": "d8edd629c1820d97aff5dc500aa0930ac1a0e3eb79e0390621ca484b9a5e6ee5",
+    ".agents/skills/update/evals/evals.json": "cd53060a15b832fd51e1d62aac1f95b0e90d6530b85857a9477b07b7183e4d8f"
   }
 }

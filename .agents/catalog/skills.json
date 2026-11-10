@@ -658,6 +658,15 @@
       "upstream_hash": null,
       "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in."
     },
+    "setup": {
+      "kind": "tooling",
+      "description": "Interview users and remember local Studio preferences. Use for /setup, onboarding, changing defaults or remember my preferences. Not for credentials, installing tools or starting production.",
+      "readme_summary": "Interview users and remember safe workspace or production preferences across sessions without starting generation.",
+      "dependencies": [],
+      "source_revision": "workspace",
+      "upstream_hash": null,
+      "overlay_notes": "Local preference interview with workspace defaults, production overrides and capability-and-consent boundaries."
+    },
     "showcase-html": {
       "kind": "tooling",
       "description": "Build and maintain a self-contained HTML canvas for generated-media projects created before HyperFrames Studio (projects with a showcase.json), and ad-hoc comparison pages (optional for Studio projects). For a pre-Studio canvas project, keep briefs, stage status, elements, prompts, references, images, audio, video takes, selections, review evidence, assemblies, and deliverables synchronized in one data-driven page throughout every production stage, and lock variants back into manifests. New production projects use a HyperFrames Studio project through studio_project.py instead. Use for pre-Studio canvas project review or lifecycle checkpoints, and whenever the user asks for an HTML gallery, before/after comparison, combined view, or local interface for comparing assets and choosing variants.",
@@ -821,13 +830,13 @@
       "overlay_notes": null
     },
     "update": {
-      "kind": "leaf",
-      "description": "Bring this repository up to date with its remote: fetch, integrate the upstream branch (default main), resolve merge conflicts file by file while preserving local work, then re-run workspace validation and refresh the skill catalog when skills changed. Use when asked to update the repo, pull latest changes, sync with origin, or resolve conflicts after pulling. Pushes only when the user asks. Not for committing task work or rewriting history.",
-      "readme_summary": "Updates the repository from its remote, resolves merge conflicts while preserving local work, and re-runs validation and catalog refresh.",
+      "kind": "tooling",
+      "description": "Preview Git or ZIP repository updates while preserving local work and preferences. Use for /update, pull latest or update without Git. Not for commits, pushes or production edits.",
+      "readme_summary": "Preview Git or staged ZIP updates, preserve local work and preferences, and apply only reviewed changes with backups.",
       "dependencies": [],
       "source_revision": "workspace",
       "upstream_hash": null,
-      "overlay_notes": "Portability overlay: preserve current-brief language, market, identity and project scope; remove prior-run assumptions and keep explicit localization examples opt-in."
+      "overlay_notes": "Reviewed staged ZIP updater with known-base conflict handling, protected local preferences, safe aliases and explicit apply/execution gates."
     }
   }
 }

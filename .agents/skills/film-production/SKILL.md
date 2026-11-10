@@ -44,8 +44,10 @@ specialist runs it, and which production defaults make the result better.
    `studio/stages.json` (`showcase.json` for a pre-Studio canvas project),
    relevant element, scene and shot manifests, prompt snapshots, and the latest
    review decisions. Manifests and the registry win over `handoff.md`. A new
-   Studio project starts with `review_mode: default` and
-   `approval_mode: approve_for_me` in `project.md`,
+   Studio project initializes review and approval from confirmed
+   [workspace preferences](../../contracts/workspace-preferences.md), unless
+   the task specifies otherwise. Without applicable saved choices, use
+   `review_mode: default` and `approval_mode: approve_for_me` in `project.md`,
    `studio_project.py init <project>`, then
    `studio_project.py stage <project> start brief-development`.
 3. **Never hand-write Studio state** (`stages.json`, `provenance.json`,

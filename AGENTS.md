@@ -26,6 +26,24 @@ Ask for missing information when it materially affects the intended result.
 Continue reversible work whose requirements are already clear. Do not repeat an
 approval request when existing user instructions authorize the same action.
 
+## Local Preferences And Maintenance
+
+At session start and resume, read
+[Workspace preferences](.agents/contracts/workspace-preferences.md) and any
+existing `.agents/local/preferences.json`, plus overrides for an explicitly
+selected production. Missing settings retain existing policy; invalid settings
+require repair, not silent reset. Saved prompt-only mode applies even with MCP.
+Task-only agent-mode overrides do not change the saved preference or authorize
+generation outside explicit scope. Active brief choices and all safety
+contracts remain authoritative.
+
+Route `/setup`, "run setup" and explicit durable-preference requests to `setup`.
+Interview in small batches, confirm changes and remember only safe, scoped
+preferences. Route `/update`, "update this repo" and ZIP-install updates to
+`update`. Keep `.agents/local/`, production assets and unrelated work untouched
+by repository updates. No Git, MCP or production setup is required for
+preferences; ZIP update tooling has its own documented runtime requirements.
+
 ## Operational contracts
 
 Load only the contract relevant to the current stage:
@@ -237,7 +255,8 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   [Routing](.agents/contracts/routing.md).
 - Elements define identity; derivative boards require current source hashes and
   explicit selection before video use. Control-only diagrams stay analysis-only
-  by default. New projects set `approval_mode: approve_for_me` in `project.md`;
+  by default. New projects use applicable confirmed workspace preferences;
+  otherwise set `approval_mode: approve_for_me` in `project.md`;
   `ask_for_approval` is the alternative. A legacy project without the field uses
   the default for new decisions only. In `approve_for_me`, an agent may select
   and approve a passing candidate after modality-appropriate inspection and a

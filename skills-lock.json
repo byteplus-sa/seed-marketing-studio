@@ -105,7 +105,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/film-production/SKILL.md",
-      "computedHash": "bbb61bd0b14056a4d36c009c5a42999779d3fc79df19e8b7fa65259d4f87e61f",
+      "computedHash": "85b9f581958107a4a3c70e3864610092511b68d3fe614b75ff3aab06fcb8d506",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "general-video": {
@@ -450,6 +450,13 @@
       "skillPath": ".agents/skills/seedream-woodblock-poster/SKILL.md",
       "computedHash": "62580f10146e5246caa5c1a6080e051e3f342e861812a2dd36faedc4a3c6cba9"
     },
+    "setup": {
+      "source": "./local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/setup/SKILL.md",
+      "sourceNotes": "Project-local preference onboarding, not global configuration or production authorization.",
+      "computedHash": "ae09aacc23008922706f6d27217788a1f1ccb3b01c2d962826b074a2fb6ba2ab"
+    },
     "showcase-html": {
       "source": "./local",
       "sourceType": "local",
@@ -564,7 +571,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/update/SKILL.md",
-      "computedHash": "fc5136de5201734f1c45b962d67e5f8f0d4a5351a36c0be9e827294029f04b81"
+      "computedHash": "d8edd629c1820d97aff5dc500aa0930ac1a0e3eb79e0390621ca484b9a5e6ee5"
     }
   }
 }

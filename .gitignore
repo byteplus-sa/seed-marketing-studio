@@ -54,4 +54,6 @@ build/
 # Claude Code local-only state (symlinked skills stay tracked)
 .claude/settings.local.json
 
+.agents/local/
+
 .artifacts
