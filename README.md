@@ -396,7 +396,7 @@ The workspace ships **93 skills**. Leaf skills are independent; declared orchest
 
 | Skill | Summary |
 |---|---|
-| **ark-mcp** | Uses the Ark multimodal MCP server for image, video, audio and 3D workflows, durable artifacts, and Advanced Creation Rights face/voice assets with existing authorization reuse and privacy rejection triage. |
+| **ark-mcp** | Upstream Ark MCP usage skill for Seedream 5.5, Seedance 2.5 4K and Flash, audio, 3D, OmniHuman, MediaKit, assets and durable background jobs; repository contracts remain authoritative. |
 
 ### FFmpeg post
 
@@ -437,7 +437,8 @@ The workspace ships **93 skills**. Leaf skills are independent; declared orchest
 
 | Source | Type | Skills |
 |---|---|---|
-| **Project-authored** | `local` | All `seedance-*`, `seedream-*`, `seed-audio-*`, `ugc-*`, `ad-*` and `audio-*` skills, plus `acting-direction`, `scene-craft`, `blocking-map`, `brand-kit`, `product-intake`, `static-ad-batch`, `brief-intake`, `film-production`, `template-factory`, `prompt-review`, `reference-edit-rebuild`, `omnihuman-prompt-20`, `html-graphic-render`, `color-grade-palettes`, `source-subject-map`, `ffmpeg-scene-transitions`, `ffmpeg-side-by-side-comparison`, `ark-mcp`, `lark-showcase-aigc`, `showcase-html`, `media-review`, `update` |
+| **Project-authored** | `local` | All `seedance-*`, `seedream-*`, `seed-audio-*`, `ugc-*`, `ad-*` and `audio-*` skills, plus `acting-direction`, `scene-craft`, `blocking-map`, `brand-kit`, `product-intake`, `static-ad-batch`, `brief-intake`, `film-production`, `template-factory`, `prompt-review`, `reference-edit-rebuild`, `omnihuman-prompt-20`, `html-graphic-render`, `color-grade-palettes`, `source-subject-map`, `ffmpeg-scene-transitions`, `ffmpeg-side-by-side-comparison`, `lark-showcase-aigc`, `showcase-html`, `media-review`, `update` |
+| **Partner-authored, locally tracked** | `local` | `ark-mcp`: exact [upstream bundle](https://github.com/byteplus-sa/ark-mcp/tree/ca2850965171b8e4f4069d55805993752e883a52/.agents/skills/ark-mcp); SHA-256 entrypoint and bundle inventory retain local hash semantics. [MIT license](.agents/catalog/ark-mcp-LICENSE). |
 | **HyperFrames (vendored)** | `github: heygen-com/hyperframes` | `hyperframes`, `hyperframes-*` and `general-video`; never installed globally or on demand |
 | **FFmpeg (vendored)** | `github: digitalsamba/claude-code-video-toolkit` | `ffmpeg` |
 
