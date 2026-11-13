@@ -63,9 +63,9 @@
     {
       "skill": "seedream-prompt",
       "before_lines": 689,
-      "after_lines": 101,
+      "after_lines": 139,
       "before_bytes": 31538,
-      "entry_bytes": 6062,
+      "entry_bytes": 7796,
       "references": [
         ".agents/skills/seedream-prompt/references/image-editing.md",
         ".agents/skills/seedream-prompt/references/image-generation.md",
@@ -82,16 +82,16 @@
           ".agents/skills/seedream-prompt/SKILL.md",
           ".agents/skills/seedream-prompt/references/image-generation.md"
         ],
-        "loaded_bytes": 16047,
+        "loaded_bytes": 18172,
         "measurement": "Exact file bytes for a declared loading path, not measured agent tokens or behavior."
       }
     },
     {
       "skill": "seedream-storyboard",
       "before_lines": 963,
-      "after_lines": 227,
+      "after_lines": 268,
       "before_bytes": 41972,
-      "entry_bytes": 13421,
+      "entry_bytes": 16007,
       "references": [
         ".agents/skills/seedream-storyboard/references/context-and-preflight.md",
         ".agents/skills/seedream-storyboard/references/editing-failed-panels.md",
@@ -109,7 +109,7 @@
           ".agents/skills/seedream-storyboard/references/context-and-preflight.md",
           ".agents/skills/seedream-storyboard/references/panel-and-grid-prompts.md"
         ],
-        "loaded_bytes": 34043,
+        "loaded_bytes": 37904,
         "measurement": "Exact file bytes for a declared loading path, not measured agent tokens or behavior."
       }
     },
@@ -214,5 +214,5 @@
       }
     }
   ],
-  "measurement_revision": "2026-09-08 creative-quality update; original before counts retained, current paths remeasured as file bytes, not agent tokens"
+  "measurement_revision": "2026-09-08 creative-quality update; original before counts retained, current paths remeasured as file bytes, not agent tokens; 2026-11-13 approved Seedream remediation remeasured changed bundles only, historical before counts retained"
 }

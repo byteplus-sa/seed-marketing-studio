@@ -20,8 +20,9 @@ For actual image creation:
 - use the lowest suitable size for the requested target; default mode has no
   automatic draft-first pass;
 - set `watermark: false` unless the user requires a visible watermark;
-- use `prompt_optimization: standard` for final candidates and `fast` only when
-  latency matters more than fidelity.
+- use `prompt_optimization: standard` only when the selected model and tool
+  expose it. `fast` needs verified support (documented for Pro, not 5.5);
+  latency preference alone does not authorize it.
 - Upload and pass the resolved local Element files as ordered reference inputs;
   keep their `@Image N` indices identical in the prompt, request, and manifest.
 
@@ -79,13 +80,23 @@ panel numbers.
 
 ### Downloading artifacts
 
-Set `output_path` on the generation call (an absolute file path, or a directory
-ending in `/`, inside an allowed output root) so the file is written locally and
-reported in the artifact's `local_path`. The durable artifact is always kept. If
-the call did not set it, copy the persisted artifact with
-`seed_media_export_artifact`, or pass `response_format: "url"` and download the
-presigned URL promptly. Do not hand-decode Base64 from tool output: large
-artifacts are truncated.
+For background jobs, submit through `ark_job_submit` with `persist: true`.
+Do not pass `output_path` or `output_dir` through `ark_job_submit`. Record the
+job ID, poll `ark_job_get` to a terminal state, and inspect the actual
+`ArtifactRef` and `persistence_error` before claiming storage succeeded.
+Export the durable artifact separately with `seed_media_export_artifact` to
+the intended project file, then verify file existence, bytes, and hash.
+
+Only a client with confirmed native task augmentation may call the tool
+directly with an allowed absolute `output_path` (or `output_dir` where its
+schema supports it). Inspect terminal task and persistence state, then verify
+the reported local file; negotiation is not proof it was written.
+
+If persistence failed but a provider URL exists, report the failure and recover
+that result promptly without regenerating. A failed export is an export retry,
+not a generation retry. If submission state is unknown, reconcile it before any
+resubmission or transport change. Never hand-decode large Base64 tool output,
+which may be truncated.
 
 ### Manifest and metadata
 
@@ -106,7 +117,7 @@ Record:
 - model and model ID;
 - ordered reference list and role of each image;
 - prompt file and hash;
-- size, format, watermark, seed, optimization mode, and batch count;
+- size, format, watermark, supported seed/optimization fields, and actual count;
 - output path, byte size, and hash;
 - provider artifact ID when available;
 - generated variants;
