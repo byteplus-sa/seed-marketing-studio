@@ -134,7 +134,9 @@ flowchart LR
    projects/<campaign> --video-model <id> --video-operation
    <op> --capabilities <evidence.json> --expected-provider <provider>
    --expected-tool-schema-revision <revision> --transport <transport>` (plus `--audio-model` and
-   `--audio-operation` when language rows exist) refuses a draft matrix, an
+   `--audio-operation` when language rows exist; mixed rows also supply
+   `--audio-capabilities`, `--audio-expected-provider` and
+   `--audio-expected-tool-schema-revision` for the audio destination) refuses a draft matrix, an
    unbound hero, or unresolved model, operation or capability values, and
    prints per owned provider step the `prepare_request.py` hash command and
    register command. It is a dry plan: it writes nothing and submits nothing.
@@ -151,7 +153,12 @@ flowchart LR
      Exact legacy native Draft identities retain 480p, boolean `draft=true`
      and the historical four-second hook policy only on the compatibility path.
      Audio-only and delivery-only rows get no video controls or video profile
-     requirements. Native production/final stages are refused without selected
+     requirements. Bind each executable operation's evidence/destination once
+     and reuse identical transport/capability/expectation flags in hash and
+     register commands. Audio-only runs may use the common flags for audio;
+     video evidence never certifies a mixed row's audio operation.
+     An evidenced optional absent preview emits no invented preview controls.
+     Native production/final stages are refused without selected
      source tasks: prepare promotions individually from selected `draft_task_id`
      values and supported output settings. Ordinary previews are not promotable.
    - **Required rules.** Strict steps carry `--required-rule` for
@@ -186,12 +193,21 @@ flowchart LR
    hash-bound decision. Default needs short actual candidate/final sanity,
    not a full craft checklist. For other models without native Draft, run
    `register --stage final --final-resolution
-   <delivery target>` for the selected rows and repeat review, registration,
+   <delivery target> --ordinary-final-selection
+   <row-name>=<registered-preview-operation>:<decisions/id.json>` for the selected
+   rows when preview is required and repeat review, registration,
    QA and selection for the final. For 2.5, register a native promotion from
    the selected draft instead; changed inputs start another native Draft.
    Place each selected take in its variant
    shot in Studio and record the selection. Rows that fail QA keep their
    name; a retake is a new `--take t02`, not a new variant name.
+   Ordinary finals freeze intent and selected lineage inside
+   `extensions.execution_profile.ordinary_final`; the source digest, matching
+   profile, unchanged creative inputs and decision hashes are rechecked at
+   submitting. Never disable the prerequisite or add native Draft keys.
+   Final controls are validated independently; include the exact source
+   references in final preparation. Optional no-preview operations need no
+   invented source selection.
 8. **Deliver** each selected variant per placement with `ad-delivery-formats`
    and run `ad-creative-check` before paid upload.
 

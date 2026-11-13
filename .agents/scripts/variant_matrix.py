@@ -12,12 +12,13 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from prepare_request import parse_params
+from prepare_request import ordinary_final_binding, parse_params
 from ruamel.yaml.error import YAMLError
 from validate_request import (
     Finding,
     capability_findings,
     is_seedance_25,
+    ordinary_final_findings,
     preview_params,
     profile_findings,
     project_review_mode,
@@ -96,9 +97,12 @@ REGISTER_PROCEDURE = [
         "its source, and a step owned by another row is never registered again"
     ),
     (
-        "Inspect and select the 480p draft with a hash-bound decision in both "
-        "review modes; promote Seedance 2.5 with the selected draft_task_id and "
-        "output settings, use --stage final for other models; a retake uses a new --take"
+        "Inspect and select the evidenced preview with a hash-bound decision in both "
+        "review modes; exact legacy native bindings retain 480p boolean Draft. "
+        "Promote only selected native tasks individually; ordinary finals use "
+        "--stage final with per-row selected-preview lineage. Optional none-preview "
+        "operations need no invented preview; audio and delivery get no video controls. "
+        "Every final needs fresh inspection; a retake uses a new --take"
     ),
 ]
 PROVIDER_ROUTES = {"object-swap", "motion-recast", "hook-opening", "language-dub"}
@@ -699,6 +703,9 @@ def operation_commands(
         audio = route in AUDIO_ROUTES
         asset = f"{row['name']}_{options.take}_{'audio' if audio else options.stage}"
         params = step_params(route, options)
+        selected = getattr(options, "ordinary_final_sources", {}).get(row["name"])
+        if selected is not None and not audio:
+            params = final_params(selected["source"], options)
         exemption = shot_rule_exemption(route, options.static_by_design)
         rules = step_rules(route, exemption, options.review_mode, options.hook_performance)
         performance = route == "hook-opening" and options.hook_performance == "character"
@@ -724,12 +731,12 @@ def operation_commands(
             options.audio_model if audio else options.video_model,
             "--operation",
             options.audio_operation if audio else options.video_operation,
+            *operation_binding_flags(options, audio),
             *(
-                ["--transport", options.transport,
-                 "--capabilities", options.capabilities,
-                 "--expected-provider", options.expected_provider,
-                 "--expected-tool-schema-revision", options.expected_tool_schema_revision]
-                if not audio and getattr(options, "execution_profile", None) is not None else []
+                ["--ordinary-final-source", selected["intent"]["source_operation_id"],
+                 "--ordinary-final-decision", selected["intent"]["decision_path"],
+                 *source_reference_flags(selected["source"])]
+                if selected is not None and not audio else []
             ),
             *flag_pairs("--param", params),
             "--expected-output",
@@ -759,8 +766,6 @@ def operation_commands(
                     *base,
                     "--review",
                     f"{folder}/review_{asset}.json",
-                    "--capabilities",
-                    options.capabilities,
                     "--write",
                     "--register",
                 ],
@@ -848,6 +853,35 @@ def unresolved(value: str | None) -> bool:
     return not value or not value.strip() or "<" in value or ">" in value
 
 
+def operation_binding_flags(options: argparse.Namespace, audio: bool) -> list[str]:
+    capabilities = options.audio_capabilities or options.capabilities if audio else options.capabilities
+    provider = options.audio_expected_provider or options.expected_provider if audio else options.expected_provider
+    revision = options.audio_expected_tool_schema_revision or options.expected_tool_schema_revision if audio else options.expected_tool_schema_revision
+    flags = ["--transport", options.transport, "--capabilities", capabilities]
+    binding = getattr(options, "audio_execution_profile" if audio else "execution_profile", None)
+    if binding is not None:
+        flags += ["--expected-provider", provider, "--expected-tool-schema-revision", revision]
+    return flags
+
+
+def final_params(source: dict[str, Any], options: argparse.Namespace) -> list[str]:
+    values = {**source["params"], "resolution": options.final_resolution}
+    return [f"{key}={json.dumps(value, ensure_ascii=False) if not isinstance(value, str) else value}" for key, value in values.items()]
+
+
+def source_reference_flags(source: dict[str, Any]) -> list[str]:
+    flags = []
+    for reference in source["references"]:
+        approval = reference["approval_evidence"]
+        fields = [reference["path"], reference["role"], approval["manifest"], approval["field"]]
+        if approval["field"] == "selected_variants":
+            fields.append(approval["key"])
+        flags += ["--ref", ":".join(fields)]
+        if approval.get("evidence_type") == "legacy":
+            flags += ["--ref-legacy", f"{reference['path']}={approval['legacy_asset_id']}"]
+    return flags
+
+
 def option_findings(
     rows: list[dict[str, Any]], options: argparse.Namespace
 ) -> list[Finding]:
@@ -903,8 +937,10 @@ def option_findings(
         needed += ["video_model", "video_operation"]
     if routes & AUDIO_ROUTES:
         needed += ["audio_model", "audio_operation"]
-    if routes - DELIVERY_ROUTES:
+    if routes - AUDIO_ROUTES - DELIVERY_ROUTES:
         needed.append("capabilities")
+    if routes & AUDIO_ROUTES and unresolved(options.audio_capabilities or options.capabilities):
+        needed.append("audio_capabilities")
     missing = [name for name in needed if unresolved(getattr(options, name))]
     if missing:
         flags = ", ".join(f"--{name.replace('_', '-')}" for name in missing)
@@ -920,19 +956,20 @@ def option_findings(
 
 def matrix_profile_findings(rows: list[dict[str, Any]], options: argparse.Namespace) -> list[Finding]:
     routes = {step["route"] for row in rows for step in staged_steps(row, options.stage)}
+    findings = audio_profile_findings(routes, options)
     if not routes - AUDIO_ROUTES - DELIVERY_ROUTES:
-        return []
+        return findings
     path = project_file(options.project, options.capabilities)
     if path is None:
         if is_seedance_25(options.video_model or "") and not (
             options.expected_provider or options.expected_tool_schema_revision
         ):
-            return []
+            return findings
         return [Finding("model.supported_mode", "Video capability profile is missing or unknown")]
     evidence = json.loads(path.read_text())
     if not isinstance(evidence, dict) or evidence.get("schema_version", 1) != 2:
         if is_seedance_25(options.video_model or ""):
-            return []
+            return findings
         return [Finding("model.supported_mode", "Non-legacy video needs a verified version 2 operation profile")]
     binding = {
         "destination": {
@@ -948,21 +985,70 @@ def matrix_profile_findings(rows: list[dict[str, Any]], options: argparse.Namesp
         "model": options.video_model, "operation": options.video_operation,
         "transport": options.transport, "extensions": {"execution_profile": binding},
     }
-    findings = profile_findings(request, evidence)
-    if findings:
-        return findings
+    video_findings = profile_findings(request, evidence)
+    if video_findings:
+        return [*findings, *video_findings]
     options.execution_profile = binding
+    options.ordinary_final_sources = {}
     try:
-        preview_params(request)
-        for route in sorted(routes - AUDIO_ROUTES - DELIVERY_ROUTES):
-            candidate = {
-                **request, "params": parse_params(step_params(route, options)),
-                "references": [],
-            }
-            findings.extend(capability_findings(candidate, evidence))
+        selections = {}
+        for item in options.ordinary_final_selection:
+            row_name, separator, value = item.partition("=")
+            source_id, colon, decision = value.partition(":")
+            if not separator or not colon or not row_name or not source_id or not decision or row_name in selections:
+                raise ValueError("Expected unique --ordinary-final-selection <row>=<source-operation>:<decision-path>")
+            selections[row_name] = (source_id, decision)
+        executable_rows = {row["name"] for row in rows if staged_steps(row, options.stage)}
+        if set(selections) - executable_rows:
+            raise ValueError("Ordinary-final selection names no executable row")
+        for row in rows:
+            for step in staged_steps(row, options.stage):
+                route = step["route"]
+                if route in AUDIO_ROUTES | DELIVERY_ROUTES:
+                    continue
+                candidate = {**request, "params": parse_params(step_params(route, options)), "references": []}
+                if options.stage != "draft" and evidence["preview"]["kind"] == "ordinary":
+                    if row["name"] in selections:
+                        intent, source = ordinary_final_binding(options.project, *selections[row["name"]])
+                        options.ordinary_final_sources[row["name"]] = {"intent": intent, "source": source}
+                        candidate = {
+                            **source, **request,
+                            "params": parse_params(final_params(source, options)),
+                            "extensions": {"execution_profile": {**binding, "ordinary_final": intent}},
+                        }
+                        findings.extend(ordinary_final_findings(options.project, candidate))
+                    elif evidence["workspace_policy"]["preview_required"]:
+                        raise ValueError("Required ordinary preview needs per-row --ordinary-final-selection")
+                findings.extend(capability_findings(candidate, evidence))
     except ValueError as error:
         findings.append(Finding("model.supported_mode", str(error)))
     return findings
+
+
+def audio_profile_findings(routes: set[str], options: argparse.Namespace) -> list[Finding]:
+    if not routes & AUDIO_ROUTES:
+        return []
+    path = project_file(options.project, options.audio_capabilities or options.capabilities)
+    if path is None:
+        return [Finding("model.supported_mode", "Audio capability evidence is missing")]
+    evidence = json.loads(path.read_text())
+    request = {
+        "model": options.audio_model, "operation": options.audio_operation,
+        "transport": options.transport, "params": {}, "references": [],
+    }
+    if isinstance(evidence, dict) and evidence.get("schema_version") == 2:
+        binding = {
+            "destination": {
+                "model": options.audio_model, "operation": options.audio_operation,
+                "transport": options.transport,
+                "provider": options.audio_expected_provider or options.expected_provider,
+                "tool_schema_revision": options.audio_expected_tool_schema_revision or options.expected_tool_schema_revision,
+            },
+            "evidence": evidence,
+        }
+        request["extensions"] = {"execution_profile": binding}
+        options.audio_execution_profile = binding
+    return capability_findings(request, evidence)
 
 
 def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
@@ -1050,6 +1136,10 @@ def parser() -> argparse.ArgumentParser:
     register.add_argument("--audio-model")
     register.add_argument("--audio-operation")
     register.add_argument("--capabilities")
+    register.add_argument("--audio-capabilities")
+    register.add_argument("--audio-expected-provider")
+    register.add_argument("--audio-expected-tool-schema-revision")
+    register.add_argument("--ordinary-final-selection", action="append", default=[])
     register.add_argument("--expected-provider")
     register.add_argument("--expected-tool-schema-revision")
     register.add_argument("--transport", choices=("ark-mcp", "arkcli", "curl"), default="ark-mcp")

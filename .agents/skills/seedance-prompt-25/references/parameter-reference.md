@@ -83,7 +83,8 @@ Do not change the selected model or transport to resolve a support gap.
 ### Cost ladder
 - Draft first, then promote the selected draft (see [Draft mode](#draft-mode)).
   Both review modes require explicit `resolution: "480p"` and boolean
-  `draft: true` for every new 2.5 generation, without a skip-draft exception.
+  `draft: true` for every new generation on exact legacy native bindings listed
+  in the execution-profile contract, without a skip-draft exception.
   Resolve schema or transport conflicts without dropping the native flag.
 - Keep resolution in request parameters, separate from prompt text and Studio
   canvas dimensions. Final requests and outputs need fresh request review and QA
@@ -152,9 +153,12 @@ checked 2026-10-17). Confirm the current tool schema before relying on it.
 4. **Re-check the final.** Picture and soundtrack are not byte-identical to the
    draft; inspect playback, dialogue words and audio again before placing it.
 
-For other models without native Draft support, a plain 480p request is
-an ordinary paid generation, and the final is a new reviewed request that may
-change picture, timing or audio. This is not a fallback for Seedance 2.5.
+Other models use their verified operation profile for native or ordinary
+preview controls, or optional absent preview. An ordinary preview is a paid
+generation, never a native promotion source. Its separately reviewed and
+registered final binds required selected-preview lineage and ordinary-final
+intent without disabling the prerequisite. Every final needs fresh picture
+and audio inspection. This is not a fallback for exact legacy native bindings.
 
 ## Guide disclaimer
 

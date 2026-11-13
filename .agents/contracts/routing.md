@@ -66,13 +66,17 @@ treatments first.
 
 Resolve the actual tool schema/model binding before selecting operation, resolution, duration, reference roles/counts, or optional flags. A capability record contains model, source, verified_at, operations, parameter JSON Schemas, required_parameters, reference_roles, max_references, and supports_first_frame_with_reference_images. Recheck when the tool, binding, or operation changes; cached evidence is historical, not a live guarantee.
 
-Every new Seedance 2.5 generation uses explicit `resolution: "480p"` and
+Every new generation on exact legacy native bindings listed in
+[Seedance execution profiles](seedance-execution-profiles.md) uses explicit `resolution: "480p"` and
 boolean `draft: true` in both review modes. If the tool schema disagrees,
 resolve the binding/schema or use an equivalent supported transport before
 submission; never omit the flag or fall back silently to non-draft 2.5.
-Resolve endpoint aliases to the model family before request preparation.
-Other models use verified operation-profile preview mechanics, not inferred
-480p or native Draft controls. Delivery resolution
+Resolve endpoint aliases to the exact model identity before request preparation.
+Other models use their verified operation profile for preview mechanics, not inferred
+480p or native Draft controls. Optional verified absent preview is distinct from
+unsupported execution. Required ordinary preview selection remains hash-bound
+to a separately registered final intent; no native task-ID promotion applies.
+Delivery resolution
 alone is not a skip-draft override.
 
 Saved defaults remain unchanged; an explicit selected model wins. Resolution,

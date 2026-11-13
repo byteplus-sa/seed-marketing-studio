@@ -11,7 +11,10 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / ".agents/scripts"))
+import operation_store
+import prepare_request
 import studio_project
+import test_native_draft
 import variant_matrix
 from test_seedance_capability_profiles import profile
 
@@ -70,7 +73,10 @@ VIDEO_FLAGS = [
     "--expected-tool-schema-revision",
     "fixture-r1",
 ]
-AUDIO_FLAGS = ["--audio-model", "audio-model-a", "--audio-operation", "audio_dub"]
+AUDIO_FLAGS = [
+    "--audio-model", "audio-model-a", "--audio-operation", "audio_dub",
+    "--audio-capabilities", "capabilities/audio.json",
+]
 COMMON_RULES = {
     "ad.claims_supported",
     "ad.no_fabricated_testimonial",
@@ -170,9 +176,179 @@ class VariantMatrixTests(unittest.TestCase):
         capabilities = self.project / "capabilities/video.json"
         capabilities.parent.mkdir()
         capabilities.write_text(json.dumps(evidence))
+        (capabilities.parent / "audio.json").write_text(json.dumps({
+            "model": "audio-model-a", "source": "offline audio fixture",
+            "verified_at": "2026-10-22T00:00:00Z", "operations": ["audio_dub"],
+            "parameters": {}, "reference_roles": [], "max_references": 0,
+        }))
 
     def project_files(self):
         return sorted(path for path in self.project.rglob("*"))
+
+    def test_audio_only_and_mixed_commands_reuse_exact_operation_bindings_offline(self):
+        (self.project / "project.md").write_text("---\nreview_mode: default\n---\n")
+        (self.project / "studio").mkdir()
+        audio = profile()
+        audio.update(
+            model="audio-model-a", operation="audio_dub", operations=["audio_dub"],
+            transport="curl", parameters={}, reference_roles=[], max_references=0,
+            workspace_policy={"preview_required": False},
+            preview={"support": "unsupported", "kind": "none", "params": {}},
+        )
+        (self.project / "capabilities/audio.json").write_text(json.dumps(audio))
+        video = json.loads((self.project / "capabilities/video.json").read_text())
+        video["transport"] = "curl"
+        (self.project / "capabilities/video.json").write_text(json.dumps(video))
+        for mixed in (False, True):
+            matrix = base_matrix(axes={"language": ["es"]})
+            matrix["hero"]["values"] = {"language": "en"}
+            if mixed:
+                matrix["axes"]["hook"] = ["hook-callout"]
+                matrix["hero"]["values"]["hook"] = "hook-demo-first"
+            code, result = self.register(
+                matrix, *VIDEO_FLAGS, *AUDIO_FLAGS, "--transport", "curl",
+                "--audio-expected-provider", "fixture-provider",
+                "--audio-expected-tool-schema-revision", "fixture-r1",
+                "--take", "t02" if mixed else "t01",
+            )
+            self.assertEqual(code, 0, result)
+            for operations in result["operations"].values():
+                for operation in operations:
+                    command = operation["hash_command"]
+                    expected = "capabilities/audio.json" if operation["route"] == "language-dub" else "capabilities/video.json"
+                    for key in ("hash_command", "register_command"):
+                        self.assertEqual(option_values(operation[key], "--capabilities"), [expected])
+                        self.assertEqual(option_values(operation[key], "--transport"), ["curl"])
+                    prompt = self.project / option_values(command, "--prompt")[0]
+                    prompt.parent.mkdir(parents=True, exist_ok=True)
+                    prompt.write_text("Offline fixture intent.\n")
+                    prepared, findings = prepare_request.run(prepare_request.parser().parse_args(command[4:]))
+                    self.assertEqual(findings, [])
+                    request = prepared["request"]
+                    if operation["route"] == "language-dub":
+                        self.assertEqual(request["params"], {})
+                        self.assertEqual(request["extensions"]["execution_profile"]["evidence"], audio)
+                    review_file = self.project / option_values(operation["register_command"], "--review")[0]
+                    review_file.write_text(json.dumps({
+                        "schema_version": 1, "request_sha256": request["request_sha256"],
+                        "reviewer_status": "complete",
+                        "checks": [{"rule_id": rule, "status": "pass", "evidence": "Synthetic offline contract check only"} for rule in operation["required_rules"]],
+                    }))
+                    registered, findings = prepare_request.run(prepare_request.parser().parse_args(operation["register_command"][4:]))
+                    self.assertEqual(findings, [])
+                    self.assertEqual(registered["request_sha256"], request["request_sha256"])
+                    operation_store.transition_operation(self.project, registered["registered"], "prepared", "submitting")
+
+    def test_optional_no_preview_matrix_emits_only_supported_execution_controls(self):
+        path = self.project / "capabilities/video.json"
+        evidence = json.loads(path.read_text())
+        evidence["preview"] = {"support": "unsupported", "kind": "none", "params": {}}
+        path.write_text(json.dumps(evidence))
+        code, result = self.register(base_matrix(axes={"hook": ["hook-callout"]}), *VIDEO_FLAGS)
+        self.assertEqual(code, 0, result)
+        _, operation = self.hook_operation(result)
+        self.assertEqual(operation["params"], ["duration=4"])
+
+    def test_required_ordinary_matrix_final_runs_emitted_commands_and_blocks_stale_selection(self):
+        fixture = test_native_draft.NativeDraftTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        source = fixture.profiled_source(native=False)
+        (fixture.root / "studio").mkdir()
+        evidence = fixture.caps
+        evidence["parameters"]["duration"] = {"type": "number", "minimum": 2.5}
+        evidence["reference_roles"] = ["first_frame"]
+        evidence["max_references"] = 1
+        evidence["modality_limits"]["Image"] = 1
+        (fixture.root / "frame.png").write_bytes(b"synthetic selected still fixture")
+        (fixture.root / "frame.md").write_text("---\nselected_variant: frame.png\n---\n")
+        (fixture.root / "prompt.md").write_text("@Image 1 defines the opening composition.\n")
+        source["references"] = prepare_request.build_references(
+            fixture.root, ["frame.png:first_frame:frame.md:selected_variant"]
+        )
+        source["prompt_sha256"] = hashlib.sha256((fixture.root / "prompt.md").read_bytes()).hexdigest()
+        decision_path = fixture.root / "decisions/select-draft.json"
+        decision = json.loads(decision_path.read_text())
+        decision["upstream_sha256"] = {
+            "prompt.md": source["prompt_sha256"],
+            "frame.png": source["references"][0]["sha256"],
+        }
+        decision_path.write_text(json.dumps(decision))
+        source["params"]["duration"] = 2.5
+        fixture.rehash(source)
+        fixture.write_registry(source)
+        (fixture.root / "caps.json").write_text(json.dumps(evidence))
+        matrix = base_matrix(axes={"hook": ["hook-callout"]})
+        matrix["hero"].update(
+            take_file="cup_t01.mp4", decision_ref="decisions/select-draft.json",
+            sha256=hashlib.sha256((fixture.root / "cup_t01.mp4").read_bytes()).hexdigest(),
+        )
+        path = self.write(matrix)
+        row = variant_matrix.expand(matrix)[1]
+        flags = [
+            "register", str(path), "--project", str(fixture.root),
+            "--video-model", "fixture-video", "--video-operation", "generate",
+            "--capabilities", "caps.json", "--expected-provider", "fixture-provider",
+            "--expected-tool-schema-revision", "fixture-r1", "--stage", "final",
+            "--final-resolution", "1080p", "--hook-performance", "non-performance",
+        ]
+        _, findings = variant_matrix.run(variant_matrix.parser().parse_args(flags))
+        self.assertTrue(variant_matrix.blocking(findings))
+        flags += ["--ordinary-final-selection", f"{row['name']}={source['operation_id']}:decisions/select-draft.json"]
+        result, findings = variant_matrix.run(variant_matrix.parser().parse_args(flags))
+        self.assertFalse(variant_matrix.blocking(findings), findings)
+        [operation] = result["operations"][row["name"]]
+        command = operation["hash_command"]
+        for command_key in ("hash_command", "register_command"):
+            self.assertEqual(
+                option_values(operation[command_key], "--ref"),
+                ["frame.png:first_frame:frame.md:selected_variant"],
+            )
+        prompt = fixture.root / option_values(command, "--prompt")[0]
+        prompt.parent.mkdir(parents=True)
+        prompt.write_bytes((fixture.root / source["prompt_file"]).read_bytes())
+        prepared, findings = prepare_request.run(prepare_request.parser().parse_args(command[4:]))
+        self.assertEqual(findings, [])
+        self.assertEqual(prepared["request"]["references"], source["references"])
+        review = fixture.root / option_values(operation["register_command"], "--review")[0]
+        review.write_text(json.dumps({
+            "schema_version": 1, "request_sha256": prepared["request_sha256"],
+            "reviewer_status": "complete", "checks": [
+                {"rule_id": rule, "status": "pass", "evidence": "Synthetic contract check, no playback claim"}
+                for rule in operation["required_rules"]
+            ],
+        }))
+        registered, findings = prepare_request.run(prepare_request.parser().parse_args(operation["register_command"][4:]))
+        self.assertEqual(findings, [])
+        self.assertEqual(registered["request_sha256"], prepared["request_sha256"])
+        operation_store.transition_operation(fixture.root, registered["registered"], "prepared", "submitting")
+        (fixture.root / "cup_t01.mp4").write_bytes(b"stale source")
+        _, findings = variant_matrix.run(variant_matrix.parser().parse_args(flags))
+        self.assertTrue(variant_matrix.blocking(findings))
+
+    def test_audio_destination_mismatch_and_missing_mixed_evidence_emit_no_commands(self):
+        matrix = base_matrix(axes={"language": ["es"], "hook": ["hook-callout"]})
+        matrix["hero"]["values"] = {"language": "en", "hook": "hook-demo-first"}
+        flags = [*VIDEO_FLAGS, "--audio-model", "audio-model-a", "--audio-operation", "audio_dub"]
+        code, result = self.register(matrix, *flags)
+        self.assertEqual(code, 1, result)
+        self.assertNotIn("operations", result)
+        audio = profile()
+        audio.update(
+            model="audio-model-a", operation="audio_dub", operations=["audio_dub"],
+            parameters={}, reference_roles=[], max_references=0,
+            workspace_policy={"preview_required": False},
+            preview={"support": "unsupported", "kind": "none", "params": {}},
+        )
+        (self.project / "capabilities/audio.json").write_text(json.dumps(audio))
+        for flag, value in (
+            ("--audio-expected-provider", "wrong-provider"),
+            ("--audio-expected-tool-schema-revision", "wrong-revision"),
+            ("--transport", "curl"),
+        ):
+            code, result = self.register(matrix, *VIDEO_FLAGS, *AUDIO_FLAGS, flag, value)
+            self.assertEqual(code, 1, result)
+            self.assertNotIn("operations", result)
 
     def write(self, matrix):
         path = self.root / "matrix.json"

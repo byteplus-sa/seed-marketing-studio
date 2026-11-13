@@ -423,9 +423,9 @@
         "preflight"
       ],
       "owner_path": ".agents/skills/seedance-prompt-25/references/parameter-reference.md",
-      "summary": "Every new Seedance 2.5 generation uses explicit resolution 480p and boolean draft true in both review modes; a delivery target alone does not bypass it. Resolve schema or transport mismatches without dropping the flag. Promote a selected native draft by draft_task_id with only output settings, and check final audio again.",
+      "summary": "Every new generation on exact legacy native bindings listed in seedance-execution-profiles.md uses explicit resolution 480p and boolean draft true in both review modes. Other models use their verified operation profile for native or ordinary preview controls, or optional absent preview. Required ordinary preview selection and final intent are hash-bound; a separately reviewed and registered final never disables the prerequisite. Promote only selected native tasks with supported output settings and inspect final audio again.",
       "exceptions": [
-        "Other models without native Draft use a plain 480p test and a new reviewed final request; this is not a fallback for Seedance 2.5."
+        "Wholly unprofiled historical requests keep their compatibility hashes and policy; adoption never authorizes new execution."
       ]
     },
     {

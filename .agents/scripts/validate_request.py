@@ -647,7 +647,15 @@ def profile_findings(request: dict[str, Any], evidence: Any) -> list[Finding]:
     if evidence["operations"] != [evidence["operation"]]:
         findings.append(Finding("model.supported_mode", "Version 2 profiles cover exactly one operation"))
     preview = evidence["preview"]
-    if preview["support"] != "verified" or preview["kind"] == "unknown":
+    absent_preview = (
+        not evidence["workspace_policy"]["preview_required"]
+        and preview["kind"] == "none"
+        and preview["support"] == "unsupported"
+        and preview["params"] == {}
+    )
+    if not absent_preview and (
+        preview["support"] != "verified" or preview["kind"] not in ("ordinary", "native_draft")
+    ):
         findings.append(Finding("model.supported_mode", "Preview mechanics are unsupported or unknown"))
     if is_seedance_25(request["model"]) and (
         preview["kind"] != "native_draft"
@@ -667,13 +675,23 @@ def preview_params(request: dict[str, Any], evidence: Any = None) -> dict[str, A
         return {"resolution": "480p", "draft": True}
     if isinstance(evidence, dict) and evidence.get("schema_version") == 2:
         preview = evidence["preview"]
+        if (
+            not evidence["workspace_policy"]["preview_required"]
+            and preview == {"support": "unsupported", "kind": "none", "params": {}}
+        ):
+            return {}
         if preview["support"] != "verified" or preview["kind"] not in ("ordinary", "native_draft"):
             raise ValueError("Preview mechanics are unsupported or unknown")
         params: dict[str, Any] = preview["params"]
         if not params or (preview["kind"] == "ordinary" and ("draft" in params or "draft_task_id" in params)):
             raise ValueError("Ordinary previews must be explicit and non-promotable")
-        if preview["kind"] == "native_draft" and params != {"resolution": "480p", "draft": True}:
-            raise ValueError("Native Draft mechanics need explicit boolean draft and 480p")
+        if preview["kind"] == "native_draft" and (
+            params.get("draft") is not True
+            or not isinstance(params.get("resolution"), str)
+            or not params["resolution"].strip()
+            or "draft_task_id" in params
+        ):
+            raise ValueError("Native Draft mechanics need evidenced resolution and explicit boolean draft")
         return dict(params)
     return {}
 
@@ -689,6 +707,20 @@ def native_draft_findings(request: dict[str, Any], evidence: Any = None) -> list
         malformed = schema_findings(evidence, "capability-evidence.schema.json")
         if malformed:
             return [Finding("model.supported_mode", f.message) for f in malformed]
+        if not legacy and evidence["preview"]["kind"] in ("ordinary", "none"):
+            if "draft" in request["params"] or "draft_task_id" in request["params"]:
+                return [Finding("seedance.draft_promotion", "Ordinary or absent previews cannot carry Draft controls")]
+            intent = binding.get("ordinary_final") if isinstance(binding, dict) else None
+            if intent is not None:
+                if (
+                    evidence["preview"]["kind"] != "ordinary"
+                    or not isinstance(intent, dict)
+                    or set(intent) != {"kind", "source_operation_id", "source_request_sha256", "decision_path", "decision_sha256"}
+                    or intent.get("kind") != "ordinary_final"
+                    or any(not isinstance(value, str) or not value.strip() for value in intent.values())
+                ):
+                    return [Finding("seedance.draft_promotion", "Invalid ordinary-final intent")]
+                return []
         if not legacy and not evidence["workspace_policy"]["preview_required"] and "draft_task_id" not in request["params"]:
             return []
     try:
@@ -748,8 +780,9 @@ def draft_promotion_findings(root: Path, request: dict[str, Any]) -> list[Findin
             raise ValueError("draft_task_id must identify one registered native Draft")
         source = sources[0]
         binding = execution_profile(request)
-        if binding is not None:
-            if execution_profile(source) != binding or source["transport"] != request["transport"] or source["operation"] != request["operation"]:
+        source_binding = execution_profile(source)
+        if binding is not None or source_binding is not None:
+            if binding is None or source_binding is None or source_binding != binding or source["transport"] != request["transport"] or source["operation"] != request["operation"]:
                 raise ValueError("Promotion must retain the exact model, transport, operation and profile")
             if profile_findings(request, binding["evidence"]):
                 raise ValueError("Promotion profile is invalid or expired")
@@ -760,17 +793,19 @@ def draft_promotion_findings(root: Path, request: dict[str, Any]) -> list[Findin
             age = (datetime.now(UTC) - completed).total_seconds()
             if completed.tzinfo is None or not 0 <= age < binding["evidence"]["promotion"]["max_age_seconds"]:
                 raise ValueError("Native Draft source is expired")
+        native_controls = preview_params(source) if source_binding is not None else {"resolution": "480p", "draft": True}
         if (
             source["model"] != request["model"]
             or source["transport"] != request["transport"]
             or source["params"].get("draft") is not True
-            or source["params"].get("resolution") != "480p"
+            or not all(type(source["params"].get(key)) is type(value) and source["params"].get(key) == value for key, value in native_controls.items())
+            or (source_binding is not None and source_binding["evidence"]["preview"]["kind"] != "native_draft")
             or source["submission_status"] != "terminal"
             or source["provider_status"] not in ("succeeded", "completed")
             or source["review_status"] == "rejected"
         ):
             raise ValueError(
-                "Promotion needs a successful native 480p Draft of the same model"
+                "Promotion needs a successful native Draft with evidenced controls of the same model"
             )
         prompt = contained_path(root, source["prompt_file"]).read_bytes()
         if (
@@ -816,6 +851,87 @@ def draft_promotion_findings(root: Path, request: dict[str, Any]) -> list[Findin
             "Draft needs a passing hash-bound selection decision; review_status alone is insufficient"
         )
     except (ValueError, TypeError, OSError, UnicodeError, YAMLError) as error:
+        return [Finding("seedance.draft_promotion", str(error), "task_ids.json")]
+
+
+def ordinary_final_findings(root: Path, request: dict[str, Any]) -> list[Finding]:
+    binding = execution_profile(request)
+    intent = binding.get("ordinary_final") if isinstance(binding, dict) else None
+    if intent is None:
+        return []
+    try:
+        if (
+            is_seedance_25(request["model"])
+            or native_draft_findings(request)
+            or profile_findings(request, binding["evidence"])
+            or binding["evidence"]["preview"]["kind"] != "ordinary"
+        ):
+            raise ValueError("Ordinary-final intent or profile is invalid")
+        registry = json.loads(contained_path(root, "task_ids.json").read_text())
+        if schema_findings(registry, "task-registry.schema.json"):
+            raise ValueError("Ordinary-preview registry is invalid")
+        sources = [source for source in registry["tasks"] if source["operation_id"] == intent["source_operation_id"]]
+        if len(sources) != 1:
+            raise ValueError("Ordinary final requires one registered selected preview")
+        source = sources[0]
+        source_binding = execution_profile(source)
+        if (
+            not isinstance(source_binding, dict)
+            or set(source_binding) != {"destination", "evidence"}
+            or source_binding != {key: binding[key] for key in ("destination", "evidence")}
+            or source["model"] != request["model"]
+            or source["operation"] != request["operation"]
+            or source["transport"] != request["transport"]
+            or source["submission_status"] != "terminal"
+            or source["provider_status"] not in ("succeeded", "completed")
+            or not source["provider_task_id"]
+            or source["review_status"] == "rejected"
+            or source["request_sha256"] != intent["source_request_sha256"]
+            or source["prompt_sha256"] != request["prompt_sha256"]
+            or source["references"] != request["references"]
+        ):
+            raise ValueError("Ordinary final must retain the successful preview identity, profile and creative inputs")
+        if capability_findings(source, source_binding["evidence"]):
+            raise ValueError("Ordinary-preview source controls or profile are invalid")
+        controls = preview_params(source)
+        if not all(type(source["params"].get(key)) is type(value) and source["params"].get(key) == value for key, value in controls.items()):
+            raise ValueError("Ordinary source was not the evidenced preview")
+        output_controls = {"resolution", "watermark", "return_last_frame", "priority", "execution_expires_after", "safety_identifier"}
+        creative_keys = (set(source["params"]) | set(request["params"])) - output_controls
+        if any(
+            key not in source["params"] or key not in request["params"]
+            or type(source["params"][key]) is not type(request["params"][key])
+            or source["params"][key] != request["params"][key]
+            for key in creative_keys
+        ):
+            raise ValueError("Ordinary final changed creative parameters; select a new preview")
+        prompt = contained_path(root, source["prompt_file"]).read_bytes()
+        if (
+            hashlib.sha256(prompt).hexdigest() != source["prompt_sha256"]
+            or compute_request_hash(
+                prompt, source["references"], source["model"], source["operation"], source["params"],
+                approval_mode=source.get("approval_mode"), project_sha256=source.get("project_sha256"),
+                execution_profile=source_binding,
+            ) != source["request_sha256"]
+        ):
+            raise ValueError("Ordinary-preview source hash changed")
+        if not re.fullmatch(r"decisions/[A-Za-z0-9][A-Za-z0-9_-]*\.json", intent["decision_path"]):
+            raise ValueError("Ordinary-preview selection requires a decision path")
+        decision_bytes = contained_path(root, intent["decision_path"]).read_bytes()
+        if hashlib.sha256(decision_bytes).hexdigest() != intent["decision_sha256"]:
+            raise ValueError("Ordinary-preview selection changed")
+        decision = json.loads(decision_bytes)
+        if (
+            schema_findings(decision, "production-decision.schema.json")
+            or decision["decision_type"] != "variant_selection"
+            or decision["asset_id"] != source["asset_id"]
+            or decision["subject_path"] != source.get("extensions", {}).get("expected_output")
+            or decision["selected_variant"] != decision["subject_path"]
+            or decision_findings(root, decision, require_current_project=True)
+        ):
+            raise ValueError("Ordinary preview needs a passing hash-bound selection decision")
+        return []
+    except (ValueError, TypeError, KeyError, OSError, UnicodeError, YAMLError) as error:
         return [Finding("seedance.draft_promotion", str(error), "task_ids.json")]
 
 
@@ -936,6 +1052,8 @@ def prepared_evidence_findings(
                 findings.extend(capability_findings(request, binding["evidence"]))
         findings.extend(native_draft_findings(request))
     root = Path(project_root).resolve()
+    if not existing_submission and not findings:
+        findings.extend(ordinary_final_findings(root, request))
     if (
         not existing_submission
         and "draft_task_id" in request["params"]

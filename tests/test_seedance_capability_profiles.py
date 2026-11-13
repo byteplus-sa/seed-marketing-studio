@@ -95,6 +95,19 @@ class CapabilityProfileTests(unittest.TestCase):
         findings = validate_request.prepared_evidence_findings(self.root, changed)
         self.assertIn("request.current_hash", {f.rule_id for f in findings})
 
+    def test_optional_absent_preview_does_not_negate_verified_execution(self):
+        self.evidence["preview"] = {"support": "unsupported", "kind": "none", "params": {}}
+        self.evidence["workspace_policy"]["preview_required"] = False
+        (self.root / "caps.json").write_text(json.dumps(self.evidence))
+        request = self.request()
+        self.assertEqual(validate_request.validate_request(self.root, request, self.evidence), [])
+        for support in ("unsupported", "unknown"):
+            evidence = copy.deepcopy(self.evidence)
+            evidence["workspace_policy"]["preview_required"] = True
+            evidence["preview"]["support"] = support
+            request["extensions"]["execution_profile"]["evidence"] = evidence
+            self.assertTrue(validate_request.capability_findings(request, evidence))
+
     def test_each_destination_dimension_is_independently_checked(self):
         request = self.request()
         for field in ("model", "provider", "operation", "transport", "tool_schema_revision"):
@@ -212,10 +225,19 @@ class CapabilityProfileTests(unittest.TestCase):
             self.assertEqual(variant_matrix.step_params(route, options), [], route)
 
     def test_audio_routes_require_audio_options_but_not_video_profiles(self):
+        audio = profile()
+        audio.update(
+            model="fixture-audio", operation="voice", operations=["voice"],
+            parameters={}, reference_roles=[], max_references=0,
+            preview={"support": "unsupported", "kind": "none", "params": {}},
+            workspace_policy={"preview_required": False},
+        )
+        (self.root / "audio.json").write_text(json.dumps(audio))
         options = variant_matrix.parser().parse_args([
             "register", "matrix.json", "--project", str(self.root),
             "--audio-model", "fixture-audio", "--audio-operation", "voice",
-            "--capabilities", "caps.json",
+            "--capabilities", "audio.json", "--expected-provider", "fixture-provider",
+            "--expected-tool-schema-revision", "fixture-r1",
         ])
         rows = [{"name": "v", "role": "variant", "steps": [{
             "owner": "v", "route": "language-dub", "provider_operation": True,

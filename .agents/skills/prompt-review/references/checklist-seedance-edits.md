@@ -222,19 +222,26 @@ medium. Mark N/A any item whose feature is absent and record why.
    Source text surfaces become abstract shapes; no lettering is requested.
 
 6. **Route and limits.** The operation matches the recorded route decision and
-   capability evidence (`model.supported_mode`); an unverified route is
-   labeled provisional and the request is a 480p probe. Route A uses 1–5
-   images; Route B sets the whole-second source duration and ratio.
+   current capability evidence (`model.supported_mode`); an unverified route
+   stays provisional and execution feasibility unresolved. A denied probe
+   stays absent. A probe or source derivative needs explicit authorization
+   for its span and consequences; strict review grants no generation scope.
+   Preserve exact fractional source duration, cuts, ratio and the independent
+   audio tail. Unsupported values block execution, never authorize rounding,
+   trimming, padding or retiming. Verify reference limits for the selected
+   operation and omit absent image roles. Exact legacy native Draft policy
+   still applies to authorized full-source requests.
 
 7. **Same place.** A restyle keeps the source's place: the background is
-   restyled through an environment image of that place, or left as it is.
+   redrawn in the requested medium through words-only surface descriptions
+   or an independently selected optional environment image of that place.
    Naming a different location (a city street becoming a seaside village) is
-   MAJOR unless the user asked for one. A scene replacement or style word that
-   only tells the model to keep the source layout for the background is likely
-   to leave it photographic; flag it MAJOR when a whole-frame restyle is
-   requested. Keeping positions for the subject and the furniture they use is
-   correct. A restyle that intentionally keeps the original background
-   photographic is N/A.
+   MAJOR unless the user asked for one. Keeping source geometry, subject
+   positions and furniture is correct while every surface takes the requested
+   medium. Missing imagery alone is not a defect and does not authorize image
+   generation. Flag an actual incomplete medium description or observed
+   photographic leakage, not an assumed words-only failure. Unknown reliability
+   stays unresolved. A deliberately photographic background is N/A.
 
 8. **Video-to-video inputs.** Apply the shared items under
    [Video-to-video inputs](#video-to-video-inputs-swap-recast-restyle).

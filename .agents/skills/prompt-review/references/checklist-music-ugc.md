@@ -7,6 +7,12 @@ items in [the index](review-checklists.md#universal--all-prompts) first.
 
 Source skill: `seedance-music-video`
 
+This additive layer preserves musical intent and exact master/lyric fidelity.
+Resolve the selected model and operation first. Adapter syntax, reference roles
+and duration limits apply only when verified for that exact binding. Otherwise
+record `not_applicable` for adapter grammar, retain ordinary language sound
+intent and leave executable settings unresolved. Genre never selects an adapter.
+
 ### Format and genre
 
 1. **Format declared.** Performance, narrative, conceptual, lyric, visualizer,
@@ -33,17 +39,21 @@ Source skill: `seedance-music-video`
 
 ### Audio contract
 
-6. **Audio treatment explicit.** Native audio brackets, `@Audio N` timing
-   authority, or hybrid (reference + native generation) — never ambiguous.
+6. **Audio treatment explicit.** Name native sound, an exact master, post audio,
+   silence or owned mixed layers. Native brackets and `@Audio N` roles are
+   conditional on the selected operation, not required for ordinary language
+   prompt-only intent. Separate audio generation remains opt-in.
 
-7. **Lip-sync lines verbatim in `{...}`.** Match the audio master exactly —
-   no paraphrasing, no reordering, no omitted lines.
+7. **Lip-sync lines verbatim.** Match the audio master exactly:
+   no paraphrasing, reordering or omitted lines. Use `{...}` only when the
+   selected adapter and operation support that syntax.
 
 8. **Lyric timing follows audio evidence.** When coverage or synchronization
-   requires per-line timing, use audio-measured `[X-Ys] { line }` slots, retaining
+   requires per-line timing, use audio-measured cues, retaining
    raw measurements separately from proposed edits. With unavailable audio or
    unverified timings, use ordered cues and label timing provisional. Genre or
    fast delivery alone does not require timestamps or justify invented timings.
+   `[X-Ys] { line }` slots apply only to a verified compatible adapter.
 
 9. **"No line skipped" mandate present.** When the timestamped timeline is
    used, the prompt includes an explicit instruction that no line may be
@@ -64,8 +74,10 @@ Source skill: `seedance-music-video`
 
 ### Structure
 
-13. **Right-sized (4–30s).** One song section per pass, or an explicit
-    continuous one-take. Not padded to fill 30s.
+13. **Right-sized to intent and verified limits.** Preserve requested section
+    spans, fractional beats and continuous takes. The historical 4–30s adapter
+    range applies only to its verified selected operation; unknown limits stay
+    unresolved. Do not pad, round or split to satisfy an inapplicable range.
 
 14. **Treatment summary is optional.** When useful, summarize brief-derived
     continuity, coherent hybrid choices and deliberate section transitions.

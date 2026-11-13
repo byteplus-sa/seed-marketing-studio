@@ -12,7 +12,7 @@ This keeps the mapping reproducible and prevents slot drift.
 | Scene | `elements[]` location descriptors | `@Image` binding |
 | Visual style | `visual_style.grade` + `lighting_direction` + `lens` + `film_look` | Order: lighting → lens → palette. Capture-format and texture looks in `film_look` (camcorder, grain, scanlines, halation) go to the post recipe, not the prompt |
 | Camera | `camera` + per-shot `shots[].camera` + `shots[].motion.camera_motion` (the pin's per-shot camera and light serve as the shot plan; `skill_owned_camera`) | One or two moves is a planning heuristic, not a cap; preserve source choreography and check readability, endpoints and incompatible directions |
-| Audio | `audio-analysis.json` soundscape, verified events and sync rules; `audio` fallback for older runs | Native only for on-camera dialogue: `( )` music, `< >` SFX, `{ }` dialogue when authorized; describe replacement audio rather than copying source words or recordings. Score-led or ambient pins generate picture with `generate_audio: false` and map the sound grammar to a Seed Audio post bed |
+| Audio | `audio-analysis.json` soundscape, verified events and sync rules; `audio` fallback for older runs | Follow the brief's sound ownership, not genre: selected native dialogue, effects or wordless ambience stay native with supported controls; an exact master stays unchanged; purposeful silence adds no bed. Mixed layers name their owners. Separate Seed Audio generation is opt-in. Use `( )` music, `< >` SFX and `{ }` dialogue only for the selected adapter and verified operation. Preserve rights/consent and inspect playback/listening before muting or replacement; unresolved ownership remains unresolved |
 
 ## Reference binding order (Seedance)
 

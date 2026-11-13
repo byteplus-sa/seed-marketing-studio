@@ -46,6 +46,10 @@ an alias is exposed by today's server.
 
 Other models require their verified operation profile for matrix execution.
 Ordinary previews use only evidenced controls and are non-promotable.
+An evidenced `preview: {support: unsupported, kind: none, params: {}}` is valid
+only when `workspace_policy.preview_required` is false and the operation itself
+is verified. Unknown preview support is not evidenced absence. Required preview
+and exact legacy native policy remain enforced.
 Flash's exact imported declaration does not authorize invented duration,
 Draft or preview values. Unknown profile requirements block execution, not
 creative prompt-only writing. No silently dropped Draft flag.
@@ -56,6 +60,30 @@ hash-bound selection and unexpired evidence/source. Version 2 requires
 `promotion.support: verified`, `max_age_seconds`, supported `resolutions` and
 `extensions.provider_completed_at` on the source. Reinspect actual finals.
 Historical plain tasks never become native Draft through a new profile.
+Nonlegacy native controls and selected-source eligibility come from the verified
+native preview parameters, including boolean `draft: true` and its evidenced
+resolution, not an arbitrary 480p predicate. Profile parity applies whenever
+either promotion side is profiled; wholly unprofiled history keeps its hash rules.
+
+## Ordinary Finals
+
+Use `prepare_request.py --ordinary-final-source <registered-operation-id>
+--ordinary-final-decision <decisions/id.json>` with the same independently
+resolved destination and evidence. Preparation freezes an `ordinary_final`
+object inside `extensions.execution_profile`, so existing profile-aware hash
+consumers bind intent and lineage without changing no-profile hash algorithms:
+`kind: ordinary_final`, `source_operation_id`, `source_request_sha256`,
+`decision_path` and `decision_sha256`.
+
+The selected source must be one registered successful terminal ordinary preview
+with the exact destination/evidence, prompt, references, creative parameters and
+current source digest. Validate decision identity, artifact/review/upstream
+hashes and project policy. Validate final controls independently against the
+operation schema. The final has a new registry identity, review and authorization;
+submission rechecks the persisted selection and source. Missing, stale, failed,
+unselected or changed sources block before writes. Intent does not disable
+`preview_required` and does not authorize changed creative inputs. Neither
+ordinary previews nor ordinary finals carry `draft` or `draft_task_id`.
 
 ## Variant Compiler
 
@@ -63,9 +91,22 @@ Historical plain tasks never become native Draft through a new profile.
 transport options. It derives hook duration from verified `duration.minimum_s`
 and preview fields from the frozen profile, not model names. A prompt-only
 `plan` leaves generation duration unresolved. Audio/delivery rows get no video
-controls. Shared lineage, costs and `max_variants` remain unchanged.
+controls. Resolve evidence and independent destination per executable operation:
+video uses `--capabilities`, `--expected-provider`,
+`--expected-tool-schema-revision`; audio can use `--audio-capabilities`,
+`--audio-expected-provider`, `--audio-expected-tool-schema-revision`.
+Audio-only invocations may use the common flags for their audio destination;
+mixed operations require separate matching evidence. Each operation's emitted
+hash and register commands reuse identical capability, destination and transport
+flags. Audio has no video controls or video prerequisite. Delivery has no
+provider command. Shared lineage, costs and `max_variants` remain unchanged.
 The matrix cannot emit native promotions because it has no per-row selected
 task identity; hand off each actual selected task for individual preparation.
+For required ordinary previews, `--stage final` needs
+`--ordinary-final-selection <row-name>=<source-operation-id>:<decision-path>`
+for each executable row. Preserve source creative parameters and references in
+the actual final command; compile-time validation never replaces final preflight.
+Optional absent-preview operations emit no invented preview parameters.
 
 ## Imported Compatibility
 

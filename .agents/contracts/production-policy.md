@@ -265,9 +265,9 @@ cuts, moves or light cues against the approved intent; a failure is critical
 when it loses a required beat or violates a lock, not merely because a shot
 is labelled a turn. Contrast, cadence, holds and standout images have no
 mandatory count. Dialogue does not impose a body or camera energy ceiling;
-judge actual readability. A 480p draft checks shot structure before
-final-resolution generation in both modes; Seedance 2.5 also requires boolean
-`draft: true`. In default mode, preserve the requested direction and inspect
+judge actual readability. The evidenced preview checks shot structure before
+final-resolution generation in both modes when required; exact legacy native
+bindings retain 480p and boolean `draft: true`. In default mode, preserve the requested direction and inspect
 actual results without a mandatory craft checklist. A project whose scene
 breakdown is already complete plans only new or revised shots, proposes a
 migration preview for older scenes, and never invents a plan for existing takes.
@@ -340,23 +340,26 @@ Provider moderation errors remain moderation_rejected with original error eviden
 
 ## Generation and review defaults
 
-**Video is draft-first in both default and strict review modes.** Every new
-Seedance 2.5 generation (including Premium) sets explicit `resolution: "480p"`
+**Video preview policy applies in both default and strict review modes.** Every new
+generation on the exact legacy native bindings listed in
+[Seedance execution profiles](seedance-execution-profiles.md) sets explicit `resolution: "480p"`
 and boolean `draft: true`, including revised drafts, edits, extensions and
 independent variants. A delivery resolution alone never bypasses this pass.
 If the schema lacks or rejects `draft`, resolve the current model binding,
 capability evidence or equivalent transport before submission; never drop the
-flag or silently fall back to a non-draft 2.5 request. Other models without
-native Draft use a plain 480p test without an invented `draft` flag. Keep the
+flag or silently fall back to non-draft legacy execution. Other models use their
+verified operation profile for exact native or ordinary preview controls,
+even when 480p is schema-allowed but the preview prescribes another resolution.
+Optional evidenced `none` preview requires no invented preview controls.
+Unknown needed mechanics block execution, not prompt-only writing. Keep the
 intended aspect, natural duration, approved inputs and requested audio behavior.
 Record draft resolution and the separate delivery target in the owning project
 and shot manifests; Studio canvas dimensions follow the delivery target.
 Initialize Studio with `init --resolution <delivery-target>` before syncing
-480p shots when the target differs; do not let draft resolution define the
+preview shots when the target differs; do not let draft resolution define the
 delivery canvas by accident.
-Seedance 2.5 has no skip-draft exception or runtime bypass. For other models whose operation cannot
-produce 480p, record current capability evidence and the reason for the lowest
-suitable supported resolution; this is not a 2.5 native Draft bypass.
+Exact legacy native bindings have no skip-draft exception or runtime bypass.
+Saved defaults and wholly unprofiled historical hashes remain unchanged.
 
 Inspect draft playback and audio, motion, continuity and the shot plan. Record a
 passing, hash-bound draft selection under the project's approval mode before
@@ -367,21 +370,30 @@ final takes only within the authorized scope at the recorded delivery
 target; do not assume 1080p is always required. A requested 480p delivery can use
 reviewed 480p takes after delivery QA.
 
-A 480p output is not automatically a provider-native Draft task: 2.5 requires
-both explicit parameters. Promote only the selected native Draft by its
+A low-resolution output is not automatically a provider-native Draft task:
+exact legacy native bindings require both explicit parameters; nonlegacy native
+source eligibility comes from evidenced native mechanics and current source
+identity. Promote only the selected native Draft by its
 `draft_task_id` and supported output settings after verifying the live
 constraints. Changed generation inputs require another native Draft. For
-other models without native Draft, final-resolution generation is a new paid
+ordinary-preview models, final-resolution generation is a new paid
 request using the selected prompt and approved inputs; it can change the
 picture, timing or audio. Every final request has its own prepared registry
 entry and mode-appropriate preflight (complete hash-bound review in strict),
-including changed parameters and
-references, even when prompt text is unchanged. Inspect and select the final
+including independently verified final controls. Required ordinary-preview
+selection, source operation/digest and decision bytes are frozen with explicit
+ordinary-final intent in `extensions.execution_profile.ordinary_final` and
+rechecked at submitting. Preserve creative parameters, prompt and references;
+changed creative inputs need another selected preview, not intent relabeling.
+Inspect and select the final
 output again before replacing draft takes in Studio and rendering the master.
 Upscaling or a delivery-quality export alone does not establish final-take QA.
 
 Local promotion preflight requires `draft_task_id` to identify exactly one
-registered successful terminal native 480p Draft of the same resolved model.
+registered successful terminal native Draft of the same resolved model.
+Exact legacy native controls remain 480p and boolean Draft; nonlegacy controls
+and source eligibility come from verified evidence. If either side has a
+profile, both retain the exact profile/operation identity and current validity.
 Its prompt and request hashes must still match, and a valid hash-bound
 `variant_selection` decision must name its recorded output and asset.
 `review_status: approved` alone is not selection evidence. Retain the exact

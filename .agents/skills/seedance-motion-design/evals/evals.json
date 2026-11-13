@@ -50,6 +50,19 @@
         "Each generated clip states its camera and a named light source.",
         "The response returns prompts rather than an unrelated production workflow."
       ]
+    },
+    {
+      "id": 5,
+      "prompt": "Review only in default and strict modes. We selected a labelled four-panel planning board and cropped panel 2. Separately, we selected a clean final-medium still with current hashes and explicit lineage for a verified first_frame role. Which can condition the next take? Do not generate or transform anything.",
+      "expected_output": "The board and cropped panel remain planning-only. The independently selected clean production still is eligible only after checking its source lineage, current selection, hashes and verified role, with leakage QA retained.",
+      "files": [],
+      "expectations": [
+        "Board approval, cropping, rehashing or control_only changes do not convert planning-origin imagery into eligible conditioning.",
+        "Translates board framing and blocking into text without binding the board or panel.",
+        "Distinguishes an independently selected clean final-medium still from a renamed or relabelled panel.",
+        "Checks current source lineage, selection evidence, hashes and operation-specific first_frame support rather than universally rejecting clean production stills.",
+        "Both review modes retain rights, consent and label/border/style leakage checks; absent evidence is unresolved and no media action is taken."
+      ]
     }
   ]
 }

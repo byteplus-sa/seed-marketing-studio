@@ -4,7 +4,7 @@ Read [the entrypoint](../SKILL.md). Load this reference when planning a project'
 stage flow, before the first paid video submission, at assembly, and whenever a
 take needs a fix. These defaults come from observed production runs; they are
 not provider guarantees. Explicit user instructions may override creative
-defaults, but not the native Draft requirement for new Seedance 2.5 generations.
+defaults, but not the native Draft requirement for new exact legacy native bindings.
 Exact tool parameters live in the `ark-mcp` Seedance reference; this file says
 when to use them.
 
@@ -19,11 +19,18 @@ claims, disclosure, native-human and registry requirements in both.
 
 ## 1. Draft first, then final
 
-Both modes start every new Seedance 2.5 generation with explicit
+Both modes start every new generation on exact legacy native bindings listed in
+the project execution-profile contract with explicit
 `resolution: "480p"` and boolean `draft: true`, including edits and variants.
 A delivery target alone does not skip this pass. Resolve schema or transport
-conflicts without dropping the flag; other models without native Draft use a
-plain 480p test.
+conflicts without dropping the flag. Other models use their verified operation profile:
+evidenced native or non-promotable ordinary preview controls, or optional absent
+preview. Never substitute 480p merely because that value is supported when the
+profile prescribes another preview resolution.
+
+The four-step native procedure below retains exact legacy mechanics and cost
+observations. Nonlegacy native mechanics and supported final controls come only
+from verified evidence; these observations do not impose family limits.
 
 1. Freeze and review the full request (prompt, ordered references, duration,
    ratio, `generate_audio`, task type) and submit it with `resolution: "480p"`
@@ -39,10 +46,13 @@ plain 480p test.
    soundtrack is not byte-identical to the Draft's, and words or timing can
    move.
 
-A plain 480p request from another model without native Draft cannot be promoted;
-its final is a new paid request that may change picture, timing or audio, and it needs its
-own registration and review. When a fix requires a prompt change, write a new
-Draft rather than promoting the old one.
+An ordinary preview cannot be promoted by task ID. Its final is a new paid
+request with independently supported final controls, its own registration and
+review. Required preview selection and explicit ordinary-final lineage are
+hash-bound and rechecked at submitting; preserve source creative parameters,
+prompt and references. Changed creative inputs require another selected preview.
+Every final may change picture, timing or audio and needs actual inspection.
+Optional absent preview does not acquire a video prerequisite.
 
 ## 2. Choose the audio route at the brief
 
@@ -149,9 +159,18 @@ mandatory report is required.
   drafts. Add a grade, grain, halation, vignette or a capture-format look only
   when the brief records one. A look such as camcorder or MiniDV is a post
   treatment; the prompt word alone produced clean cinema.
-- Decode 10-bit HEVC finals as limited-range BT.709, tag outputs BT.709 and
-  dither to 8-bit. Avoid FFmpeg `vignette` inside a high-bit-depth chain; it
-  drops to 8-bit YUV and shifts hues.
+- Choose decoding from measured `pix_fmt`, `color_range`, `color_primaries`,
+  `color_transfer` and `color_space`, not the model name or bit depth alone.
+  Only when all measured fields match 10-bit HEVC limited-range BT.709
+  (`yuv420p10le`, `tv`, `bt709`, `bt709`, `bt709`) use the known limited-range
+  BT.709 decode/tagging recipe and dither to 8-bit for an authorized SDR target.
+  Measured full-range SDR needs its own range-preserving decision. PQ or HLG with
+  BT.2020 needs an explicitly authorized HDR-preserving or tone-mapping
+  decision; BT.2020 SDR is not BT.709 merely because it is SDR.
+  Missing, unknown or conflicting fields stay unresolved: diagnose metadata
+  before conversion, never guess or silently retag. Preserve the source master.
+  Avoid FFmpeg `vignette` inside a high-bit-depth chain; it drops to 8-bit YUV
+  and can shift hues.
 - Render each clip to an **exact-length lossless intermediate** in whole frames,
   pad or trim its audio to the same length, join with the concat demuxer and
   encode once. The concat filter needs `setsar=1`. Read the video-stream

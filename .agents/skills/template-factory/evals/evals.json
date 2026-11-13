@@ -178,6 +178,19 @@
         "Does not upload media or infer auditory perception from a waveform or transcript.",
         "Does not create Studio state, submit generation, alter campaign pins or infer disclosure/native-review approval."
       ]
+    },
+    {
+      "id": 15,
+      "prompt": "Review the slot mapping only, once in default and once in strict mode. This wordless product reveal uses selected native room ambience and glass effects, with an exact supplied music master added in post. We did not authorize a new score, muting the native effects, or media generation.",
+      "expected_output": "The mapping retains mixed ownership: native ambience/effects and the unchanged supplied master. Review mode does not change sound ownership or authorize generation or replacement.",
+      "files": [],
+      "assertions": [
+        "Maps wordless ambience and effects to the explicitly selected native route rather than limiting native sound to on-camera dialogue.",
+        "Keeps the supplied music master exact, with rights and consent checks intact; separate music generation remains opt-in.",
+        "Does not infer silence, picture-only ownership or a new music job from product genre or the absence of speech.",
+        "Requires actual playback and listening before any mute or replacement decision and names mixed layers independently.",
+        "Default and strict review preserve the same ownership and no-generation boundary; only review evidence requirements differ."
+      ]
     }
   ]
 }

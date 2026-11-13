@@ -391,14 +391,19 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   variation. Deterministic renders produce one exact version per specification.
   Explicit requested count or creative alternatives override the generative
   default. Default review mode generates one image.
-- In both review modes, every new Seedance 2.5 video generation uses explicit
+- In both review modes, every new video generation on the exact legacy native
+  bindings listed in the execution-profile contract uses explicit
   `resolution: "480p"` and boolean `draft: true` before final-resolution generation.
   This includes edits, extensions and independent variants. Review and select the draft under
   the project approval mode before advancing. Neither review mode nor a
   requested delivery resolution bypasses this requirement.
   Resolve a missing native Draft flag in the tool schema or transport; never
-  silently fall back to non-draft 2.5. Other models without native Draft use a
-  plain 480p test. Follow the production policy for final QA and promotion.
+  silently fall back to non-draft legacy execution. Other models use their
+  verified operation profile: evidenced native or non-promotable ordinary preview
+  controls, or explicitly optional absent preview. Required ordinary previews
+  need a selected hash-bound prerequisite before a separately registered final;
+  final intent never disables that requirement. Follow the production policy
+  for final QA and promotion.
   Studio canvas size follows the delivery target.
 - Use the lowest suitable cost/resolution within the request. Set watermark
   false only when the tool supports that parameter, unless the user requests it.

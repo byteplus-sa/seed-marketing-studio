@@ -208,6 +208,22 @@ def model_family(model: str) -> str:
     return tokens[0] + "".join(tokens[1:])
 
 
+def ordinary_final_binding(root: Path, source_id: str, decision: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    registry = read_registry(contained_path(root, "task_ids.json"))
+    sources = [source for source in registry["tasks"] if source["operation_id"] == source_id]
+    if len(sources) != 1:
+        raise ValueError("Ordinary final requires one registered preview source")
+    decision_path = relative_path(decision)
+    decision_bytes = contained_path(root, decision_path).read_bytes()
+    return {
+        "kind": "ordinary_final",
+        "source_operation_id": sources[0]["operation_id"],
+        "source_request_sha256": sources[0]["request_sha256"],
+        "decision_path": decision_path,
+        "decision_sha256": hashlib.sha256(decision_bytes).hexdigest(),
+    }, sources[0]
+
+
 def build_request(root: Path, args: argparse.Namespace) -> dict[str, Any]:
     if not ASSET_PATTERN.fullmatch(args.asset):
         raise ValueError("Asset ID must contain only letters, digits, _ and -")
@@ -259,6 +275,11 @@ def build_request(root: Path, args: argparse.Namespace) -> dict[str, Any]:
             raise ValueError("Destination binding requires version 2 capability evidence")
     elif args.expected_provider or args.expected_tool_schema_revision:
         raise ValueError("Destination binding requires --capabilities")
+    if args.ordinary_final_source or args.ordinary_final_decision:
+        if not (args.ordinary_final_source and args.ordinary_final_decision and "execution_profile" in extensions):
+            raise ValueError("Ordinary final requires a profile, source operation and selection decision")
+        intent, _ = ordinary_final_binding(root, args.ordinary_final_source, args.ordinary_final_decision)
+        extensions["execution_profile"]["ordinary_final"] = intent
     return {
         "schema_version": version,
         "operation_id": operation_id,
@@ -417,6 +438,8 @@ def parser() -> argparse.ArgumentParser:
     parser.add_argument("--capabilities")
     parser.add_argument("--expected-provider")
     parser.add_argument("--expected-tool-schema-revision")
+    parser.add_argument("--ordinary-final-source")
+    parser.add_argument("--ordinary-final-decision")
     parser.add_argument("--required-rule", action="append", default=[])
     parser.add_argument("--replace-unregistered", action="store_true")
     parser.add_argument("--adopt-provider-task-id")

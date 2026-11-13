@@ -5,6 +5,13 @@ ROOT = Path(__file__).resolve().parents[1] / ".agents/skills"
 
 
 class MarketingRoutingTests(unittest.TestCase):
+    def test_additive_music_preserves_fidelity_without_inapplicable_adapter_controls(self):
+        text = (ROOT / "prompt-review/references/checklist-music-ugc.md").read_text()
+        for phrase in ("selected model and operation", "not_applicable", "exact master", "ordinary language", "unresolved"):
+            self.assertIn(phrase, text)
+        self.assertNotIn("**Right-sized (4–30s).**", text)
+        self.assertNotIn("**Lip-sync lines verbatim in `{...}`.**", text)
+
     def test_shared_craft_names_neutral_leaf_and_retains_source_basis(self):
         for name in ("seedance-camera-presets", "seedance-acting-console",
                      "seedance-animation-styles", "seedance-pacing-presets",

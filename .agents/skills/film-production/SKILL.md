@@ -113,11 +113,14 @@ Read [production defaults](references/production-defaults.md) before the first
 paid video submission and again at assembly. In short:
 
 1. **Mode-aware sampling, draft-first video.** Default produces one image;
-   strict uses three. Both start every new Seedance 2.5 generation with explicit
-   `resolution: "480p"` and boolean `draft: true`; other models without native
-   Draft use a plain 480p test. Explicit image counts win; new 2.5 generations
-   have no skip-draft exception. Resolve schema or transport conflicts
-   without dropping the native flag. Promotion requires unchanged inputs.
+   strict uses three. Both start new generation on exact legacy native bindings
+   in the execution-profile contract with explicit `resolution: "480p"` and
+   boolean `draft: true`, without a skip-draft exception. Other models use their
+   verified operation profile for native or ordinary preview mechanics, or
+   optional absent preview. Required ordinary preview selection is hash-bound
+   to separately registered final intent and rechecked at submitting.
+   Explicit image counts win. Resolve schema or transport conflicts
+   without dropping required native controls. Promotion requires unchanged inputs.
 2. **Audio route from the brief.** Native dialogue keeps native audio.
    Ambience-only, score-driven and wordless pieces generate picture with
    `generate_audio: false` and build the bed in post, because a "no music" line
