@@ -144,12 +144,13 @@ records its time, change and trigger.
 | Dim | `From <N>s to <M>s, <declared source> fades down to <visible result>.` |
 | Flicker | `At <N>s, <declared source> flickers <twice / rapidly for about one second>, then <holds steady / goes out>.` |
 
-In workspace 480p Seedance 2.5 drafts a stated cue time was honoured to about
-0.1 s, and an `off` cue switched the source instantly; write a fade as a time
-range. Plain wording ("the lamp goes out") already produces the change; the
-timestamp adds control of when it lands and of the hold after it. An untimed
-"partway through" lands at an unplanned moment. Name the source the scene
-already declared, and say what the frame looks like after the change.
+A historical observation in workspace 480p Seedance 2.5 drafts reported
+about 0.1 s cue timing and an instant `off` change. This is not current artifact
+reinspection or a family guarantee; other models/modes remain unknown.
+Preserve the requested event and fade interval without automatic probes or
+retiming. Name the already-declared source and intended visible endpoints.
+The caller composes creative intent with `seedance-prompt`; verified controls
+belong to the selected model's operation profile.
 
 ## Parameter schema
 

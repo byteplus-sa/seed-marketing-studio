@@ -1,0 +1,38 @@
+{
+  "skill_name": "prompt-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review this generic Seedance pottery prompt, default mode. Flash is explicitly selected but no operation profile exists. No generation.",
+      "expected_output": "A model-first review preserving Flash with unknown execution support, without a standard-2.5 fallback.",
+      "files": [],
+      "expectations": [
+        "Uses generic family boundaries rather than assuming standard-2.5 syntax or limits.",
+        "Keeps the exact selected model and labels missing support unresolved.",
+        "Does not impose strict craft checklists in default mode or generate media."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Strict review: a coherent dolly-orbit-rise, planned focus loss and purposeful silence. Keep my selected model. Only a historical six-take 2.5 observation is available.",
+      "expected_output": "A family craft review preserving coherent intent and scoped historical uncertainty.",
+      "files": [],
+      "expectations": [
+        "Keeps actor, camera and edit energy independent and does not impose a move quota.",
+        "Does not turn the historical observation into a family incapability verdict or mandatory post repair.",
+        "Preserves silence; additional probes or separate audio remain unselected."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review a source edit with 7.37-second timing, original audio tail and an approved planning board proposed as a first frame.",
+      "expected_output": "Source preservation review with conditioning authority separated from planning approval.",
+      "files": [],
+      "expectations": [
+        "Preserves fractional timing and the audio tail without assuming trim or mute permission.",
+        "Planning approval does not make a board or panel an eligible first-frame input.",
+        "Requires selected eligible asset provenance, current hashes, supported role and leakage QA without fabricating passes."
+      ]
+    }
+  ]
+}

@@ -105,12 +105,13 @@ Use explicit input first; filenames below are fallback hints, not authority:
 
 | Prompt type | File prefix | Checklist file (`references/`) |
 |---|---|---|
+| Generic Seedance or a selected model without a retained adapter | explicit model + operation, or unresolved | `checklist-seedance-family.md` |
 | Seedance 2.5 video | `prompt_sNN_shNNN_tNN_vNN.md` | `checklist-seedance-25.md` |
 | Seedance 2.0 video (4K/Fast/Mini) | `prompt_sNN_shNNN_tNN_vNN.md` | `checklist-seedance-legacy.md` |
 | Seedance 2.5 edit, object swap, recast or restyle | explicit model + operation | `checklist-seedance-edits.md` (plus the 2.5 reference items) |
 | Seedance VFX (video-to-video edit, legacy path) | `prompt_sNN_shNNN_tNN_vNN.md` | `checklist-seedance-legacy.md` |
-| Seedance dialogue | `prompt_sNN_shNNN_tNN_vNN.md` | `checklist-seedance-25.md` + `checklist-audio-dialogue.md` |
-| Seedance music video | `prompt_sNN_shNNN_tNN_vNN.md` (song-driven) | `checklist-seedance-25.md` + `checklist-music-ugc.md` |
+| Seedance dialogue | explicit selected model + operation first | selected model checklist (family if unresolved) + `checklist-audio-dialogue.md` |
+| Seedance music video | explicit selected model + operation first | selected model checklist (family if unresolved) + `checklist-music-ugc.md` |
 | Seed Audio (dialogue/music/SFX/ambience) | `prompt_dlg_*`, `prompt_mus_*`, `prompt_sfx_*`, `prompt_amb_*`, `prompt_mix_*` | `checklist-audio-dialogue.md` |
 | Seedream image, screen UI or brand/title card | `prompt_concept_*`, `prompt_screen_*`, `prompt_card_*` | `checklist-seedream.md` |
 | Seedream storyboard | `prompt_sNN_kf*` (multi-panel) | `checklist-seedream.md` |
@@ -140,7 +141,8 @@ dialogue), stack the checklists — the reviewer checks all applicable sections.
 
 UGC intermediate outputs (hooks, scripts) are reviewed at **Stage 1** (before
 composition into a final Seedance prompt). The final composed Seedance prompt is
-reviewed at **Stage 2** against the Seedance 2.5 + Universal checklists. UGC
+reviewed at **Stage 2** against the selected model/operation checklist (family
+when unresolved), with applicable Universal and UGC layers. Genre never selects 2.5. UGC
 compliance audit runs **before Stage 1** — if it returns CRITICAL, stop the pipeline.
 
 ## Workflow

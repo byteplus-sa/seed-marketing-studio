@@ -123,10 +123,15 @@ screen, product, and keyframe, then route by fidelity:
   reference derivatives separate.
 - **Illustrative or photographic plates** → `seedream-prompt` without exact
   typography; select before deterministic finishing.
-- **Approved storyboard panels / keyframes** → `seedream-storyboard`, promoted
-  only after review.
+- **Storyboard boards, grids and panels** remain planning-only; translate
+  their staging into text. Approval, cropping, a hash or `control_only: false`
+  never makes a board-origin panel eligible conditioning.
+- **Clean full-frame keyframes in the final medium** need independent selection,
+  current hashes, source lineage, a supported frame/reference role and leakage QA.
+  They are production stills, not relabeled planning panels; prompt-only work
+  does not create or generate them.
 
-Generated or approved visual plates may become a `reference_image`,
+Only eligible independently selected visual plates may become a `reference_image`,
 `first_frame`, or `last_frame` with a stable `@Image N` binding. Exact graphic
 plates stay in post when fidelity is required. **The submitted reference array
 must match the `@Image N` bindings in the prompt 1:1 — same files, same order.**
@@ -216,8 +221,9 @@ layers unless the user explicitly accepts model-driven fidelity risk:
 Prefer **one-click video** when the deliverable is a self-contained paced ad from
 a stack of visual plates. Prefer **first/last frame** when only the open and
 close compositions matter and the middle is a continuous, model-driven move.
-Record the chosen mode and ordered roles in `shot.md` (see `seedance-prompt-25`
-storyboard-to-video handoff).
+Record the chosen mode, ordered roles, independent selection, current hashes
+and source lineage in `shot.md`. Board planning approval is never a
+storyboard-to-video authorization.
 
 ## Output formats
 
@@ -252,7 +258,7 @@ Plate bindings are declared up front as `[Material Roles]`:
 ```text
 [Material Roles]
 @Image 1 defines <selected visual plate> — use its composition and art direction.
-@Image 2 defines <approved storyboard / keyframe> — use its shot structure.
+@Image 2 defines <independently selected clean final-medium keyframe> — use its eligible frame composition.
 @Image N defines <product / identity sheet> — use its identity and material only.
 
 [Motion Design]
@@ -328,7 +334,9 @@ This skill is prompt-only. It **never calls generation tools.** It composes:
 
 - **Keyframes as first/last frames.** Lock the exact opening and/or ending
   composition with `first_frame` / `last_frame` (FLF2V). First and last images
-  must share the same aspect ratio.
+  must share the same aspect ratio. Require independent selection, current
+  hashes, source lineage, supported roles and actual leakage QA; board panels
+  stay planning-only even after review or flag changes.
 - **Exact graphics as post layers.** Headlines, charts, logos, and UI stay
   deterministic when fidelity matters. A selected solid-background derivative
   may guide model motion, but it does not replace the final exact overlay.
@@ -407,7 +415,10 @@ Before returning the prompt (and before any generation task), verify:
 7. **Reality compressed, not faked.** The demo shows a plausible workflow;
    impossible fluidity is avoided.
 8. **Reference discipline.** `@Image N` indices are stable, roles are stated,
-   and the submitted array matches the bindings 1:1.
+   and the submitted array matches the bindings 1:1. No board, grid or panel
+   is bound. Clean production stills have independent selection, current
+   hashes, source lineage and supported roles; inspect takes for labels,
+   borders and unintended planning style before acceptance.
 9. **Composition respected.** The skill composes in prose with
    `html-graphic-render`, `seedance-prompt-25`, `seedream-*`, and
    `seed-audio-prompt`; it does not call generation tools.

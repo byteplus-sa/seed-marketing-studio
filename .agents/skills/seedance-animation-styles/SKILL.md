@@ -210,7 +210,9 @@ Use when the user only wants animation-style wording:
 ### Full animation prompt
 
 Use when the user asks for a complete Seedance prompt. The full-prompt form uses
-the six-part formula (see `seedance-prompt-25` for the grammar); the
+the creative prompt (see `seedance-prompt`); the selected model's retained
+adapter owns exact syntax and verified settings. Historical 2.5 examples
+establish craft provenance, not family-wide support; the
 `[Animation Medium]` block drops into the **Visual Style** slot:
 
 ```text

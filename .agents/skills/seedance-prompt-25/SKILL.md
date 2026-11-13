@@ -18,6 +18,11 @@ description: >-
 
 # Seedance Prompt
 
+This is the retained 2.5 syntax adapter, not the generic family entrypoint.
+Use `seedance-prompt` for reusable creative intent, then apply this adapter only
+for the selected 2.5 binding. Historical tables and examples do not establish
+current provider/transport support; the project execution profile owns that gate.
+
 Write production-grade prompts for the BytePlus Seedance 2.5 video generation
 model. Seedance 2.5 generates **up to 30 seconds** of video with native audio in
 a single pass (set the actual duration via the `duration` parameter — 30s is

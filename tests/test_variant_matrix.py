@@ -2,6 +2,7 @@ import contextlib
 import hashlib
 import io
 import json
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -11,8 +12,13 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / ".agents/scripts"))
+import operation_store
+import prepare_request
 import studio_project
+import test_native_draft
+import test_seedance_capability_profiles
 import variant_matrix
+from test_seedance_capability_profiles import profile
 
 HERO_BYTES = b"approved hero take"
 HERO_HASH = hashlib.sha256(HERO_BYTES).hexdigest()
@@ -64,8 +70,15 @@ VIDEO_FLAGS = [
     "video_create_task",
     "--capabilities",
     "capabilities/video.json",
+    "--expected-provider",
+    "fixture-provider",
+    "--expected-tool-schema-revision",
+    "fixture-r1",
 ]
-AUDIO_FLAGS = ["--audio-model", "audio-model-a", "--audio-operation", "audio_dub"]
+AUDIO_FLAGS = [
+    "--audio-model", "audio-model-a", "--audio-operation", "audio_dub",
+    "--audio-capabilities", "capabilities/audio.json",
+]
 COMMON_RULES = {
     "ad.claims_supported",
     "ad.no_fabricated_testimonial",
@@ -150,9 +163,432 @@ class VariantMatrixTests(unittest.TestCase):
         take = self.project / HERO_TAKE_FILE
         take.parent.mkdir(parents=True)
         take.write_bytes(HERO_BYTES)
+        evidence = profile()
+        evidence.update(
+            model="video-model-a", operation="video_create_task",
+            operations=["video_create_task"],
+            parameters={
+                "resolution": {"enum": ["480p", "720p", "1080p"]},
+                "duration": {"type": "number", "minimum": 4},
+            },
+            preview={"support": "verified", "kind": "ordinary", "params": {"resolution": "480p"}},
+            duration={"support": "verified", "minimum_s": 4},
+            workspace_policy={"preview_required": False},
+        )
+        capabilities = self.project / "capabilities/video.json"
+        capabilities.parent.mkdir()
+        capabilities.write_text(json.dumps(evidence))
+        (capabilities.parent / "audio.json").write_text(json.dumps({
+            "model": "audio-model-a", "source": "offline audio fixture",
+            "verified_at": "2026-10-22T00:00:00Z", "operations": ["audio_dub"],
+            "parameters": {}, "reference_roles": [], "max_references": 0,
+        }))
 
     def project_files(self):
         return sorted(path for path in self.project.rglob("*"))
+
+    def test_audio_only_and_mixed_commands_reuse_exact_operation_bindings_offline(self):
+        (self.project / "project.md").write_text("---\nreview_mode: default\n---\n")
+        (self.project / "studio").mkdir()
+        audio = profile()
+        audio.update(
+            model="audio-model-a", operation="audio_dub", operations=["audio_dub"],
+            transport="curl", parameters={}, reference_roles=[], max_references=0,
+            workspace_policy={"preview_required": False},
+            preview={"support": "unsupported", "kind": "none", "params": {}},
+        )
+        (self.project / "capabilities/audio.json").write_text(json.dumps(audio))
+        video = json.loads((self.project / "capabilities/video.json").read_text())
+        video["transport"] = "curl"
+        (self.project / "capabilities/video.json").write_text(json.dumps(video))
+        for mixed in (False, True):
+            matrix = base_matrix(axes={"language": ["es"]})
+            matrix["hero"]["values"] = {"language": "en"}
+            if mixed:
+                matrix["axes"]["hook"] = ["hook-callout"]
+                matrix["hero"]["values"]["hook"] = "hook-demo-first"
+            code, result = self.register(
+                matrix, *VIDEO_FLAGS, *AUDIO_FLAGS, "--transport", "curl",
+                "--audio-expected-provider", "fixture-provider",
+                "--audio-expected-tool-schema-revision", "fixture-r1",
+                "--take", "t02" if mixed else "t01",
+            )
+            self.assertEqual(code, 0, result)
+            for operations in result["operations"].values():
+                for operation in operations:
+                    command = operation["hash_command"]
+                    expected = "capabilities/audio.json" if operation["route"] == "language-dub" else "capabilities/video.json"
+                    for key in ("hash_command", "register_command"):
+                        self.assertEqual(option_values(operation[key], "--capabilities"), [expected])
+                        self.assertEqual(option_values(operation[key], "--transport"), ["curl"])
+                    prompt = self.project / option_values(command, "--prompt")[0]
+                    prompt.parent.mkdir(parents=True, exist_ok=True)
+                    prompt.write_text("Offline fixture intent.\n")
+                    prepared, findings = prepare_request.run(prepare_request.parser().parse_args(command[4:]))
+                    self.assertEqual(findings, [])
+                    request = prepared["request"]
+                    if operation["route"] == "language-dub":
+                        self.assertEqual(request["params"], {})
+                        self.assertEqual(request["extensions"]["execution_profile"]["evidence"], audio)
+                    review_file = self.project / option_values(operation["register_command"], "--review")[0]
+                    review_file.write_text(json.dumps({
+                        "schema_version": 1, "request_sha256": request["request_sha256"],
+                        "reviewer_status": "complete",
+                        "checks": [{"rule_id": rule, "status": "pass", "evidence": "Synthetic offline contract check only"} for rule in operation["required_rules"]],
+                    }))
+                    registered, findings = prepare_request.run(prepare_request.parser().parse_args(operation["register_command"][4:]))
+                    self.assertEqual(findings, [])
+                    self.assertEqual(registered["request_sha256"], request["request_sha256"])
+                    operation_store.transition_operation(self.project, registered["registered"], "prepared", "submitting")
+
+    def test_optional_no_preview_matrix_emits_only_supported_execution_controls(self):
+        path = self.project / "capabilities/video.json"
+        evidence = json.loads(path.read_text())
+        evidence["preview"] = {"support": "unsupported", "kind": "none", "params": {}}
+        path.write_text(json.dumps(evidence))
+        code, result = self.register(base_matrix(axes={"hook": ["hook-callout"]}), *VIDEO_FLAGS)
+        self.assertEqual(code, 0, result)
+        _, operation = self.hook_operation(result)
+        self.assertEqual(operation["params"], ["duration=4"])
+
+    def test_required_ordinary_matrix_final_runs_emitted_commands_and_blocks_stale_selection(self):
+        fixture = test_native_draft.NativeDraftTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        source = fixture.profiled_source(native=False)
+        (fixture.root / "studio").mkdir()
+        evidence = fixture.caps
+        evidence["parameters"]["duration"] = {"type": "number", "minimum": 2.5}
+        evidence["reference_roles"] = ["first_frame"]
+        evidence["max_references"] = 1
+        evidence["modality_limits"]["Image"] = 1
+        (fixture.root / "frame.png").write_bytes(b"synthetic selected still fixture")
+        (fixture.root / "frame.md").write_text("---\nselected_variant: frame.png\n---\n")
+        (fixture.root / "prompt.md").write_text("@Image 1 defines the opening composition.\n")
+        source["references"] = prepare_request.build_references(
+            fixture.root, ["frame.png:first_frame:frame.md:selected_variant"]
+        )
+        source["prompt_sha256"] = hashlib.sha256((fixture.root / "prompt.md").read_bytes()).hexdigest()
+        decision_path = fixture.root / "decisions/select-draft.json"
+        decision = json.loads(decision_path.read_text())
+        decision["upstream_sha256"] = {
+            "prompt.md": source["prompt_sha256"],
+            "frame.png": source["references"][0]["sha256"],
+        }
+        decision_path.write_text(json.dumps(decision))
+        source["params"]["duration"] = 2.5
+        fixture.rehash(source)
+        fixture.write_registry(source)
+        (fixture.root / "caps.json").write_text(json.dumps(evidence))
+        matrix = base_matrix(axes={"hook": ["hook-callout"]})
+        matrix["hero"].update(
+            take_file="cup_t01.mp4", decision_ref="decisions/select-draft.json",
+            sha256=hashlib.sha256((fixture.root / "cup_t01.mp4").read_bytes()).hexdigest(),
+        )
+        path = self.write(matrix)
+        row = variant_matrix.expand(matrix)[1]
+        flags = [
+            "register", str(path), "--project", str(fixture.root),
+            "--video-model", "fixture-video", "--video-operation", "generate",
+            "--capabilities", "caps.json", "--expected-provider", "fixture-provider",
+            "--expected-tool-schema-revision", "fixture-r1", "--stage", "final",
+            "--final-resolution", "1080p", "--hook-performance", "non-performance",
+        ]
+        _, findings = variant_matrix.run(variant_matrix.parser().parse_args(flags))
+        self.assertTrue(variant_matrix.blocking(findings))
+        flags += ["--ordinary-final-selection", f"{row['name']}={source['operation_id']}:decisions/select-draft.json"]
+        result, findings = variant_matrix.run(variant_matrix.parser().parse_args(flags))
+        self.assertFalse(variant_matrix.blocking(findings), findings)
+        [operation] = result["operations"][row["name"]]
+        command = operation["hash_command"]
+        for command_key in ("hash_command", "register_command"):
+            self.assertEqual(
+                option_values(operation[command_key], "--ref"),
+                ["frame.png:first_frame:frame.md:selected_variant"],
+            )
+        prompt = fixture.root / option_values(command, "--prompt")[0]
+        prompt.parent.mkdir(parents=True)
+        prompt.write_bytes((fixture.root / source["prompt_file"]).read_bytes())
+        prepared, findings = prepare_request.run(prepare_request.parser().parse_args(command[4:]))
+        self.assertEqual(findings, [])
+        self.assertEqual(prepared["request"]["references"], source["references"])
+        review = fixture.root / option_values(operation["register_command"], "--review")[0]
+        review.write_text(json.dumps({
+            "schema_version": 1, "request_sha256": prepared["request_sha256"],
+            "reviewer_status": "complete", "checks": [
+                {"rule_id": rule, "status": "pass", "evidence": "Synthetic contract check, no playback claim"}
+                for rule in operation["required_rules"]
+            ],
+        }))
+        registered, findings = prepare_request.run(prepare_request.parser().parse_args(operation["register_command"][4:]))
+        self.assertEqual(findings, [])
+        self.assertEqual(registered["request_sha256"], prepared["request_sha256"])
+        operation_store.transition_operation(fixture.root, registered["registered"], "prepared", "submitting")
+        (fixture.root / "cup_t01.mp4").write_bytes(b"stale source")
+        _, findings = variant_matrix.run(variant_matrix.parser().parse_args(flags))
+        self.assertTrue(variant_matrix.blocking(findings))
+
+    def test_audio_destination_mismatch_and_missing_mixed_evidence_emit_no_commands(self):
+        matrix = base_matrix(axes={"language": ["es"], "hook": ["hook-callout"]})
+        matrix["hero"]["values"] = {"language": "en", "hook": "hook-demo-first"}
+        flags = [*VIDEO_FLAGS, "--audio-model", "audio-model-a", "--audio-operation", "audio_dub"]
+        code, result = self.register(matrix, *flags)
+        self.assertEqual(code, 1, result)
+        self.assertNotIn("operations", result)
+        audio = profile()
+        audio.update(
+            model="audio-model-a", operation="audio_dub", operations=["audio_dub"],
+            parameters={}, reference_roles=[], max_references=0,
+            workspace_policy={"preview_required": False},
+            preview={"support": "unsupported", "kind": "none", "params": {}},
+        )
+        (self.project / "capabilities/audio.json").write_text(json.dumps(audio))
+        for flag, value in (
+            ("--audio-expected-provider", "wrong-provider"),
+            ("--audio-expected-tool-schema-revision", "wrong-revision"),
+            ("--transport", "curl"),
+        ):
+            code, result = self.register(matrix, *VIDEO_FLAGS, *AUDIO_FLAGS, flag, value)
+            self.assertEqual(code, 1, result)
+            self.assertNotIn("operations", result)
+
+    def ordinary_final_fixture(self, value):
+        fixture = test_native_draft.NativeDraftTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        source = fixture.profiled_source(native=False)
+        (fixture.root / "studio").mkdir()
+        parameter_type = {
+            str: "string", bool: "boolean", int: "integer", float: "number",
+            type(None): "null", list: "array", dict: "object",
+        }[type(value)]
+        fixture.caps["parameters"]["style"] = {"type": parameter_type}
+        source["params"]["style"] = value
+        fixture.rehash(source)
+        fixture.write_registry(source)
+        (fixture.root / "caps.json").write_text(json.dumps(fixture.caps))
+        matrix = base_matrix(axes={"hook": ["hook-callout"]})
+        decision = json.loads((fixture.root / "decisions/select-draft.json").read_text())
+        matrix["hero"].update(
+            take_file="cup_t01.mp4", decision_ref="decisions/select-draft.json",
+            sha256=decision["selected_sha256"],
+        )
+        matrix_path = fixture.root / "matrix.json"
+        matrix_path.write_text(json.dumps(matrix))
+        row = variant_matrix.expand(matrix)[1]
+        flags = [
+            "register", str(matrix_path), "--project", str(fixture.root),
+            "--video-model", source["model"], "--video-operation", source["operation"],
+            "--capabilities", "caps.json", "--expected-provider", "fixture-provider",
+            "--expected-tool-schema-revision", "fixture-r1", "--stage", "final",
+            "--final-resolution", "1080p", "--hook-performance", "non-performance",
+            "--ordinary-final-selection",
+            f"{row['name']}={source['operation_id']}:decisions/select-draft.json",
+        ]
+        return fixture, source, row, flags
+
+    def offline_cli(self, script, arguments):
+        result = subprocess.run(
+            [sys.executable, "-B", str(ROOT / script), *arguments],
+            capture_output=True, text=True, check=False, timeout=30,
+        )
+        self.assertEqual(result.stderr, "", result.stderr)
+        return result.returncode, json.loads(result.stdout)
+
+    def test_ordinary_final_emitted_cli_roundtrips_all_json_types_and_quoted_strings(self):
+        values = (
+            "cinematic", "true", "null", "123", "[1]", '{"v":1}', "",
+            "a 'quoted' \"string\" \\ path\n$(no-command); key=value",
+            "x" * 10000, 123, 1.25, True, False, None, [], [1, "true"],
+            {"v": 1, "nested": [None, False, "null"]},
+        )
+        for value in values:
+            with self.subTest(value=value):
+                fixture, source, row, flags = self.ordinary_final_fixture(value)
+                original_source = json.loads((fixture.root / "task_ids.json").read_text())["tasks"][0]
+                code, result = self.offline_cli(".agents/scripts/variant_matrix.py", flags)
+                self.assertEqual(code, 0, result)
+                [operation] = result["operations"][row["name"]]
+                for command_key in ("hash_command", "register_command"):
+                    command = operation[command_key]
+                    quoted = shlex.join(command)
+                    self.assertEqual(shlex.split(quoted), command)
+                    parsed = prepare_request.parse_params(params(shlex.split(quoted)))
+                    self.assertEqual(parsed, {**source["params"], "resolution": "1080p"})
+                    self.assertIs(type(parsed["style"]), type(value))
+                command = operation["hash_command"]
+                prompt = fixture.root / option_values(command, "--prompt")[0]
+                prompt.parent.mkdir(parents=True)
+                prompt.write_bytes((fixture.root / source["prompt_file"]).read_bytes())
+                code, prepared = self.offline_cli(command[3], command[4:])
+                self.assertEqual(code, 0, prepared)
+                self.assertEqual(prepared["request"]["params"]["style"], value)
+                self.assertIs(type(prepared["request"]["params"]["style"]), type(value))
+                review = fixture.root / option_values(operation["register_command"], "--review")[0]
+                review.write_text(json.dumps({
+                    "schema_version": 1, "request_sha256": prepared["request_sha256"],
+                    "reviewer_status": "complete",
+                    "checks": [
+                        {"rule_id": rule, "status": "pass",
+                         "evidence": "Synthetic offline contract check; no media inspection"}
+                        for rule in operation["required_rules"]
+                    ],
+                }))
+                command = operation["register_command"]
+                code, registered = self.offline_cli(command[3], command[4:])
+                self.assertEqual(code, 0, registered)
+                self.assertEqual(registered["request_sha256"], prepared["request_sha256"])
+                tasks = operation_store.read_registry(fixture.root / "task_ids.json")["tasks"]
+                self.assertEqual(len(tasks), 2)
+                self.assertEqual(tasks[0], original_source)
+                self.assertEqual(tasks[1]["params"], prepared["request"]["params"])
+                self.assertIs(type(tasks[1]["params"]["style"]), type(value))
+                operation_store.transition_operation(
+                    fixture.root, registered["registered"], "prepared", "submitting"
+                )
+
+    def test_ordinary_final_changed_or_unsupported_values_fail_without_writes(self):
+        fixture, _, row, flags = self.ordinary_final_fixture("true")
+        code, result = self.offline_cli(".agents/scripts/variant_matrix.py", flags)
+        self.assertEqual(code, 0, result)
+        [operation] = result["operations"][row["name"]]
+        command = operation["hash_command"]
+        prompt = fixture.root / option_values(command, "--prompt")[0]
+        prompt.parent.mkdir(parents=True)
+        prompt.write_bytes((fixture.root / "prompt.md").read_bytes())
+        code, prepared = self.offline_cli(command[3], command[4:])
+        self.assertEqual(code, 0, prepared)
+        review = fixture.root / option_values(operation["register_command"], "--review")[0]
+        review.write_text(json.dumps({
+            "schema_version": 1, "request_sha256": prepared["request_sha256"],
+            "reviewer_status": "complete",
+            "checks": [
+                {"rule_id": rule, "status": "pass", "evidence": "Synthetic contract only"}
+                for rule in operation["required_rules"]
+            ],
+        }))
+        before = {path: path.read_bytes() for path in fixture.root.rglob("*") if path.is_file()}
+        for value in ("changed", True, None, 123, [], {}):
+            with self.subTest(value=value):
+                command = list(operation["register_command"])
+                index = next(index for index, item in enumerate(command) if item.startswith("style="))
+                command[index] = f"style={json.dumps(value)}"
+                code, rejected = self.offline_cli(command[3], command[4:])
+                self.assertEqual(code, 1, rejected)
+                expected_rule = "seedance.draft_promotion" if isinstance(value, str) else "model.supported_mode"
+                self.assertIn(expected_rule, self.rule_ids(rejected))
+                self.assertEqual(
+                    before, {path: path.read_bytes() for path in fixture.root.rglob("*") if path.is_file()}
+                )
+        fixture.caps["parameters"]["style"] = {"type": "boolean"}
+        (fixture.root / "caps.json").write_text(json.dumps(fixture.caps))
+        before = {path: path.read_bytes() for path in fixture.root.rglob("*") if path.is_file()}
+        code, rejected = self.offline_cli(".agents/scripts/variant_matrix.py", flags)
+        self.assertEqual(code, 1, rejected)
+        self.assertNotIn("operations", rejected)
+        self.assertIn("model.supported_mode", self.rule_ids(rejected))
+        self.assertEqual(
+            before, {path: path.read_bytes() for path in fixture.root.rglob("*") if path.is_file()}
+        )
+
+    def emitted_identity_fixture(self, value, style_schema=None):
+        fixture = test_seedance_capability_profiles.OrdinaryFinalIdentityTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        source = fixture.selected_preview({"style": value}, version=2, style_schema=style_schema)
+        matrix = base_matrix(axes={"hook": ["hook-callout"]})
+        decision = json.loads((fixture.root / "decisions/select-preview.json").read_text())
+        matrix["hero"].update(
+            take_file="cup.mp4", decision_ref="decisions/select-preview.json",
+            sha256=decision["selected_sha256"],
+        )
+        matrix_path = fixture.root / "matrix.json"
+        matrix_path.write_text(json.dumps(matrix))
+        row = variant_matrix.expand(matrix)[1]
+        code, result = fixture.cli(".agents/scripts/variant_matrix.py", [
+            "register", str(matrix_path), "--project", str(fixture.root),
+            "--video-model", source["model"], "--video-operation", source["operation"],
+            "--capabilities", "caps.json", "--expected-provider", "fixture-provider",
+            "--expected-tool-schema-revision", "fixture-r1", "--stage", "final",
+            "--final-resolution", "1080p", "--hook-performance", "non-performance",
+            "--ordinary-final-selection",
+            f"{row['name']}={source['operation_id']}:decisions/select-preview.json",
+        ])
+        self.assertEqual(code, 0, result)
+        [operation] = result["operations"][row["name"]]
+        prompt = fixture.root / option_values(operation["hash_command"], "--prompt")[0]
+        prompt.parent.mkdir(parents=True)
+        prompt.write_bytes((fixture.root / source["prompt_file"]).read_bytes())
+        return fixture, source, operation
+
+    def test_emitted_nested_json_identity_records_registers_and_reaches_submitting(self):
+        for value in (
+            {"enabled": True, "nested": [False, {"value": 1}]},
+            [0, {"enabled": 1}, None, "true"], {}, [],
+        ):
+            with self.subTest(value=value):
+                fixture, source, operation = self.emitted_identity_fixture(value)
+                command = operation["hash_command"]
+                self.assertEqual(shlex.split(shlex.join(command)), command)
+                code, prepared = fixture.cli(command[3], [*command[4:], "--write"])
+                self.assertEqual(code, 0, prepared)
+                request = json.loads((fixture.root / prepared["path"]).read_text())
+                self.assertEqual(
+                    json.dumps(request["params"]["style"], sort_keys=True),
+                    json.dumps(source["params"]["style"], sort_keys=True),
+                )
+                review_path = fixture.record(request, prepared["path"], operation["required_rules"])
+                command = list(operation["register_command"])
+                command[command.index("--review") + 1] = review_path
+                code, registered = fixture.cli(command[3], command[4:])
+                self.assertEqual(code, 0, registered)
+                self.assertEqual(registered["request_sha256"], request["request_sha256"])
+                operation_store.transition_operation(
+                    fixture.root, registered["registered"], "prepared", "submitting",
+                )
+                tasks = operation_store.read_registry(fixture.root / "task_ids.json")["tasks"]
+                self.assertEqual(tasks[0], source)
+                self.assertEqual(tasks[1]["submission_status"], "submitting")
+
+    def test_emitted_nested_substitutions_and_restrictive_schema_block_without_writes(self):
+        cases = (
+            ({"enabled": True}, {"enabled": 1}, None),
+            ({"enabled": 1}, {"enabled": True}, None),
+            ([False, {"enabled": True}], [0, {"enabled": 1}], None),
+            ([0, {"enabled": 1}], [False, {"enabled": True}], None),
+            ({"enabled": True}, {"enabled": 1}, {
+                "type": "object", "properties": {"enabled": {"type": "boolean"}},
+                "required": ["enabled"], "additionalProperties": False,
+            }),
+        )
+        for original, changed, schema in cases:
+            with self.subTest(original=original, changed=changed, schema=schema):
+                fixture, source, operation = self.emitted_identity_fixture(original, schema)
+                command = list(operation["hash_command"])
+                parameter_index = next(index for index, item in enumerate(command) if item.startswith("style="))
+                command[parameter_index] = f"style={json.dumps(changed)}"
+                before = fixture.snapshot()
+                code, rejected = fixture.cli(command[3], [*command[4:], "--write"])
+                self.assertEqual(code, 1, rejected)
+                rule = "model.supported_mode" if schema else "seedance.draft_promotion"
+                self.assertIn(rule, self.rule_ids(rejected))
+                self.assertEqual(before, fixture.snapshot())
+                candidate = prepare_request.build_request(
+                    fixture.root, prepare_request.parser().parse_args(command[4:]),
+                )
+                (fixture.root / "candidate.json").write_text(json.dumps(candidate))
+                review_path = fixture.record(candidate, "candidate.json", operation["required_rules"])
+                command = list(operation["register_command"])
+                command[parameter_index] = f"style={json.dumps(changed)}"
+                command[command.index("--review") + 1] = review_path
+                before = fixture.snapshot()
+                code, rejected = fixture.cli(command[3], command[4:])
+                self.assertEqual(code, 1, rejected)
+                self.assertIn(rule, self.rule_ids(rejected))
+                self.assertEqual(before, fixture.snapshot())
+                self.assertEqual(
+                    operation_store.read_registry(fixture.root / "task_ids.json")["tasks"][0], source,
+                )
 
     def write(self, matrix):
         path = self.root / "matrix.json"
@@ -653,7 +1089,7 @@ class VariantMatrixTests(unittest.TestCase):
         _, result = self.run_cli("plan", self.write(base_matrix()))
         row = next(r for r in result["rows"] if r["changed_axes"] == ["hook"])
         step = row["steps"][0]
-        self.assertEqual(step["generate_duration_s"], 4)
+        self.assertIsNone(step["generate_duration_s"])
         self.assertIn("trim", step["studio_note"].lower())
 
     def test_hook_rows_use_the_consolidated_ugc_skill(self):
@@ -664,7 +1100,7 @@ class VariantMatrixTests(unittest.TestCase):
         for row in rows:
             self.assertEqual(
                 row["steps"][0]["skills"],
-                ["seedance-ugc-ads", "seedance-prompt-25"],
+                ["seedance-ugc-ads", "seedance-prompt"],
             )
 
     def test_ratio_change_is_not_a_provider_operation(self):
@@ -763,7 +1199,23 @@ class VariantMatrixTests(unittest.TestCase):
         code, result = self.run_cli("plan", self.root / "missing.json")
         self.assertEqual(code, 1)
 
+    def bind_fixture_profile(self, extra):
+        if "--video-model" in extra:
+            model = extra[extra.index("--video-model") + 1]
+            if variant_matrix.is_seedance_25(model):
+                path = self.project / "capabilities/video.json"
+                evidence = json.loads(path.read_text())
+                evidence["model"] = model
+                evidence["parameters"]["draft"] = {"type": "boolean"}
+                evidence["preview"] = {
+                    "support": "verified", "kind": "native_draft",
+                    "params": {"resolution": "480p", "draft": True},
+                }
+                evidence["workspace_policy"]["preview_required"] = True
+                path.write_text(json.dumps(evidence))
+
     def register(self, matrix, *extra):
+        self.bind_fixture_profile(extra)
         return self.run_cli(
             "register",
             self.write(matrix),
@@ -864,8 +1316,9 @@ class VariantMatrixTests(unittest.TestCase):
                 (self.project / "project.md").write_text(
                     f"---\nreview_mode: {mode}\napproval_mode: {approval}\n---\n"
                 )
-                before = {path: path.read_bytes() for path in self.project_files() if path.is_file()}
                 flags = ["seedance-2.5" if flag == "video-model-a" else flag for flag in VIDEO_FLAGS]
+                self.bind_fixture_profile(flags)
+                before = {path: path.read_bytes() for path in self.project_files() if path.is_file()}
                 code, result = self.register(
                     base_matrix(), *UNIT_COSTS, *flags, "--static-by-design", "ugc"
                 )
@@ -877,7 +1330,7 @@ class VariantMatrixTests(unittest.TestCase):
                     self.assertIn("resolution=480p", params(hook[key]))
                 self.assertIn("acting-direction", hook["skills"])
                 self.assertLess(hook["skills"].index("acting-direction"), hook["skills"].index("seedance-acting-console"))
-                self.assertLess(hook["skills"].index("seedance-acting-console"), hook["skills"].index("seedance-prompt-25"))
+                self.assertLess(hook["skills"].index("seedance-acting-console"), hook["skills"].index("seedance-prompt"))
                 self.assertFalse(SHOT_RULES & required_rules(hook["register_command"]))
                 self.assertEqual(before, {path: path.read_bytes() for path in self.project_files() if path.is_file()})
                 for operations in result["operations"].values():

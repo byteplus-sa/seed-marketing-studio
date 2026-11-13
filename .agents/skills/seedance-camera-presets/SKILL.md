@@ -5,7 +5,7 @@ description: >
   tracking, handheld, FPV, aerial, bullet time, dolly zoom, crash zoom, whip
   pan, optical zoom, Dutch angle, one-take, or static — or a shot framing
   (single, two-shot, over-the-shoulder, over-the-hip, point of view, insert) —
-  into a canonical, drop-in Camera block for the Seedance 2.5 six-part prompt
+  into a reusable, drop-in Camera block for the selected Seedance prompt
   formula.
   Use when the user asks for a camera
   preset, camera movement style, or a shot's camera treatment, and when a shot
@@ -19,6 +19,11 @@ description: >
 
 # Seedance Camera Presets
 
+Return model-neutral camera intent. The caller composes with `seedance-prompt`
+and uses a retained versioned adapter only for the explicitly selected model.
+Historical 2.5 vocabulary and examples below are craft provenance, not verified
+controls or reliability for another model. This leaf never selects or invokes siblings.
+
 This skill turns a named camera preset, movement style, or camera personality into a
 canonical, drop-in **Camera block** for the Seedance 2.5 six-part prompt formula
 (Subject + Action + Scene + Visual Style + Camera + Audio). It is a
@@ -26,7 +31,7 @@ canonical, drop-in **Camera block** for the Seedance 2.5 six-part prompt formula
 it never runs generation. The base prompt grammar — the six-part formula,
 `@Image N` / `@Video N` reference-role syntax, `At Ns` timestamp syntax, and
 audio bracket syntax — is defined in `seedance-prompt-25` and is **not
-redefined here**. Compose with `seedance-prompt-25` for the full prompt
+redefined here**. Compose with `seedance-prompt` for the full creative prompt
 contract; this skill only adds the preset bank on top.
 
 The output of this skill is always a **Camera block** — one or two sentences
@@ -308,4 +313,4 @@ Before a Camera block is submitted as part of a Seedance 2.5 prompt, verify:
    the prompt text.
 
 A Camera block that passes all nine checks is ready to be composed into the
-full prompt by `seedance-prompt-25`.
+full prompt by `seedance-prompt`, with verified selected-model syntax kept separate.

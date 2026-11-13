@@ -39,7 +39,7 @@ each clip reliable:
 | Budget per clip | Guidance |
 | --- | --- |
 | Hard cuts | About 7 shots per clip and 0.8 s per shot are provisional generation heuristics, not provider limits or guaranteed merge/drop thresholds. Preserve the pin's requested rhythm and source timing without automatic retiming or shot removal. Offer assembly for precise cuts or omitted action; return genuine feasibility conflicts rather than changing locks. |
-| Duration | Choose natural integer durations from the pin spans, rounded up, with at least 0.3 s of hold after the last action. |
+| Duration | Preserve exact fractional pin spans, cuts and audio tails within verified limits; unsupported durations remain unresolved. Rounding, padding or trimming needs explicit scope and separate provenance. |
 | Split points | Split only on measured hard cuts. Do not split inside a whip, match cut, or continuous camera move. |
 
 Timing rules at clip boundaries:
@@ -68,31 +68,27 @@ Continuity across clips:
 
 ## Continuous audio across clips
 
-Native audio generated per clip does not share tempo or key across seams, and a
-"no music" or "ambience only" line does not reliably hold. For a multi-clip spot
-whose sound is score-led or ambient, generate picture with
-`generate_audio: false` and either:
-
-- generate one separate music bed after the picture is locked, or
-- build the bed from the clips' native audio. Measure each clip's tempo. Loop
-  exact whole-bar segments from clips that share a tempo, and switch sources
-  only on section changes (drop, reveal, lead entry). Crossfade seams by
-  30–120 ms, then confirm with a listening pass that names each seam.
-
-Long generated music beds are more exposed to provider output audits. If a bed
-is rejected, diagnose before revising and prefer the native-audio edit over
-repeated submissions. Measure the delivered bed's
-tempo and section timing; pad or splice in assembly rather than trusting the
-prompt's timing.
+Resolve sound ownership from the current brief: requested native sound,
+unchanged supplied/post master, purposeful silence, or named mixed layers.
+Genre alone never chooses picture-only or a new bed. Separate music generation
+and native-audio assembly are opt-in alternatives. Seam reliability is unknown
+until playback/listening verifies the actual clips; earlier leakage or tempo
+drift is not a family guarantee. Measure the selected master and each seam.
+Only authorized edits may loop, crossfade, pad or splice; preserve source tails
+and record derivative spans. Rejection requires diagnosis and reconciliation,
+not repeated submissions.
 
 ## Assembling the clips
 
-- Render each trimmed clip to an exact-length lossless intermediate in whole
-  frames, pad or trim its audio to the same length, join with the concat
+- For authorized trims, render exact-length compatible lossless intermediates;
+  preserve fractional source spans and audio tails, join with the concat
   demuxer, and encode once. The concat filter needs `setsar=1`.
 - Read video-stream durations, not container durations.
-- Keep the takes' original colours. Decode 10-bit HEVC finals as limited-range
-  BT.709 and tag the output BT.709; apply a look only when the recipe locks one.
+- Keep original colours. Choose conform from actual stream metadata:
+  pixel format, range, primaries, transfer and matrix, not a model-family name.
+  Limited-range BT.709 recipes apply only to matching measured streams;
+  unknown or conflicting tags require investigation, not assumed BT.709.
+  Apply a look only when authorized and keep untouched masters.
 
 ## Multi-pin batches
 

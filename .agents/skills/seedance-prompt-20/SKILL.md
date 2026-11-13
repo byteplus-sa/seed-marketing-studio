@@ -18,7 +18,8 @@ needs 4K output through 2.0, the Fast or Mini variants, or a revision of an
 existing 2.0 take. General directing craft — body-part action, externalized
 emotion, per-shot camera and light from a shot plan, counts, frame-side hands,
 text-free frames, the speech budget and the revision contract — is the same as
-in `seedance-prompt-25`; compose with it for those details.
+expressed by `seedance-prompt` and the requested craft leaves. Keep the selected
+2.0 syntax below; the generic handoff does not select 2.5 or invoke siblings.
 
 ## Source authority
 

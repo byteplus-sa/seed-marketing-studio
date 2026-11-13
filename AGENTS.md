@@ -117,6 +117,15 @@ adaptation) are declared orchestrators: they plan and gate, hand every prompt,
 edit and render to specialists, and never bypass applicable review requirements,
 the registry or the approval mode. Load only specialists needed for the current stage or requested axis.
 
+Generic Seedance creative authoring routes to `seedance-prompt`; retain
+`seedance-prompt-20` and `seedance-prompt-25` as explicit syntax adapters,
+not automatic model selectors. Preserve the supplied exact model and saved
+defaults. The project [execution profile](.agents/contracts/seedance-execution-profiles.md)
+binds provider, model, operation, transport and schema revision independently
+of capability evidence; unknown support remains unresolved. Audio-only and
+delivery-only matrix rows get no video controls. Imported `ark-mcp` remains
+unchanged; history, hashes, selections and actual final inspection remain authoritative.
+
 ### Skill sources and symlinks
 
 `.agents/` is the only source of truth for skills, catalog, contracts and
@@ -382,14 +391,19 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   variation. Deterministic renders produce one exact version per specification.
   Explicit requested count or creative alternatives override the generative
   default. Default review mode generates one image.
-- In both review modes, every new Seedance 2.5 video generation uses explicit
+- In both review modes, every new video generation on the exact legacy native
+  bindings listed in the execution-profile contract uses explicit
   `resolution: "480p"` and boolean `draft: true` before final-resolution generation.
   This includes edits, extensions and independent variants. Review and select the draft under
   the project approval mode before advancing. Neither review mode nor a
   requested delivery resolution bypasses this requirement.
   Resolve a missing native Draft flag in the tool schema or transport; never
-  silently fall back to non-draft 2.5. Other models without native Draft use a
-  plain 480p test. Follow the production policy for final QA and promotion.
+  silently fall back to non-draft legacy execution. Other models use their
+  verified operation profile: evidenced native or non-promotable ordinary preview
+  controls, or explicitly optional absent preview. Required ordinary previews
+  need a selected hash-bound prerequisite before a separately registered final;
+  final intent never disables that requirement. Follow the production policy
+  for final QA and promotion.
   Studio canvas size follows the delivery target.
 - Use the lowest suitable cost/resolution within the request. Set watermark
   false only when the tool supports that parameter, unless the user requests it.

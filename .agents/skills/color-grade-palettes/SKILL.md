@@ -34,10 +34,15 @@ colours" request needs a new generation.
 
 ## Correct colour decode (every route)
 
-Seedance 2.5 finals are 10-bit HEVC. Decode them as ordinary **limited-range
-BT.709**; a full-range reading lifts blacks and no longer matches the
-approved drafts. Tag the output BT.709, keep any look inside a high-bit-depth
-chain, and dither once to 8-bit at the end. Ungraded conform:
+Inspect actual stream metadata with ffprobe: `pix_fmt`, `color_range`,
+`color_primaries`, `color_transfer` and `color_space` (matrix), plus codec and
+video/audio durations. A model family or container does not determine decode.
+For measured limited-range BT.709 SDR, keep that interpretation and use the
+recipe below. Full-range SDR needs its measured range; HDR needs an explicitly
+authorized color-managed route. Missing, unknown or conflicting tags stay
+unresolved: inspect metadata and provenance before converting or relabeling.
+Keep untouched masters and original colours for ungraded conform; dither once
+only when actually reducing bit depth. The following is a known conditional recipe:
 
 ```
 ffmpeg -i master.mp4 -vf "scale=in_range=limited:out_range=limited:in_color_matrix=bt709:out_color_matrix=bt709:sws_dither=ed,format=yuv420p,setparams=range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709" -c:v libx264 -crf 16 -preset slow -c:a copy out.mp4
@@ -206,7 +211,9 @@ same graph to every clip that shares the palette. On route `both`, use a much
 lighter version of the graph only to match takes to each other, never to
 stack a second grade on a baked-in prompt grade.
 
-Wrap every `<LOOK>` in the decode and dither stages:
+Only for measured limited-range BT.709 SDR, wrap `<LOOK>` in these decode and
+dither stages. Other streams need a metadata-matched graph; do not paste this
+wrapper into unknown, full-range or HDR work:
 
 ```
 ffmpeg -i master.mp4 -vf "scale=in_range=limited:out_range=limited:in_color_matrix=bt709:out_color_matrix=bt709,format=yuv420p10le,<LOOK>,scale=in_color_matrix=bt709:out_color_matrix=bt709:out_range=limited:sws_dither=ed,format=yuv420p,setparams=range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709" -c:v libx264 -crf 16 -preset slow -c:a copy out.mp4
@@ -244,7 +251,7 @@ overlay layer.
 
 - **Preservation is not open authorship.** Conform/source-preserving work adds
   no look outside authorized changes. Keep original colours, explicit ungraded
-  delivery and the correct limited-range BT.709 decode.
+  delivery and metadata-matched decode, not inferred limited-range BT.709.
 - **Resolve actual colour conflicts.** Compatible ingredients or ordered
   per-scene looks may form one coherent treatment. Name their spatial or temporal
   scope; do not apply contradictory instructions to the same region and interval.
@@ -268,7 +275,7 @@ overlay layer.
 
 ## Self-check checklist
 
-1. Look authority is clear: delegated authorship may propose a look; preservation/conform and explicit ungraded delivery add no unauthorized look. Keep the limited-range BT.709 decode.
+1. Look authority is clear; ungraded conform adds no unauthorized look. Decode follows actual range, primaries, transfer, matrix and pixel format; unknown/conflicting metadata is unresolved.
 2. Palette is from the bank, or a plain descriptive grade with no invented film name.
 3. Look ingredients and ordered changes are coherent within their scope; no contradictory same-region, same-interval instructions.
 4. On the prompt route, the grade sentence is placed in the Visual Style slot (Seedance) or `Style:` section (Seedream), not in the subject or action line.

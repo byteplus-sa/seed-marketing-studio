@@ -83,25 +83,25 @@
     {
       "id": 7,
       "prompt": "This pin is a wordless perfume ad carried by an orchestral score and room ambience. Rebuild it for our fragrance with matching sound.",
-      "expected_output": "A picture-only generation plan with the score and ambience rebuilt in post from the verified audio grammar.",
+      "expected_output": "A source-bound sound ownership decision from the current brief, with native audio, supplied/post audio, silence, mixed or unresolved ownership explicit before execution.",
       "files": [],
       "assertions": [
-        "Generates picture with generate_audio false instead of relying on a negative 'no speech' line in native audio.",
-        "Maps the verified sound grammar (arc, accents, silences) to a Seed Audio post bed, without copying the source recording or melody.",
-        "Diagnoses rejected music before revising or retrying and measures the bed's timing, padding or splicing it to the cut in assembly.",
-        "Assembles in the takes' original colours from exact-length intermediates."
+        "Does not infer picture-only or new music generation from perfume genre or wordless content; sound ownership is resolved from the brief.",
+        "Preserves exact supplied audio or purposeful silence when chosen; separate music generation is opt-in and does not copy unauthorized source recordings.",
+        "Preserves fractional visual spans, seam cues and audio tails; padding, splicing or retiming is a proposed repair, not automatic permission.",
+        "Assembles in original colours from exact-length intermediates using measured stream metadata."
       ]
     },
     {
       "id": 8,
       "prompt": "The selected full-colour storyboard looks perfect. Attach the board as @Image 1 so Seedance copies its framing exactly.",
-      "expected_output": "Declines to bind the board, explains the leak risk briefly, and writes the framing into the prompt with element references bound.",
+      "expected_output": "Keeps the board planning-only; permits a separately selected clean derivative only with current hashes, lineage, approved role and verified operation support.",
       "files": [],
       "assertions": [
-        "Does not bind the board, grid or any panel as a Seedance reference.",
+        "Does not bind the board or grid merely because it was selected for planning, or because control_only changed.",
         "Explains that panel numbers, labels and the board look leak into video and raise output-copyright rejections.",
-        "Translates each panel's framing, blocking and end state into prompt text and binds only approved element references.",
-        "Plans take QA with frame samples and corner crops for leaked text."
+        "Translates framing, blocking and end state into text; any clean derivative has explicit selection, source lineage, current hashes and a supported binding role.",
+        "Plans take QA for leaked labels, borders, style and copyright; missing evidence leaves conditioning unresolved."
       ]
     },
     {
@@ -177,6 +177,19 @@
         "Keeps the supplied CTA and does not copy competitor claims, talent, trade dress or music.",
         "Does not upload media or infer auditory perception from a waveform or transcript.",
         "Does not create Studio state, submit generation, alter campaign pins or infer disclosure/native-review approval."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Review the slot mapping only, once in default and once in strict mode. This wordless product reveal uses selected native room ambience and glass effects, with an exact supplied music master added in post. We did not authorize a new score, muting the native effects, or media generation.",
+      "expected_output": "The mapping retains mixed ownership: native ambience/effects and the unchanged supplied master. Review mode does not change sound ownership or authorize generation or replacement.",
+      "files": [],
+      "assertions": [
+        "Maps wordless ambience and effects to the explicitly selected native route rather than limiting native sound to on-camera dialogue.",
+        "Keeps the supplied music master exact, with rights and consent checks intact; separate music generation remains opt-in.",
+        "Does not infer silence, picture-only ownership or a new music job from product genre or the absence of speech.",
+        "Requires actual playback and listening before any mute or replacement decision and names mixed layers independently.",
+        "Default and strict review preserve the same ownership and no-generation boundary; only review evidence requirements differ."
       ]
     }
   ]

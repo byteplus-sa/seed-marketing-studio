@@ -11,6 +11,7 @@ specific generation.
 
 | Prompt type | Checklist file |
 |---|---|
+| Generic Seedance or unresolved model/operation | [Seedance family](checklist-seedance-family.md); no inferred 2.5 controls |
 | Every prompt | [Universal — all prompts](#universal--all-prompts) (below) |
 | Seedance 2.5 generation (T2V, R2V, frames, one-click, transitions, extension) | [Seedance 2.5](checklist-seedance-25.md) |
 | Seedance 2.5 edit, object swap, recast, restyle and shared video-to-video inputs | [Seedance edits](checklist-seedance-edits.md) |

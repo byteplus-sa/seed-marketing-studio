@@ -171,6 +171,12 @@ pin_local → breakdown_draft → breakdown_approved → elements_draft
    reference**. Observed: panel numbers, corner labels and the sketch look
    leaked into video, and output-copyright rejections rose.
 
+   **Optional conditioning:** boards, grids and panels remain planning-only.
+   A clean final-medium derivative can be selected independently for a supported
+   composition, motion or frame role only with mode-authorized approval,
+   current hashes, source lineage and actual leakage QA. Merely changing
+   `control_only` does not authorize conditioning; prompt-only work creates no assets.
+
 7. **Video** — use current capability evidence to choose one supported clip or
    multiple natural-duration shots plus assembly. Compose the Seedance 2.5
    six-part prompt from breakdown + board staging written as text + per-beat
@@ -190,15 +196,17 @@ pin_local → breakdown_draft → breakdown_approved → elements_draft
    exact brand copy, logos and captions out of the video prompt (plain, clean
    space) and composite them afterwards as deterministic `html-graphic-render`
    overlays (ffmpeg `overlay` with a short alpha fade).
-   **Audio route:** when the pin's sound is score-led, ambient or a music bed,
-   generate picture with `generate_audio: false` and rebuild the sound grammar
-   with Seed Audio in post, because a "no speech" or "ambience only" line on
-   native audio often leaks speech or score. Keep native audio for on-camera
-   dialogue.
-   Expect Seedance to stretch dense beat timelines by roughly 0.5–1.2 s; a
-   stronger timing prompt rarely fixes it. When a take's beats land late, retime
-   in the edit (trim a held tail, clone-pad the final hold, crossfade audio)
-   rather than regenerating, and record the edit operations on the take.
+   **Sound ownership:** resolve the current brief, not the pin's genre.
+   Requested native dialogue, diegetic effects or wordless ambience stay native
+   where supported; exact supplied/post masters stay unchanged;
+   purposeful silence adds no bed. Mixed layers name their owners; missing or contradictory
+   ownership remains unresolved. Separate Seed Audio generation is opt-in.
+   Inspect playback/listening before any authorized muting or replacement.
+   Historical 2.5 dense-timeline drift reports are scoped observations, not
+   expected stretch for this model or permission to repair automatically.
+   Preserve fractional source spans, cuts and audio tails; compare actual beats
+   and propose trim, padding, retiming or a retake only for a measured defect.
+   Each selected repair records its scope and derivative provenance.
    Capture-format and texture looks in the pin (camcorder, film grain,
    scanlines, halation) are not reliably produced by prompt words; record them
    as a post treatment in the recipe and apply them only when the run locks
@@ -331,8 +339,10 @@ decision. Resolve schema or transport conflicts without dropping the flag.
 Promote the final only after passing draft
 review and mode-authorized selection (including draft assembly review for
 multi-shot work), then re-inspect the final: its audio is not identical to the
-draft's. There is no skip-draft exception. Other models without native Draft
-use a plain 480p test followed by a separately registered final request.
+draft's. There is no skip-draft exception for exact legacy native bindings.
+Other models use their verified operation preview mechanics and separately
+registered non-promotable finals; unknown support stays unresolved under the
+project [execution profile](../../contracts/seedance-execution-profiles.md).
 
 ## Storyboard rules
 

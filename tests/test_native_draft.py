@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,6 +13,7 @@ sys.path.insert(0, str(ROOT / ".agents/scripts"))
 import operation_store
 import prepare_request
 import validate_request
+from test_seedance_capability_profiles import profile
 
 
 class NativeDraftTests(unittest.TestCase):
@@ -203,6 +205,179 @@ class NativeDraftTests(unittest.TestCase):
         (self.root / "task_ids.json").write_text(
             json.dumps({"schema_version": 1, "tasks": [draft]})
         )
+
+    def profiled_source(self, native=True):
+        source = self.selected_draft()
+        evidence = profile()
+        evidence.update(
+            model=source["model"] if native else "fixture-video",
+            reference_roles=[], max_references=0,
+            parameters={
+                "resolution": {"enum": ["360p", "480p", "720p", "1080p"]},
+                "draft": {"type": "boolean"},
+                "draft_task_id": {"type": "string"},
+            },
+        )
+        if native:
+            evidence["preview"] = {
+                "support": "verified", "kind": "native_draft",
+                "params": {"resolution": "480p", "draft": True},
+            }
+            evidence["promotion"] = {
+                "support": "verified", "max_age_seconds": 3600,
+                "resolutions": ["1080p"],
+            }
+        else:
+            source["model"] = evidence["model"]
+            source["params"] = {"resolution": "720p"}
+        binding = {
+            "destination": {key: evidence[key] for key in validate_request.DESTINATION_FIELDS},
+            "evidence": evidence,
+        }
+        source["extensions"]["execution_profile"] = binding
+        source["extensions"]["provider_completed_at"] = datetime.now(UTC).isoformat()
+        self.rehash(source)
+        self.write_registry(source)
+        self.caps = evidence
+        (self.root / "caps.json").write_text(json.dumps(evidence))
+        return source
+
+    def rehash(self, request):
+        request["request_sha256"] = validate_request.compute_request_hash(
+            (self.root / request["prompt_file"]).read_bytes(),
+            request["references"], request["model"], request["operation"], request["params"],
+            approval_mode=request.get("approval_mode"),
+            project_sha256=request.get("project_sha256"),
+            execution_profile=validate_request.execution_profile(request),
+        )
+
+    def final_request(self, source):
+        args = self.argv({"resolution": "1080p"}, source["model"])
+        args += [
+            "--capabilities", "caps.json", "--expected-provider", "fixture-provider",
+            "--expected-tool-schema-revision", "fixture-r1",
+            "--ordinary-final-source", source["operation_id"],
+            "--ordinary-final-decision", "decisions/select-draft.json",
+        ]
+        request = prepare_request.build_request(self.root, prepare_request.parser().parse_args(args))
+        request.update(operation_id="cup-final", asset_id="cup-final")
+        return request
+
+    def test_profile_omission_on_either_promotion_side_is_rejected(self):
+        source = self.profiled_source()
+        request = self.request({"draft_task_id": "selected-task", "resolution": "1080p"})
+        self.assertTrue(validate_request.prepared_evidence_findings(self.root, request))
+        request["extensions"]["execution_profile"] = copy.deepcopy(source["extensions"]["execution_profile"])
+        self.rehash(request)
+        self.assertEqual(validate_request.validate_request(self.root, request, self.caps), [])
+        del source["extensions"]["execution_profile"]
+        self.rehash(source)
+        self.write_registry(source)
+        self.assertTrue(validate_request.prepared_evidence_findings(self.root, request))
+
+    def test_profile_omission_and_operation_mismatch_cannot_begin_submission(self):
+        source = self.profiled_source()
+        request = self.request({"draft_task_id": "selected-task", "resolution": "1080p"})
+        request.update(operation_id="cup-final", asset_id="cup-final")
+        for binding, operation in (
+            (None, "generate"),
+            (source["extensions"]["execution_profile"], "edit"),
+        ):
+            changed = copy.deepcopy(request)
+            changed["operation"] = operation
+            if binding is not None:
+                changed["extensions"]["execution_profile"] = copy.deepcopy(binding)
+            self.rehash(changed)
+            with self.assertRaises(ValueError):
+                operation_store.prepare_operation(self.root, changed, self.caps, None, [])
+            (self.root / "task_ids.json").write_text(json.dumps({"schema_version": 1, "tasks": [source, changed]}))
+            before = (self.root / "task_ids.json").read_bytes()
+            with self.assertRaises(ValueError):
+                operation_store.transition_operation(self.root, "cup-final", "prepared", "submitting")
+            self.assertEqual(before, (self.root / "task_ids.json").read_bytes())
+
+    def test_nonlegacy_native_controls_and_selected_source_follow_evidence(self):
+        source = self.profiled_source()
+        source["model"] = "fixture-native"
+        binding = source["extensions"]["execution_profile"]
+        binding["destination"]["model"] = source["model"]
+        binding["evidence"]["model"] = source["model"]
+        binding["evidence"]["preview"]["params"]["resolution"] = "360p"
+        source["params"]["resolution"] = "360p"
+        self.rehash(source)
+        self.write_registry(source)
+        request = self.request({"draft_task_id": "selected-task", "resolution": "1080p"}, source["model"])
+        request["extensions"]["execution_profile"] = copy.deepcopy(binding)
+        self.rehash(request)
+        self.assertEqual(validate_request.validate_request(self.root, request, binding["evidence"]), [])
+        source["params"] = {"resolution": "360p"}
+        self.rehash(source)
+        self.write_registry(source)
+        self.assertTrue(validate_request.prepared_evidence_findings(self.root, request))
+
+    def test_required_ordinary_preview_allows_separate_final_and_rechecks_selection(self):
+        source = self.profiled_source(native=False)
+        request = self.final_request(source)
+        self.assertEqual(validate_request.validate_request(self.root, request, self.caps), [])
+        operation_store.prepare_operation(self.root, request, self.caps, None, [])
+        (self.root / "decisions/select-draft.json").unlink()
+        before = (self.root / "task_ids.json").read_bytes()
+        with self.assertRaisesRegex(ValueError, "ordinary|selection|file"):
+            operation_store.transition_operation(self.root, "cup-final", "prepared", "submitting")
+        self.assertEqual(before, (self.root / "task_ids.json").read_bytes())
+
+    def test_ordinary_final_requires_unchanged_source_and_current_bound_evidence(self):
+        source = self.profiled_source(native=False)
+        request = self.final_request(source)
+        for field, value in (
+            ("params", {"resolution": "1080p", "draft": True}),
+            ("prompt_sha256", "0" * 64),
+            ("operation", "edit"),
+        ):
+            changed = copy.deepcopy(request)
+            changed[field] = value
+            self.rehash(changed)
+            self.assertTrue(validate_request.prepared_evidence_findings(self.root, changed), field)
+        for field, value in (
+            ("request_sha256", "0" * 64),
+            ("provider_status", "failed"),
+            ("submission_status", "acknowledged"),
+        ):
+            self.write_registry({**source, field: value})
+            self.assertTrue(validate_request.prepared_evidence_findings(self.root, request), field)
+        self.write_registry(source)
+        binding = request["extensions"]["execution_profile"]
+        binding["evidence"]["valid_until"] = (datetime.now(UTC) - timedelta(seconds=1)).isoformat()
+        self.rehash(request)
+        self.assertTrue(validate_request.prepared_evidence_findings(self.root, request))
+
+    def test_ordinary_final_intent_cannot_disable_prerequisite_or_change_duration(self):
+        source = self.profiled_source(native=False)
+        binding = source["extensions"]["execution_profile"]
+        binding["evidence"]["parameters"]["duration"] = {"type": "number"}
+        binding["evidence"]["preview"]["params"]["duration"] = 7.25
+        source["params"]["duration"] = 7.25
+        self.rehash(source)
+        self.write_registry(source)
+        (self.root / "caps.json").write_text(json.dumps(self.caps))
+        request = self.final_request(source)
+        request["params"]["duration"] = 7.25
+        self.rehash(request)
+        self.assertEqual(validate_request.validate_request(self.root, request, self.caps), [])
+        changed = copy.deepcopy(request)
+        changed["params"]["duration"] = 8
+        self.rehash(changed)
+        self.assertTrue(validate_request.prepared_evidence_findings(self.root, changed))
+        for intent in (None, {}, {"kind": "ordinary_final"}):
+            changed = copy.deepcopy(request)
+            if intent is None:
+                del changed["extensions"]["execution_profile"]["ordinary_final"]
+            else:
+                changed["extensions"]["execution_profile"]["ordinary_final"] = intent
+            self.rehash(changed)
+            self.assertTrue(validate_request.prepared_evidence_findings(self.root, changed))
+        (self.root / "decisions/select-draft.json").write_text("{}")
+        self.assertTrue(validate_request.prepared_evidence_findings(self.root, request))
 
     def test_promotion_rejects_unknown_plain_unselected_failed_or_wrong_model_source(
         self,

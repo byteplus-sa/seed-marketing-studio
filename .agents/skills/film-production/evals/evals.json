@@ -33,7 +33,8 @@
       "files": [],
       "expectations": [
         "Keeps original Seedance colours and asks or records before adding any grade, grain, halation or vignette, because no look is locked in the brief.",
-        "Builds exact-length lossless intermediates, joins with the concat demuxer, encodes once and decodes HEVC finals as limited-range BT.709.",
+        "Builds exact-length lossless intermediates, joins with the concat demuxer and encodes once; chooses decoding from actual pix_fmt, color_range, color_primaries, color_transfer and color_space rather than a model-family assumption.",
+        "Unknown or conflicting stream metadata remains unresolved; full-range SDR and HDR require their own measured decode/transform decisions.",
         "Places the result in Studio and renders the master with studio_project.py render; adds no AI label."
       ]
     },
@@ -70,6 +71,19 @@
         "Requests actual full-speed playback and listening with timestamps for attention, reveal timing and the click's audibility.",
         "Checks that the final cut preserves the approved withholding and payoff without treating motion or a wow frame as mandatory.",
         "Uses concise existing default-mode review evidence and existing lock writers, with no new runtime, paid generation or strict checklist mandate."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Review the decode plan only in default and strict modes; do not transform media. All five masters are 10-bit. A measures yuv420p10le/tv/bt709/bt709/bt709. B is full-range BT.709 SDR. C has BT.2020 primaries and PQ transfer. D has BT.2020 primaries with SDR transfer. E has missing or conflicting range/transfer tags. We authorize an SDR delivery target only for A.",
+      "expected_output": "A measured per-stream plan, with the known limited-range BT.709 recipe applicable only to A and no automatic family-wide decode or transform for B through E.",
+      "files": [],
+      "expectations": [
+        "Uses pix_fmt, color_range, color_primaries, color_transfer and color_space rather than model family or bit depth alone.",
+        "Applies the known limited-range BT.709 SDR recipe only to the exact measured A profile and authorized target.",
+        "Keeps B range-preserving; PQ or HLG with BT.2020 requires an HDR-preserving or explicitly authorized tone-mapping decision.",
+        "Does not treat BT.2020 SDR as BT.709 or apply A's matrix/range recipe to it.",
+        "Leaves E unresolved, preserves all source masters, and makes no transformation or playback-quality claim in either review mode."
       ]
     }
   ]
