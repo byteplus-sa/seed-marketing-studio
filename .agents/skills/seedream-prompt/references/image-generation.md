@@ -34,11 +34,13 @@ References:
 ```
 
 Rules for references:
-- Seedream 5.0 Pro: up to 10 input images. Seedream 5.0 Lite: reference images + generated images ≤ 15 (so up to 14 refs when generating 1 image).
-- First reference image is free. Each additional image: $0.003 (Pro).
-- Formats: JPEG, PNG, WebP, BMP, TIFF, GIF, HEIC, HEIF.
-- Up to 30 MB per image.
-- Input resolution: each dimension > 14px, aspect ratio [1/16, 16], total pixels ≤ 36,000,000 (per API reference).
+- Preserve the selected model and verify its requested operation, reference
+  limits, input formats and connected tool schema. Pro and 5.5 generation
+  document up to 10 references; older Lite/4.x sequential limits are separate.
+- Historical Pro reference-pricing snapshots are not current account prices
+  or family-wide billing rules. Verify pricing separately when requested.
+- Provider input formats and size limits do not prove a wrapper accepts them;
+  verify the selected transport before packaging executable settings.
 - When no references are provided, omit the References section.
 - The reference list is an inventory, not the instruction. Bind each reference
   again where it affects the output, naming both its role and target:
@@ -71,9 +73,27 @@ Reference-based generation sub-types (Reference Target + Generated Scene Descrip
 
 **Image Editing**: Modify an existing image with localized changes. See the editing modes section below.
 
-**Sequential Generation**: Generate multiple coordinated images in one call. **Not supported on Seedream 5.0 Pro** — Pro supports only single-image and multi-layer output. Sequential/batch generation requires Seedream 5.0 Lite (or 4.5/4.0) with `sequential_image_generation` set to `auto` (or `disabled`). Include "series", "set", or "sequence" in the prompt.
+**Sequential Generation**: Multiple coordinated images in one call require
+verified native sequential support for the selected model and tool. Pro and
+5.5 do not support it. Older Lite/4.x configurations or future models need
+current evidence; do not silently switch to them. Offer per-panel prompts,
+a single-image grid, or an unselected verified alternative, with authorization
+before changing the model or request count. Layers and stochastic variations
+are not ordered sequences.
 
-**Infographic / Information Visualization**: Transform data, concepts, and dense text into professional layouts. Seedream 5.0 Pro is specifically optimized for this.
+**Infographic / Information Visualization**: Seedream may supply an expressive
+image layer. Exact typography, logo geometry, data placement, and delivery-critical
+layout belong in a deterministic render, not a model-quality promise.
+
+### Generation size
+
+For documented Pro and 5.5 generation, presets are `1K`, `1.5K`, and `2K`;
+explicit `widthxheight` dimensions are also valid within pixel totals
+[921600, 4624220] and aspect ratios [1/16, 16]. Examples include `2048x2048`,
+`1728x2160`, and `2816x1584`. Do not replace valid dimensions with invented
+3K/4K tiers. Verify the selected model and tool; decomposition is a separate
+operation with presets or `auto`, not explicit dimensions. See
+[Quick reference](quick-reference.md) for operation-scoped settings.
 
 ### 3. Subject
 
@@ -126,7 +146,7 @@ Style:
 
 **Art style and medium**: photorealistic, cinematic, oil painting, watercolor, 3D render, anime, illustration, flat design, pencil sketch, charcoal, vector art, pixel art.
 
-**Aesthetic keywords** (from the Seedream 5.0 Pro manual):
+**Aesthetic keywords** (historical Pro guide vocabulary, reusable creative intent):
 
 | Category | Keywords |
 |---|---|
@@ -181,7 +201,9 @@ Rules:
 - Put exact text in double quotes.
 - Treat the quoted string as prompt intent, not proof of pixel-exact output.
 - Describe the surface: "on a storefront window," "on a vintage paper scroll," "on a digital screen."
-- Seedream 5.0 Pro natively renders text in 14 languages: Arabic, Filipino, French, German, Indonesian, Japanese, Korean, Malay, Portuguese, Russian, Spanish, Thai, Turkish, Vietnamese. English is the base language. Other languages also work but with weaker in-image text rendering and cultural understanding.
+- A historical Pro guide lists multilingual text examples; that is not a
+  family-wide fidelity guarantee. Inspect actual spelling and typography in
+  the requested language, and keep exact copy in the deterministic layer.
 - Small text may still be unstable. If fidelity matters, remove it from the
   generative layer and render it deterministically.
 

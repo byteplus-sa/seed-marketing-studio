@@ -117,10 +117,13 @@ before submission. A static-ad plate takes the ratio of the ad it backs.
 
 ## Selection set
 
-Default to **three stochastic samples** per selection set with identical prompt,
-references and parameters except the seed. An explicit count or a requested
-creative alternative overrides the default. A deterministic composite produces
-one render per version and never takes the three-sample default.
+Use one sample in default review mode and three stochastic samples in strict
+mode where applicable. An explicit requested count wins in either mode.
+Keep prompt, references and supported parameters identical for sampling;
+vary a seed only when the selected model and tool support it. A requested
+creative alternative changes only its authorized axes. Sample advice never
+authorizes extra generation. A deterministic composite produces one render
+per version, not a stochastic selection set.
 
 ## Submission boundary
 
@@ -168,7 +171,12 @@ Save beside the product element, `projects/<project>/elements/<product-id>/`:
 
 ## Quick defaults
 
-- Model: `dola-seedream-5-0-pro-260628`, Image-to-Image
+Preserve the selected model. Resolve the configured exact binding only when no
+model is selected; verify the operation, ordered references and effective tool
+schema. Unknown support is unresolved. Do not switch models or transports or
+submit extra samples without authorization.
+
+- Model: selected model or verified workspace binding, Image-to-Image
 - Format: `png`; watermark false where supported
-- Prompt optimization: `standard`
-- Samples: three
+- Prompt optimization: `standard` only where verified
+- Samples: one in default review, three in strict where applicable; explicit count wins

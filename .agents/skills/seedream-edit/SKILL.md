@@ -1,14 +1,14 @@
 ---
 name: seedream-edit
-description: Guide for using the seedream_edit_image MCP tool for interactive image editing with Seedream 5.0 Pro. Use when the user wants to edit an existing image (replace objects, change regions, add elements at specific positions), especially when coordinate-based precision is needed via point or bounding-box selection.
+description: Prepare bounded Seedream image edits with point or bounding-box targets. Use for replacing objects, changing regions, or placing elements in an existing image. Verify selected-model and tool support.
 ---
 
 # Seedream Interactive Image Editing
 
-The `seedream_edit_image` MCP tool wraps Seedream 5.0 Pro's interactive
-editing capability with structured coordinate inputs. It is the dedicated
-editing tool — distinct from `seedream_generate_image` which is primarily for
-text-to-image generation.
+Prepare a narrow Seedream edit prompt with ordered references and a spatial
+target. Use `seedream_edit_image` only when the selected model, operation,
+and connected tool expose compatible interactive editing. It is distinct
+from full-frame reference-based generation.
 
 ## When to Use `seedream_edit_image`
 
@@ -55,7 +55,7 @@ input, check what the video actually needs:
 
 ## Coordinate System
 
-Seedream 5.0 Pro uses **normalized coordinates** in the range **0 to 999**:
+The documented structured edit tool uses **normalized coordinates** in the range **0 to 999**:
 
 | Corner | Coordinates |
 |---|---|
@@ -156,8 +156,9 @@ or:
 ```
 
 URLs are validated for SSRF safety (HTTPS only, public IPs, no metadata
-endpoints). Base64 data is limited to 10 MiB. An Active private asset can be
-passed as `{"kind": "url", "url": "asset://<asset_id>"}`. Local file paths are
+endpoints). Base64 data is limited to 10 MiB. When asset resolve mode is enabled,
+an Active private asset can be passed as
+`{"kind": "url", "url": "asset://<asset_id>"}`. Local file paths are
 not accepted: upload the file or presign a cached object key first, then submit
 promptly because presigned URLs expire.
 
@@ -167,16 +168,21 @@ visible watermark.
 
 ## Model Compatibility
 
-The edit tool works with all Seedream models:
+Preserve the selected model and verify three separate contracts: its provider
+interactive-edit support, the connected adapter's model mapping, and the tool's
+point/bbox schema and reference limits. The family name alone proves none of
+them. Unknown support stays unresolved; offer a prompt-only handoff or an
+unselected compatible alternative. Do not replace a bounded edit with a
+full-frame edit, switch models/transports, or submit without authorization.
 
-| Model | Max References | Notes |
-|---|---|---|
-| `dola-seedream-5-0-pro-260628` (default) | 10 | Pro model, no batch |
-| Lite models (via `SEEDREAM_MODEL_BINDINGS`) | 14 | Supports batch |
-| 4.x models (via `SEEDREAM_MODEL_BINDINGS`) | 14 | JPEG output only |
+Pro (`dola-seedream-5-0-pro-260628`) and 5.5
+(`dola-seedream-5-5-261028`) have documented provider interactive editing.
+That does not prove the installed wrapper supports 5.5. Lite, 4.x, or future
+bindings require separate evidence for this operation, not generation limits.
+Inspect the actual edited result, including the unmarked area, before acceptance.
 
-The `<point>` and `<bbox>` markup is specifically documented for
-`seedream-5-0-pro` but may work with other models.
+The structured edit input convention below is 0-999. Decomposition OCR output
+uses 0-1000 base-image coordinates; it is not interchangeable with edit input.
 
 ## Common Pitfalls
 
@@ -186,16 +192,16 @@ The `<point>` and `<bbox>` markup is specifically documented for
 2. **Bbox ordering.** `x1` must be ≤ `x2` and `y1` must be ≤ `y2`. The tool
    validates this.
 
-3. **Too many reference images.** Pro models accept up to 10; Lite/4x accept
-   up to 14. The tool validates this against the capability registry.
+3. **Too many reference images.** Verify the selected edit operation and
+   wrapper limits. Do not copy batch-generation limits into an edit.
 
 4. **Assuming the model knows image context.** The prompt should explicitly
    describe the edit. Don't rely on the model inferring intent from
    coordinates alone — they only specify *where*, not *what*.
 
 5. **Using `seedream_generate_image` with raw markup.** While possible, it
-   shifts coordinate validation onto the agent. Prefer `seedream_edit_image`
-   when you have structured coordinates.
+   shifts coordinate validation onto the agent. Prefer a verified
+   `seedream_edit_image` path when you have structured coordinates.
 
 ## Artifact Persistence
 
@@ -203,11 +209,17 @@ Like all Seedream tools, `persist=true` (the default) saves the edited image
 to the local artifact store. The returned `ArtifactRef.uri` (e.g.
 `seed-media://artifacts/abc123`) survives provider URL expiry (24 hours for
 images). Always use `persist=true` unless you have a specific reason not to.
-Pass an absolute `output_path` inside an allowed output root to also write a
-local copy, reported in `ArtifactRef.local_path`.
-
 The edit runs as a long task. Submit it through `ark_job_submit` and poll with
-`ark_job_get` unless the client negotiates MCP task augmentation.
+`ark_job_get` to a terminal state. Do not pass `output_path` or `output_dir`
+through `ark_job_submit`. Inspect the actual `ArtifactRef` and
+`persistence_error`, export separately with `seed_media_export_artifact`, and
+verify the saved file's existence, bytes, and hash.
+
+Only clients with confirmed native task augmentation may call the tool directly
+with an allowed absolute `output_path`. Verify terminal task state and the
+reported local file before claiming success. Recover an existing provider
+result or retry an export on persistence failure; do not regenerate. Reconcile
+an interrupted or ambiguous submission before any retry or transport change.
 
 ## Related Tools
 

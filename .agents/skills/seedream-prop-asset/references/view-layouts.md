@@ -6,14 +6,12 @@ The two-view default and single views are in `SKILL.md`.
 
 ## Single row or stacked
 
-In the car samples a single row gave the most even scale (height spread 3.3%
-against 6.6-8.3% stacked) and slightly better margins (4.1% against 3.5%), but
-drew each view at roughly 0.4-0.6 of the stacked views' pixel area, dropped one
-of the two doors per flank, and left a gray gradient with a shadow band across
-the sheet. The stacked layout kept both doors and a flat background. Use stacked
-for vehicles and other long objects where per-view detail matters; use the single
-row for compact objects whose views read at a third of the sheet width. Whichever
-you pick, swap "object" for its noun in the blocks below.
+Use stacked for vehicles and other long objects where per-view detail matters;
+use a single row for compact objects whose views remain readable at a third
+of the sheet width. Inspect scale, margins, all identity-critical features and
+background continuity in the actual result. These are layout heuristics, not
+model-wide measured performance laws. Whichever you pick, swap "object" for
+its noun in the blocks below.
 
 ## Flanks
 
@@ -60,14 +58,24 @@ decide each flank from which end points where in the frame and say so. The table
 is a request, and the model can still render both three-quarter views from the
 same corner.
 
-Measure scale as height including roof furniture such as a lamp box (a strict
-colour mask dropped the pale lamp and understated heights by up to 18% in a
-sample), cross-checked by the wheel-face major axis. Allow a few percent for the
-near wheel's perspective in three-quarter views.
+Measure scale as height including roof furniture such as a lamp box, and
+cross-check using stable landmarks such as wheel size. A strict colour mask can
+miss pale or transparent details; visually inspect the complete silhouette.
+Account for perspective rather than imposing a universal numerical tolerance.
 
-Sample evidence, one car, three runs: the turntable wording put the rear
+## Historical sample evidence
+
+One car, three runs, not a family-wide benchmark: the turntable wording put the rear
 three-quarter on the opposite flank in both later runs (the earlier "opposite
 side" wording did not), and one continuous background removed the faint
 rectangles of the earlier panel wording. Margins landed at 55-80% of the 6%
 request. Width targets were not needed: scale was already within 8.3% without
-them.
+them. Single-row height spread was 3.3% versus 6.6-8.3% stacked, with margins
+4.1% versus 3.5%, but per-view pixel area was roughly 0.4-0.6 of stacked.
+The row dropped one door per flank and introduced a gradient/shadow band;
+stacked kept both doors and a flat background. A strict colour mask understated
+height by up to 18% after missing a pale roof lamp.
+
+These observations explain the earlier heuristic, not guaranteed behavior for
+another object, model, prompt or transport. Evaluate the new candidate against
+its own view plan and identity requirements.

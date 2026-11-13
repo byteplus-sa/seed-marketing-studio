@@ -295,7 +295,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-lighting-presets/SKILL.md",
-      "computedHash": "32ea10898d66e0765402644b36b789f52b302f9afdcc4eafdf92aa426e930d3e"
+      "computedHash": "db5f4f08ce7ab791a62637d96754474bac72115ef1e38f0f8450fd4d3a1083d2"
     },
     "seedance-motion-design": {
       "source": "./local",
@@ -307,7 +307,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-motion-recast/SKILL.md",
-      "computedHash": "3589bd76b5c5d5c13fac714f3edfa762b1d7276d11ce1e23c5c5692cd919ad2f"
+      "computedHash": "366dc121590a5d3a1975b9d95991e4c31365db3c1b0d3ac01290082000431dcc"
     },
     "seedance-music-video": {
       "source": "./local",
@@ -350,7 +350,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-restoration/SKILL.md",
-      "computedHash": "baba459b364ff44cab81dbfccc5b918782d89d7438ba68d46e954846698a5fa3"
+      "computedHash": "8c82d6a5ebe79203004d146866b702bf5760112d6e740436b856bc739f7e44fc"
     },
     "seedance-restyle": {
       "source": "./local",
@@ -405,7 +405,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-edit/SKILL.md",
-      "computedHash": "3f9b6232ee52242bcb2056798383a419d7e68f1b99eb4a2c64a93dac93cde3af"
+      "computedHash": "ac5f3e9535f4b6e26e5ddf8cd085fa3e6ddd01f3d3aee7853a0bfa9699f575c6"
     },
     "seedream-handcrafted-3d": {
       "source": "./local",
@@ -417,31 +417,31 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-location-asset/SKILL.md",
-      "computedHash": "9bf159f36b24830bb42b8539649ec4b2a4bfb7903cc81f86cc9b69d0ae324d9d"
+      "computedHash": "e1104ed5194c41c21faae85484338ba56f0bac3abd824db592b93d59be98905b"
     },
     "seedream-product-shot": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-product-shot/SKILL.md",
-      "computedHash": "fa74dc901f696dc7cf496e7ba610a00c570599ff52a87147aa9808d0b6344fcb"
+      "computedHash": "dacbe6fecfa2bded8aad33ddfcc87055dbe9270a472b07e49ab3885216fdf3ee"
     },
     "seedream-prompt": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-prompt/SKILL.md",
-      "computedHash": "b06c685db9fd072241a5e6143ee7f9db7e1a78b4336f8123e80f58f7855cecf6"
+      "computedHash": "b0d8f6ccab7207800968cf4d6e78e3aa9563a656422cb97f6707eb215f99d62e"
     },
     "seedream-prop-asset": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-prop-asset/SKILL.md",
-      "computedHash": "2c7ab97e94c59ce7d3c4730c4b4df68e51ea7e5831619ccaae810c8238246b3b"
+      "computedHash": "9d2ed6f7d5b6d5408343ecbd3d6fda5a6720ce81f2b1bfe77b9c951aa6e39ceb"
     },
     "seedream-storyboard": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-storyboard/SKILL.md",
-      "computedHash": "e8345e75a51ad4938d426349f174526a13fc2514e25ca6c405dd96c09667f29c",
+      "computedHash": "f0aa4899e00b34ac331cfc1c2d01ce8f6ceafed3a0d16677d78aa06347af083c",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "seedream-woodblock-poster": {
