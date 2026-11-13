@@ -897,13 +897,14 @@ def ordinary_final_findings(root: Path, request: dict[str, Any]) -> list[Finding
         if not all(type(source["params"].get(key)) is type(value) and source["params"].get(key) == value for key, value in controls.items()):
             raise ValueError("Ordinary source was not the evidenced preview")
         output_controls = {"resolution", "watermark", "return_last_frame", "priority", "execution_expires_after", "safety_identifier"}
-        creative_keys = (set(source["params"]) | set(request["params"])) - output_controls
-        if any(
-            key not in source["params"] or key not in request["params"]
-            or type(source["params"][key]) is not type(request["params"][key])
-            or source["params"][key] != request["params"][key]
-            for key in creative_keys
-        ):
+        creative_hashes = {
+            compute_request_hash(
+                b"", [], candidate["model"], candidate["operation"],
+                {key: value for key, value in candidate["params"].items() if key not in output_controls},
+            )
+            for candidate in (source, request)
+        }
+        if len(creative_hashes) != 1:
             raise ValueError("Ordinary final changed creative parameters; select a new preview")
         prompt = contained_path(root, source["prompt_file"]).read_bytes()
         if (

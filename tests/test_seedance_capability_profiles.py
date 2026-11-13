@@ -1,5 +1,7 @@
 import copy
+import hashlib
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -276,6 +278,278 @@ class CapabilityProfileTests(unittest.TestCase):
             evidence = {**self.evidence, field: value}
             (self.root / "caps.json").write_text(json.dumps(evidence))
             self.assertTrue(variant_matrix.matrix_profile_findings(rows, options), field)
+
+
+class OrdinaryFinalIdentityTests(unittest.TestCase):
+    setUp = CapabilityProfileTests.setUp
+    args = CapabilityProfileTests.args
+
+    def cli(self, script, arguments):
+        command = [sys.executable, "-B", str(ROOT / script), *arguments]
+        result = subprocess.run(
+            command, capture_output=True, text=True, check=False, timeout=30,
+        )
+        if log_path := os.environ.get("MKT_RR01_COMMAND_LOG"):
+            with Path(log_path).open("a") as handle:
+                handle.write(json.dumps({
+                    "command": command, "returncode": result.returncode,
+                    "stdout": result.stdout, "stderr": result.stderr,
+                }) + "\n")
+        self.assertEqual(result.stderr, "", result.stderr)
+        return result.returncode, json.loads(result.stdout)
+
+    def snapshot(self):
+        return {
+            path.relative_to(self.root).as_posix(): path.read_bytes() if path.is_file() else None
+            for path in self.root.rglob("*")
+        }
+
+    def record(self, request, relative, rules=("model.supported_mode",)):
+        input_path = self.root / "review-input.json"
+        input_path.write_text(json.dumps({
+            "schema_version": 1, "request_sha256": request["request_sha256"],
+            "reviewer_status": "complete", "checks": [
+                {"rule_id": rule, "status": "pass", "evidence": "Synthetic offline contract only"}
+                for rule in rules
+            ],
+        }))
+        code, recorded = self.cli(".agents/skills/prompt-review/scripts/record_review.py", [
+            "--project", str(self.root), "--request", relative,
+            "--input", str(input_path), "--write",
+            *[item for rule in rules for item in ("--required-rule", rule)],
+        ])
+        self.assertEqual(code, 0, recorded)
+        return recorded["path"]
+
+    def selected_preview(self, creative, version=1, style_schema=None):
+        if version == 2:
+            (self.root / "project.md").write_text("---\nreview_mode: default\n---\n")
+        (self.root / "studio").mkdir(exist_ok=True)
+        self.evidence["parameters"].update({
+            "style": {} if style_schema is None else style_schema,
+            "watermark": {"type": "boolean"},
+            "return_last_frame": {"type": "boolean"},
+            "priority": {"type": "string"},
+            "execution_expires_after": {"type": "integer"},
+            "safety_identifier": {"type": "string"},
+        })
+        (self.root / "caps.json").write_text(json.dumps(self.evidence))
+        arguments = [
+            *self.args(), "--schema-version", str(version),
+            *[item for key, value in creative.items() for item in ("--param", f"{key}={json.dumps(value)}")],
+        ]
+        code, prepared = self.cli(".agents/scripts/prepare_request.py", [*arguments, "--write"])
+        self.assertEqual(code, 0, prepared)
+        source = json.loads((self.root / prepared["path"]).read_text())
+        review_path = self.record(source, prepared["path"])
+        code, registered = self.cli(".agents/scripts/prepare_request.py", [
+            *arguments, "--write", "--register", "--review", review_path,
+        ])
+        self.assertEqual(code, 0, registered)
+        operation_id = registered["registered"]
+        operation_store.transition_operation(self.root, operation_id, "prepared", "submitting")
+        operation_store.transition_operation(
+            self.root, operation_id, "submitting", "acknowledged",
+            provider_task_id="synthetic-preview-task", provider_status="running",
+        )
+        operation_store.transition_operation(
+            self.root, operation_id, "acknowledged", "terminal", provider_status="succeeded",
+        )
+        output_bytes = b"synthetic artifact; no provider or playback"
+        (self.root / "cup.mp4").write_bytes(output_bytes)
+        artifact_hash = hashlib.sha256(output_bytes).hexdigest()
+        review = {
+            "schema_version": 1, "artifact_path": "cup.mp4", "artifact_sha256": artifact_hash,
+            "status": "pass", "inspection_method": "synthetic temporal fixture, not actual inspection",
+            "coverage": "synthetic contract only",
+            "checks": [{"criterion": "fixture", "status": "pass", "evidence": "synthetic"}],
+            "observations": ["Synthetic artifact only"],
+            "limitations": ["No real media inspection"], "recommendation": "select",
+        }
+        review_bytes = json.dumps(review).encode()
+        (self.root / "artifact-review.json").write_bytes(review_bytes)
+        (self.root / "decisions").mkdir(exist_ok=True)
+        (self.root / "decisions/select-preview.json").write_text(json.dumps({
+            "schema_version": 1, "decision_id": "select-preview",
+            "decision_type": "variant_selection", "asset_id": source["asset_id"],
+            "subject_path": "cup.mp4", "selected_variant": "cup.mp4",
+            "selected_sha256": artifact_hash, "actor": "agent", "approval_mode": "approve_for_me",
+            "project_sha256": hashlib.sha256((self.root / "project.md").read_bytes()).hexdigest(),
+            "result": "approved", "review_path": "artifact-review.json",
+            "review_sha256": hashlib.sha256(review_bytes).hexdigest(),
+            "upstream_sha256": {"prompt.md": source["prompt_sha256"]},
+            "reason": "Synthetic selection only", "decided_at": datetime.now(UTC).isoformat(),
+        }))
+        self.assertEqual(validate_request.decision_findings(
+            self.root, json.loads((self.root / "decisions/select-preview.json").read_text()),
+            require_current_project=True,
+        ), [])
+        return operation_store.read_registry(self.root / "task_ids.json")["tasks"][0]
+
+    def final_arguments(self, source, creative, asset="cup_final", outputs=None):
+        arguments = self.args()
+        arguments[arguments.index("cup_t01")] = asset
+        arguments[arguments.index("cup.mp4")] = f"{asset}.mp4"
+        arguments[arguments.index("resolution=720p")] = "resolution=1080p"
+        return [
+            *arguments, "--schema-version", str(source["schema_version"]),
+            "--ordinary-final-source", source["operation_id"],
+            "--ordinary-final-decision", "decisions/select-preview.json",
+            *[item for key, value in {**creative, **(outputs or {})}.items()
+              for item in ("--param", f"{key}={json.dumps(value)}")],
+        ]
+
+    def register_final(self, arguments):
+        code, prepared = self.cli(".agents/scripts/prepare_request.py", [*arguments, "--write"])
+        self.assertEqual(code, 0, prepared)
+        request = json.loads((self.root / prepared["path"]).read_text())
+        review_path = self.record(request, prepared["path"])
+        code, registered = self.cli(".agents/scripts/prepare_request.py", [
+            *arguments, "--review", review_path, "--write", "--register",
+        ])
+        self.assertEqual(code, 0, registered)
+        self.assertEqual(registered["request_sha256"], request["request_sha256"])
+        return request, review_path
+
+    def test_matching_nested_identity_and_supported_output_changes_reach_submitting(self):
+        values = [
+            None, "", [], {}, [False, {"enabled": True}],
+            {"nested": {"enabled": True, "values": [None, "1", 1, 1.0]}},
+            {"text": "x" * 10000, "number": 10 ** 100},
+        ]
+        for version in (1, 2):
+            for value in values:
+                with self.subTest(version=version, value=value):
+                    self.setUp()
+                    source = self.selected_preview({"style": value}, version)
+                    final_value = dict(reversed(list(value.items()))) if isinstance(value, dict) else value
+                    request, _ = self.register_final(self.final_arguments(
+                        source, {"style": final_value}, outputs={
+                            "watermark": False, "return_last_frame": True, "priority": "normal",
+                            "execution_expires_after": 300, "safety_identifier": "synthetic",
+                        },
+                    ))
+                    operation_store.transition_operation(
+                        self.root, request["operation_id"], "prepared", "submitting",
+                    )
+                    tasks = operation_store.read_registry(self.root / "task_ids.json")["tasks"]
+                    self.assertEqual(tasks[0], source)
+                    self.assertEqual(tasks[1]["submission_status"], "submitting")
+
+    def test_changed_json_identity_blocks_prepare_register_and_submitting_without_writes(self):
+        pairs = [
+            ({"style": {"enabled": True}}, {"style": {"enabled": 1}}),
+            ({"style": {"enabled": 1}}, {"style": {"enabled": True}}),
+            ({"style": [False, {"enabled": True}]}, {"style": [0, {"enabled": 1}]}),
+            ({"style": [0, {"enabled": 1}]}, {"style": [False, {"enabled": True}]}),
+            ({"style": {"nested": [{"value": False}]}}, {"style": {"nested": [{"value": 0}]}}),
+            ({"style": "true"}, {"style": True}),
+            ({"style": None}, {}),
+            ({}, {"style": None}),
+            ({"style": {"value": None}}, {"style": {}}),
+            ({"style": [1, 2]}, {"style": [2, 1]}),
+            ({"style": []}, {"style": {}}),
+            ({"style": {"value": 1}}, {"style": {"value": 2}}),
+            ({"style": {"value": 1}}, {"style": {"value": 1.0}}),
+            ({"style": "unchanged"}, {"style": "changed"}),
+        ]
+        for version in (1, 2):
+            for original, changed in pairs:
+                with self.subTest(version=version, original=original, changed=changed):
+                    self.setUp()
+                    source = self.selected_preview(original, version)
+                    arguments = self.final_arguments(source, changed)
+                    before = self.snapshot()
+                    code, rejected = self.cli(".agents/scripts/prepare_request.py", [*arguments, "--write"])
+                    self.assertEqual(code, 1, rejected)
+                    self.assertIn("seedance.draft_promotion", {f["rule_id"] for f in rejected["findings"]})
+                    self.assertEqual(before, self.snapshot())
+                    candidate = prepare_request.build_request(
+                        self.root, prepare_request.parser().parse_args(arguments),
+                    )
+                    (self.root / "candidate.json").write_text(json.dumps(candidate))
+                    review_path = self.record(candidate, "candidate.json")
+                    before = self.snapshot()
+                    code, rejected = self.cli(".agents/scripts/prepare_request.py", [
+                        *arguments, "--review", review_path, "--write", "--register",
+                    ])
+                    self.assertEqual(code, 1, rejected)
+                    self.assertIn("seedance.draft_promotion", {f["rule_id"] for f in rejected["findings"]})
+                    self.assertEqual(before, self.snapshot())
+                    valid, _ = self.register_final(self.final_arguments(source, original, asset="valid_final"))
+                    candidate["operation_id"] = valid["operation_id"]
+                    candidate["asset_id"] = valid["asset_id"]
+                    candidate["extensions"]["expected_output"] = valid["extensions"]["expected_output"]
+                    registry = operation_store.read_registry(self.root / "task_ids.json")
+                    registry["tasks"][1] = candidate
+                    operation_store.replace_registry(self.root / "task_ids.json", registry)
+                    before = self.snapshot()
+                    with self.assertRaisesRegex(ValueError, "changed creative parameters"):
+                        operation_store.transition_operation(
+                            self.root, valid["operation_id"], "prepared", "submitting",
+                        )
+                    self.assertEqual(before, self.snapshot())
+                    self.assertEqual(
+                        operation_store.read_registry(self.root / "task_ids.json")["tasks"][0], source,
+                    )
+
+    def test_restrictive_nested_schema_and_unsupported_output_controls_write_nothing(self):
+        for changed in (
+            {"style": {"enabled": 1}},
+            {"style": {"enabled": True}, "watermark": 1},
+            {"style": {"enabled": True}, "fps": 60},
+        ):
+            with self.subTest(changed=changed):
+                self.setUp()
+                source = self.selected_preview({"style": {"enabled": True}}, version=2, style_schema={
+                    "type": "object", "properties": {"enabled": {"type": "boolean"}},
+                    "required": ["enabled"], "additionalProperties": False,
+                })
+                arguments = self.final_arguments(source, changed)
+                for flags in (["--write"], ["--write", "--register"]):
+                    before = self.snapshot()
+                    code, rejected = self.cli(".agents/scripts/prepare_request.py", [*arguments, *flags])
+                    self.assertEqual(code, 1, rejected)
+                    self.assertIn("model.supported_mode", {f["rule_id"] for f in rejected["findings"]})
+                    self.assertEqual(before, self.snapshot())
+                valid, _ = self.register_final(self.final_arguments(
+                    source, {"style": {"enabled": True}}, asset="valid_final",
+                ))
+                candidate = prepare_request.build_request(
+                    self.root, prepare_request.parser().parse_args(
+                        self.final_arguments(source, changed, asset="valid_final"),
+                    ),
+                )
+                registry = operation_store.read_registry(self.root / "task_ids.json")
+                registry["tasks"][1] = candidate
+                operation_store.replace_registry(self.root / "task_ids.json", registry)
+                before = self.snapshot()
+                with self.assertRaises(ValueError):
+                    operation_store.transition_operation(
+                        self.root, valid["operation_id"], "prepared", "submitting",
+                    )
+                self.assertEqual(before, self.snapshot())
+
+    def test_recorder_rejects_stale_nested_digest_without_writing(self):
+        for version in (1, 2):
+            with self.subTest(version=version):
+                self.setUp()
+                source = self.selected_preview({"style": {"enabled": True}}, version)
+                arguments = self.final_arguments(source, {"style": {"enabled": True}})
+                request = prepare_request.build_request(
+                    self.root, prepare_request.parser().parse_args(arguments),
+                )
+                request["params"]["style"]["enabled"] = 1
+                (self.root / "stale.json").write_text(json.dumps(request))
+                before = self.snapshot()
+                code, rejected = self.cli(".agents/skills/prompt-review/scripts/record_review.py", [
+                    "--project", str(self.root), "--request", "stale.json",
+                    "--input", str(self.root / "review-input.json"), "--write",
+                ])
+                self.assertEqual(code, 1, rejected)
+                self.assertIn("input.readable", {f["rule_id"] for f in rejected["findings"]})
+                self.assertIn("stale", rejected["findings"][0]["message"])
+                self.assertEqual(before, self.snapshot())
 
 
 if __name__ == "__main__":

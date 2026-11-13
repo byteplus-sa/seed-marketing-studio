@@ -16,6 +16,7 @@ import operation_store
 import prepare_request
 import studio_project
 import test_native_draft
+import test_seedance_capability_profiles
 import variant_matrix
 from test_seedance_capability_profiles import profile
 
@@ -489,6 +490,105 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertEqual(
             before, {path: path.read_bytes() for path in fixture.root.rglob("*") if path.is_file()}
         )
+
+    def emitted_identity_fixture(self, value, style_schema=None):
+        fixture = test_seedance_capability_profiles.OrdinaryFinalIdentityTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        source = fixture.selected_preview({"style": value}, version=2, style_schema=style_schema)
+        matrix = base_matrix(axes={"hook": ["hook-callout"]})
+        decision = json.loads((fixture.root / "decisions/select-preview.json").read_text())
+        matrix["hero"].update(
+            take_file="cup.mp4", decision_ref="decisions/select-preview.json",
+            sha256=decision["selected_sha256"],
+        )
+        matrix_path = fixture.root / "matrix.json"
+        matrix_path.write_text(json.dumps(matrix))
+        row = variant_matrix.expand(matrix)[1]
+        code, result = fixture.cli(".agents/scripts/variant_matrix.py", [
+            "register", str(matrix_path), "--project", str(fixture.root),
+            "--video-model", source["model"], "--video-operation", source["operation"],
+            "--capabilities", "caps.json", "--expected-provider", "fixture-provider",
+            "--expected-tool-schema-revision", "fixture-r1", "--stage", "final",
+            "--final-resolution", "1080p", "--hook-performance", "non-performance",
+            "--ordinary-final-selection",
+            f"{row['name']}={source['operation_id']}:decisions/select-preview.json",
+        ])
+        self.assertEqual(code, 0, result)
+        [operation] = result["operations"][row["name"]]
+        prompt = fixture.root / option_values(operation["hash_command"], "--prompt")[0]
+        prompt.parent.mkdir(parents=True)
+        prompt.write_bytes((fixture.root / source["prompt_file"]).read_bytes())
+        return fixture, source, operation
+
+    def test_emitted_nested_json_identity_records_registers_and_reaches_submitting(self):
+        for value in (
+            {"enabled": True, "nested": [False, {"value": 1}]},
+            [0, {"enabled": 1}, None, "true"], {}, [],
+        ):
+            with self.subTest(value=value):
+                fixture, source, operation = self.emitted_identity_fixture(value)
+                command = operation["hash_command"]
+                self.assertEqual(shlex.split(shlex.join(command)), command)
+                code, prepared = fixture.cli(command[3], [*command[4:], "--write"])
+                self.assertEqual(code, 0, prepared)
+                request = json.loads((fixture.root / prepared["path"]).read_text())
+                self.assertEqual(
+                    json.dumps(request["params"]["style"], sort_keys=True),
+                    json.dumps(source["params"]["style"], sort_keys=True),
+                )
+                review_path = fixture.record(request, prepared["path"], operation["required_rules"])
+                command = list(operation["register_command"])
+                command[command.index("--review") + 1] = review_path
+                code, registered = fixture.cli(command[3], command[4:])
+                self.assertEqual(code, 0, registered)
+                self.assertEqual(registered["request_sha256"], request["request_sha256"])
+                operation_store.transition_operation(
+                    fixture.root, registered["registered"], "prepared", "submitting",
+                )
+                tasks = operation_store.read_registry(fixture.root / "task_ids.json")["tasks"]
+                self.assertEqual(tasks[0], source)
+                self.assertEqual(tasks[1]["submission_status"], "submitting")
+
+    def test_emitted_nested_substitutions_and_restrictive_schema_block_without_writes(self):
+        cases = (
+            ({"enabled": True}, {"enabled": 1}, None),
+            ({"enabled": 1}, {"enabled": True}, None),
+            ([False, {"enabled": True}], [0, {"enabled": 1}], None),
+            ([0, {"enabled": 1}], [False, {"enabled": True}], None),
+            ({"enabled": True}, {"enabled": 1}, {
+                "type": "object", "properties": {"enabled": {"type": "boolean"}},
+                "required": ["enabled"], "additionalProperties": False,
+            }),
+        )
+        for original, changed, schema in cases:
+            with self.subTest(original=original, changed=changed, schema=schema):
+                fixture, source, operation = self.emitted_identity_fixture(original, schema)
+                command = list(operation["hash_command"])
+                parameter_index = next(index for index, item in enumerate(command) if item.startswith("style="))
+                command[parameter_index] = f"style={json.dumps(changed)}"
+                before = fixture.snapshot()
+                code, rejected = fixture.cli(command[3], [*command[4:], "--write"])
+                self.assertEqual(code, 1, rejected)
+                rule = "model.supported_mode" if schema else "seedance.draft_promotion"
+                self.assertIn(rule, self.rule_ids(rejected))
+                self.assertEqual(before, fixture.snapshot())
+                candidate = prepare_request.build_request(
+                    fixture.root, prepare_request.parser().parse_args(command[4:]),
+                )
+                (fixture.root / "candidate.json").write_text(json.dumps(candidate))
+                review_path = fixture.record(candidate, "candidate.json", operation["required_rules"])
+                command = list(operation["register_command"])
+                command[parameter_index] = f"style={json.dumps(changed)}"
+                command[command.index("--review") + 1] = review_path
+                before = fixture.snapshot()
+                code, rejected = fixture.cli(command[3], command[4:])
+                self.assertEqual(code, 1, rejected)
+                self.assertIn(rule, self.rule_ids(rejected))
+                self.assertEqual(before, fixture.snapshot())
+                self.assertEqual(
+                    operation_store.read_registry(fixture.root / "task_ids.json")["tasks"][0], source,
+                )
 
     def write(self, matrix):
         path = self.root / "matrix.json"
