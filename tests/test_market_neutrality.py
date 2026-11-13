@@ -68,6 +68,12 @@ LANGUAGE_DATA = {
     SKILLS / "seedream-prompt" / "references" / "quick-reference.md",
 }
 TEXT_SUFFIXES = {".md", ".json", ".yaml", ".yml", ".py", ".html", ".css", ".txt"}
+UPSTREAM_VARIATION_RANGE_LINES = {
+    ".agents/skills/ark-mcp/SKILL.md":
+        "49c08ebff62c1168344aa40ec5d171094b1636457d41fecfaaba84388b30c740",
+    ".agents/skills/ark-mcp/references/workflows.md":
+        "9f664061371b91d72186f3e23ad418cfdabb6988633d1ea6c75f48a49785bbc5",
+}
 
 
 def text_files(roots):
@@ -136,11 +142,16 @@ def contains_restricted_term(
     return False
 
 
+def is_upstream_variation_range(path, line):
+    expected_hash = UPSTREAM_VARIATION_RANGE_LINES.get(str(path.relative_to(ROOT)))
+    return expected_hash is not None and digest(line) == expected_hash
+
+
 def restricted_offenders():
     found = []
     for path in public_files():
         for number, line in enumerate(path.read_text(errors="ignore").splitlines(), 1):
-            if contains_restricted_term(line):
+            if contains_restricted_term(line) and not is_upstream_variation_range(path, line):
                 found.append(f"{path.relative_to(ROOT)}:{number}")
     return found
 
@@ -160,6 +171,17 @@ class MarketNeutralityTests(unittest.TestCase):
 
     def test_no_restricted_names_in_public_files(self):
         self.assertEqual(restricted_offenders(), [])
+
+    def test_upstream_variation_range_exception_requires_exact_line_and_path(self):
+        for relative, expected_hash in UPSTREAM_VARIATION_RANGE_LINES.items():
+            path = ROOT / relative
+            lines = path.read_text().splitlines()
+            line = next(line for line in lines if digest(line) == expected_hash)
+            with self.subTest(path=relative):
+                self.assertTrue(contains_restricted_term(line))
+                self.assertTrue(is_upstream_variation_range(path, line))
+                self.assertFalse(is_upstream_variation_range(path, line + ' altered'))
+                self.assertFalse(is_upstream_variation_range(ROOT / 'README.md', line))
 
     def test_restricted_matcher_ignores_case_and_punctuation(self):
         terms = frozenset({digest("zebra crossing 2 0")})
