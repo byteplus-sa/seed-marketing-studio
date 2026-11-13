@@ -432,7 +432,7 @@
     ".agents/skills/prompt-review/references/creative-quality.md": "492b0c7b743d2386eea72fd49a58dacc90c64feb1f07c929e6a3f461f7d79d09",
     ".agents/skills/prompt-review/references/review-checklists.md": "cb66943a77c8ae6700c957e6c110266deb983afbcb929777ab35ff50781995ae",
     ".agents/skills/prompt-review/references/rule-provenance.json": "026db656467bbd7ee1873a58999f4d613abbd492d1df9e1bc79a1537deb281dc",
-    ".agents/skills/prompt-review/scripts/record_review.py": "deeee84faee7e1f8197e45dbe531c646e80be0a1e3b5760c38eae01dc914cf89",
+    ".agents/skills/prompt-review/scripts/record_review.py": "b399120d77c48da39f54c32615477bc82ec8955d52ea8131f3635e5942c20237",
     ".agents/skills/reference-edit-rebuild/SKILL.md": "10f47e86217b2a933b5eabe31497da81e630e3f1fd7880934d2b98170729b893",
     ".agents/skills/reference-edit-rebuild/agents/openai.yaml": "9c8ba200dc640e485e43914b5e89d223309a252ecda55465aa4bb3fea64c10f9",
     ".agents/skills/reference-edit-rebuild/evals/evals.json": "c0b113f666fc1106293ac3032db8308a1c863770365ee793afe22df51001c69d",

@@ -2,6 +2,7 @@ import contextlib
 import hashlib
 import io
 import json
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -349,6 +350,145 @@ class VariantMatrixTests(unittest.TestCase):
             code, result = self.register(matrix, *VIDEO_FLAGS, *AUDIO_FLAGS, flag, value)
             self.assertEqual(code, 1, result)
             self.assertNotIn("operations", result)
+
+    def ordinary_final_fixture(self, value):
+        fixture = test_native_draft.NativeDraftTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        source = fixture.profiled_source(native=False)
+        (fixture.root / "studio").mkdir()
+        parameter_type = {
+            str: "string", bool: "boolean", int: "integer", float: "number",
+            type(None): "null", list: "array", dict: "object",
+        }[type(value)]
+        fixture.caps["parameters"]["style"] = {"type": parameter_type}
+        source["params"]["style"] = value
+        fixture.rehash(source)
+        fixture.write_registry(source)
+        (fixture.root / "caps.json").write_text(json.dumps(fixture.caps))
+        matrix = base_matrix(axes={"hook": ["hook-callout"]})
+        decision = json.loads((fixture.root / "decisions/select-draft.json").read_text())
+        matrix["hero"].update(
+            take_file="cup_t01.mp4", decision_ref="decisions/select-draft.json",
+            sha256=decision["selected_sha256"],
+        )
+        matrix_path = fixture.root / "matrix.json"
+        matrix_path.write_text(json.dumps(matrix))
+        row = variant_matrix.expand(matrix)[1]
+        flags = [
+            "register", str(matrix_path), "--project", str(fixture.root),
+            "--video-model", source["model"], "--video-operation", source["operation"],
+            "--capabilities", "caps.json", "--expected-provider", "fixture-provider",
+            "--expected-tool-schema-revision", "fixture-r1", "--stage", "final",
+            "--final-resolution", "1080p", "--hook-performance", "non-performance",
+            "--ordinary-final-selection",
+            f"{row['name']}={source['operation_id']}:decisions/select-draft.json",
+        ]
+        return fixture, source, row, flags
+
+    def offline_cli(self, script, arguments):
+        result = subprocess.run(
+            [sys.executable, "-B", str(ROOT / script), *arguments],
+            capture_output=True, text=True, check=False, timeout=30,
+        )
+        self.assertEqual(result.stderr, "", result.stderr)
+        return result.returncode, json.loads(result.stdout)
+
+    def test_ordinary_final_emitted_cli_roundtrips_all_json_types_and_quoted_strings(self):
+        values = (
+            "cinematic", "true", "null", "123", "[1]", '{"v":1}', "",
+            "a 'quoted' \"string\" \\ path\n$(no-command); key=value",
+            "x" * 10000, 123, 1.25, True, False, None, [], [1, "true"],
+            {"v": 1, "nested": [None, False, "null"]},
+        )
+        for value in values:
+            with self.subTest(value=value):
+                fixture, source, row, flags = self.ordinary_final_fixture(value)
+                original_source = json.loads((fixture.root / "task_ids.json").read_text())["tasks"][0]
+                code, result = self.offline_cli(".agents/scripts/variant_matrix.py", flags)
+                self.assertEqual(code, 0, result)
+                [operation] = result["operations"][row["name"]]
+                for command_key in ("hash_command", "register_command"):
+                    command = operation[command_key]
+                    quoted = shlex.join(command)
+                    self.assertEqual(shlex.split(quoted), command)
+                    parsed = prepare_request.parse_params(params(shlex.split(quoted)))
+                    self.assertEqual(parsed, {**source["params"], "resolution": "1080p"})
+                    self.assertIs(type(parsed["style"]), type(value))
+                command = operation["hash_command"]
+                prompt = fixture.root / option_values(command, "--prompt")[0]
+                prompt.parent.mkdir(parents=True)
+                prompt.write_bytes((fixture.root / source["prompt_file"]).read_bytes())
+                code, prepared = self.offline_cli(command[3], command[4:])
+                self.assertEqual(code, 0, prepared)
+                self.assertEqual(prepared["request"]["params"]["style"], value)
+                self.assertIs(type(prepared["request"]["params"]["style"]), type(value))
+                review = fixture.root / option_values(operation["register_command"], "--review")[0]
+                review.write_text(json.dumps({
+                    "schema_version": 1, "request_sha256": prepared["request_sha256"],
+                    "reviewer_status": "complete",
+                    "checks": [
+                        {"rule_id": rule, "status": "pass",
+                         "evidence": "Synthetic offline contract check; no media inspection"}
+                        for rule in operation["required_rules"]
+                    ],
+                }))
+                command = operation["register_command"]
+                code, registered = self.offline_cli(command[3], command[4:])
+                self.assertEqual(code, 0, registered)
+                self.assertEqual(registered["request_sha256"], prepared["request_sha256"])
+                tasks = operation_store.read_registry(fixture.root / "task_ids.json")["tasks"]
+                self.assertEqual(len(tasks), 2)
+                self.assertEqual(tasks[0], original_source)
+                self.assertEqual(tasks[1]["params"], prepared["request"]["params"])
+                self.assertIs(type(tasks[1]["params"]["style"]), type(value))
+                operation_store.transition_operation(
+                    fixture.root, registered["registered"], "prepared", "submitting"
+                )
+
+    def test_ordinary_final_changed_or_unsupported_values_fail_without_writes(self):
+        fixture, _, row, flags = self.ordinary_final_fixture("true")
+        code, result = self.offline_cli(".agents/scripts/variant_matrix.py", flags)
+        self.assertEqual(code, 0, result)
+        [operation] = result["operations"][row["name"]]
+        command = operation["hash_command"]
+        prompt = fixture.root / option_values(command, "--prompt")[0]
+        prompt.parent.mkdir(parents=True)
+        prompt.write_bytes((fixture.root / "prompt.md").read_bytes())
+        code, prepared = self.offline_cli(command[3], command[4:])
+        self.assertEqual(code, 0, prepared)
+        review = fixture.root / option_values(operation["register_command"], "--review")[0]
+        review.write_text(json.dumps({
+            "schema_version": 1, "request_sha256": prepared["request_sha256"],
+            "reviewer_status": "complete",
+            "checks": [
+                {"rule_id": rule, "status": "pass", "evidence": "Synthetic contract only"}
+                for rule in operation["required_rules"]
+            ],
+        }))
+        before = {path: path.read_bytes() for path in fixture.root.rglob("*") if path.is_file()}
+        for value in ("changed", True, None, 123, [], {}):
+            with self.subTest(value=value):
+                command = list(operation["register_command"])
+                index = next(index for index, item in enumerate(command) if item.startswith("style="))
+                command[index] = f"style={json.dumps(value)}"
+                code, rejected = self.offline_cli(command[3], command[4:])
+                self.assertEqual(code, 1, rejected)
+                expected_rule = "seedance.draft_promotion" if isinstance(value, str) else "model.supported_mode"
+                self.assertIn(expected_rule, self.rule_ids(rejected))
+                self.assertEqual(
+                    before, {path: path.read_bytes() for path in fixture.root.rglob("*") if path.is_file()}
+                )
+        fixture.caps["parameters"]["style"] = {"type": "boolean"}
+        (fixture.root / "caps.json").write_text(json.dumps(fixture.caps))
+        before = {path: path.read_bytes() for path in fixture.root.rglob("*") if path.is_file()}
+        code, rejected = self.offline_cli(".agents/scripts/variant_matrix.py", flags)
+        self.assertEqual(code, 1, rejected)
+        self.assertNotIn("operations", rejected)
+        self.assertIn("model.supported_mode", self.rule_ids(rejected))
+        self.assertEqual(
+            before, {path: path.read_bytes() for path in fixture.root.rglob("*") if path.is_file()}
+        )
 
     def write(self, matrix):
         path = self.root / "matrix.json"

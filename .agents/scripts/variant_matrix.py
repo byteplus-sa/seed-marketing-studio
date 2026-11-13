@@ -866,7 +866,7 @@ def operation_binding_flags(options: argparse.Namespace, audio: bool) -> list[st
 
 def final_params(source: dict[str, Any], options: argparse.Namespace) -> list[str]:
     values = {**source["params"], "resolution": options.final_resolution}
-    return [f"{key}={json.dumps(value, ensure_ascii=False) if not isinstance(value, str) else value}" for key, value in values.items()]
+    return [f"{key}={json.dumps(value, ensure_ascii=False)}" for key, value in values.items()]
 
 
 def source_reference_flags(source: dict[str, Any]) -> list[str]:
