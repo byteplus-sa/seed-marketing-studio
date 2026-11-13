@@ -71,10 +71,18 @@ boolean `draft: true` in both review modes. If the tool schema disagrees,
 resolve the binding/schema or use an equivalent supported transport before
 submission; never omit the flag or fall back silently to non-draft 2.5.
 Resolve endpoint aliases to the model family before request preparation.
-Other models without native Draft use a plain 480p test. Delivery resolution
+Other models use verified operation-profile preview mechanics, not inferred
+480p or native Draft controls. Delivery resolution
 alone is not a skip-draft override.
 
-The workspace default remains Seedance 2.5; legacy 2.0 may be selected for a verified capability such as an available lower-cost variant. Requested 4K needs 2.0 or, when the operator has enabled it, the whitelist-only 2.5 Premium model (the 2.5 feature set plus 4K); standard 2.5 tops out at 1080p. Skills defer to this paragraph for 4K routing. A face in a shot is a QA concern, not an automatic model switch. Chaining does not override unsupported mixed frame/reference inputs.
+Saved defaults remain unchanged; an explicit selected model wins. Resolution,
+native promotion and provider exposure require the exact current destination
+profile in [Seedance execution profiles](seedance-execution-profiles.md).
+Historical 2.0/2.5/Premium tables are compatibility evidence, not current
+family limits. Imported regular 2.5 ordinary 4K is not 4K native promotion.
+A capability gap remains unresolved; other models/transports are unselected
+alternatives, never automatic switches. A face is a QA/rights concern, not a
+model switch. Chaining does not override unsupported mixed-reference roles.
 
 Credential names are BYTEPLUS_MODELARK_API_KEY and BYTEPLUS_SEED_AUDIO_API_KEY. A transport may document compatibility aliases. Resolve secrets, region, and base URL at runtime; never serialize credentials into requests, fixtures, snapshots, or logs.
 

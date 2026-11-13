@@ -25,7 +25,7 @@ region; a recast rebuilds everything except motion.
 | VFX edit | Add, remove or restyle an effect, environment or element while the source cast and camera stay | `seedance-vfx-prompt` (2.5 edit grammar) | `omni_reference_task_type: edit` |
 | Object Swap | Replace one named character, outfit, product, prop, object or the location and preserve everything else | `seedance-object-swap` | `omni_reference_task_type: edit` |
 | Motion Transfer | Keep the source motion, camera path, timing and cuts; rebuild cast, wardrobe, product, location and style from locked references | `seedance-motion-recast` | R2V (below; verified on one case); fallback full-frame edit |
-| Restyle | Redraw the whole clip in a new visual medium; keep the performance, motion, camera and cuts; the background is restyled as the same place through an environment image | `seedance-restyle` | Full-frame edit with an environment image of the same place; reference route as the alternative |
+| Restyle | Redraw the whole clip in a new visual medium; keep performance, motion, camera, cuts and the same place | `seedance-restyle` | Words-only full-frame edit; a selected environment image or reference route is optional |
 
 Decision rules:
 
@@ -40,7 +40,9 @@ Decision rules:
 
 ### Submission parameter differences
 
-Every route submits through `seedance_2_5_create_task` on Seedance 2.5.
+Resolve the selected model, operation and transport through the project
+[execution profile](../../../contracts/seedance-execution-profiles.md).
+The following table retains the historical 2.5 route vocabulary, not a family guarantee.
 Object Swap, Motion Transfer and Restyle bind the muted source master as `@Video 1` (`videos[].role = "reference_video"`),
 element sheets and Virtual Portrait `asset://` views as
 `images[].role = "reference_image"`, `generate_audio: false` and no `@Audio`
@@ -57,25 +59,25 @@ differ.
 | `omni_reference_task_type` | `edit` | `auto`, or the type the route probe verified | `edit` | `edit` | `auto`, or the type the route probe verified |
 | `@Video 1` meaning | Editing master; pixels outside the change persist | Motion authority only: motion, poses, screen positions, camera, cuts, timing | Editing master with full-frame replace-all-subjects-and-environment scope | Editing master; every surface redrawn in the style | Authority for composition, poses, camera, cuts and timing |
 | `ratio` | Omit; locks to the source | Set explicitly to the source ratio | Omit; locks to the source | Omit; locks to the source | Set explicitly to the source ratio |
-| `duration` | Omit; output is approximately the source length, verify the actual duration | Set explicitly (4–30 s) to the source or beat length | Omit; approximately the source length | Omit; approximately the source length | Set to the whole-second source length |
+| `duration` | Omit when source-locked; verify actual duration | Preserve exact source span when supported; otherwise flag the conflict | Omit when source-locked | Omit when source-locked | Preserve exact fractional duration; unsupported values remain unresolved |
 | `images` | Optional; Object Swap uses 1–5 target references | 1–8 subject references plus location; warn above | 1–5 references; split the shot above that | 1–5 style images and anchors | Style images and anchors |
-| `resolution` | 480p probe, then the lowest suitable final (720p or 1080p) | Same | Same | Same | Same |
+| `resolution` | Profile-supported full-source preview, then selected final | Same | Same | Same | Same |
 
 The Motion Transfer default route rebuilds appearance from a Virtual Portrait
 character and a text-described location (see `seedance-motion-recast`). For other
-cases (multiple subjects, a location image, a moving camera), the project records
-a route probe confirming that R2V with `@Video 1` as a motion reference rebuilds
-appearance rather than retaining source pixels:
+cases (multiple subjects, a location image, a moving camera), reliability is
+unresolved until current evidence supports the route. A route probe is optional,
+requires explicit extra generation scope, and never replaces full-source QA:
 
-1. Run the route probe on the first variant row only, on the critical path,
-   before the other rows spend credits on the same route.
+1. Run an explicitly authorized route probe on the first row only. Without
+   probe authorization, continue source-preserving preparation and disclose uncertainty.
 2. Inspect the probe for appearance rebuild: new faces, wardrobe and location
    present in every frame, and no retained source pixels.
 3. Record the outcome once as a hash-bound project decision (route, operation
    type, probe task ID, evidence). Every row reuses that decision; rows never
    rediscover the route independently.
-4. If the probe retains source appearance, switch all Motion Transfer rows to
-   the full-frame edit fallback. The prompt changes route, so it returns to
+4. If the probe retains source appearance, propose the full-frame edit
+   alternative without selecting it. An approved route change returns to
    `seedance-motion-recast` for the fallback wording and to `prompt-review`
    before any further submission.
 
@@ -93,7 +95,7 @@ recorded as derivatives of that hash. All variant rows share that one map.
   the map, and record the change before any prompt is authored.
 - A changed source hash (a new trim, a different approved take) invalidates the
   map and every prompt and review derived from it.
-- The key-beat probe uses a trimmed derivative of the source. Record the trim
+- An authorized key-beat probe uses a separate trimmed derivative. Record the trim
   window, its SHA-256 and its `ref_cache.json` entry; the probe prompt cites
   only cuts and subjects inside that window.
 - VFX edits that touch no subject may skip the map when the user does not
@@ -134,9 +136,9 @@ Follow the workspace asset-naming contract
 - Each variant row is its own shot folder in the source scene, numbered after
   the source in gaps of ten: source `s01_sh010`, rows `s01_sh020`,
   `s01_sh030`, and so on. Very large batches may use one scene per market.
-- The 480p key-beat probe is take `t01`, the full-duration 480p check is
-  `t02`, and the final-resolution take is `t03`. A retry after a legitimate prompt revision is a new take with a
-  new prompt snapshot. Record `take_role: probe | full | final` in `shot.md`.
+- Historical runs used probe `t01`, full-source `t02`, final `t03`; preserve
+  those IDs. New runs number actual takes without reserving an unrequested probe.
+  A legitimate revision gets a new snapshot; record `take_role: probe | full | final`.
 - Each take has an immutable `prompt_<scene>_sh<NNN>_t<NN>_v<NN>.md` beside it.
 - The comparison render sits in the row folder, for example
   `s01_sh020_compare_v01.mp4`.
@@ -159,18 +161,16 @@ stable; it does not wait for unrelated rows.
    Motion Transfer and `seedance-restyle` for Restyle. Every
    source subject gets a mapping or an explicit disposition from the shared
    subject map. No overlay text in the prompt.
-3. **Prompt review.** Run `prompt-review` on the exact prepared request for the
-   probe and for the final. The probe and final differ in reference video,
-   duration or resolution, so each request hash needs a complete review.
-   Resolve CRITICAL and MAJOR findings.
-4. **Probe.** Submit the key-beat probe (4–5 s) with explicit
-   `resolution: "480p"` and boolean `draft: true` for Seedance 2.5 in both modes.
-   Resolve schema or transport conflicts without dropping the flag. Inspect it for the route
-   evidence and the QA list below. A failed probe blocks the final; revise the
-   prompt or elements and re-review.
-5. **Full duration, then final.** Submit the full duration at 480p after the
-   probe passes, with `draft: true` for 2.5, then promote the selected native
-   Draft after QA and selection under the project approval mode. Each rung is a separately reviewed request.
+3. **Review.** Freeze each exact request hash and apply the independent review
+   mode; strict uses full review, default uses required focused evidence.
+4. **Optional probe.** Only with explicit extra scope, create a separate
+   derivative and record its source span, hashes, role, task and limitations.
+   A denied probe stays absent. Do not shorten the authoritative source.
+5. **Full source, then final.** Preserve fractional duration, cut boundaries,
+   motion and the full audio tail. Use verified profile preview mechanics;
+   exact legacy standard/Premium bindings retain native 480p Draft. Unsupported
+   duration remains a finding, never rounded, padded or trimmed silently.
+   Select the full-source take before supported promotion or a new final.
 6. **Side-by-side.** Render the final against the source with
    `ffmpeg-side-by-side-comparison`: a simultaneous `hstack` for visual
    changes, the staggered split when the rows differ mainly in audio.
@@ -190,9 +190,8 @@ Apply the parallel production rules in AGENTS.md.
   elements when no other row shares them, its prompts and its provider
   operations. Assign a shared element to one owner; other rows wait for its
   approval.
-- **Critical path first.** The subject map and, for Motion Transfer, the route
-  probe run before the fan-out. Element work for all rows may start in parallel
-  with them.
+- **Critical path first.** Complete the subject map and selected-route evidence.
+  An optional authorized route probe may precede fan-out; it is not mandatory.
 - **Serialize shared state.** The main agent, or a single designated writer,
   applies every change to `task_ids.json`, the Studio project (or pre-Studio
   canvas `showcase.json`), `ref_cache.json`, `variants.md` and selection manifests. Row agents hand prepared operations,
@@ -227,11 +226,13 @@ scope still needs a scope decision under the project approval mode.
 - Estimate each line as seconds × per-second rate at that resolution, from
   current pricing evidence (`arkcli-pricing`) or the usage of a comparable
   confirmed task. State the source of the rate.
-- Batch total = variants × (probe + final). Include the Motion Transfer route
-  probe and a stated allowance for revision takes.
-- Use 480p for probes and the verified native promotion target for 2.5 finals;
-  derive smaller delivery copies in post. Other models without native Draft
-  use a plain 480p test and a new final request at the lowest suitable target.
+- Batch total counts actual authorized full-source previews and finals.
+  Optional probes and revisions are separate explicitly authorized rows, never
+  an automatic allowance. The table above is a historical example, not a default.
+- Use verified profile mechanics for authorized probes and finals; exact
+  legacy native bindings retain 480p Draft and selected supported promotion.
+  Other models use evidenced non-promotable previews and separately registered
+  finals; derive smaller copies only within authorized delivery scope.
 - Keep the estimated cost separate from confirmed billing. Record the confirmed
   cost per task in `task_ids.json` and the row's `shot.md` when available, and
   report actual totals against the preview.

@@ -13,12 +13,18 @@ mode selection and caller responsibilities.
 
 | Variant | Model ID |
 |---|---|
-| Seedance 2.5 | `dreamina-seedance-2-5-260628` |
+| Seedance 2.5 (historical binding) | `dreamina-seedance-2-5-260628` |
 | Seedance 2.0 Standard (legacy) | `dreamina-seedance-2-0-260128` |
 | Seedance 2.0 Fast (legacy) | `dreamina-seedance-2-0-fast-260128` |
 | Seedance 2.0 Mini (legacy) | `dreamina-seedance-2-0-mini-260615` |
 
-**MCP tools:** `seedance_2_5_create_task` (submit), `seedance_get_task` (shared 2.0/2.5 poll), `seedance_list_tasks` / `seedance_cancel_or_delete_task` (shared with 2.0).
+**Historical MCP tools:** `seedance_2_5_create_task`, `seedance_get_task`,
+`seedance_list_tasks` / `seedance_cancel_or_delete_task`. These are retained
+compatibility names, not aliases for the imported unified server.
+Current destination exposure, ordinary generation versus native promotion,
+Flash and Premium differences belong to the project
+[execution profile](../../../contracts/seedance-execution-profiles.md).
+Do not change the selected model or transport to resolve a support gap.
 
 > The model ID `dreamina-seedance-2-5-260628` is live on BytePlus ModelArk. Confirm the current ID on the [Model list](https://docs.byteplus.com/en/docs/ModelArk/1330310) before making API calls.
 
@@ -67,7 +73,11 @@ mode selection and caller responsibilities.
 
 ### Output duration
 - 4–30s per generation (up from 4–15s in 2.0).
-- Output resolution: 480p, 720p, or 1080p. For 4K output follow the 4K routing in [routing.md](../../../contracts/routing.md): Seedance 2.0 (`dreamina-seedance-2-0-260128`) via `seedance-prompt-20`, or the whitelist-only 2.5 Premium model where enabled.
+- Historical output resolutions were 480p, 720p, 1080p and separately enabled
+  Premium 4K. Current exact operation profiles override executable settings;
+  ordinary generation and native promotion limits remain separate.
+  A requested 4K gap is unresolved; 2.0/Premium are unselected alternatives
+  only after explicit model choice and verification.
 - Multi-round extensions up to 180s (beta).
 
 ### Cost ladder

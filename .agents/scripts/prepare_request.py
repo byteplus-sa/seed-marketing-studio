@@ -239,6 +239,26 @@ def build_request(root: Path, args: argparse.Namespace) -> dict[str, Any]:
             datetime.now(UTC).strftime("%Y%m%d"),
         )
     )
+    extensions: dict[str, Any] = {"expected_output": relative_path(args.expected_output)}
+    if args.capabilities:
+        evidence = load_json(root, args.capabilities)
+        if isinstance(evidence, dict) and evidence.get("schema_version") == 2:
+            if not args.expected_provider or not args.expected_tool_schema_revision:
+                raise ValueError("Version 2 capabilities need independent --expected-provider and --expected-tool-schema-revision")
+            extensions["execution_profile"] = {
+                "destination": {
+                    "model": args.model,
+                    "operation": args.operation,
+                    "transport": args.transport,
+                    "provider": args.expected_provider,
+                    "tool_schema_revision": args.expected_tool_schema_revision,
+                },
+                "evidence": evidence,
+            }
+        elif args.expected_provider or args.expected_tool_schema_revision:
+            raise ValueError("Destination binding requires version 2 capability evidence")
+    elif args.expected_provider or args.expected_tool_schema_revision:
+        raise ValueError("Destination binding requires --capabilities")
     return {
         "schema_version": version,
         "operation_id": operation_id,
@@ -249,7 +269,8 @@ def build_request(root: Path, args: argparse.Namespace) -> dict[str, Any]:
         "prompt_file": prompt_file,
         "prompt_sha256": hashlib.sha256(prompt_bytes).hexdigest(),
         "request_sha256": compute_request_hash(
-            prompt_bytes, references, args.model, args.operation, params, **mode
+            prompt_bytes, references, args.model, args.operation, params,
+            execution_profile=extensions.get("execution_profile"), **mode
         ),
         "references": references,
         "params": params,
@@ -258,7 +279,7 @@ def build_request(root: Path, args: argparse.Namespace) -> dict[str, Any]:
         "provider_status": None,
         "review_status": "not_started",
         "cost": {"estimated": None, "confirmed": None, "currency": "USD"},
-        "extensions": {"expected_output": relative_path(args.expected_output)},
+        "extensions": extensions,
         **mode,
     }
 
@@ -394,6 +415,8 @@ def parser() -> argparse.ArgumentParser:
     parser.add_argument("--register", action="store_true")
     parser.add_argument("--review")
     parser.add_argument("--capabilities")
+    parser.add_argument("--expected-provider")
+    parser.add_argument("--expected-tool-schema-revision")
     parser.add_argument("--required-rule", action="append", default=[])
     parser.add_argument("--replace-unregistered", action="store_true")
     parser.add_argument("--adopt-provider-task-id")

@@ -117,6 +117,15 @@ adaptation) are declared orchestrators: they plan and gate, hand every prompt,
 edit and render to specialists, and never bypass applicable review requirements,
 the registry or the approval mode. Load only specialists needed for the current stage or requested axis.
 
+Generic Seedance creative authoring routes to `seedance-prompt`; retain
+`seedance-prompt-20` and `seedance-prompt-25` as explicit syntax adapters,
+not automatic model selectors. Preserve the supplied exact model and saved
+defaults. The project [execution profile](.agents/contracts/seedance-execution-profiles.md)
+binds provider, model, operation, transport and schema revision independently
+of capability evidence; unknown support remains unresolved. Audio-only and
+delivery-only matrix rows get no video controls. Imported `ark-mcp` remains
+unchanged; history, hashes, selections and actual final inspection remain authoritative.
+
 ### Skill sources and symlinks
 
 `.agents/` is the only source of truth for skills, catalog, contracts and

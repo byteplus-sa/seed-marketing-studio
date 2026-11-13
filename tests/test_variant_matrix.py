@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / ".agents/scripts"))
 import studio_project
 import variant_matrix
+from test_seedance_capability_profiles import profile
 
 HERO_BYTES = b"approved hero take"
 HERO_HASH = hashlib.sha256(HERO_BYTES).hexdigest()
@@ -64,6 +65,10 @@ VIDEO_FLAGS = [
     "video_create_task",
     "--capabilities",
     "capabilities/video.json",
+    "--expected-provider",
+    "fixture-provider",
+    "--expected-tool-schema-revision",
+    "fixture-r1",
 ]
 AUDIO_FLAGS = ["--audio-model", "audio-model-a", "--audio-operation", "audio_dub"]
 COMMON_RULES = {
@@ -150,6 +155,21 @@ class VariantMatrixTests(unittest.TestCase):
         take = self.project / HERO_TAKE_FILE
         take.parent.mkdir(parents=True)
         take.write_bytes(HERO_BYTES)
+        evidence = profile()
+        evidence.update(
+            model="video-model-a", operation="video_create_task",
+            operations=["video_create_task"],
+            parameters={
+                "resolution": {"enum": ["480p", "720p", "1080p"]},
+                "duration": {"type": "number", "minimum": 4},
+            },
+            preview={"support": "verified", "kind": "ordinary", "params": {"resolution": "480p"}},
+            duration={"support": "verified", "minimum_s": 4},
+            workspace_policy={"preview_required": False},
+        )
+        capabilities = self.project / "capabilities/video.json"
+        capabilities.parent.mkdir()
+        capabilities.write_text(json.dumps(evidence))
 
     def project_files(self):
         return sorted(path for path in self.project.rglob("*"))
@@ -653,7 +673,7 @@ class VariantMatrixTests(unittest.TestCase):
         _, result = self.run_cli("plan", self.write(base_matrix()))
         row = next(r for r in result["rows"] if r["changed_axes"] == ["hook"])
         step = row["steps"][0]
-        self.assertEqual(step["generate_duration_s"], 4)
+        self.assertIsNone(step["generate_duration_s"])
         self.assertIn("trim", step["studio_note"].lower())
 
     def test_hook_rows_use_the_consolidated_ugc_skill(self):
@@ -664,7 +684,7 @@ class VariantMatrixTests(unittest.TestCase):
         for row in rows:
             self.assertEqual(
                 row["steps"][0]["skills"],
-                ["seedance-ugc-ads", "seedance-prompt-25"],
+                ["seedance-ugc-ads", "seedance-prompt"],
             )
 
     def test_ratio_change_is_not_a_provider_operation(self):
@@ -763,7 +783,23 @@ class VariantMatrixTests(unittest.TestCase):
         code, result = self.run_cli("plan", self.root / "missing.json")
         self.assertEqual(code, 1)
 
+    def bind_fixture_profile(self, extra):
+        if "--video-model" in extra:
+            model = extra[extra.index("--video-model") + 1]
+            if variant_matrix.is_seedance_25(model):
+                path = self.project / "capabilities/video.json"
+                evidence = json.loads(path.read_text())
+                evidence["model"] = model
+                evidence["parameters"]["draft"] = {"type": "boolean"}
+                evidence["preview"] = {
+                    "support": "verified", "kind": "native_draft",
+                    "params": {"resolution": "480p", "draft": True},
+                }
+                evidence["workspace_policy"]["preview_required"] = True
+                path.write_text(json.dumps(evidence))
+
     def register(self, matrix, *extra):
+        self.bind_fixture_profile(extra)
         return self.run_cli(
             "register",
             self.write(matrix),
@@ -864,8 +900,9 @@ class VariantMatrixTests(unittest.TestCase):
                 (self.project / "project.md").write_text(
                     f"---\nreview_mode: {mode}\napproval_mode: {approval}\n---\n"
                 )
-                before = {path: path.read_bytes() for path in self.project_files() if path.is_file()}
                 flags = ["seedance-2.5" if flag == "video-model-a" else flag for flag in VIDEO_FLAGS]
+                self.bind_fixture_profile(flags)
+                before = {path: path.read_bytes() for path in self.project_files() if path.is_file()}
                 code, result = self.register(
                     base_matrix(), *UNIT_COSTS, *flags, "--static-by-design", "ugc"
                 )
@@ -877,7 +914,7 @@ class VariantMatrixTests(unittest.TestCase):
                     self.assertIn("resolution=480p", params(hook[key]))
                 self.assertIn("acting-direction", hook["skills"])
                 self.assertLess(hook["skills"].index("acting-direction"), hook["skills"].index("seedance-acting-console"))
-                self.assertLess(hook["skills"].index("seedance-acting-console"), hook["skills"].index("seedance-prompt-25"))
+                self.assertLess(hook["skills"].index("seedance-acting-console"), hook["skills"].index("seedance-prompt"))
                 self.assertFalse(SHOT_RULES & required_rules(hook["register_command"]))
                 self.assertEqual(before, {path: path.read_bytes() for path in self.project_files() if path.is_file()})
                 for operations in result["operations"].values():

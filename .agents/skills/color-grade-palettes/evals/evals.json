@@ -64,11 +64,11 @@
     {
       "id": 6,
       "prompt": "Write a Seedance 2.5 prompt for the teal-and-orange grade on a two-take scene, and emit the matching FFmpeg filter graph for cross-shot matching in the mix step.",
-      "expected_output": "A Seedance prompt with the teal-and-orange grade in the visual style slot plus a light FFmpeg matching graph inside the limited-range BT.709 decode-and-dither wrapper, labelled matching-only.",
+      "expected_output": "A Seedance prompt with the teal-and-orange grade plus a matching-only FFmpeg proposal selected from measured stream metadata; unresolved input metadata blocks a final graph.",
       "files": [],
       "expectations": [
         "The output includes the teal-and-orange grade sentence in the visual style slot.",
-        "The output emits an ffmpeg -i ... -vf ... command whose chain decodes limited-range BT.709, works at 10-bit or higher, and dithers to 8-bit only at the end.",
+        "Checks pix_fmt, color_range, color_primaries, color_transfer and color_space before choosing a graph; limited-range BT.709 is used only for measured matching inputs, never inferred from the model name.",
         "The filter graph uses no vignette or eq filter.",
         "The output labels the FFmpeg graph as matching-only for the takes, not as a second grade on top of the prompt grade.",
         "The output does not put FFmpeg commands inside the model prompt text."
@@ -89,11 +89,11 @@
     {
       "id": 8,
       "prompt": "Assemble these three approved Seedance 2.5 1080p clips into one 30-second spot with an end card. No look was mentioned in the brief.",
-      "expected_output": "An ungraded conform: original Seedance colours, limited-range BT.709 decode and tagging, dither to 8-bit, no palette, grain, halation or vignette.",
+      "expected_output": "An ungraded conform selected from actual stream metadata, preserving original colours with no palette, grain, halation or vignette.",
       "files": [],
       "expectations": [
         "The output applies no colour grade, palette, grain, halation or vignette.",
-        "The conform decodes the HEVC finals as limited-range BT.709 and tags the output BT.709.",
+        "Does not infer HEVC, bit depth or BT.709 from Seedance identity; separates limited/full-range SDR, HDR and unknown/conflicting metadata before decode and output tagging.",
         "Any 10-bit to 8-bit conversion is dithered once at the end of the chain.",
         "The output does not add a grade sentence to any prompt."
       ]
@@ -105,7 +105,7 @@
       "files": [],
       "expectations": [
         "The output chooses the post route and does not ask to regenerate the clips with a prompt grade.",
-        "The command decodes limited-range BT.709, keeps the look in a 10-bit or higher chain, and tags the output BT.709.",
+        "The command follows probed range, primaries, transfer, matrix and pixel format; unknown/conflicting metadata stays unresolved and HDR-to-SDR needs an explicit transform.",
         "The filter graph contains no vignette or eq filter.",
         "The look is applied before captions, end cards or other overlays, and the original masters are kept."
       ]

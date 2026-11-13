@@ -121,20 +121,23 @@ an exact shape or near-to-far focus outcome.
 
 ### Focus changes: rack focus and focus loss
 
-This skill owns focus-change wording. Seedance keeps a face sharp: in 480p
+This skill owns focus-change wording. A historical observation reported in 480p
 Seedance 2.5 text-to-video drafts a face that was asked to drift out of focus
 stayed sharp in all six takes across three wordings, and the model softened the
-background instead.
+background instead. These six takes are reported evidence, not re-inspected
+artifacts here or proof for other models, operations or transports. Their
+reliability remains unknown. Preserve selected-model prompt-only focus,
+locked timing, camera movement and no-cut intent without adding probes.
 
 | Change | Status | What to write |
 |---|---|---|
-| Face sharp, then focus left behind on the background (rack away from a face, focus loss during a move) | **Post only** | Generate with ordinary focus on the face; add the defocus ramp in post (FFmpeg or HyperFrames), or carry the change with light, a move or a cut |
+| Face sharp, then focus left behind on the background (rack away from a face, focus loss during a move) | Reported failure in the scoped 2.5 T2V Draft sample; other bindings unknown | Preserve the requested starting/ending planes in creative text. Post defocus is an unselected alternative only within authorized scope |
 | Foreground object sharp, then focus pulls onto a face behind it | Unverified hypothesis; check a 480p draft | `Rack focus: focus starts on <foreground object>, sharp, with <subject> soft behind it; at <N>s focus shifts smoothly to <subject>, the <foreground object> blurring as <subject>'s face turns sharp.` |
 | Between two objects with no face | Unverified hypothesis; check a 480p draft | The same template with both planes named as visible objects |
 
-Do not spend more tries on wording when a draft keeps the face sharp; the
-repair is in post. An attention shift inside one frame can also be staged: a
-move past a foreground element, or the subject stepping into the sharp plane.
+If a current take fails, report the exact region and interval. Extra retries,
+probes, post work, cuts, movement and timing changes require scope; no
+historical observation automatically selects a repair.
 
 ### Lens character
 
@@ -318,8 +321,8 @@ Before delivering a prompt built with this skill, verify:
    aberration behavior.
 8. **Supported controls remain separate** — no authoring field is presented
    as a provider parameter without live evidence.
-9. **Focus changes are honest** — no prompted focus pull away from a face; that
-   defocus is a post step, and a pull onto a face is marked unverified.
+9. **Focus changes are honest** — retain prompt-only intent and endpoints;
+   scoped failure evidence and unknown reliability stay separate from optional post.
 10. **Tape and camcorder looks stay in post** for Seedance video; grain,
     halation and vignette stay within requested or delegated look scope.
 

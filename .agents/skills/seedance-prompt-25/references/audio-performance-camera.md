@@ -223,14 +223,15 @@ Rack focus: shift focus smoothly from the leaves in the foreground to the person
 background. The leaves gradually blur while the person's face changes from soft to sharp.
 ```
 
-A rack that ends on the subject works far better than the reverse. "Focus left
-behind" (subject sharp, then focus moves to the background) mostly fails
-because the model keeps the face sharp; add that defocus in post.
+A historical 2.5 T2V 480p Draft report found six face-defocus failures across
+three wordings. It is not current artifact reinspection or a family guarantee.
+Preserve requested prompt-only focus endpoints and no-cut/movement locks;
+other bindings remain unknown. Post defocus is an unselected alternative,
+not permission for retries, probes or automatic repair.
 
-A timed light change on a declared source is honoured to about a tenth of a
-second: "at 3.2 s the overhead lamp clicks off and the room drops to the blue
-window light". Plain wording already produces a light going off or a lunge;
-presets add timing and holds, not the effect.
+Historical 2.5 Draft reports described about a tenth-second light cue accuracy.
+Write the requested declared-source event and endpoints, but verify actual
+playback; no model-family timing guarantee or automatic retiming follows.
 
 For a precise transition, also state the **trigger time**, **occluding object**,
 **camera direction**, **transition method**, and the **composition or motion

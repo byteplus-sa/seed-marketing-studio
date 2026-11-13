@@ -1,7 +1,7 @@
 ---
 name: seedance-music-video
 description: >-
-  Write Seedance 2.5 music-video prompts from a song, artist brief, or requested
+  Write Seedance music-video prompts from a song, artist brief, or requested
   format. Map song sections, beat density, performer intent, camera, lyric timing,
   native versus supplied audio, and natural scene duration into the six-part
   formula. Cover rap, dance, performance, narrative, abstract, vertical, and custom
@@ -12,7 +12,10 @@ description: >-
 
 # Seedance Music Video
 
-Write ready-to-use Seedance 2.5 prompts for music videos. The music is the
+Write model-neutral music-video intent; the caller uses `seedance-prompt` and
+the selected model's retained adapter for exact syntax and supported settings.
+The historical 2.5 bracket examples are not guarantees for other bindings.
+The music is the
 fixed brief: every visual decision is planned backward from the track's
 sections, beats, and energy. Make the format, the song map, the beat contract,
 and the brief-derived treatment visible in the prompt, not just the scene content.
@@ -162,7 +165,7 @@ Choose the audio intent from the current request, then verify the selected
 tool/model supports its reference roles and parameter combination. State the
 chosen mode and any unresolved capability requirement explicitly.
 
-**Native audio (default).** Seedance co-generates audio and video in one pass.
+**Requested native audio.** Verify co-generation for the selected operation.
 Use the bracket syntax in the Audio slot and inside `{...}` for sung or spoken
 lines. Choose exactly one of these patterns — they are mutually exclusive, do
 not combine them:
@@ -393,7 +396,8 @@ camera passes through in order.
 
 ### 7. Compose with the six-part formula
 
-Assemble the treatment into the `seedance-prompt-25` formula:
+Assemble creative intent with `seedance-prompt`; only an explicitly selected
+2.5 adapter uses the historical formula below:
 
 > **Subject + Action or Event + Scene and Environment + Visual Style + Camera Movement/Cut + Audio**
 

@@ -83,25 +83,25 @@
     {
       "id": 7,
       "prompt": "This pin is a wordless perfume ad carried by an orchestral score and room ambience. Rebuild it for our fragrance with matching sound.",
-      "expected_output": "A picture-only generation plan with the score and ambience rebuilt in post from the verified audio grammar.",
+      "expected_output": "A source-bound sound ownership decision from the current brief, with native audio, supplied/post audio, silence, mixed or unresolved ownership explicit before execution.",
       "files": [],
       "assertions": [
-        "Generates picture with generate_audio false instead of relying on a negative 'no speech' line in native audio.",
-        "Maps the verified sound grammar (arc, accents, silences) to a Seed Audio post bed, without copying the source recording or melody.",
-        "Diagnoses rejected music before revising or retrying and measures the bed's timing, padding or splicing it to the cut in assembly.",
-        "Assembles in the takes' original colours from exact-length intermediates."
+        "Does not infer picture-only or new music generation from perfume genre or wordless content; sound ownership is resolved from the brief.",
+        "Preserves exact supplied audio or purposeful silence when chosen; separate music generation is opt-in and does not copy unauthorized source recordings.",
+        "Preserves fractional visual spans, seam cues and audio tails; padding, splicing or retiming is a proposed repair, not automatic permission.",
+        "Assembles in original colours from exact-length intermediates using measured stream metadata."
       ]
     },
     {
       "id": 8,
       "prompt": "The selected full-colour storyboard looks perfect. Attach the board as @Image 1 so Seedance copies its framing exactly.",
-      "expected_output": "Declines to bind the board, explains the leak risk briefly, and writes the framing into the prompt with element references bound.",
+      "expected_output": "Keeps the board planning-only; permits a separately selected clean derivative only with current hashes, lineage, approved role and verified operation support.",
       "files": [],
       "assertions": [
-        "Does not bind the board, grid or any panel as a Seedance reference.",
+        "Does not bind the board or grid merely because it was selected for planning, or because control_only changed.",
         "Explains that panel numbers, labels and the board look leak into video and raise output-copyright rejections.",
-        "Translates each panel's framing, blocking and end state into prompt text and binds only approved element references.",
-        "Plans take QA with frame samples and corner crops for leaked text."
+        "Translates framing, blocking and end state into text; any clean derivative has explicit selection, source lineage, current hashes and a supported binding role.",
+        "Plans take QA for leaked labels, borders, style and copyright; missing evidence leaves conditioning unresolved."
       ]
     },
     {

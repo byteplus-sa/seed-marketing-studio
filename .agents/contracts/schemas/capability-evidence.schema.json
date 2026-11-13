@@ -11,6 +11,59 @@
     "max_references"
   ],
   "properties": {
+    "schema_version": {"enum": [1, 2]},
+    "profile_id": {"type": "string", "minLength": 1},
+    "provider": {"type": "string", "minLength": 1},
+    "operation": {"type": "string", "minLength": 1},
+    "transport": {"enum": ["ark-mcp", "arkcli", "curl"]},
+    "tool_schema_revision": {"type": "string", "minLength": 1},
+    "valid_until": {"type": "string", "format": "date-time"},
+    "support": {"$ref": "#/$defs/support"},
+    "modality_limits": {
+      "type": "object",
+      "properties": {
+        "Image": {"type": "integer", "minimum": 0},
+        "Video": {"type": "integer", "minimum": 0},
+        "Audio": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "parameter_constraints": {"type": "array", "items": {"type": ["object", "boolean"]}},
+    "workspace_policy": {
+      "type": "object",
+      "required": ["preview_required"],
+      "properties": {"preview_required": {"type": "boolean"}},
+      "additionalProperties": false
+    },
+    "preview": {
+      "type": "object",
+      "required": ["support", "kind", "params"],
+      "properties": {
+        "support": {"$ref": "#/$defs/support"},
+        "kind": {"enum": ["native_draft", "ordinary", "none", "unknown"]},
+        "params": {"type": "object"}
+      },
+      "additionalProperties": false
+    },
+    "duration": {
+      "type": "object",
+      "required": ["support"],
+      "properties": {
+        "support": {"$ref": "#/$defs/support"},
+        "minimum_s": {"type": "number", "exclusiveMinimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "promotion": {
+      "type": "object",
+      "required": ["support"],
+      "properties": {
+        "support": {"$ref": "#/$defs/support"},
+        "max_age_seconds": {"type": "integer", "minimum": 1},
+        "resolutions": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      },
+      "additionalProperties": false
+    },
     "model": {
       "type": "string",
       "minLength": 1
@@ -53,5 +106,16 @@
       "type": "boolean"
     }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "$defs": {
+    "support": {"enum": ["verified", "unsupported", "unknown"]}
+  },
+  "allOf": [{
+    "if": {"required": ["schema_version"], "properties": {"schema_version": {"const": 2}}},
+    "then": {"required": [
+      "profile_id", "provider", "operation", "transport", "tool_schema_revision",
+      "valid_until", "support", "preview", "workspace_policy", "duration",
+      "promotion", "modality_limits", "parameter_constraints"
+    ]}
+  }]
 }

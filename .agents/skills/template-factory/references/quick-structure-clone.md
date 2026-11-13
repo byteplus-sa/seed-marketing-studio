@@ -88,10 +88,13 @@ top of it.
    submit every new 2.5 generation with explicit `resolution: "480p"` and
    boolean `draft: true` in both review modes, review it, and select under the
    project's approval mode before native promotion. Resolve schema or transport
-   conflicts without dropping the flag. Other models without native Draft use
-   a plain 480p test followed by a new registered, reviewed final request.
-8. **Assemble** the takes in Studio to the beat sheet's cut times, retiming in
-   the edit rather than regenerating, and add overlays and audio in post.
+   conflicts without dropping the flag. Other models use verified operation
+   preview mechanics followed by a separately registered, reviewed final request.
+8. **Assemble** in Studio against the exact beat sheet spans and audio tails.
+   Keep requested native sound, exact supplied masters or purposeful silence.
+   Add only authorized overlays and sound layers. Measured drift may motivate
+   an unselected repair; retiming, padding, trimming and regeneration all need
+   scope and separate provenance rather than an automatic post workaround.
 
 ## Stage mapping
 

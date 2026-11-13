@@ -11,8 +11,10 @@
         "Asks for or records the hero's current hook, talent and ratio values and the hero take's SHA-256 before approving the matrix.",
         "Routes hooks to a regenerated opening beat spliced in Studio, presenters to Object Swap with Virtual Portrait asset:// references, and ratios to delivery reframes with no provider step.",
         "Runs variant_matrix.py plan and cost with the available unit costs and reports an informative total without enforcing the legacy budget or requiring spending approval.",
-        "States that each provider row needs its own frozen prompt, inline prompt-review bound to the request hash and prepare_request.py --register before submission, starting with a 480p draft.",
-        "Plans each variant as its own Studio shot under scenes/variant-<kebab-name>/ and registers hook steps as 4 s 480p drafts trimmed to the opening span in Studio, with take- and stage-specific asset IDs."
+        "States that each provider row needs its own frozen prompt, mode-appropriate request-bound review and prepare_request.py --register before submission, using verified operation preview mechanics.",
+        "Plans each generated variant as its own Studio shot under scenes/variant-<kebab-name>/ with take- and stage-specific asset IDs; hook duration comes from the exact operation profile and any trim is an unselected proposal.",
+        "Routes hook craft through seedance-prompt, independently binds provider and schema revision, and leaves unknown duration or preview support unresolved.",
+        "Audio-only and delivery-only rows receive no video profile requirements or controls; native finals need selected source tasks and cannot be promoted by this compiler."
       ]
     },
     {

@@ -12,10 +12,14 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+from prepare_request import parse_params
 from ruamel.yaml.error import YAMLError
 from validate_request import (
     Finding,
+    capability_findings,
     is_seedance_25,
+    preview_params,
+    profile_findings,
     project_review_mode,
     schema_findings,
 )
@@ -47,7 +51,7 @@ RESOLUTION = re.compile(r"^\d{3,4}p$")
 STEP_SKILLS = {
     "object-swap": ["source-subject-map", "seedance-object-swap"],
     "motion-recast": ["seedance-motion-recast"],
-    "hook-opening": ["seedance-ugc-ads", "seedance-prompt-25"],
+    "hook-opening": ["seedance-ugc-ads", "seedance-prompt"],
     "language-dub": ["audio-dubbing", "seedance-prompt-25-dialogue", "ad-captions"],
     "market-adapt": [LOCALIZE_SKILL],
     "ratio-reframe": ["ad-delivery-formats"],
@@ -55,8 +59,8 @@ STEP_SKILLS = {
 STEP_OUTPUT_SUFFIX = {"language-dub": ".wav"}
 STEP_NOTES = {
     "hook-opening": (
-        f"Generate at the {HOOK_MIN_DURATION_S} s minimum supported duration, then "
-        "trim it in Studio to the hero's recorded opening span before the hero body"
+        "Resolve duration from the selected operation profile; preserve the hero's "
+        "recorded opening span and request approval for any necessary trim"
     ),
     "language-dub": (
         "Mux the dubbed audio onto the hero picture in post and place the muxed "
@@ -266,7 +270,7 @@ def plan_steps(values: dict[str, str], changed: list[str]) -> list[dict[str, Any
             "operation_key": ">".join(lineage),
         }
         if route == "hook-opening":
-            step["generate_duration_s"] = HOOK_MIN_DURATION_S
+            step["generate_duration_s"] = None
         if route in STEP_NOTES:
             step["studio_note"] = STEP_NOTES[route]
         steps.append(step)
@@ -619,8 +623,22 @@ def shot_rule_exemption(route: str, static_by_design: str | None) -> str | None:
 
 
 def step_params(route: str, options: argparse.Namespace) -> list[str]:
-    if route in AUDIO_ROUTES:
+    if route in AUDIO_ROUTES | DELIVERY_ROUTES:
         return []
+    binding = getattr(options, "execution_profile", None)
+    if binding is not None:
+        evidence = binding["evidence"]
+        values = (
+            preview_params({"model": options.video_model, "extensions": {"execution_profile": binding}})
+            if options.stage == "draft" else {"resolution": options.final_resolution}
+        )
+        if route == "hook-opening":
+            duration = evidence["duration"]
+            if duration["support"] != "verified" or not duration.get("minimum_s"):
+                raise ValueError("Hook minimum duration is unknown in the selected profile")
+            values["duration"] = duration["minimum_s"]
+        return [f"{key}={json.dumps(value, ensure_ascii=False) if not isinstance(value, str) else value}"
+                for key, value in values.items()]
     resolution = (
         DRAFT_RESOLUTION if options.stage == "draft" else options.final_resolution
     )
@@ -706,6 +724,13 @@ def operation_commands(
             options.audio_model if audio else options.video_model,
             "--operation",
             options.audio_operation if audio else options.video_operation,
+            *(
+                ["--transport", options.transport,
+                 "--capabilities", options.capabilities,
+                 "--expected-provider", options.expected_provider,
+                 "--expected-tool-schema-revision", options.expected_tool_schema_revision]
+                if not audio and getattr(options, "execution_profile", None) is not None else []
+            ),
             *flag_pairs("--param", params),
             "--expected-output",
             f"{folder}/{asset}{STEP_OUTPUT_SUFFIX.get(route, '.mp4')}",
@@ -834,9 +859,13 @@ def option_findings(
         for step in staged_steps(row, options.stage)
     }
     if (
-        routes - AUDIO_ROUTES
+        routes - AUDIO_ROUTES - DELIVERY_ROUTES
         and options.stage != "draft"
-        and is_seedance_25(options.video_model or "")
+        and (
+            is_seedance_25(options.video_model or "")
+            or (getattr(options, "execution_profile", None) is not None
+                and options.execution_profile["evidence"]["preview"]["kind"] == "native_draft")
+        )
     ):
         findings.append(
             Finding(
@@ -850,7 +879,7 @@ def option_findings(
             )
         )
     if (
-        routes - AUDIO_ROUTES
+        routes - AUDIO_ROUTES - DELIVERY_ROUTES
         and options.stage != "draft"
         and (
             not options.final_resolution
@@ -870,11 +899,11 @@ def option_findings(
             )
         )
     needed: list[str] = []
-    if routes - AUDIO_ROUTES:
+    if routes - AUDIO_ROUTES - DELIVERY_ROUTES:
         needed += ["video_model", "video_operation"]
     if routes & AUDIO_ROUTES:
         needed += ["audio_model", "audio_operation"]
-    if routes:
+    if routes - DELIVERY_ROUTES:
         needed.append("capabilities")
     missing = [name for name in needed if unresolved(getattr(options, name))]
     if missing:
@@ -886,6 +915,53 @@ def option_findings(
                 "register",
             )
         )
+    return findings
+
+
+def matrix_profile_findings(rows: list[dict[str, Any]], options: argparse.Namespace) -> list[Finding]:
+    routes = {step["route"] for row in rows for step in staged_steps(row, options.stage)}
+    if not routes - AUDIO_ROUTES - DELIVERY_ROUTES:
+        return []
+    path = project_file(options.project, options.capabilities)
+    if path is None:
+        if is_seedance_25(options.video_model or "") and not (
+            options.expected_provider or options.expected_tool_schema_revision
+        ):
+            return []
+        return [Finding("model.supported_mode", "Video capability profile is missing or unknown")]
+    evidence = json.loads(path.read_text())
+    if not isinstance(evidence, dict) or evidence.get("schema_version", 1) != 2:
+        if is_seedance_25(options.video_model or ""):
+            return []
+        return [Finding("model.supported_mode", "Non-legacy video needs a verified version 2 operation profile")]
+    binding = {
+        "destination": {
+            "model": options.video_model,
+            "provider": options.expected_provider,
+            "operation": options.video_operation,
+            "transport": options.transport,
+            "tool_schema_revision": options.expected_tool_schema_revision,
+        },
+        "evidence": evidence,
+    }
+    request = {
+        "model": options.video_model, "operation": options.video_operation,
+        "transport": options.transport, "extensions": {"execution_profile": binding},
+    }
+    findings = profile_findings(request, evidence)
+    if findings:
+        return findings
+    options.execution_profile = binding
+    try:
+        preview_params(request)
+        for route in sorted(routes - AUDIO_ROUTES - DELIVERY_ROUTES):
+            candidate = {
+                **request, "params": parse_params(step_params(route, options)),
+                "references": [],
+            }
+            findings.extend(capability_findings(candidate, evidence))
+    except ValueError as error:
+        findings.append(Finding("model.supported_mode", str(error)))
     return findings
 
 
@@ -925,6 +1001,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], list[Finding]]:
         if not TAKE.fullmatch(args.take):
             raise ValueError(f"--take must look like t01: {args.take}")
         findings.extend(register_findings(matrix, args.project))
+        findings.extend(matrix_profile_findings(rows, args))
         findings.extend(option_findings(rows, args))
         if not blocking(findings):
             result["dry_run"] = True
@@ -973,6 +1050,9 @@ def parser() -> argparse.ArgumentParser:
     register.add_argument("--audio-model")
     register.add_argument("--audio-operation")
     register.add_argument("--capabilities")
+    register.add_argument("--expected-provider")
+    register.add_argument("--expected-tool-schema-revision")
+    register.add_argument("--transport", choices=("ark-mcp", "arkcli", "curl"), default="ark-mcp")
     register.add_argument("--stage", choices=("production", "draft", "final"))
     register.add_argument("--final-resolution")
     register.add_argument("--take", default="t01")

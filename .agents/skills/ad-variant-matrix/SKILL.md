@@ -92,7 +92,7 @@ flowchart LR
   A --> W[Per row: specialist prompt]
   W --> PR[Compliance evidence; strict adds craft review]
   PR --> REG[prepare_request.py --write --register]
-  REG --> S[480p draft; native draft=true for Seedance 2.5]
+  REG --> S[Verified operation preview mechanics]
   S --> Q[QA and select under approval mode]
   Q --> D[Delivery per ratio]
 ```
@@ -132,7 +132,8 @@ flowchart LR
    still selected separately.
 5. **Prepare registration.** `variant_matrix.py register <matrix> --project
    projects/<campaign> --video-model <id> --video-operation
-   <op> --capabilities <evidence.json>` (plus `--audio-model` and
+   <op> --capabilities <evidence.json> --expected-provider <provider>
+   --expected-tool-schema-revision <revision> --transport <transport>` (plus `--audio-model` and
    `--audio-operation` when language rows exist) refuses a draft matrix, an
    unbound hero, or unresolved model, operation or capability values, and
    prints per owned provider step the `prepare_request.py` hash command and
@@ -141,16 +142,18 @@ flowchart LR
      regular file inside `--project` (no absolute path, `..` or symlink
      escape; `matrix.hero_decision`, `matrix.hero_take`), and the take file
      must still hash to `hero.sha256` (`matrix.hero_hash_mismatch`).
-   - **Generation target.** Both modes default to `--stage draft`, adding
-     `--param resolution=480p` and, for resolved Seedance 2.5 models,
-     `--param draft=true`. A delivery target alone does not bypass drafts.
-     Resolve schema or transport mismatches without dropping the native flag.
-     Other models without native Draft use plain 480p tests. Hook steps also
-     get `--param duration=4`; audio steps get neither video parameter.
-     Explicit production/final stages remain available for other models.
-     For 2.5, the planner refuses those stages: prepare promotions individually
-     from selected `draft_task_id` values and supported output settings, since
-     the matrix has no per-row native draft selection.
+   - **Generation target.** Both modes default to `--stage draft`; the exact
+     operation profile supplies verified preview parameters and the supported
+     hook minimum duration. Unknown support produces findings, not guessed
+     Flash, Premium or family values. Expected model, provider, operation,
+     transport and schema revision are independently bound to the request.
+     See the project [execution profile](../../contracts/seedance-execution-profiles.md).
+     Exact legacy native Draft identities retain 480p, boolean `draft=true`
+     and the historical four-second hook policy only on the compatibility path.
+     Audio-only and delivery-only rows get no video controls or video profile
+     requirements. Native production/final stages are refused without selected
+     source tasks: prepare promotions individually from selected `draft_task_id`
+     values and supported output settings. Ordinary previews are not promotable.
    - **Required rules.** Strict steps carry `--required-rule` for
      `ad.claims_supported`, `ad.no_fabricated_testimonial`,
      `brand.copy_rules`, `library.pin_current`, `ad.variant_one_axis` and
@@ -199,7 +202,7 @@ prompt. Summary:
 
 | Axis | Route | Specialists | Provider step |
 | --- | --- | --- | --- |
-| `hook` | Regenerate the opening beat at the 4 s minimum duration, trim it to the hero's opening span and splice it onto the hero in Studio | `seedance-ugc-ads` hook library, `seedance-prompt-25` | yes |
+| `hook` | Resolve the minimum duration from the selected operation profile, preserve the hero's opening span and propose any required trim before splicing in Studio | `seedance-ugc-ads` hook library, `seedance-prompt` | yes |
 | `talent`, `product`, `outfit`, `location` | Object Swap on the muted hero master; keeps motion, framing, cuts and timing | `source-subject-map`, then `seedance-object-swap` | yes |
 | `talent` + `location` in one row | One Motion Transfer instead of two swaps; costs one `motion-recast` unit | `seedance-motion-recast` | yes |
 | `language` | Re-voice the locked script, then per-language captions | `audio-dubbing`, `seedance-prompt-25-dialogue`, `ad-captions` | yes (audio) |
@@ -319,8 +322,9 @@ full table is in [axis routing](references/axis-routing.md#project-paths).
   Never silently drop rows.
 - **Every row is a normal generation.** Mode-appropriate review, frozen
   prompts, request hashes, registry registration before submission and the
-  approval mode apply to each provider step. Both modes default to 480p drafts,
-  with explicit boolean `draft: true` for every new Seedance 2.5 generation.
+  approval mode apply to each provider step. Both modes use verified preview
+  mechanics; exact legacy native Draft identities retain 480p and boolean
+  `draft: true`. Unknown capability is not permission to change the selected model.
 - **Facts and CTA never vary by accident.** A hook row changes the opening
   beat only; a language row translates the locked script; no row invents a
   claim, offer or testimonial. Check rows against

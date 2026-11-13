@@ -10,7 +10,7 @@ description: >-
   music-video and showcase clips when camera and light are not already locked,
   when a scene reads flat or static, or when the user asks for a shot list,
   coverage, shot framing, or more dynamic camera work and lighting. Returns a shot plan record and the
-  per-shot facts a Seedance 2.5 prompt carries. Not for static assets,
+  per-shot facts a selected Seedance prompt carries. Not for static assets,
   source-preserving edits (object swap, restyle, recast), or task submission.
 ---
 
@@ -70,7 +70,7 @@ beats, source locks and generation scope, not a mandatory six-clip or standout q
 | Character geometry and blocking | `blocking-map` |
 | Dramatic structure of the scene | `scene-craft` |
 | Performance intentions, triggers and listening | `acting-direction`; consume the supplied plan |
-| Six-part formula, per-shot prompt block, references, audio syntax | `seedance-prompt-25` |
+| Creative intent and per-shot prompt block | `seedance-prompt`; the selected model's retained adapter owns exact syntax |
 
 These are prose pointers for the calling agent. This skill decides *which*
 choices a shot needs; the preset skills decide *how* each one is worded.
@@ -172,9 +172,9 @@ instead of changing timing, product demonstrations, copy or CTA.
    depth layers when useful to the idea. Dialogue may use a held frame or
    energetic coverage; choose size, framing, angle and speed for readability,
    not the mere presence of speech.
-   Plan an attention shift inside one frame with staging or a move, not a
-   prompted rack focus: Seedance drafts keep a face sharp, so a focus pull away
-   from a face is added in post (see the lens preset skill).
+   Preserve requested focus endpoints and prompt-only/no-cut intent. Historical
+   2.5 T2V Draft focus failures do not require a post repair on another model;
+   mark reliability unknown and leave staging, moves or post as unselected alternatives.
 6. **Check the coverage rules below** against the intended response and actual
    readability. Optional variety heuristics need no waiver to omit. Record
    each shot's purpose; mark a turn only when the selected scene contains one.
@@ -182,8 +182,8 @@ instead of changing timing, product demonstrations, copy or CTA.
    changes which side of a source the camera sees, or a motivated event adds or
    removes a source (a door opens, a lamp is switched on, the room lights go
    out). A light cue may land inside a shot, even during a move, when the plan
-   records its time and trigger; a timed cue is one of the most reliable
-   controls in Seedance 2.5 drafts. A shot never invents a source or a cue the
+   records its time and trigger; historical 2.5 Draft timing observations do
+   not establish a family guarantee. A shot never invents a source or a cue the
    scene did not declare. Silhouette may carry speech if speaker attribution
    and the intended performance remain readable. Visible lip-sync requires
    visible lips; do not reveal a deliberately concealed face to satisfy it.
@@ -260,8 +260,8 @@ Before returning a plan, confirm:
 7. Sequence count and timing serve the approved beats and generation scope; the optional
    cinematic sequence example does not override holds or source-count locks.
    A single generation is not mislabeled as a mandatory continuous take.
-8. No shot relies on a prompted focus pull away from a face; that defocus is
-   planned for post.
+8. Preserve requested focus endpoints; post defocus remains an unselected
+   alternative until its scope is authorized.
 9. The plan names where it is stored and which prompt carries it.
 
 Worked cases are hypothetical teaching repairs in
