@@ -200,5 +200,5 @@ Return source/permission gaps, representation route, ledger, shot/source plan,
 complete prompts, edit/audio/graphics handoff and observable QA.
 No checklist predicts persuasion, conversion or legal/platform acceptance.
 Optional caller composition may use film-production for execution,
-seedance-prompt-25 for model grammar, or authorized-avatar, audio and caption
+seedance-prompt for model grammar, or authorized-avatar, audio and caption
 specialists. These are prose hints only, not sibling commands or dependencies.

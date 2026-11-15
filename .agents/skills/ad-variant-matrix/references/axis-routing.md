@@ -46,13 +46,14 @@ planned in that invocation, not to swaps or localization. Retain the exact
 copy, CTA, supported claims, product identity and the hero's remaining body.
 
 - Take the hook entry by ID from the `seedance-ugc-ads` hook library
-  (`references/hooks.md`) and write the opening as a new Seedance 2.5 shot with
-  `seedance-prompt-25` grammar, at the hero's ratio and with the same talent,
+  (`references/hooks.md`) and write the opening for the selected exact model with
+  `seedance-prompt` grammar, at the hero's ratio and with the same talent,
   wardrobe, product and setting references as the hero.
-- Seedance 2.5 generates 4–30 s per request, so a 0–3 s opening cannot be
-  generated at its span length. Generate at the **4 s minimum** (`--param
-  duration=4`, which the planner adds to hook steps) and direct the hook
-  action into the first part of the clip so the cut point lands cleanly.
+- The execution profile supplies the supported minimum duration and preview
+  controls. A prompt-only plan leaves those controls unresolved. If the
+  supported generated span exceeds the hook's recorded span, direct the hook
+  into the opening and preserve the authorized Studio trim; do not infer a
+  fixed four-second minimum from the model family.
 - **Trim in Studio** to the recorded span so the hero's body and timing stay
   unchanged; the surplus seconds are discarded, never stretched over the body.
 - Place the trimmed opening in the variant's Studio shot
@@ -81,9 +82,11 @@ axis. Review that preservation rather than requiring a new performance plan.
 | `outfit` | Garment packshot, flat lay or mannequin view | One garment on one person |
 | `location` | Location sheet or plate | Environment behind kept subjects |
 
-- Parameters follow the swap route: `@Video 1` is the muted master,
-  `generate_audio: false`, ratio and duration omitted (locked to the input),
-  explicit `resolution: "480p"` and boolean `draft: true` for every new 2.5 draft.
+- Parameters follow the verified swap operation profile and source locks.
+  `@Video 1` is the muted master under the video-to-video contract. Exact legacy
+  native bindings retain explicit `resolution: "480p"` and boolean `draft: true`;
+  other bindings use evidenced preview controls. Audio-only and delivery rows
+  never acquire video parameters or video prerequisites.
 - Sound returns in post: the hero's audio track, re-cut if the swap changed
   any timing.
 

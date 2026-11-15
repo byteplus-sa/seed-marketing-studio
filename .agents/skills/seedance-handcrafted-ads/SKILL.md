@@ -209,7 +209,7 @@ capture claims, conversion gains or platform guarantees.
 ## Composition Hints
 
 The caller may pair `seedance-animation-styles` with material wording,
-`seedance-pacing-presets` with rhythm, `seedance-prompt-25` with grammar, and
+`seedance-pacing-presets` with rhythm, `seedance-prompt` with grammar, and
 finishing capabilities with exact cadence and graphics. Footage restyling is
 a different capability. These are prose hints only, not sibling dependencies.
 This leaf owns the ad's material-state argument, not an animation style catalog.

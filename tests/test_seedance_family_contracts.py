@@ -32,7 +32,7 @@ class MarketingContractTests(unittest.TestCase):
             repo / ".agents/contracts/production-policy.md",
             ROOT / "film-production/SKILL.md",
             ROOT / "film-production/references/production-defaults.md",
-            ROOT / "seedance-prompt-25/references/parameter-reference.md",
+            ROOT / "seedance-prompt/references/parameter-reference.md",
         ]
         for path in paths:
             with self.subTest(path=path):

@@ -91,9 +91,8 @@ between modalities.
 | Score, ambience, SFX or dialogue audio | `seed-audio-prompt` |
 | Narrative audio commercial | `seed-audio-commercial` |
 | Per-shot coverage, camera, lens intent and light for a scene | `seedance-shot-design` |
-| Seedance 2.5 video prompt | `seedance-prompt-25` |
-| Non-English or multilingual video dialogue | `seedance-prompt-25-dialogue` with `seedance-prompt-25` |
-| Seedance 2.0 video prompt | `seedance-prompt-20` |
+| Seedance video prompt for any selected exact model | `seedance-prompt` |
+| Non-English or multilingual video dialogue | `seedance-prompt-25-dialogue` with `seedance-prompt` |
 | Footage-driven VFX prompt | `seedance-vfx-prompt` |
 | End-to-end Seedance 2.0 VFX shot | `seedance-vfx-pipeline` |
 | Model submission, polling, artifact access, speech-to-text | `ark-mcp` |

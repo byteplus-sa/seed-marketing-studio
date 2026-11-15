@@ -198,7 +198,7 @@ claim real capture, or predict sales, conversion or platform acceptance.
 ## Composition Hints
 
 The caller may pair this with `seedance-ugc-ads` for neutral try-on persuasion,
-`seedance-shot-design` or axis specialists for wording, `seedance-prompt-25`
+`seedance-shot-design` or axis specialists for wording, `seedance-prompt`
 for grammar, and exact-graphic or production capabilities for finishing.
 These are prose hints only, not dependencies or instructions to load siblings.
 This leaf owns garment-led editorial structure, not those catalogs or execution.

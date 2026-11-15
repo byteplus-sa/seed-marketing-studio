@@ -70,7 +70,7 @@ beats, source locks and generation scope, not a mandatory six-clip or standout q
 | Character geometry and blocking | `blocking-map` |
 | Dramatic structure of the scene | `scene-craft` |
 | Performance intentions, triggers and listening | `acting-direction`; consume the supplied plan |
-| Creative intent and per-shot prompt block | `seedance-prompt`; the selected model's retained adapter owns exact syntax |
+| Creative intent and per-shot prompt block | `seedance-prompt`; the caller verifies exact syntax for the selected model and operation |
 
 These are prose pointers for the calling agent. This skill decides *which*
 choices a shot needs; the preset skills decide *how* each one is worded.

@@ -212,7 +212,7 @@ work. Arbitrarily slowing all surviving footage can erase the requested
 energy; re-plan the cut and report the compromise. Do not label a corrected
 closing card as proof that all generated packaging passed.
 
-The calling workflow may compose this direction with `seedance-prompt-25`
+The calling workflow may compose this direction with `seedance-prompt`
 for mode grammar, `seedance-shot-design` and camera/lens/lighting/pacing
 specialists for requested axes, `product-intake` and `brand-kit` for supplied
 identity, `html-graphic-render` for exact graphics and `seed-audio-prompt`

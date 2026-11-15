@@ -79,7 +79,7 @@ top of it.
    settle those values, compose with `seedance-shot-design` to fill them.
 6. **One Seedance prompt per clip.** Write each beat, or a run of adjacent
    short beats grouped into one natural-duration clip, as a Seedance 2.5
-   prompt that carries its manifest's shot plan (compose with `seedance-prompt-25`, and with `seedance-ugc-ads` for the
+   prompt that carries its manifest's shot plan (compose with `seedance-prompt`, and with `seedance-ugc-ads` for the
    mode texture). Bind only the product reference and approved elements. Keep
    every clip text-free; supers, prices and the CTA card are finishing layers
    (`html-graphic-render` overlays).

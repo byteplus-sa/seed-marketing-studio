@@ -111,7 +111,7 @@ Optional absent-preview operations emit no invented preview parameters.
 ## Imported Compatibility
 
 The imported unified `seedance_create_task` and `gen_task_get` names remain
-unchanged. Historical separate 2.5/Premium names in retained adapters describe
+unchanged. Historical separate 2.5/Premium names in the consolidated reference describe
 their original binding only. Current regular 2.5 ordinary 4K declarations do
 not imply 4K native promotion; imported promotion and Flash limits remain
 distinct. Resolve account, tool and provider exposure through current evidence.

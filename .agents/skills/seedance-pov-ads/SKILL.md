@@ -195,7 +195,7 @@ imagery. Preserve consenting likeness when a reflection or body reference is use
 
 The caller may pair `seedance-ugc-ads` with an evidenced how-to script,
 `seedance-shot-design` or axis specialists with camera wording, and
-`seedance-prompt-25` with final grammar. UI-led explanations, source-preserving
+`seedance-prompt` with final grammar. UI-led explanations, source-preserving
 edits and exact finishing have separate capabilities.
 These are prose hints only; this leaf has no sibling loading dependency and
 does not reproduce their catalogs or execute production.

@@ -13,7 +13,7 @@ description: >-
 # Seedance Music Video
 
 Write model-neutral music-video intent; the caller uses `seedance-prompt` and
-the selected model's retained adapter for exact syntax and supported settings.
+verifies exact syntax and supported settings for the selected model and operation.
 The historical 2.5 bracket examples are not guarantees for other bindings.
 The music is the
 fixed brief: every visual decision is planned backward from the track's
@@ -48,7 +48,7 @@ inputs stay unresolved rather than invented.
 
 - Official Seedance 2.5 prompt guide, launch blog, and ModelArk docs — audio
   bracket syntax, `@Audio N` timing-authority contract, the one-take singer
-  example, timestamp grammar, and limitations. See `seedance-prompt-25`.
+  example, timestamp grammar, and limitations. See `seedance-prompt`.
 - Music-video craft and beat-sync practice — format taxonomy, song-section
   energy mapping, and section-relative cut density (sources below).
 - Genre conventions — per-genre visual recipes, vertical-vs-landscape norms.

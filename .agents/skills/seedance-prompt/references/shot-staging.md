@@ -1,6 +1,6 @@
 # Shot Staging
 
-Focused reference for `seedance-prompt-25`. Read [the entrypoint](../SKILL.md) for
+Focused reference for `seedance-prompt`. Read [the entrypoint](../SKILL.md) for
 mode selection and caller responsibilities.
 
 - [Shots or stages](#shots-or-stages)

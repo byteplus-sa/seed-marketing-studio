@@ -209,7 +209,7 @@ Keep this leaf independent. These are prose handoffs for the caller:
 - `template-factory` owns measured reference analysis. Require actual inspected
   footage for reference-derived timing, not campaign names or articles.
 - `seedance-shot-design` and directorial-axis specialists supply general
-  coverage vocabulary; `seedance-prompt-25` is the caller's final grammar authority.
+  coverage vocabulary; `seedance-prompt` is the caller's final grammar authority.
 - `film-production` owns execution, Studio state and downstream review.
 
 When entering an existing production plan, map these shot facts into its

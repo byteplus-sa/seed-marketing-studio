@@ -208,7 +208,7 @@ sales ranking, conversion promise or platform guarantee.
 ## Composition Hints
 
 The caller may pair `seedance-shot-design` and axis specialists with coverage,
-`seedance-prompt-25` with grammar and deterministic finishing with exact geometry.
+`seedance-prompt` with grammar and deterministic finishing with exact geometry.
 Free magical morphs belong to synthetic treatments; source footage edits belong
 to editing capabilities. These are prose hints, not sibling loading dependencies.
 This leaf owns spatial illusion logic, not an effects or camera catalog.

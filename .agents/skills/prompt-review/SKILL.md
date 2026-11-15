@@ -105,7 +105,7 @@ Use explicit input first; filenames below are fallback hints, not authority:
 
 | Prompt type | File prefix | Checklist file (`references/`) |
 |---|---|---|
-| Generic Seedance or a selected model without a retained adapter | explicit model + operation, or unresolved | `checklist-seedance-family.md` |
+| General Seedance prompt, any selected model or unresolved binding | explicit model + operation, or unresolved | `checklist-seedance-family.md`; add version-specific items only with applicable evidence |
 | Seedance 2.5 video | `prompt_sNN_shNNN_tNN_vNN.md` | `checklist-seedance-25.md` |
 | Seedance 2.0 video (4K/Fast/Mini) | `prompt_sNN_shNNN_tNN_vNN.md` | `checklist-seedance-legacy.md` |
 | Seedance 2.5 edit, object swap, recast or restyle | explicit model + operation | `checklist-seedance-edits.md` (plus the 2.5 reference items) |

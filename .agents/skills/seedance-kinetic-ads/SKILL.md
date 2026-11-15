@@ -273,7 +273,7 @@ sequence into that record rather than designing a replacement sequence:
   source manifest with several internal shots, not several provider tasks.
 - Keep transition and treatment records alongside the mapped plan. The
   caller reconciles any heuristic conflict against explicit user constraints,
-  validates the plan and applies `seedance-prompt-25` as final prompt grammar
+  validates the plan and applies `seedance-prompt` as final prompt grammar
   authority. This leaf does not load or invoke that skill.
 
 These are optional prose handoffs for the caller, not skill dependencies:

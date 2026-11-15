@@ -1,6 +1,6 @@
 # Video Extension
 
-Focused reference for `seedance-prompt-25`. Read [the entrypoint](../SKILL.md) for
+Focused reference for `seedance-prompt`. Read [the entrypoint](../SKILL.md) for
 mode selection and caller responsibilities.
 
 - [Video extension](#video-extension)
@@ -11,13 +11,14 @@ Video extension creates content beyond the boundary of a source video.
 - **Forward extension**: extension's first frame continues from the source's last frame.
 - **Backward extension**: extension's last frame connects to the source's first frame.
 
-Request facts: ratio is locked to the source, so omit it; duration is settable.
-Set the extension task type explicitly when auto-detection could misread the
-request: Seedance 2.5 uses `omni_reference_task_type: extend` (`extend_video`
-is a 2.0 value and is rejected by 2.5). A source that shows generated
-or real people is rejected for privacy unless those people are `asset://`
-Virtual Portrait assets; without them, chain a new clip from an approved last
-frame or a blocking plan instead of extending.
+Preserve the selected source, its exact fractional span and audio tail, and the
+requested added interval. Do not trim, retime or replace it to fit an assumed
+limit. Verify direction, task-type syntax, ratio/duration controls, references
+and applicable portrait authorization against the exact model, operation and
+destination. Historical `omni_reference_task_type: extend` and `extend_video`
+values are not interchangeable family defaults. A missing binding remains
+unresolved; chaining from a last frame is only an unselected, authorized
+alternative. Prompt-only or denied-probe scope grants no upload or extra call.
 
 ### Forward extension
 

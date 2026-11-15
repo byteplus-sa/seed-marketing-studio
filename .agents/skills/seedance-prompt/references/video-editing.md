@@ -1,6 +1,6 @@
 # Video Editing
 
-Focused reference for `seedance-prompt-25`. Read [the entrypoint](../SKILL.md) for
+Focused reference for `seedance-prompt`. Read [the entrypoint](../SKILL.md) for
 mode selection and caller responsibilities.
 
 - [Video editing](#video-editing)
@@ -8,16 +8,19 @@ mode selection and caller responsibilities.
 ## Video editing
 
 When editing, first define the source video as the **sole editing master**, then
-specify edit target, scope, target material, and content to preserve. The output
-preserves the input's aspect ratio and approximately preserves duration (±0.3s
-from transition-frame handling).
+specify edit target, scope, target material, and content to preserve. Preserve
+the source's exact span, including fractional duration and audio tails; do not
+round, trim, pad or retime it. Actual output fidelity needs inspection, not a
+provider tolerance used to relax a source lock. Verify input compatibility and
+ratio/duration controls for the exact model, operation and destination.
 
-A source clip that shows people is accepted only when those people are
-`asset://` Virtual Portrait assets. Outside an explicit audio edit, submit a
-muted source (`generate_audio: false`) and add original or new sound in post,
-per the workspace video-to-video contract. Narrower edit families have their own
-skills: compose with `seedance-object-swap`, `seedance-motion-recast` or
-`seedance-restyle` when the request is one of those.
+Keep applicable portrait authorization and the workspace video-to-video input
+contract. Outside an explicit audio edit, the caller's authorized execution
+uses a muted source and post audio under that contract, with supported controls.
+This leaf does not mute, upload or probe a source. Preserve denied probes and
+words-only scope; unknown support stays unresolved. The caller may compose
+specialized `seedance-object-swap`, `seedance-motion-recast` or `seedance-restyle`
+direction when applicable; this leaf does not load them.
 
 ### General editing pattern
 
@@ -96,8 +99,9 @@ area, keep all other content from @Video 1 unchanged.
 
 ### Audio editing
 
-Dialogue, language, voice, background music, and sound effects can be edited
-**separately** from visuals.
+When the selected operation supports audio edits, specify dialogue, language,
+voice, background music or sound effects **separately** from visuals. These
+patterns express intent, not a guarantee of language support or isolated editing.
 
 ```
 Edit @Video 1. Remove only the original background music. Keep the character dialogue, lip sync,

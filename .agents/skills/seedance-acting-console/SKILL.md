@@ -220,7 +220,7 @@ Dialogue language: English. B says as a quiet invitation: {There is one corner l
 
 For the full scene prompt, the caller places this block in the six-part formula
 (Subject + Action + Scene + Visual Style + Camera + Audio) as the subject/action
-section. The selected model's retained adapter owns exact audio syntax; the
+section. The caller verifies exact audio syntax for the selected model and operation; the
 generic `seedance-prompt` leaf preserves cue intent without selecting a model.
 
 ---

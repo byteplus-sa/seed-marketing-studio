@@ -21,10 +21,10 @@ rhythm — not just its content — is directed. It is a **prompt-composition-on
 skill: it never calls MCP tools or the Ark API, and it never runs generation.
 The base prompt grammar — the six-part formula, `At Ns` timestamp syntax, the
 bounce-speed-ramp technique contract, the audio bracket syntax `()<>{}【】`,
-and scene-staging rules — is defined in `seedance-prompt-25` and is **not
+and scene-staging rules — is defined in `seedance-prompt` and is **not
 redefined here**. Compose with `seedance-prompt` for creative intent; the
-selected model's retained adapter owns syntax and verified timing controls.
-this skill only adds the pacing preset bank on top.
+caller verifies syntax and timing controls for the selected model and operation.
+This skill only adds the pacing preset bank on top.
 
 The output of this skill is always a **pacing block** — a timestamped
 description of where motion speeds up, slows down, lands on a beat, or cuts —
@@ -52,7 +52,7 @@ speed-ramp grammar. All sources accessed 2026-08-13:
 - [BytePlus ModelArk prompt guide](https://docs.byteplus.com/en/docs/ModelArk/2607689) — official prompt guidance
 - [Seedance 2.5 launch blog](https://seed.bytedance.com/en/blog/one-take-creation-flexible-referencing-introducing-seedance-2-5) — official announcement
 
-**The base grammar is defined in `seedance-prompt-25`.** This skill adds the
+**The base grammar is defined in `seedance-prompt`.** This skill adds the
 pacing preset bank and block-composition rules; it does not restate or replace
 the six-part formula, timestamp rules, reference-role syntax, or audio syntax
 from that skill.
@@ -186,7 +186,7 @@ Fill these knobs when composing a pacing block. At least one of `ramp`, `pacing`
 
 ## Output grammar
 
-The pacing block composes with the `seedance-prompt-25` six-part formula and
+The pacing block composes with the `seedance-prompt` six-part formula and
 scene staging. Insert the ramp/pacing phrasing as timestamped lines in the
 Action or Camera description, and use the audio bracket syntax for any beat
 audio.
@@ -199,7 +199,7 @@ At <N>s, <ramp behavior with subject, beat, and end state>.
 Audio: <(music)> <{dialogue}> <sfx>, cut <on / against> the beat.
 ```
 
-Timestamp syntax follows `seedance-prompt-25`: **exact moments use `At N
+Timestamp syntax follows `seedance-prompt`: **exact moments use `At N
 seconds`, time ranges are written bare** (e.g. `5-9 seconds, ...`). Do not
 write `At 5-9 seconds` — that hybrid form is not in the canonical grammar.
 
@@ -221,7 +221,7 @@ This block names the ramp (Impact, then Slow Motion, then Flash Out), names the
 beat that lands (the crate impact), gives each stage a timestamp, a camera
 statement and an end state, lights it from a named source rather than a grade,
 and stays within a natural 12-second duration. It composes with
-`seedance-prompt-25` scene staging for multi-stage scenes, with
+`seedance-prompt` scene staging for multi-stage scenes, with
 `seedance-camera-presets` for the camera treatment, and with
 `film-production` / `seedream-storyboard` when the scene needs an approved shot
 list before generation.

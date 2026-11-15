@@ -1,15 +1,21 @@
 # Seedance 2.5 Checklist
 
-Source skill: `seedance-prompt-25`. Apply the universal items in
+Source skill: `seedance-prompt`. Apply the universal items in
 [the index](review-checklists.md#universal--all-prompts) first, then this file.
 For an edit, swap, recast or restyle use [Seedance edits](checklist-seedance-edits.md)
 instead of the generation-only items below. Default severity is MAJOR; an item
 states CRITICAL or MINOR when it differs.
 
+The single creative entrypoint is `seedance-prompt`. This checklist preserves
+2.5-derived review detail, not family-wide API guarantees. Apply
+[family review](checklist-seedance-family.md) first and verify executable
+controls for the exact model, operation, transport and schema revision.
+
 ## Request and parameters
 
-1. **Draft first and promotion (`seedance.draft_promotion`).** An initial or
-   revised generation sets boolean `draft: true` and explicit `resolution: "480p"`
+1. **Draft first and promotion (`seedance.draft_promotion`).** On exact legacy
+   native bindings in the execution-profile contract, an initial or revised
+   generation sets boolean `draft: true` and explicit `resolution: "480p"`
    in both review modes, without a skip-draft exception. Resolve schema or
    transport conflicts without dropping the flag. A final is promoted with
    `draft_task_id` from a passing, hash-bound draft selection under the
@@ -17,8 +23,9 @@ states CRITICAL or MINOR when it differs.
    watermark, return_last_frame, expiry, priority). A final call that also
    sends prompt, references, duration, ratio, audio or task type is CRITICAL:
    those are reused from the draft and any change must happen before the
-   draft. Other models without native Draft use a plain 480p test and a new
-   reviewed final request, not a fallback for 2.5. Multi-shot work also needs a reviewed draft assembly
+   draft. Other models use their verified operation profile for native,
+   ordinary or optional absent preview; do not invent a 480p fallback.
+   Multi-shot work also needs a reviewed draft assembly
    and picture/audio decisions. Final outputs need fresh playback and audio QA:
    the final soundtrack is not byte-identical to the draft's. Prompt-only work
    needs no generated draft.
@@ -39,9 +46,9 @@ states CRITICAL or MINOR when it differs.
    noncompliant audio or request an authorized repair, not automatic muting of
    requested native sound. Mixed ownership names each layer's source.
 
-3. **Reference count limits.** ≤ 30 images, ≤ 10 videos, ≤ 10 audio, ≤ 50 in
-   total; recommended 1-8 image subjects, 1-5 video subjects (5-10 s each), only
-   directly relevant audio. Exceeding a hard limit is CRITICAL.
+3. **Reference count limits.** Compare the ordered bundle with current exact
+   operation evidence. Historical 2.5 limits and recommended ranges do not
+   establish present support or apply to Flash by name.
 
 ## Formula
 
@@ -49,8 +56,9 @@ states CRITICAL or MINOR when it differs.
    and a primary action or event. These are the only grammar-required parts;
    camera and light are craft-required for narrative shots (Shot plan items).
 
-5. **Six-part order.** Subject + Action/Event + Scene/Environment + Visual Style +
-   Camera Movement/Cut + Audio, in this order when present (MINOR).
+5. **Flexible formula.** Subject + Action/Event, with relevant Scene/Environment,
+   Visual Style, Camera Movement/Cut and Audio. Optional headings and slot order
+   are clarity aids, not independent pass/fail criteria.
 
 6. **Action granularity.** Describe critical action and perceptual outcomes,
    with body-part detail, range, speed, force, contact or recovery only where
@@ -93,16 +101,18 @@ states CRITICAL or MINOR when it differs.
     or last frame must be a clean, full-frame keyframe in the final medium with
     no marks. Blocking maps and other control diagrams are judged under item 12.
 
-14. **Reference photos outrank text.** Where text and a bound photo disagree on
-    a detail (gear down in the photo, retracted in the text), the photo wins;
-    the prompt aligns with the reference or the reference is replaced.
+14. **Reference conflicts.** Where text and a bound photo disagree on a detail
+    (gear down in the photo, retracted in the text), flag the conflict and keep
+    locked intent. Propose a reference correction without replacing a selected
+    input or claiming that negative wording guarantees the requested result.
 
 15. **People in video and face inputs (`model.supported_mode`).** An extension
-    or video input that shows generated or real people binds them as
-    `asset://` Virtual Portrait assets; a raw clip with people is rejected
-    (CRITICAL). Real-person photos without an authorized asset are CRITICAL.
-    A `reference_image` face or body crop may be rejected — use the full sheet
-    or a first frame. A last-frame-only request is rejected; use first + last.
+    or video input follows applicable portrait authorization and exact-operation
+    input rules. Keep face, voice and creative selection independent; do not
+    disguise an input to bypass restrictions. Missing required authorization is
+    CRITICAL. Verify crop and frame-role eligibility; an unsupported crop or
+    last-frame-only input stays unresolved, not converted to another mode
+    without explicit selection and current support.
 
 ## Shot plan and structure
 
@@ -165,9 +175,10 @@ change or turn to pass. Authorized source count and timing remain locked.
     alone is a finding; return a genuine feasibility conflict if required
     control cannot be assured through the permitted route. Do not silently
     retime source material or remove approved actions.
-    A rack focus that leaves the subject soft ("focus left
-    behind", subject sharp to background) mostly fails because the model keeps
-    the face sharp: plan the defocus in post (MINOR). Burst count and holds are
+    Historical 2.5 reports of face-defocus failure do not prove a family-wide
+    limitation. Preserve requested focus endpoints and movement locks; post
+    defocus is an unselected alternative, not an automatic repair or a finding
+    against an untested prompt. Burst count and holds are
     not acceptance quotas. Slowing or isolating an action is an optional repair
     for a demonstrated readability or physical-continuity failure; preserve
     intended speed, interruptions and recovery unless an authorized repair
@@ -185,8 +196,9 @@ change or turn to pass. Authorized source count and timing remain locked.
     action-count threshold; return genuine timing conflicts or missing inputs.
     The last stage ends at the requested duration.
 
-25. **Natural duration.** Each scene runs at its natural length (4-30 s); a 30 s
-    single pass or native extension is a recorded exception.
+25. **Natural duration.** Preserve creative timing and verify executable duration
+    separately. A continuous take or extension follows intent and authorized scope,
+    not a mandatory block length.
 
 ## Craft guards
 
@@ -230,11 +242,13 @@ change or turn to pass. Authorized source count and timing remain locked.
 
 ## Audio and dialogue
 
-31. **Bracket syntax.** Dialogue in `{}`, music in `()`, SFX in `<>`. `【】`
-    subtitles fail item 28.
+31. **Bracket syntax.** Verify syntax for the selected destination. The 2.5 guide
+    uses dialogue in `{}`, music in `()`, SFX in `<>`; ordinary-language direction
+    is valid when syntax is unresolved. Generated subtitles fail item 28.
 
-32. **Dialogue language reinforcement.** Non-Chinese dialogue states Dialogue
-    Language + Regional Variety/Accent + Delivery Style + Speaker + `{line}`.
+32. **Dialogue language reinforcement.** Preserve the requested language,
+    supplied regional variety/accent, delivery style and speaker. Bracket cues
+    remain conditional on the selected destination's syntax.
     Every speaking character, including phone-screen voices and narrators, has
     a scripted line; unscripted speakers ad-lib.
 
@@ -284,16 +298,19 @@ change or turn to pass. Authorized source count and timing remain locked.
 
 ## Mode locks
 
-38. **Auto-locked parameters.** Edit: ratio and duration unset (locked to the
-    input). First/last frame: ratio follows the first image and both frames
-    share it. Extension: ratio unset, duration settable, boundary image, motion
-    trend and audio continuity checked.
+38. **Operation-specific parameters.** Verify edit, frame and extension controls
+    against the exact operation profile. Historical automatic ratio/duration
+    locks are not generic defaults. Preserve source geometry, exact fractional
+    span and audio tails independently of provider tolerances; check extension
+    boundary images, motion trend and audio continuity.
 
 39. **Other modes.** One-click video defines material roles, image order, motion
     amount, editing style and audio. Seamless transitions define both videos'
     roles, the trigger action, the transition process and the arrival state.
-    Blockouts identify coarse, fine or video-lock and keep the blockout as the
-    motion authority only.
+    Blockouts identify coarse, fine or video-lock and assign authority by
+    attribute. An animated source may own motion; a fine model may also own
+    selected structure. Do not inherit unselected appearance or treat an
+    unanimated 3D asset as a motion source.
 
 ## Revision diff
 

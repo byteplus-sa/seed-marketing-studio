@@ -15,7 +15,7 @@
     },
     {
       "id": "energetic_dialogue",
-      "skill": "seedance-prompt-25",
+      "skill": "seedance-prompt",
       "prompt": "Write only an approved 12-second shot: two designers hurry beside a moving display, A points twice to separate samples and says {Look at these!}, B keeps pace and replies {Both of them?}. Preserve both quick gestures, tracking medium two-shot, constant window light and product identities. No cuts, added holds, slow motion or generation. Delivery has not been recorded.",
       "criteria": {
         "intent": "Excited shared discovery remains energetic without replacing the physical task with mood adjectives.",
@@ -25,7 +25,7 @@
     },
     {
       "id": "legacy_repeated_bursts",
-      "skill": "seedance-prompt-20",
+      "skill": "seedance-prompt",
       "prompt": "Legacy Seedance 2.0 prompt only, no generation. Ten-second physical-comedy demo: presenter quickly reaches twice for a rolling plain spool, recovers balance between attempts, says {Not that one!}, then catches it. Locked wide camera and window light. Keep both attempts and pace; no new claims, cuts or inserted holds.",
       "criteria": {
         "intent": "Retains the repeated attempts and comic rhythm through grounded physical action rather than a slow-body default.",

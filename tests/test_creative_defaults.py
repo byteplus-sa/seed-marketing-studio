@@ -32,7 +32,7 @@ class CreativeDefaultsTests(unittest.TestCase):
 
     def test_action_frequency_checks_use_feasibility_not_count_alone(self):
         paths = (
-            "seedance-prompt-25/references/scene-action.md",
+            "seedance-prompt/references/scene-action.md",
             "prompt-review/references/checklist-seedance-25.md",
         )
         for relative in paths:
@@ -74,8 +74,7 @@ class CreativeDefaultsTests(unittest.TestCase):
 
     def test_compilers_and_reviews_do_not_soften_body_or_cap_bursts(self):
         paths = [
-            SKILLS / "seedance-prompt-25/references/scene-action.md",
-            SKILLS / "seedance-prompt-20/SKILL.md",
+            SKILLS / "seedance-prompt/references/scene-action.md",
             SKILLS / "seedance-acting-console/SKILL.md",
             SKILLS / "seedance-acting-console/references/restraint-and-shape.md",
             SKILLS / "prompt-review/references/checklist-seedance-25.md",
@@ -98,7 +97,7 @@ class CreativeDefaultsTests(unittest.TestCase):
             SKILLS / "seedance-shot-design/SKILL.md",
             SKILLS / "seedance-shot-design/references/coverage-patterns.md",
             SKILLS / "seedance-shot-design/references/worked-repairs.md",
-            SKILLS / "seedance-prompt-25/references/shot-staging.md",
+            SKILLS / "seedance-prompt/references/shot-staging.md",
             SKILLS / "prompt-review/references/checklist-seedance-25.md",
         ]
         prohibited = (
@@ -125,7 +124,7 @@ class CreativeDefaultsTests(unittest.TestCase):
             SKILLS / "film-production/SKILL.md",
             SKILLS / "film-production/references/stage-contracts.md",
             SKILLS / "film-production/references/production-defaults.md",
-            SKILLS / "seedance-prompt-25/references/shot-staging.md",
+            SKILLS / "seedance-prompt/references/shot-staging.md",
             SKILLS / "seedance-shot-design/SKILL.md",
             SKILLS / "brief-intake/SKILL.md",
             SKILLS / "brief-intake/references/worked-repairs.md",
@@ -183,7 +182,7 @@ class CreativeDefaultsTests(unittest.TestCase):
                 self.assertRegex(text, r"unavailable|unresolved")
 
     def test_evaluation_expectations_do_not_reward_blanket_activity(self):
-        names = ("brief-intake", "film-production", "seedance-prompt-25", "seedance-prompt-20",
+        names = ("brief-intake", "film-production", "seedance-prompt",
                  "seedance-shot-design", "seedance-acting-console", "seedance-ugc-ads")
         for name in names:
             cases = evaluation_cases(name)
@@ -256,7 +255,7 @@ class CreativeDefaultsTests(unittest.TestCase):
     def test_closing_cadence_is_readability_led_not_a_state_change_quota(self):
         paths = [
             SKILLS / "seedance-shot-design/SKILL.md",
-            SKILLS / "seedance-prompt-25/references/shot-staging.md",
+            SKILLS / "seedance-prompt/references/shot-staging.md",
             SKILLS / "seedance-ugc-ads/SKILL.md",
             SKILLS / "prompt-review/references/checklist-seedance-25.md",
             ROOT / ".agents/contracts/rules.json",
@@ -301,8 +300,7 @@ class CreativeDefaultsTests(unittest.TestCase):
             "seedance-camera-presets/SKILL.md",
             "seedance-shot-design/SKILL.md",
             "seedance-shot-design/references/coverage-patterns.md",
-            "seedance-prompt-20/SKILL.md",
-            "seedance-prompt-25/references/shot-staging.md",
+            "seedance-prompt/references/shot-staging.md",
             "prompt-review/references/checklist-seedance-25.md",
             "prompt-review/references/checklist-seedance-legacy.md",
             "prompt-review/references/checklist-seedance-edits.md",
@@ -394,7 +392,7 @@ class CreativeDefaultsTests(unittest.TestCase):
     def test_progressive_change_does_not_require_slowing_readable_action(self):
         paths = (
             "seedance-pacing-presets/SKILL.md",
-            "seedance-prompt-25/references/scene-action.md",
+            "seedance-prompt/references/scene-action.md",
             "prompt-review/references/checklist-seedance-25.md",
         )
         for relative in paths:
@@ -438,8 +436,7 @@ class CreativeDefaultsTests(unittest.TestCase):
             "seedance-shot-design/references/coverage-patterns.md",
             "prompt-review/references/checklist-seedance-25.md",
             "prompt-review/references/author-self-check.md",
-            "seedance-prompt-25/SKILL.md",
-            "seedance-prompt-25/references/shot-staging.md",
+            "seedance-prompt/references/shot-staging.md",
             "film-production/references/production-defaults.md",
             "film-production/references/stage-contracts.md",
             "seedance-ugc-ads/SKILL.md",
@@ -494,7 +491,7 @@ class CreativeDefaultsTests(unittest.TestCase):
             "assembly-only",
         )
         for name in (
-            "seedance-pacing-presets", "seedance-shot-design", "seedance-prompt-25",
+            "seedance-pacing-presets", "seedance-shot-design", "seedance-prompt",
             "film-production", "seedance-music-video", "seedance-ugc-ads",
             "seedance-motion-design", "seedance-animation-styles", "template-factory",
         ):

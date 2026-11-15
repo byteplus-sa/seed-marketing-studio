@@ -1,7 +1,8 @@
 # Seedance Family Review
 
 Resolve the selected model and operation before genre, language or ad layers.
-Retained 2.0/2.5 adapters apply only to those explicit bindings. Missing selection
+`seedance-prompt` is the single creative entrypoint. Version-specific checklist
+items apply only with evidence for the selected exact operation. Missing selection
 uses this creative checklist, never inferred 2.5 controls. Prompt-only work needs
 no generation or production state.
 
