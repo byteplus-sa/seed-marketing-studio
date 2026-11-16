@@ -6,37 +6,43 @@ index](review-checklists.md#universal--all-prompts) first.
 
 ## Seedance 2.0
 
-Source skill: `seedance-prompt-20`
+Source skill: `seedance-prompt`
+
+This section preserves useful 2.0 review history, not a second prompt
+entrypoint. Apply [family review](checklist-seedance-family.md) first.
+Validate executable limits and syntax for the selected exact operation; unknown
+evidence stays unresolved. General creative structure remains flexible.
 
 ### Structure
 
-1. **Section order.** Prompt assembles in this order: Asset preparation → Subject
-   definitions → Prompt (with task type) → Shot 1/2/3 → Quality and constraints.
+1. **Readable structure.** Roles, stable subjects, intended task, ordered action
+   and preservation constraints are clear. Legacy section headings are optional.
 
-2. **Asset preparation first.** References are labeled with `@Image N`, `@Video N`,
-   `@Audio N` (sequential, space separator) before any prompt body.
+2. **Ordered reference mapping.** Each selected reference has an explicit role
+   and stable typed label. Verify destination syntax before execution; a
+   separate asset-preparation heading is optional.
 
-3. **Reference limits.** ≤ 9 images, ≤ 3 videos, ≤ 3 audio (15 total). Audio cannot
-   be sent alone. Combined video duration ≤ 15s, combined audio duration ≤ 15s.
+3. **Reference limits.** Verify counts, sizes, duration and combined roles against
+   the exact model, operation and destination, not an inherited 2.0 table.
 
 ### Subject definitions
 
-4. **Define keyword.** Uses `Define` keyword with 2-3 stable static features
-   (clothing, hairstyle, appearance, category). Static only — no mutable attributes
-   like expression or pose.
+4. **Stable identities.** Distinguishing static features identify each subject;
+   `Define` is optional. Do not confuse temporary expression or pose with identity.
 
-5. **Label reuse.** The same `@Image N` / `@Video N` label is reused in every shot.
+5. **Label reuse.** Stable subject labels and reference order carry across shots
+   without unnecessary repetition of the full mapping.
 
-6. **No Asset IDs.** Uses `@Image 1` / `@Video 1` format, not Asset IDs.
+6. **Readable bindings.** Provider asset IDs stay in the separate binding
+   package; readable typed references identify subjects in the prompt.
 
 ### Reference classification
 
 7. **Classification.** Each reference is classified as: Visible identity, Visible
    environment, Motion/camera reference, or Control-only reference.
 
-8. **Control-only handling.** Control-only images are preferably translated to text.
-   If kept, labeled as control-only with extraction instructions and visual
-   reproduction prohibition.
+8. **Control-only handling.** Translate planning maps and boards to text and omit
+   them. Labels do not establish input eligibility or authorization.
 
 9. **Face restriction.** No direct uploads of real human faces. Uses recent model
    outputs, preset digital characters, or authorized `asset://` portrait
@@ -48,17 +54,17 @@ Source skill: `seedance-prompt-20`
 
 ### Task type declaration
 
-10. **Task type declared.** One of: Multimodal Reference | Video Editing | Video
-    Extension | Combined Tasks.
+10. **Task intent clear.** Distinguish reference-guided generation, source
+    editing and extension. API task types require exact-operation evidence.
 
-11. **Edit/extend phrasing.** For edit/extend: uses `@Video 1` directly ("Strictly
-    edit @Video 1..."). Does NOT write "Reference @Video 1" (which triggers
-    multimodal reference mode).
+11. **Edit/extend phrasing.** Identify the source as the editing master or the
+    boundary to extend, not merely a motion reference. A phrase does not
+    guarantee mode selection; verify supported task controls separately.
 
 ### Shots
 
-12. **Timeline storyboard.** Uses `Shot 1 / Shot 2 / Shot 3` format. Each shot
-    covers one coherent unit of action.
+12. **Readable sequence.** Shots or optional stages communicate ordered actions
+    or a sustained state. Numbered headings are aids, not acceptance criteria.
 
 12a. **Shot plan carried (`shot.plan_bound`, `shot.variety`, `shot.axis_carry`).**
     The Seedance 2.5 shot-plan items (`shot.plan_bound`, `shot.variety`, `shot.axis_carry` in [the 2.5 checklist](checklist-seedance-25.md#shot-plan-and-structure)) apply to a 2.0 prompt: each shot line carries
@@ -67,23 +73,23 @@ Source skill: `seedance-prompt-20`
     are optional; repeated framing, constant light and sustained holds pass
     when they serve the approved intent and readability.
 
-13. **Per-shot references repeated.** Every shot repeats applicable `@Image N`,
-    `@Video N`, `@Audio N` references inline.
+13. **Reference continuity.** Each shot unambiguously identifies the relevant
+    subjects and inherited reference authority; a clear shared mapping suffices.
 
-14. **Per-shot description order.** (1) Camera movement/transition, (2) Subject
-    actions/expressions, (3) Position/spatial changes, (4) Lighting & color tone,
-    (5) Audio.
+14. **Per-shot facts.** Preserve planned camera, action, spatial changes,
+    lighting and audio where applicable. Their prose order is flexible.
 
 15. **Coherent camera movement.** One or two moves is a planning heuristic,
     not a cap on coherent requested choreography. Check sequence, endpoints
     and readability; flag incompatible simultaneous directions or unclear
     handoffs, not move count alone.
 
-16. **Complexity budget.** At most 3 major action beats or 4 tightly related shots
-    for 15s generation.
+16. **Feasibility.** Assess causal order, readable action and actual timing.
+    No beat or shot quota applies. Splitting is an unselected alternative,
+    not permission to drop actions or add paid clips.
 
-17. **Action detail.** Body-part level detail (hands, legs, head, shoulders, back)
-    with range, speed, force.
+17. **Action detail.** Include body-part, range, speed or force details only when
+    they communicate critical action or continuity.
 
 18. **Motion intent.** Body speed, amplitude, interruptions and recovery follow
     the approved action. Quiet performance and repeated bursts are valid;
@@ -96,9 +102,9 @@ Source skill: `seedance-prompt-20`
 19. **Emotion externalization.** Emotions are externalized as physical details,
     never bare labels.
 
-20. **Dialogue format and budget (`dialogue.speech_budget`).** Spoken text in
-    `{curly braces}` or quotes for lip-sync, with speaker labels for several
-    speakers. Use measured delivery or a native-language-informed read with
+20. **Dialogue format and budget (`dialogue.speech_budget`).** Preserve exact
+    words and speaker ownership. Quotes or documented bracket cues distinguish
+    speech; verify syntax and lip-sync support separately. Use measured delivery or a native-language-informed read with
     pauses, onset and tail. Words / 2.2 is an English planning estimate, not a
     universal rejection rule. Initially allow 0.5-1.5 s onset and at least
     0.4 s tail, then verify actual delivery; without evidence, fit is provisional.
@@ -107,27 +113,30 @@ Source skill: `seedance-prompt-20`
 
 ### Timing
 
-21. **Duration via API.** Total video length set with API `duration` parameter, not
-    timecodes in text.
+21. **Duration separate.** Keep executable duration controls outside the
+    creative prompt and verify them for the exact operation. Creative timing
+    and source spans do not establish API support.
 
-22. **Natural pacing.** The model paces multi-shot generation naturally. Second-level
-    timing only when user explicitly requests it.
+22. **Optional timing.** Add timing when requested or needed for critical
+    handoffs; do not require a timestamp for every action.
 
 23. **Timestamp format.** If used: concise ranges (`Shot 1 (0-4s):`), contiguous,
-    non-overlapping, consistent with API duration.
+    non-overlapping, consistent with creative duration. Unverified executable
+    duration remains unresolved.
 
 ### Spatial continuity
 
-24. **Spatial map present.** Same 6-field format as Seedance 2.5 (Start, Travel axis,
-    Subject order, Boundary behavior, End, Forbidden transitions).
+24. **Spatial facts present.** Movement-heavy scenes state Start, Travel axis,
+    Subject order, Boundary behavior, End and relevant Forbidden transitions.
+    The six-field format is optional; preserve the physical relationships.
 
 25. **Physical locations.** Uses physical locations and ordered states, not relative
     verbs alone.
 
 ### Quality and constraints
 
-26. **Inline constraints.** All constraints go inline in the text prompt (no separate
-    negative_prompt field).
+26. **Inline constraints.** Keep necessary preservation exclusions in the prompt;
+    do not invent a separate negative-prompt field without operation evidence.
 
 27. **Prioritized constraints.** Prioritizes constraints instead of accumulating a
     long blacklist.
@@ -152,15 +161,18 @@ Source skill: `seedance-prompt-20`
 33. **Focus.** Prompt is focused; repetition compressed before removing critical
     spatial state.
 
-34. **Beats fit duration.** Requested beats fit the duration or the scene is split.
+34. **Beats fit duration.** Assess requested beats against actual timing and
+    visibility. Missing evidence stays unresolved; a split needs authorization
+    and never silently changes locked source timing or single-clip scope.
 
 ### Revision contract (if revising)
 
 35. **Locked decisions carried.** Approved identity, action, camera, environment,
     audio, boundary behavior carried into revised prompt.
 
-36. **One delta.** Only one of {prompt wording, reference bundle, motion design}
-    changed per retry.
+36. **Scoped delta.** Change only the requested behavior. Isolate prompt wording,
+    reference bundle or motion design when practical to diagnose a repair;
+    necessary linked changes remain explicit and within authorization.
 
 37. **Acceptance criteria.** Observable conditions for the next take to pass are
     stated.

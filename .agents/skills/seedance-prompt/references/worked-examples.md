@@ -1,11 +1,17 @@
 # Worked Examples
 
-Focused reference for `seedance-prompt-25`. Read [the entrypoint](../SKILL.md) for
+Focused reference for `seedance-prompt`. Read [the entrypoint](../SKILL.md) for
 mode selection and caller responsibilities.
 
 These examples are **hypothetical**: they model the current prompt practice and
 have no linked generated result. Request parameters are listed beside each
 prompt because they never go inside it.
+
+The example settings assume a verified exact legacy native 2.5 operation
+profile supporting those controls. They are not defaults for other bindings:
+the caller preserves the selected model, checks current operation evidence and
+leaves unsupported or unknown settings unresolved. Examples authorize no
+generation, source preparation or separate audio call.
 
 - [Three-shot R2V sequence with dialogue](#three-shot-r2v-sequence-with-dialogue)
 - [Ambient-only one-take](#ambient-only-one-take)

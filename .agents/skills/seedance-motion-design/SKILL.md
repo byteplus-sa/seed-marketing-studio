@@ -13,7 +13,7 @@ description: >
   user asks for motion design, motion graphics, kinetic typography, a logo
   reveal, product motion, an explainer video, an animated data story, or
   any text/graphic-driven marketing motion. Composes in prose with
-  html-graphic-render for exact static graphics, seedance-prompt-25 for the
+  html-graphic-render for exact static graphics, seedance-prompt for the
   six-part formula, seedream-prompt or seedream-storyboard for synthesized
   image/keyframe layers, and seed-audio-prompt for voice/music. Does not call
   the API itself.
@@ -123,10 +123,15 @@ screen, product, and keyframe, then route by fidelity:
   reference derivatives separate.
 - **Illustrative or photographic plates** → `seedream-prompt` without exact
   typography; select before deterministic finishing.
-- **Approved storyboard panels / keyframes** → `seedream-storyboard`, promoted
-  only after review.
+- **Storyboard boards, grids and panels** remain planning-only; translate
+  their staging into text. Approval, cropping, a hash or `control_only: false`
+  never makes a board-origin panel eligible conditioning.
+- **Clean full-frame keyframes in the final medium** need independent selection,
+  current hashes, source lineage, a supported frame/reference role and leakage QA.
+  They are production stills, not relabeled planning panels; prompt-only work
+  does not create or generate them.
 
-Generated or approved visual plates may become a `reference_image`,
+Only eligible independently selected visual plates may become a `reference_image`,
 `first_frame`, or `last_frame` with a stable `@Image N` binding. Exact graphic
 plates stay in post when fidelity is required. **The submitted reference array
 must match the `@Image N` bindings in the prompt 1:1 — same files, same order.**
@@ -162,9 +167,9 @@ micro-interaction numbers (150–300ms is a UI duration, not a film beat):
 - **Give motion weight.** Anticipate before a settle, settle into a hold, and
   let the fastest element carry the most energy.
 
-For every moving element, write the full motion grammar — motion type,
-direction, speed, amplitude, easing, loop period — not a bare verb (see
-`seedance-prompt-25`, "Motion grammar"). State camera motion explicitly,
+For each critical moving element, name the motion axes needed for readability:
+type, direction or speed, with amplitude, easing and loop period only when
+relevant (see `seedance-prompt`, "Selective motion grammar"). State camera motion explicitly,
 including when the camera is truly locked-off and only the plates move. A
 generated shot with no camera statement tends to come back as a neutral held
 frame; give each moving shot an active verb, a speed, a start and an end.
@@ -203,7 +208,7 @@ text-lock discipline from drifting across later shots.
 
 The plate classification decides *what* Seedance animates; the mode decides
 *how*. Match synthesized or intentionally non-exact visual plates to one mode
-(grammar via `seedance-prompt-25`). Exact type and UI remain deterministic post
+(grammar via `seedance-prompt`). Exact type and UI remain deterministic post
 layers unless the user explicitly accepts model-driven fidelity risk:
 
 | Plate set | Mode | Notes |
@@ -216,8 +221,9 @@ layers unless the user explicitly accepts model-driven fidelity risk:
 Prefer **one-click video** when the deliverable is a self-contained paced ad from
 a stack of visual plates. Prefer **first/last frame** when only the open and
 close compositions matter and the middle is a continuous, model-driven move.
-Record the chosen mode and ordered roles in `shot.md` (see `seedance-prompt-25`
-storyboard-to-video handoff).
+Record the chosen mode, ordered roles, independent selection, current hashes
+and source lineage in `shot.md`. Board planning approval is never a
+storyboard-to-video authorization.
 
 ## Output formats
 
@@ -243,7 +249,7 @@ and exclusions.>
 ### Full motion-design prompt
 
 Use when the user asks for a complete Seedance 2.5 prompt. The full-prompt form
-overlays the six-part formula (see `seedance-prompt-25` for the grammar). The
+overlays the six-part formula (see `seedance-prompt` for the grammar). The
 `[Motion Design]` block is this skill's front-matter for the **Subject + Action**
 slot — the message and the moment it lands — plus the attention hierarchy. It is
 **not** the Visual Style slot, which stays lighting → lens → grade → sensor.
@@ -252,7 +258,7 @@ Plate bindings are declared up front as `[Material Roles]`:
 ```text
 [Material Roles]
 @Image 1 defines <selected visual plate> — use its composition and art direction.
-@Image 2 defines <approved storyboard / keyframe> — use its shot structure.
+@Image 2 defines <independently selected clean final-medium keyframe> — use its eligible frame composition.
 @Image N defines <product / identity sheet> — use its identity and material only.
 
 [Motion Design]
@@ -290,12 +296,14 @@ requested.>
 and exclusions.>
 ```
 
-For multi-beat reveals, use `seedance-prompt-25`'s `[Stage N]` grammar (one
-primary event + a clear end state per stage) rather than inventing a shot list.
+For multi-beat reveals, the caller may use `seedance-prompt`'s optional stages
+for a continuous take or shot lines for cuts. Each may contain readable ordered
+events or a sustained state; no one-event quota applies.
 
-Right-size `duration` (4–30s) to the piece and set aspect ratio from the
-delivery format, as parameters rather than prompt sentences. Parameter defaults
-live in `seedance-prompt-25`'s quick reference.
+Right-size creative duration to the piece. Verify executable duration and aspect
+ratio for the selected operation and keep them outside the prompt. The
+`seedance-prompt` historical parameter reference never overrides saved defaults
+or the current execution profile.
 
 Return the prompt directly. Do not add production workflow, tool selection,
 asset management, approval gates, or generation instructions unless the user
@@ -305,7 +313,7 @@ explicitly asks for them.
 
 This skill is prompt-only. It **never calls generation tools.** It composes:
 
-- **`seedance-prompt-25`** — the six-part formula, `@Image N` reference roles,
+- **`seedance-prompt`** — the six-part formula, `@Image N` reference roles,
   first/last-frame and keyframe grammar, scene staging, timestamps, audio
   bracket syntax, and generation limitations. This skill references it, it does
   not re-implement it.
@@ -328,7 +336,9 @@ This skill is prompt-only. It **never calls generation tools.** It composes:
 
 - **Keyframes as first/last frames.** Lock the exact opening and/or ending
   composition with `first_frame` / `last_frame` (FLF2V). First and last images
-  must share the same aspect ratio.
+  must share the same aspect ratio. Require independent selection, current
+  hashes, source lineage, supported roles and actual leakage QA; board panels
+  stay planning-only even after review or flag changes.
 - **Exact graphics as post layers.** Headlines, charts, logos, and UI stay
   deterministic when fidelity matters. A selected solid-background derivative
   may guide model motion, but it does not replace the final exact overlay.
@@ -407,9 +417,12 @@ Before returning the prompt (and before any generation task), verify:
 7. **Reality compressed, not faked.** The demo shows a plausible workflow;
    impossible fluidity is avoided.
 8. **Reference discipline.** `@Image N` indices are stable, roles are stated,
-   and the submitted array matches the bindings 1:1.
+   and the submitted array matches the bindings 1:1. No board, grid or panel
+   is bound. Clean production stills have independent selection, current
+   hashes, source lineage and supported roles; inspect takes for labels,
+   borders and unintended planning style before acceptance.
 9. **Composition respected.** The skill composes in prose with
-   `html-graphic-render`, `seedance-prompt-25`, `seedream-*`, and
+   `html-graphic-render`, `seedance-prompt`, `seedream-*`, and
    `seed-audio-prompt`; it does not call generation tools.
 10. **The design seal** is compact and does not contradict the treatment or the
    text-lock discipline.

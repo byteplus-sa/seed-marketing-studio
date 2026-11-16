@@ -203,5 +203,5 @@ Return proposition, evidence gaps, state/shot/source records, complete prompts,
 request intent, edit/audio/graphics handoff and targeted QA. For a narrow request
 return just the changed material and its dependencies.
 Optional caller composition may use film-production for execution,
-seedance-prompt-25 for model grammar, and exact-graphics or shot specialists.
+seedance-prompt for model grammar, and exact-graphics or shot specialists.
 These are prose hints, not dependencies or commands to other skills.

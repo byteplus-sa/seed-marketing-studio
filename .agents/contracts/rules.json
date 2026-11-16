@@ -410,7 +410,7 @@
         "preflight",
         "narrative_video"
       ],
-      "owner_path": ".agents/skills/seedance-prompt-25/references/keyframes-storyboards-blockouts.md",
+      "owner_path": ".agents/skills/seedance-prompt/references/keyframes-storyboards-blockouts.md",
       "summary": "Storyboard grids, boards and board panels are never bound to a Seedance request; their staging is written as prompt text and identity comes from element references.",
       "exceptions": [
         "Blocking maps and other control diagrams follow references.control_only instead."
@@ -422,10 +422,10 @@
       "applies_to": [
         "preflight"
       ],
-      "owner_path": ".agents/skills/seedance-prompt-25/references/parameter-reference.md",
-      "summary": "Every new Seedance 2.5 generation uses explicit resolution 480p and boolean draft true in both review modes; a delivery target alone does not bypass it. Resolve schema or transport mismatches without dropping the flag. Promote a selected native draft by draft_task_id with only output settings, and check final audio again.",
+      "owner_path": ".agents/skills/seedance-prompt/references/parameter-reference.md",
+      "summary": "Every new generation on exact legacy native bindings listed in seedance-execution-profiles.md uses explicit resolution 480p and boolean draft true in both review modes. Other models use their verified operation profile for native or ordinary preview controls, or optional absent preview. Required ordinary preview selection and final intent are hash-bound; a separately reviewed and registered final never disables the prerequisite. Promote only selected native tasks with supported output settings and inspect final audio again.",
       "exceptions": [
-        "Other models without native Draft use a plain 480p test and a new reviewed final request; this is not a fallback for Seedance 2.5."
+        "Wholly unprofiled historical requests keep their compatibility hashes and policy; adoption never authorizes new execution."
       ]
     },
     {
@@ -435,7 +435,7 @@
         "preflight",
         "narrative_video"
       ],
-      "owner_path": ".agents/skills/seedance-prompt-25/references/audio-performance-camera.md",
+      "owner_path": ".agents/skills/seedance-prompt/references/audio-performance-camera.md",
       "summary": "Sound ownership follows the brief: requested native diegetic sound, including wordless action or ambience; an exact master or controlled post soundtrack; or purposeful silence with no added bed. Speech-free alone does not require picture-only. Preserve exact masters and approved native sound; use supported controls and verify unwanted audio, sync and master fidelity through playback and listening, again after promotion. Negative wording is not proof of compliance. Missing or conflicting ownership stays unresolved; preserve rights, consent and approvals.",
       "exceptions": [
         "A recorded, user-requested native-audio exception for a named take."
@@ -463,7 +463,7 @@
         "narrative_video",
         "editing"
       ],
-      "owner_path": ".agents/skills/seedance-prompt-25/SKILL.md",
+      "owner_path": ".agents/skills/seedance-prompt/SKILL.md",
       "summary": "Duration, resolution, aspect ratio and audio switches are request parameters; the prompt carries no ratio, resolution or duration sentence.",
       "exceptions": [
         "A skill whose documented prompt structure includes a parameter line."
@@ -476,7 +476,7 @@
         "narrative_video",
         "editing"
       ],
-      "owner_path": ".agents/skills/seedance-prompt-25/references/scene-action.md",
+      "owner_path": ".agents/skills/seedance-prompt/references/scene-action.md",
       "summary": "Track exact total identity separately from visible count for counted items, clones, crowds and repeated props. Account for hidden, off-screen, entering, exiting and occluded subjects and restate relevant positions after changes. Preserve locked reveal timing; first-frame visibility and repetition at every stage are not required when continuity is unambiguous. Contradictory totals, unexplained duplication and incompatible positions remain errors.",
       "exceptions": []
     },
@@ -487,7 +487,7 @@
         "narrative_video",
         "editing"
       ],
-      "owner_path": ".agents/skills/seedance-prompt-25/references/scene-action.md",
+      "owner_path": ".agents/skills/seedance-prompt/references/scene-action.md",
       "summary": "Every hand or side cue names both the character's anatomical side and the frame side.",
       "exceptions": []
     },
@@ -498,7 +498,7 @@
         "narrative_video",
         "editing"
       ],
-      "owner_path": ".agents/skills/seedance-prompt-25/SKILL.md",
+      "owner_path": ".agents/skills/seedance-prompt/SKILL.md",
       "summary": "Generated video requests no captions, subtitles, titles, taglines, CTAs, logos, end cards or AI labels, and recurring generic props and generated surfaces are described as plain or given a reference sheet.",
       "exceptions": []
     },
@@ -508,7 +508,7 @@
       "applies_to": [
         "narrative_video"
       ],
-      "owner_path": ".agents/skills/seedance-prompt-25/references/shot-staging.md",
+      "owner_path": ".agents/skills/seedance-prompt/references/shot-staging.md",
       "summary": "Each spoken line fits its shot using measured delivery or a native-language-informed read, including pauses, onset and tail. About 2.2 words per second, 0.5-1.5 s onset and 0.4 s tail are initial planning estimates, not universal gates; without delivery evidence, timing is provisional. Judge closing beats by readability of intended words, action and response, not a state-change count. Simplify only for demonstrated failure within source locks. Preserve requested language and locked words; propose retiming or splitting before an authorized wording revision.",
       "exceptions": []
     },

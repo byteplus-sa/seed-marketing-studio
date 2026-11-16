@@ -171,11 +171,20 @@ pin_local → breakdown_draft → breakdown_approved → elements_draft
    reference**. Observed: panel numbers, corner labels and the sketch look
    leaked into video, and output-copyright rejections rose.
 
+   **Optional conditioning:** boards, grids, panels and board-origin derivatives,
+   including crops, redraws and regeneration from panel prompts, remain planning-only.
+   Approval or a new render does not change their origin. Independently authored
+   non-board production stills and independent animated blockouts need their own
+   mode-authorized approval, current hashes, source lineage, rights, applicable
+   consent, exact-role support and artifact-specific QA, including leakage checks.
+   This is workspace policy, not a claim of provider incapability. Merely changing
+   `control_only` does not authorize conditioning; prompt-only work creates no assets.
+
 7. **Video** — use current capability evidence to choose one supported clip or
    multiple natural-duration shots plus assembly. Compose the Seedance 2.5
    six-part prompt from breakdown + board staging written as text + per-beat
    motion grammar + verified audio grammar and sync cues when audio is
-   requested + element sheets (via `seedance-prompt-25`), run `prompt-review`,
+   requested + element sheets (via `seedance-prompt`), run `prompt-review`,
    persist the prepared request, then submit via the supported durable
    transport. Prefer `seedance_2_5_create_task`; use an equivalent Ark CLI route
    only before any ambiguous submission and only when it satisfies the same
@@ -190,15 +199,17 @@ pin_local → breakdown_draft → breakdown_approved → elements_draft
    exact brand copy, logos and captions out of the video prompt (plain, clean
    space) and composite them afterwards as deterministic `html-graphic-render`
    overlays (ffmpeg `overlay` with a short alpha fade).
-   **Audio route:** when the pin's sound is score-led, ambient or a music bed,
-   generate picture with `generate_audio: false` and rebuild the sound grammar
-   with Seed Audio in post, because a "no speech" or "ambience only" line on
-   native audio often leaks speech or score. Keep native audio for on-camera
-   dialogue.
-   Expect Seedance to stretch dense beat timelines by roughly 0.5–1.2 s; a
-   stronger timing prompt rarely fixes it. When a take's beats land late, retime
-   in the edit (trim a held tail, clone-pad the final hold, crossfade audio)
-   rather than regenerating, and record the edit operations on the take.
+   **Sound ownership:** resolve the current brief, not the pin's genre.
+   Requested native dialogue, diegetic effects or wordless ambience stay native
+   where supported; exact supplied/post masters stay unchanged;
+   purposeful silence adds no bed. Mixed layers name their owners; missing or contradictory
+   ownership remains unresolved. Separate Seed Audio generation is opt-in.
+   Inspect playback/listening before any authorized muting or replacement.
+   Historical 2.5 dense-timeline drift reports are scoped observations, not
+   expected stretch for this model or permission to repair automatically.
+   Preserve fractional source spans, cuts and audio tails; compare actual beats
+   and propose trim, padding, retiming or a retake only for a measured defect.
+   Each selected repair records its scope and derivative provenance.
    Capture-format and texture looks in the pin (camcorder, film grain,
    scanlines, halation) are not reliably produced by prompt words; record them
    as a post treatment in the recipe and apply them only when the run locks
@@ -286,7 +297,7 @@ takes only.
 | Exact typography, screen/UI, title/end card, poster, product lineup, price/CTA, or static overlay | `html-graphic-render` |
 | Generative image with exact copy/layout | Select the generated image, then finish with `html-graphic-render` |
 | Animated exact graphic | HyperFrames; FFmpeg or HyperFrames for final video composition |
-| Seedance 2.5 video prompt | `seedance-prompt-25` |
+| Seedance 2.5 video prompt | `seedance-prompt` |
 | Prompt quality gate (generation-bound only) | `prompt-review` |
 | Persistent Studio review surface for shot takes (pre-Studio canvas: stage canvas) | `studio_project.py` (pre-Studio canvas: `showcase-html`) |
 
@@ -331,8 +342,10 @@ decision. Resolve schema or transport conflicts without dropping the flag.
 Promote the final only after passing draft
 review and mode-authorized selection (including draft assembly review for
 multi-shot work), then re-inspect the final: its audio is not identical to the
-draft's. There is no skip-draft exception. Other models without native Draft
-use a plain 480p test followed by a separately registered final request.
+draft's. There is no skip-draft exception for exact legacy native bindings.
+Other models use their verified operation preview mechanics and separately
+registered non-promotable finals; unknown support stays unresolved under the
+project [execution profile](../../contracts/seedance-execution-profiles.md).
 
 ## Storyboard rules
 
@@ -447,9 +460,10 @@ projects/<project>/
 
 ## Intentional conditioning representation
 
-Storyboards and analysis sketches are never conditioning inputs. Another
-derived control asset (for example a motion blockout) stays
-`control_only: true` until it is explicitly selected as a composition or motion
-reference; then record its manifest, current SHA-256, `reference_image` or
-`reference_video` role, and `control_only: false`, and confirm live mode
-support. Flipping the flag alone never grants approval.
+Storyboards, analysis sketches and board-origin derivatives remain ineligible
+for conditioning, including after redraw or regeneration. Independently authored
+non-board production stills and independent animated blockouts stay
+`control_only: true` until their own selection and all Optional conditioning
+checks above pass. Then record the manifest, current SHA-256, supported
+`reference_image` or `reference_video` role, and `control_only: false`.
+Flipping the flag alone never grants approval.

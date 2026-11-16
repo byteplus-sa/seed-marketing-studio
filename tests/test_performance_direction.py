@@ -65,7 +65,7 @@ class PerformanceAdoptionTests(unittest.TestCase):
             ".agents/skills/prompt-review/SKILL.md",
             ".agents/skills/ad-localize/SKILL.md",
             ".agents/skills/ad-variant-matrix/SKILL.md",
-            ".agents/skills/seedance-prompt-25/SKILL.md",
+            ".agents/skills/seedance-prompt/references/audio-performance-camera.md",
         ):
             with self.subTest(path=relative):
                 self.assertIn(RULE, read(relative))

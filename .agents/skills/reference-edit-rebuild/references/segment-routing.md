@@ -33,7 +33,7 @@ flowchart TD
 | `deterministic_graphic` | One HTML entrypoint rendered by `html-graphic-render`, animated in HyperFrames when it moves | Exact copy, fonts, UI, logos, price and CTA cards, counters, lower-thirds |
 | `keep` | Place the user's own footage unchanged | Record the source hash |
 | `post_effect` | FFmpeg or HyperFrames | Speed ramps, flashes, freezes, zooms, transitions |
-| `fresh_generation` | Seedream first frame with the locked identity references, then Seedance 2.5 image-to-video (no `ratio` with a first frame), prompt per `seedance-prompt-25` | Default for people-led edits: 5-8 distinct setups, each generated once and cut into many short appearances. Elsewhere, needs a recorded reason |
+| `fresh_generation` | Seedream first frame with the locked identity references, then Seedance 2.5 image-to-video (no `ratio` with a first frame), prompt per `seedance-prompt` | Default for people-led edits: 5-8 distinct setups, each generated once and cut into many short appearances. Elsewhere, needs a recorded reason |
 | `motion_recast` | `seedance-motion-recast` | Source clip, rights recorded, cast and world rebuilt around the same performance |
 | `object_swap` | `seedance-object-swap` | One named element changes, rest preserved; footage owned or permitted |
 

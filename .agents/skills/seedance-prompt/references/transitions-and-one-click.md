@@ -1,7 +1,12 @@
 # Transitions And One Click
 
-Focused reference for `seedance-prompt-25`. Read [the entrypoint](../SKILL.md) for
+Focused reference for `seedance-prompt`. Read [the entrypoint](../SKILL.md) for
 mode selection and caller responsibilities.
+
+These are optional 2.5-based creative patterns. Verify multi-image/video roles,
+transition or one-click operations and audio controls for the exact destination.
+No pattern grants permission to generate a bridge, upload inputs or replace
+locked source portions. Return unresolved compatibility separately.
 
 - [One-click video](#one-click-video)
 - [Seamless video transitions](#seamless-video-transitions)

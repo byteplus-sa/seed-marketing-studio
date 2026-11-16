@@ -91,9 +91,8 @@ between modalities.
 | Score, ambience, SFX or dialogue audio | `seed-audio-prompt` |
 | Narrative audio commercial | `seed-audio-commercial` |
 | Per-shot coverage, camera, lens intent and light for a scene | `seedance-shot-design` |
-| Seedance 2.5 video prompt | `seedance-prompt-25` |
-| Non-English or multilingual video dialogue | `seedance-prompt-25-dialogue` with `seedance-prompt-25` |
-| Seedance 2.0 video prompt | `seedance-prompt-20` |
+| Seedance video prompt for any selected exact model | `seedance-prompt` |
+| Non-English or multilingual video dialogue | `seedance-prompt-25-dialogue` with `seedance-prompt` |
 | Footage-driven VFX prompt | `seedance-vfx-prompt` |
 | End-to-end Seedance 2.0 VFX shot | `seedance-vfx-pipeline` |
 | Model submission, polling, artifact access, speech-to-text | `ark-mcp` |
@@ -113,11 +112,14 @@ Read [production defaults](references/production-defaults.md) before the first
 paid video submission and again at assembly. In short:
 
 1. **Mode-aware sampling, draft-first video.** Default produces one image;
-   strict uses three. Both start every new Seedance 2.5 generation with explicit
-   `resolution: "480p"` and boolean `draft: true`; other models without native
-   Draft use a plain 480p test. Explicit image counts win; new 2.5 generations
-   have no skip-draft exception. Resolve schema or transport conflicts
-   without dropping the native flag. Promotion requires unchanged inputs.
+   strict uses three. Both start new generation on exact legacy native bindings
+   in the execution-profile contract with explicit `resolution: "480p"` and
+   boolean `draft: true`, without a skip-draft exception. Other models use their
+   verified operation profile for native or ordinary preview mechanics, or
+   optional absent preview. Required ordinary preview selection is hash-bound
+   to separately registered final intent and rechecked at submitting.
+   Explicit image counts win. Resolve schema or transport conflicts
+   without dropping required native controls. Promotion requires unchanged inputs.
 2. **Audio route from the brief.** Native dialogue keeps native audio.
    Ambience-only, score-driven and wordless pieces generate picture with
    `generate_audio: false` and build the bed in post, because a "no music" line

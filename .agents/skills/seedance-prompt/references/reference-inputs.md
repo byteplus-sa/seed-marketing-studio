@@ -1,6 +1,6 @@
 # Reference Inputs
 
-Focused reference for `seedance-prompt-25`. Read [the entrypoint](../SKILL.md) for
+Focused reference for `seedance-prompt`. Read [the entrypoint](../SKILL.md) for
 mode selection and caller responsibilities.
 
 - [Reference materials](#reference-materials)
@@ -9,25 +9,21 @@ mode selection and caller responsibilities.
 
 ## Reference materials
 
-### Limits and recommended ranges
+### Scope and supported inputs
 
-Seedance 2.5 accepts up to **50 reference materials** per generation.
-
-| Material Type | Input Limit | Recommended Range |
-|---|---|---|
-| Images | Up to 30, each ≤ 4K | Prefer 1–8 distinct subjects |
-| Videos | Up to 10, combined ≤ 30s | Prefer 1–5 subjects, 5–10s each |
-| Audio | Up to 10, combined ≤ 30s | Keep only directly relevant dialogue/voice/ambience/music |
-| Video Editing | Source video + reference images | Source < 20s, 1–5 reference images |
-
-You may push beyond recommended ranges (9–12 subjects in images, 6–10 in
-audio/video, 6–8 editing refs), but **stability decreases** as count grows. If
->5 subjects need multiple views, use **separate images per view** — independent
-view images are more stable than collages.
+Select only references that contribute to the brief. Verify counts, sizes,
+duration, formats and allowed role combinations against the exact model,
+operation and destination; family names do not establish support. Historical
+limits live only in [Parameter Reference](parameter-reference.md).
+Use separate, selected views when they clarify a subject's structure. Do not
+split or replace a locked reference bundle without scope.
 
 ### Role definition syntax
 
-After uploading references, specify exactly what each one contributes. Add
+For each selected reference, specify exactly what it contributes. This leaf
+does not upload files. Typed labels such as `@Image 1`, `@Video 1`, `@Audio 1`
+are documented prompting conventions; verify destination syntax before execution.
+Number from one within each type and keep the supplied order. Add
 exclusions only when a person, background, or composition could unintentionally
 leak into the output.
 
@@ -48,6 +44,22 @@ The visuals feature <visual style>, with <camera treatment>.
 Add `"Do not use..."` exclusions **only** when a person, background, or
 composition in the reference could unintentionally leak into the output. You do
 not need one for every asset.
+
+### Stable subject definitions
+
+Give distinct recurring subjects stable labels and distinguishing static
+features, such as wardrobe, hairstyle or structure. Reuse those labels across
+shots; an expression or temporary pose is not identity. Optional `Define`
+wording from the 2.0 guide can clarify a crowded scene, but neither a keyword
+nor fixed section order is required by the general creative grammar.
+
+```text
+Define the courier in @Image 1, with a cropped jacket and short dark hair, as Courier.
+Define the attendant in @Image 2, with a plain apron, as Attendant.
+```
+
+Keep provider asset identifiers in separate bindings; readable subject labels
+and typed reference order explain which person or prop each shot concerns.
 
 ### Multiple views of the same subject
 
@@ -88,17 +100,17 @@ rather than relying on "no aura" constraints.
 
 ## Precedence and accepted inputs
 
-- **A bound photo outranks text for details it shows.** Landing gear that is
-  down in the reference stays down whatever the prompt says. Align the text
-  with the reference, or replace the reference.
-- **People in video inputs.** Extension and video-to-video inputs that contain
-  generated or real people are rejected for privacy unless those people are
-  `asset://` Virtual Portrait assets. Real-person reference photos are rejected
-  without an authorized asset. Compose with `seedance-virtual-portrait` for the
-  asset route; never disguise an input to pass the check.
-- **Face and body crops** bound as `reference_image` may be rejected; bind the
-  full sheet, or use the image as a first frame. A last frame alone is
-  rejected; use first + last.
+- **Visible reference conflicts.** A bound photo can outweigh text about the
+  same detail. If its landing gear is down but the brief locks it retracted,
+  surface the conflict and propose an authorized reference correction rather
+  than promise that adjectives override it.
+- **People in video inputs.** Keep likeness, face and voice authorization
+  independent. Follow the applicable provider asset rules and workspace
+  portrait policy; never disguise an input to evade a restriction. The caller
+  may compose the authorized asset route with `seedance-virtual-portrait`.
+- **Face/body crops and frame roles.** Verify eligibility for the exact
+  operation. Do not replace an unsupported crop with a first frame, or promote
+  a last-frame-only input into a different mode, without selection and support.
 - **Storyboards and boards are never inputs**; see
   [Keyframes Storyboards Blockouts](keyframes-storyboards-blockouts.md#storyboards-are-never-bound).
 

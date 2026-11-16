@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import fcntl
 import json
 import os
@@ -9,6 +10,7 @@ import tempfile
 from collections.abc import Iterator
 from contextlib import contextmanager
 from copy import deepcopy
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -246,6 +248,29 @@ def adopt_submitted_operation(
         ) from error
 
 
+def record_provider_completion(record: dict[str, Any], value: str) -> None:
+    if not isinstance(value, str):
+        raise TypeError("Provider completion time must be a timezone-aware ISO timestamp")
+    try:
+        completed = datetime.fromisoformat(value)
+    except ValueError as error:
+        raise ValueError("Provider completion time must be a timezone-aware ISO timestamp") from error
+    if completed.tzinfo is None or completed > datetime.now(UTC):
+        raise ValueError("Provider completion time must be timezone-aware and not in the future")
+    if (
+        record["submission_status"] != "terminal"
+        or not isinstance(record["provider_task_id"], str)
+        or not record["provider_task_id"].strip()
+        or not isinstance(record["provider_status"], str)
+        or not record["provider_status"].strip()
+    ):
+        raise ValueError("Provider completion time requires a terminal provider task ID and status")
+    extensions = record.setdefault("extensions", {})
+    if "provider_completed_at" in extensions and extensions["provider_completed_at"] != value:
+        raise ValueError("Conflicting provider completion time cannot replace recorded evidence")
+    extensions["provider_completed_at"] = value
+
+
 def transition_operation(
     root: Path,
     operation_id: str,
@@ -255,8 +280,12 @@ def transition_operation(
     provider_status: str | None = None,
     *,
     existing_submission: bool = False,
+    provider_completed_at: str | None = None,
 ) -> None:
-    if new_status not in TRANSITIONS.get(expected_status, set()):
+    reconciling_completion = (
+        expected_status == new_status == "terminal" and provider_completed_at is not None
+    )
+    if not reconciling_completion and new_status not in TRANSITIONS.get(expected_status, set()):
         raise ValueError(
             "Invalid operation transition; unknown acceptance cannot become a new submission"
         )
@@ -272,6 +301,11 @@ def transition_operation(
         )
         if record is None or record["submission_status"] != expected_status:
             raise ValueError("Operation missing or stale expected state")
+        if reconciling_completion and (
+            provider_task_id not in (None, record["provider_task_id"])
+            or provider_status not in (None, record["provider_status"])
+        ):
+            raise ValueError("Completion reconciliation cannot change provider task identity or status")
         if new_status == "submitting":
             evidence_findings = prepared_evidence_findings(
                 root, record, existing_submission=existing_submission
@@ -291,6 +325,42 @@ def transition_operation(
             record["provider_task_id"] = provider_task_id
         if provider_status is not None:
             record["provider_status"] = provider_status
+        if provider_completed_at is not None:
+            record_provider_completion(record, provider_completed_at)
         if schema_findings(record, "generation-request.schema.json"):
             raise ValueError("Transition requires a valid provider acknowledgment")
         replace_registry(path, registry)
+
+
+def main(argv: list[str] | None = None) -> int:
+    cli = argparse.ArgumentParser(description="Record local operation transitions; never calls a provider")
+    commands = cli.add_subparsers(dest="command", required=True)
+    transition = commands.add_parser("transition")
+    transition.add_argument("--project", type=Path, required=True)
+    transition.add_argument("--operation-id", required=True)
+    transition.add_argument("--expected-status", choices=TRANSITIONS, required=True)
+    transition.add_argument("--new-status", choices=TRANSITIONS, required=True)
+    transition.add_argument("--provider-task-id")
+    transition.add_argument("--provider-status")
+    transition.add_argument("--provider-completed-at")
+    args = cli.parse_args(argv)
+    try:
+        root = args.project.resolve()
+        if not root.is_dir():
+            raise ValueError("Project directory does not exist")
+        transition_operation(
+            root, args.operation_id, args.expected_status, args.new_status,
+            provider_task_id=args.provider_task_id, provider_status=args.provider_status,
+            provider_completed_at=args.provider_completed_at,
+        )
+    except (OSError, ValueError, TypeError, UnicodeError, YAMLError) as error:
+        print(json.dumps({"ok": False, "error": str(error)}))
+        return 1
+    print(json.dumps({
+        "ok": True, "operation_id": args.operation_id, "submission_status": args.new_status,
+    }))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

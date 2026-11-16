@@ -277,7 +277,7 @@ Store the source-bound performance plan in existing scene or shot notes and
 require `acting.plan_bound` in both review modes, including static-camera hooks.
 Source-preserving edits inherit acting; product-only work records non-applicability.
 
-The caller may compose this output with `seedance-prompt-25` for extended grammar
+The caller may compose this output with `seedance-prompt` for extended grammar
 or an axis specialist for deeper direction. These are optional prose hints only;
 the ordinary mode, preset and full-ad requests are self-contained here.
 

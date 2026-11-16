@@ -209,5 +209,5 @@ Surface source-count conflicts before generation; never bypass drafts or
 silently expand scope. Production checks are caller-owned, as are
 rights and disclosure decisions. Return only the needed package or revision.
 Optional caller composition may use film-production for execution,
-scene-craft for deeper scene audits, seedance-prompt-25 for model grammar,
+scene-craft for deeper scene audits, seedance-prompt for model grammar,
 and acting, camera or exact-graphics specialists. These are prose hints only.

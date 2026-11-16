@@ -137,7 +137,7 @@ media rather than treating a frame-count recipe as a guarantee.
    then mux the post-audio route and check sync.
 
 The canonical 2.5 edit blocks and face-protection lines come from
-`seedance-prompt-25` and `seedance-vfx-prompt`; a source subject map comes from
+`seedance-prompt` and `seedance-vfx-prompt`; a source subject map comes from
 `source-subject-map`. These are composition hints; this leaf does not load
 sibling skills.
 

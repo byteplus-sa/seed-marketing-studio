@@ -5,11 +5,15 @@ import hashlib
 import importlib.util
 import io
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
+
+import test_native_draft
+import test_seedance_capability_profiles
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / ".agents/skills/prompt-review/scripts/record_review.py"
@@ -199,6 +203,138 @@ class RecordReviewTests(unittest.TestCase):
             text=self.fenced(self.review(audio_hash)),
         )
         self.assertEqual(code, 1)
+
+
+class PreparedRequestReviewTests(unittest.TestCase):
+    def cli(self, script, arguments):
+        result = subprocess.run(
+            [sys.executable, "-B", str(ROOT / script), *arguments],
+            capture_output=True, text=True, check=False, timeout=30,
+        )
+        self.assertEqual(result.stderr, "", result.stderr)
+        return result.returncode, json.loads(result.stdout)
+
+    def prepared(self, kind, version=1):
+        fixture = test_native_draft.NativeDraftTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        if version == 2:
+            (fixture.root / "project.md").write_text(
+                "---\nreview_mode: default\napproval_mode: approve_for_me\n---\n"
+            )
+        if kind == "final":
+            fixture.profiled_source(native=False)
+            source = json.loads((fixture.root / "task_ids.json").read_text())["tasks"][0]
+            arguments = fixture.argv({"resolution": "1080p"}, source["model"])
+            arguments += [
+                "--ordinary-final-source", source["operation_id"],
+                "--ordinary-final-decision", "decisions/select-draft.json",
+            ]
+        elif kind == "preview":
+            fixture.caps = test_seedance_capability_profiles.profile()
+            arguments = fixture.argv({"resolution": "720p"}, fixture.caps["model"])
+        else:
+            arguments = fixture.argv({"resolution": "480p", "draft": True})
+        if kind != "legacy":
+            (fixture.root / "caps.json").write_text(json.dumps(fixture.caps))
+            arguments += [
+                "--capabilities", "caps.json", "--expected-provider", "fixture-provider",
+                "--expected-tool-schema-revision", "fixture-r1",
+            ]
+        arguments[arguments.index("--asset") + 1] = f"review-{kind}-v{version}"
+        code, result = self.cli(".agents/scripts/prepare_request.py", [*arguments, "--write"])
+        self.assertEqual(code, 0, result)
+        receipt = fixture.root / result["path"]
+        request = json.loads(receipt.read_text())
+        self.assertEqual(request["schema_version"], version)
+        self.assertEqual(validation.validate_request(fixture.root, request, fixture.caps), [])
+        return fixture.root, receipt, request
+
+    def record(self, root, receipt, request, *, explicit=False, evidence="Synthetic contract only"):
+        input_path = root / "reviewer.json"
+        input_path.write_text(json.dumps({
+            "schema_version": 1, "request_sha256": request["request_sha256"],
+            "reviewer_status": "complete",
+            "checks": [{"rule_id": "asset.visible_consistency", "status": "pass",
+                        "evidence": evidence}],
+        }))
+        identity = (
+            ["--request-sha256", request["request_sha256"], "--asset", request["asset_id"]]
+            if explicit else ["--request", receipt.relative_to(root).as_posix()]
+        )
+        return self.cli(
+            ".agents/skills/prompt-review/scripts/record_review.py",
+            ["--project", str(root), *identity, "--input", str(input_path), "--write"],
+        )
+
+    def test_actual_prepared_profiles_and_ordinary_finals_record_write_once(self):
+        for kind in ("preview", "final"):
+            for version in (1, 2):
+                with self.subTest(kind=kind, version=version):
+                    root, receipt, request = self.prepared(kind, version)
+                    original_receipt = receipt.read_bytes()
+                    code, result = self.record(root, receipt, request)
+                    self.assertEqual(code, 0, result)
+                    self.assertEqual(result["request_sha256"], request["request_sha256"])
+                    review_path = root / result["path"]
+                    original_review = review_path.read_bytes()
+                    self.assertEqual(self.record(root, receipt, request)[0], 0)
+                    code, result = self.record(root, receipt, request, evidence="Different evidence")
+                    self.assertEqual(code, 1, result)
+                    self.assertIn("overwrite", result["findings"][0]["message"])
+                    self.assertEqual(receipt.read_bytes(), original_receipt)
+                    self.assertEqual(review_path.read_bytes(), original_review)
+
+    def test_actual_unprofiled_receipts_preserve_historical_hashes(self):
+        for version in (1, 2):
+            with self.subTest(version=version):
+                root, receipt, request = self.prepared("legacy", version)
+                self.assertIsNone(validation.execution_profile(request))
+                digest = validation.compute_request_hash(
+                    (root / request["prompt_file"]).read_bytes(), request["references"],
+                    request["model"], request["operation"], request["params"],
+                    approval_mode=request.get("approval_mode"),
+                    project_sha256=request.get("project_sha256"),
+                )
+                self.assertEqual(digest, request["request_sha256"])
+                self.assertEqual(self.record(root, receipt, request)[0], 0)
+                self.assertEqual(self.record(root, receipt, request, explicit=True)[0], 0)
+
+    def test_profile_intent_prompt_and_reference_digest_tampering_write_nothing(self):
+        mutations = (
+            "destination", "evidence", "intent", "remove-profile", "remove-intent",
+            "prompt", "reference",
+        )
+        for mutation in mutations:
+            with self.subTest(mutation=mutation):
+                root, receipt, request = self.prepared("final")
+                binding = request["extensions"]["execution_profile"]
+                if mutation == "destination":
+                    binding["destination"]["provider"] = "other-provider"
+                elif mutation == "evidence":
+                    binding["evidence"]["profile_id"] = "other-profile"
+                elif mutation == "intent":
+                    binding["ordinary_final"]["decision_sha256"] = "0" * 64
+                elif mutation == "remove-profile":
+                    del request["extensions"]["execution_profile"]
+                elif mutation == "remove-intent":
+                    del binding["ordinary_final"]
+                elif mutation == "prompt":
+                    (root / request["prompt_file"]).write_text("Changed creative intent.\n")
+                else:
+                    request["references"] = [{
+                        "path": "frame.png", "sha256": "0" * 64,
+                        "role": "reference_image", "binding": "@Image 1",
+                        "approval_evidence": {"manifest": "frame.md", "field": "selected_variant"},
+                    }]
+                receipt.write_text(json.dumps(request))
+                original = receipt.read_bytes()
+                code, result = self.record(root, receipt, request)
+                self.assertEqual(code, 1, result)
+                self.assertIn("stale", result["findings"][0]["message"])
+                self.assertFalse((root / "reviews").exists())
+                self.assertEqual(receipt.read_bytes(), original)
+                self.assertEqual(self.record(root, receipt, request, explicit=True)[0], 0)
 
 
 if __name__ == "__main__":

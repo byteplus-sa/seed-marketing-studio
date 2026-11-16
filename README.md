@@ -266,7 +266,7 @@ human sign-off before final generation and delivery.
 
 ## Skills
 
-The workspace ships **93 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
+The workspace ships **92 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
 
 ### Orchestration and review
 
@@ -318,8 +318,7 @@ The workspace ships **93 skills**. Leaf skills are independent; declared orchest
 
 | Skill | Summary |
 |---|---|
-| **seedance-prompt-25** | Write production-grade Seedance 2.5 video prompts with the six-part formula, per-shot camera, lens and light, multimodal referencing, 4-30 s scene staging, dialogue timing, video editing and extension, keyframes, blockouts and draft-first request packaging. |
-| **seedance-prompt-20** | Legacy Seedance 2.0 prompt skill. Use when you need 4K output (unsupported by 2.5), Fast/Mini speed variants, or lower cost per generation. Provides reference-role classification, subject definitions, spatial continuity, shot sequencing, and native audio direction. |
+| **seedance-prompt** | Compose Seedance prompts, edits and extensions with flexible 2.5-based guidance, ordered references and source locks; preserve exact models and verify executable controls separately. |
 | **seedance-prompt-25-dialogue** | Direct spoken dialogue for Seedance in any language: native-language check, register and accent, code-switching, and word-scoped repairs. |
 | **seedance-animation-styles** | Writes Seedance animation prompts for claymation, needle felt, wood puppets, toy miniatures, vintage rubber hose, painterly 2D, cubist ink, stylized 3D, silicone creatures, wax crayon, and custom animation media. Preserves handcrafted texture and material-specific motion. |
 | **seedance-music-video** | Develop track-informed music-video treatments with intentional escalation, restraint, repetition or counterpoint and optional evidence-based synchronization. |

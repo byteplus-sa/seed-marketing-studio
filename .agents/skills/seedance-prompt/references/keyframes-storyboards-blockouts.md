@@ -1,6 +1,6 @@
 # Keyframes Storyboards Blockouts
 
-Focused reference for `seedance-prompt-25`. Read [the entrypoint](../SKILL.md) for
+Focused reference for `seedance-prompt`. Read [the entrypoint](../SKILL.md) for
 mode selection and caller responsibilities.
 
 - [Keyframes](#keyframes)
@@ -20,15 +20,19 @@ shortcut around review. Image text cannot itself enable an unsupported API role.
 ### First and last frames in R2V mode
 
 A first or last frame is a clean, full-frame keyframe in the final medium: no
-panel number, caption, border or sketch line. A last frame alone is rejected;
-pair it with a first frame.
+panel number, caption, border or sketch line. It needs independent selection,
+source lineage, current hashes and leakage QA. Crops, redraws and regeneration
+from a panel prompt retain planning origin; approval or a new render does not
+make them eligible keyframes. Use independently authored non-board production
+stills. Verify last-frame-only and paired-frame support
+against the selected operation instead of inventing an extra input.
 
 State `@Image 1 is the first frame` and `@Image 2 is the last frame` directly in
 multimodal reference mode only when current tool evidence supports this grammar
 and ordered image-role combination. This text does not override API constraints.
-For supported first-frame modes, the system locks
-the aspect ratio to the first image. First and last images **must share the same
-aspect ratio**.
+Where the selected first-frame mode locks aspect ratio to the first image,
+follow that contract; paired-frame shape and additional-reference compatibility
+also need current operation evidence.
 
 - Describe each anchor image **separately** — do not combine into one sentence.
 - Additional references supplement **only** their specified attributes and must
@@ -66,8 +70,9 @@ Maintain continuity in <subject identity, prop structure and ownership, scene la
 and axis of action> throughout.
 ```
 
-> Independent keyframe images are easier to align than a sequence crammed into one image. They control stage
-> order and key states; they do **not** reproduce every frame exactly.
+> Independently authored non-board keyframes can express stage order and key
+> states without a planning grid. Verify supported roles and inspect the result;
+> they do **not** reproduce every frame exactly.
 
 ## Storyboards are never bound
 
@@ -88,8 +93,10 @@ Carry the board into the prompt as text instead:
    subject action, end state and light (see [Shot Staging](shot-staging.md)).
 2. Bind the canonical character, location and prop references the board was
    drawn from. They own identity; the text owns composition and staging.
-3. When an exact opening composition matters, generate a clean keyframe in the
-   final medium and use it as a first frame instead of the panel.
+3. When an exact opening composition matters, return a missing clean-keyframe
+   slot or use an independently authored non-board production still with its own
+   selection and supported role. New still generation requires caller
+   authorization; a board-derived redraw remains planning-only.
 
 Audit every take conditioned near a board: sample frames across the clip and
 crop the top-left corner of each sample to catch baked digits or labels early.
@@ -182,3 +189,5 @@ keeps contact / rotates with travel / reaches the final relationship> during
 After generation, verify these criteria through temporal inspection of the
 actual video. Contact sheets can confirm appearance at selected moments but
 cannot establish trajectory, speed, contact, reaching, or camera continuity.
+The frame-for-frame wording states the requested preservation target, not a
+guarantee of numeric precision; unresolved fidelity must not be marked passed.

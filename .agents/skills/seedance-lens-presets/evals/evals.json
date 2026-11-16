@@ -105,11 +105,12 @@
     {
       "id": 9,
       "prompt": "Write the lens line for a push-in where her face drifts out of focus while the camera keeps moving, to show she is losing control.",
-      "expected_output": "An explanation that prompted focus loss tends not to hold, with a lens line using ordinary focus and the defocus moved to post.",
+      "expected_output": "A prompt-only focus-loss intention preserving the push-in, with the retained six-take historical observation scoped to tested 2.5 drafts and any post repair left unselected.",
       "files": [],
       "expectations": [
         "It does not present the drifting focus as a reliable prompt preset.",
-        "It recommends generating with ordinary focus and adding a defocus ramp in post, or using light and the edit instead.",
+        "It scopes the six-take observation to the reported 480p 2.5 T2V Draft conditions, without claiming reinspection or a family-wide impossibility.",
+        "It keeps focus loss available as prompt-only intent and treats post, another model or a probe as an unselected alternative requiring authorization.",
         "It does not stack extra blur or a second move in the prompt.",
         "It keeps the push-in as the camera move."
       ]
@@ -141,13 +142,13 @@
     {
       "id": 10,
       "prompt": "Write the lens line for a shot where a bloodied knife sits sharp in the foreground of a kitchen and focus then pulls onto the face of the woman standing behind it.",
-      "expected_output": "A rack focus line that names both planes as visible results, timed, with the pull onto the face marked as an unverified heuristic to check in a 480p draft.",
+      "expected_output": "A timed prompt-only rack-focus intention naming both planes, with reliability unknown for the selected model unless scoped evidence establishes it.",
       "files": [],
       "expectations": [
         "The line names the knife as the starting sharp plane and the woman's face as the ending sharp plane, each as a visible result.",
         "The focus change has a time or a clear start and end.",
-        "The output marks a pull onto a face as unverified and suggests checking it in a 480p draft.",
-        "It contrasts this with a pull away from a face, which belongs in post.",
+        "The output marks unverified behavior unknown and leaves any additional probe optional and explicitly authorized.",
+        "It does not force a pull away from a face into post or guarantee a pull onto a face across the family.",
         "No numeric aperture or focal length appears without a visible result."
       ]
     }

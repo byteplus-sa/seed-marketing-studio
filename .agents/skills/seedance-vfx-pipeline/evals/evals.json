@@ -1,0 +1,38 @@
+{
+  "skill_name": "seedance-vfx-pipeline",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Recast only the umbrella in this 7.37-second source, keeping its cuts, motion and original audio tail. No extra probes or retiming.",
+      "expected_output": "A full-source supported preview plan with exact fractional timing and unchanged sound ownership.",
+      "files": [],
+      "expectations": [
+        "Preserves 7.37-second source timing, cut boundaries and audio-tail duration without rounding, padding or trimming.",
+        "Does not schedule or cost a key-beat probe by default.",
+        "Unknown supported source duration remains unresolved; no alternative model or route is automatically selected."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Restyle the same source using words only. I have not selected any environment image. Planning only.",
+      "expected_output": "A words-only restyle plan with optional conditioning unresolved and no media calls.",
+      "files": [],
+      "expectations": [
+        "Does not require or generate a replacement environment image.",
+        "Any optional image needs deliberate selection, current hashes, provenance and a verified operation role.",
+        "Writes no production state, submits no request and adds no probes."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Authorize one separate 1.25-second identity probe before the full-source preview. Keep the 8.63-second source and its audio tail locked.",
+      "expected_output": "A separately scoped derivative probe followed by the unchanged source plan.",
+      "files": [],
+      "expectations": [
+        "Records the probe's derivative range and authorization separately from the source.",
+        "Checks the selected operation can represent 1.25 seconds before emission, otherwise reports unresolved support.",
+        "Counts only actual authorized work and does not add an automatic correction allowance."
+      ]
+    }
+  ]
+}

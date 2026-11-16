@@ -1,6 +1,6 @@
 # Scene Action
 
-Focused reference for `seedance-prompt-25`. Read [the entrypoint](../SKILL.md) for
+Focused reference for `seedance-prompt`. Read [the entrypoint](../SKILL.md) for
 mode selection and caller responsibilities.
 
 - [Scene staging](#scene-staging)
@@ -20,11 +20,11 @@ A clip that cuts uses shots rather than stages; see
 [Shot Staging](shot-staging.md). Stages suit a continuous take or a story that
 changes state without changing camera setup.
 
-**Generate per scene at its natural duration (4–30s), not per 30-second block.**
-Right-size each scene using the `duration` parameter — 7s for a single beat,
-12s for a short dialogue exchange, 20s for a multi-stage action sequence. Do
-not pad scenes to fill 30s. Chain approved scenes via `return_last_frame` /
-`first_frame` and assemble in post. Add a shared reference bundle only when
+**Fit the requested scene to its natural creative duration, not a fixed block.**
+Keep executable duration limits separate and verify them for the selected
+operation. Do not pad a scene to fill a historical ceiling. Chaining approved
+scenes via `return_last_frame` / `first_frame` or assembly remains a caller-owned,
+authorized alternative. Add a shared reference bundle only when
 the selected live tool/model explicitly supports mixed frame/reference roles;
 a chaining recipe never overrides input compatibility.
 
@@ -54,31 +54,30 @@ Keep <character identity, number of characters, clothing, prop ownership, spatia
 and audio relationships> consistent.
 ```
 
-### When to use 30s single-pass or native extension (exception)
+### Continuous takes and native extension
 
-Native extension (up to 180s, beta) and full 30s single-pass are the **exception**,
-not the default. Use them only when you explicitly need continuous, seamless
-motion across what would otherwise be scene boundaries:
+A long single pass or native extension is an optional response to continuous
+motion across scene boundaries, not a mandatory duration recipe. Verify the
+selected operation before proposing execution:
 
 - **Single continuous take** — a one-shot with no cuts where seamless motion
   across 30s+ matters more than per-scene iteration control.
 - **Minimal scene variation** — same location, same characters, gradual change
   that the model handles well in one pass.
-- **Audio-driven long dialogue** — one long dialogue block where lip-sync must
-  be continuous across scene boundaries; extension keeps it seamless.
+- **Audio-driven long dialogue** — continuous speech may motivate extension,
+  but language, synchronization and boundary fidelity still need verification.
 
-If using extension: generate a 30s base take, then extend it forward/backward
-in rounds — **do not force scene changes at every 30s mark**; scene changes
-happen naturally where the story needs them.
+Preserve the selected source and requested added span; do not force a new base
+take or scene changes at a fixed interval. Prompt writing grants no generation,
+extension, trimming or retiming scope.
 
 - **Audio with extension (only when separate lip-sync audio is requested).**
-  Align a single Seed Audio master to the full timeline
-  (up to ~2 min) and pass it as `reference_audio` so dialogue and sound stay
-  continuous across the extension.
+  Preserve a selected master and its timeline. A `reference_audio` binding is
+  eligible only with verified combination support; it does not guarantee sync.
 - **Validate seams.** Extension boundaries are not pixel-identical; inspect the
   boundary image, motion trend, and audio continuity on both sides of each seam.
-  Multi-round extension is beta — validate each seam before committing.
-- **Aspect ratio** is locked to the input video's ratio for extended segments.
+  Validate every authorized extension boundary before acceptance.
+- **Source geometry** stays locked; API ratio controls follow the verified profile.
 
 ### Timestamps and pacing
 

@@ -49,9 +49,9 @@ and soundtrack changes. Never force a deeper level than the change needs.
 | Setting | L4 | `seedance-object-swap` (location class), or recast when cast and setting both change |
 | Prop, wardrobe | L4 | `seedance-object-swap` (prop or outfit class), one class per pass |
 | Product SKU, packaging | L4 | `product-intake` for the market packshot, then `seedance-object-swap` (product class) |
-| Gesture, action, blocking | L5 for that beat (or a recast that maps the beat to new motion when the source motion is acceptable) | new shot through `seedance-prompt-25` |
+| Gesture, action, blocking | L5 for that beat (or a recast that maps the beat to new motion when the source motion is acceptable) | new shot through `seedance-prompt` |
 | Music bed | L4 | a new bed through `seed-audio-prompt`, or a licensed track the user supplies |
-| Script, hook, angle, structure | L5 | `brief-intake`, `seedance-ugc-ads`, `seedance-prompt-25` |
+| Script, hook, angle, structure | L5 | `brief-intake`, `seedance-ugc-ads`, `seedance-prompt` |
 
 A swap keeps the source motion, so it cannot remove a gesture or an action.
 Performance is inherited at L1-L4 unless the inventoried change explicitly
@@ -238,7 +238,7 @@ product's identity and the market's supported facts.
    reference. Check native speech support for the language with
    `seedance-prompt-25-dialogue` and record the result before any shot speaks.
 3. Produce it as a new hero ad in the localized project through the normal
-   production flow: shot plan, element locks, `seedance-prompt-25` prompts
+   production flow: shot plan, element locks, `seedance-prompt` prompts
    with the dialogue layer from `seedance-prompt-25-dialogue`, prompt-review,
    registry, 480p drafts, review and selection.
 4. Final-resolution generation and delivery wait for the reviewer sign-off.

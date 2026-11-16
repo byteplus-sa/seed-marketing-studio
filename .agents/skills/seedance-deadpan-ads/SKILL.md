@@ -197,5 +197,5 @@ Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
 Surface source-count conflicts before generation; never bypass drafts or
 silently expand scope.
 Optional caller composition may use film-production for execution,
-seedance-prompt-25 for model grammar, and acting, camera or exact-graphics
+seedance-prompt for model grammar, and acting, camera or exact-graphics
 specialists. These are prose hints, never sibling commands or dependencies.
