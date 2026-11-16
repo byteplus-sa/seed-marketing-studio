@@ -262,10 +262,12 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
   clones through `template-factory`; preserve product facts, campaign pins and
   disclosure decisions. See
   [Routing](.agents/contracts/routing.md).
-- Elements define identity; derivative boards require current source hashes and
-  explicit selection before video use. Control-only diagrams stay analysis-only
-  by default. New projects use applicable confirmed workspace preferences;
-  otherwise set `approval_mode: approve_for_me` in `project.md`;
+- Elements define identity; boards and board-origin derivatives remain planning-only.
+  Independently authored non-board stills and independent animated blockouts
+  require their own selection, current hashes, lineage, rights, applicable consent,
+  exact-role support and artifact-specific QA before video use. Control-only
+  diagrams stay analysis-only by default. New projects use applicable confirmed
+  workspace preferences; otherwise set `approval_mode: approve_for_me` in `project.md`;
   `ask_for_approval` is the alternative. A legacy project without the field uses
   the default for new decisions only. In `approve_for_me`, an agent may select
   and approve a passing candidate after modality-appropriate inspection and a

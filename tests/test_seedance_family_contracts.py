@@ -1,3 +1,4 @@
+import json
 import unittest
 from pathlib import Path
 
@@ -60,6 +61,52 @@ class MarketingContractTests(unittest.TestCase):
         self.assertIn("control_only", text)
         self.assertIn("current hashes", text)
         self.assertIn("planning-only", text)
+
+    def test_factory_rejects_board_origin_after_redraw_regeneration_or_approval(self):
+        text = " ".join((ROOT / "template-factory/SKILL.md").read_text().lower().split())
+        optional = text.split("**optional conditioning:**", 1)[1].split("7. **video**", 1)[0]
+        for phrase in (
+            "board-origin derivatives",
+            "crops, redraws and regeneration from panel prompts",
+            "remain planning-only",
+            "approval or a new render does not change their origin",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, optional)
+        self.assertNotIn("a clean final-medium derivative can be selected", optional)
+
+    def test_factory_independent_conditioning_retains_evidence_and_prompt_only_scope(self):
+        text = " ".join((ROOT / "template-factory/SKILL.md").read_text().lower().split())
+        optional = text.split("**optional conditioning:**", 1)[1].split("7. **video**", 1)[0]
+        representation = text.split("## intentional conditioning representation", 1)[1]
+        for section in (optional, representation):
+            for phrase in ("independently authored non-board production stills", "independent animated blockouts"):
+                with self.subTest(section=section, phrase=phrase):
+                    self.assertIn(phrase, section)
+        for phrase in ("mode-authorized approval", "current hashes", "source lineage", "rights", "consent", "exact-role support", "artifact-specific qa"):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, optional)
+        self.assertIn("prompt-only work creates no assets", optional)
+        self.assertIn("board-origin derivatives remain ineligible", representation)
+        self.assertIn("flipping the flag alone never grants approval", representation)
+
+    def test_factory_board_eval_rejects_derivative_laundering_without_forbidding_independent_inputs(self):
+        data = json.loads((ROOT / "template-factory/evals/evals.json").read_text())
+        case = next(case for case in data["evals"] if case["id"] == 8)
+        output = case["expected_output"].lower()
+        assertions = " ".join(case["assertions"]).lower()
+        self.assertIn("board-origin derivatives remain planning-only", output)
+        self.assertIn("independently authored non-board", output)
+        for phrase in ("crops", "redraws", "panel prompts", "approval", "new render"):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, assertions)
+        self.assertNotIn("permits a separately selected clean derivative", output)
+
+    def test_root_policy_keeps_board_origin_ineligible_and_independent_inputs_conditional(self):
+        text = " ".join((ROOT.parents[1] / "AGENTS.md").read_text().lower().split())
+        self.assertIn("boards and board-origin derivatives remain planning-only", text)
+        self.assertIn("independently authored non-board stills and independent animated blockouts", text)
+        self.assertNotIn("derivative boards require current source hashes and explicit selection before video use", text)
 
 
 if __name__ == "__main__":

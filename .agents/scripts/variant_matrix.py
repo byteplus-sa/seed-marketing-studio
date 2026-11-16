@@ -641,7 +641,7 @@ def step_params(route: str, options: argparse.Namespace) -> list[str]:
             if duration["support"] != "verified" or not duration.get("minimum_s"):
                 raise ValueError("Hook minimum duration is unknown in the selected profile")
             values["duration"] = duration["minimum_s"]
-        return [f"{key}={json.dumps(value, ensure_ascii=False) if not isinstance(value, str) else value}"
+        return [f"{key}={json.dumps(value, ensure_ascii=False)}"
                 for key, value in values.items()]
     resolution = (
         DRAFT_RESOLUTION if options.stage == "draft" else options.final_resolution

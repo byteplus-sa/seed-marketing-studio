@@ -438,3 +438,37 @@ evidence uses capability-evidence.schema.json and self-contained parameter
 schemas; external schema URLs are rejected.
 
 The operation_store.py helper exposes prepare_operation(root, request, capabilities, review, required_rule_ids) and transition_operation(root, operation_id, expected_status, new_status, provider_task_id, provider_status). `review=None` is valid only in default mode without required rules. Prepare only after the immutable snapshot exists. Validation occurs before registry writes; policy and project digest are rechecked under the registry lock. A file lock, unique operation/asset identities, expected state and atomic replace prevent duplicate local preparation and stale transitions. This does not promise provider idempotency. Legacy or invalid registries are preserved and require a migration preview.
+
+`transition_operation` also accepts keyword-only `provider_completed_at`.
+Supply the actual provider-reported completion timestamp when recording a
+terminal result, never the local preparation, polling or registration time.
+The helper requires a timezone-aware ISO timestamp no later than the current
+time, a terminal state and a nonempty provider task ID and status. It stores
+the supplied value at `extensions.provider_completed_at` under the same lock
+and atomic registry write. Request receipts, prompt bytes, request hashes and
+execution profiles remain unchanged. Old completion times remain honest
+evidence; the existing promotion age and success checks still apply. Omission
+does not invent a timestamp and leaves a profiled native source non-promotable.
+
+The local CLI exposes the same transition API without calling a provider:
+
+```bash
+uv run python .agents/scripts/operation_store.py transition \
+  --project projects/<project> --operation-id <registered-operation> \
+  --expected-status acknowledged --new-status terminal \
+  --provider-status succeeded \
+  --provider-completed-at '<actual-provider-ISO-timestamp>'
+```
+
+Only use `succeeded` after the provider reports success. Record the actual
+status for failures; a completion timestamp is not success or editorial approval.
+For earlier states use the same CLI with `--expected-status prepared
+--new-status submitting`, then `--expected-status submitting --new-status
+acknowledged --provider-task-id <id> --provider-status <actual-status>`.
+
+For a terminal record missing completion evidence, including an adopted job,
+use `--expected-status terminal --new-status terminal` with
+`--provider-completed-at` only after recovering the actual timestamp. This
+evidence-only reconciliation cannot change provider identity or status, reopen
+submission, or replace a conflicting timestamp. An exact replay is accepted.
+Unknown completion time stays unresolved; never edit registry JSON to bypass it.

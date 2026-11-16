@@ -58,7 +58,12 @@ Native promotion needs the exact registered successful full-source native task,
 unchanged prompt/references, matching transport/operation/profile, actual
 hash-bound selection and unexpired evidence/source. Version 2 requires
 `promotion.support: verified`, `max_age_seconds`, supported `resolutions` and
-`extensions.provider_completed_at` on the source. Reinspect actual finals.
+`extensions.provider_completed_at` on the source. Record the actual
+provider-reported timestamp through `transition_operation(...,
+provider_completed_at=...)` or `operation_store.py transition
+--provider-completed-at`; see the [lifecycle API](production-policy.md#local-preflight-tooling).
+Missing evidence stays unresolved; local polling time is not completion evidence.
+Reinspect actual finals.
 Historical plain tasks never become native Draft through a new profile.
 Nonlegacy native controls and selected-source eligibility come from the verified
 native preview parameters, including boolean `draft: true` and its evidenced

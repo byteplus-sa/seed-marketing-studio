@@ -171,10 +171,13 @@ pin_local → breakdown_draft → breakdown_approved → elements_draft
    reference**. Observed: panel numbers, corner labels and the sketch look
    leaked into video, and output-copyright rejections rose.
 
-   **Optional conditioning:** boards, grids and panels remain planning-only.
-   A clean final-medium derivative can be selected independently for a supported
-   composition, motion or frame role only with mode-authorized approval,
-   current hashes, source lineage and actual leakage QA. Merely changing
+   **Optional conditioning:** boards, grids, panels and board-origin derivatives,
+   including crops, redraws and regeneration from panel prompts, remain planning-only.
+   Approval or a new render does not change their origin. Independently authored
+   non-board production stills and independent animated blockouts need their own
+   mode-authorized approval, current hashes, source lineage, rights, applicable
+   consent, exact-role support and artifact-specific QA, including leakage checks.
+   This is workspace policy, not a claim of provider incapability. Merely changing
    `control_only` does not authorize conditioning; prompt-only work creates no assets.
 
 7. **Video** — use current capability evidence to choose one supported clip or
@@ -457,9 +460,10 @@ projects/<project>/
 
 ## Intentional conditioning representation
 
-Storyboards and analysis sketches are never conditioning inputs. Another
-derived control asset (for example a motion blockout) stays
-`control_only: true` until it is explicitly selected as a composition or motion
-reference; then record its manifest, current SHA-256, `reference_image` or
-`reference_video` role, and `control_only: false`, and confirm live mode
-support. Flipping the flag alone never grants approval.
+Storyboards, analysis sketches and board-origin derivatives remain ineligible
+for conditioning, including after redraw or regeneration. Independently authored
+non-board production stills and independent animated blockouts stay
+`control_only: true` until their own selection and all Optional conditioning
+checks above pass. Then record the manifest, current SHA-256, supported
+`reference_image` or `reference_video` role, and `control_only: false`.
+Flipping the flag alone never grants approval.

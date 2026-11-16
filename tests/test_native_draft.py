@@ -157,6 +157,11 @@ class NativeDraftTests(unittest.TestCase):
             provider_status="succeeded",
             review_status="approved",
         )
+        self.write_selection(draft)
+        self.write_registry(draft)
+        return draft
+
+    def write_selection(self, draft):
         output = self.root / "cup_t01.mp4"
         output.write_bytes(b"offline video fixture")
         digest = hashlib.sha256(output.read_bytes()).hexdigest()
@@ -198,8 +203,6 @@ class NativeDraftTests(unittest.TestCase):
         }
         (self.root / "decisions").mkdir(exist_ok=True)
         (self.root / "decisions/select-draft.json").write_text(json.dumps(decision))
-        self.write_registry(draft)
-        return draft
 
     def write_registry(self, draft):
         (self.root / "task_ids.json").write_text(

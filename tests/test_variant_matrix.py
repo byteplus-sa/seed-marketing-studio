@@ -622,7 +622,7 @@ class VariantMatrixTests(unittest.TestCase):
         for operations in result["operations"].values():
             for operation in operations:
                 command = operation["register_command"]
-                self.assertIn("resolution=480p", params(command))
+                self.assertEqual(prepare_request.parse_params(params(command))["resolution"], "480p")
                 self.assertNotIn("draft=true", params(command))
                 self.assertFalse(SHOT_RULES & required_rules(command))
                 self.assertNotIn("video.text_free", required_rules(command))
@@ -664,7 +664,7 @@ class VariantMatrixTests(unittest.TestCase):
                 for operations in result["operations"].values():
                     for operation in operations:
                         for key in ("hash_command", "register_command"):
-                            self.assertIn("resolution=480p", params(operation[key]))
+                            self.assertEqual(prepare_request.parse_params(params(operation[key]))["resolution"], "480p")
                             self.assertIn("draft=true", params(operation[key]))
 
     def test_seedance_non_draft_stages_require_native_promotion_handoff(self):
@@ -739,7 +739,7 @@ class VariantMatrixTests(unittest.TestCase):
                     if operation["route"] == "language-dub":
                         self.assertEqual(values, [])
                     else:
-                        self.assertIn("resolution=480p", values)
+                        self.assertEqual(prepare_request.parse_params(values)["resolution"], "480p")
                         self.assertIn("draft=true", values)
         self.assertTrue({"motion-recast", "object-swap", "language-dub"} <= routes)
 
@@ -1263,7 +1263,7 @@ class VariantMatrixTests(unittest.TestCase):
         _, operation = self.hook_operation(result)
         for key in ("hash_command", "register_command"):
             command = operation[key]
-            self.assertIn("resolution=480p", params(command), key)
+            self.assertEqual(prepare_request.parse_params(params(command))["resolution"], "480p", key)
             self.assertIn("duration=4", params(command), key)
             self.assertTrue(COMMON_RULES | SHOT_RULES <= required_rules(command), key)
         self.assertEqual(operation["stage"], "draft")
@@ -1293,7 +1293,7 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertTrue(COMMON_RULES <= rules)
         self.assertFalse(SHOT_RULES & rules)
         self.assertIn("source-preserving", swap["shot_rule_exemption"])
-        self.assertIn("resolution=480p", params(swap["register_command"]))
+        self.assertEqual(prepare_request.parse_params(params(swap["register_command"]))["resolution"], "480p")
         self.assertNotIn("duration=4", params(swap["register_command"]))
         dub_row = next(r for r in result["rows"] if r["changed_axes"] == ["language"])
         [dub] = result["operations"][dub_row["name"]]
@@ -1327,7 +1327,7 @@ class VariantMatrixTests(unittest.TestCase):
                 for key in ("hash_command", "register_command"):
                     self.assertIn("acting.plan_bound", required_rules(hook[key]))
                     self.assertIn("draft=true", params(hook[key]))
-                    self.assertIn("resolution=480p", params(hook[key]))
+                    self.assertEqual(prepare_request.parse_params(params(hook[key]))["resolution"], "480p")
                 self.assertIn("acting-direction", hook["skills"])
                 self.assertLess(hook["skills"].index("acting-direction"), hook["skills"].index("seedance-acting-console"))
                 self.assertLess(hook["skills"].index("seedance-acting-console"), hook["skills"].index("seedance-prompt"))
@@ -1381,8 +1381,7 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertEqual(code, 0, final)
         _, operation = self.hook_operation(final)
         self.assertEqual(operation["asset"], f"{row['name']}_t01_final")
-        self.assertIn("resolution=1080p", params(operation["register_command"]))
-        self.assertNotIn("resolution=480p", params(operation["register_command"]))
+        self.assertEqual(prepare_request.parse_params(params(operation["register_command"]))["resolution"], "1080p")
         assets = {
             op["asset"]
             for result in (draft, retake, final)

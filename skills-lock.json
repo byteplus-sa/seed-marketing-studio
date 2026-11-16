@@ -474,7 +474,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/template-factory/SKILL.md",
-      "computedHash": "9d13ab13c52a04fb113e6c2cfd53d3549bd74a80b9d984581529cde168e72d38"
+      "computedHash": "f096841c23dbf884602048e7a538cfce20ef0bf8e753fd45ae07d2e0f80cd998"
     },
     "blocking-map": {
       "source": "./local",

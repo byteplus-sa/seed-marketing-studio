@@ -189,8 +189,10 @@ class CapabilityProfileTests(unittest.TestCase):
             )},
             "evidence": self.evidence,
         }
-        self.assertEqual(variant_matrix.step_params("hook-opening", options),
-                         ["resolution=720p", "duration=2.5"])
+        self.assertEqual(
+            prepare_request.parse_params(variant_matrix.step_params("hook-opening", options)),
+            {"resolution": "720p", "duration": 2.5},
+        )
         self.assertEqual(variant_matrix.step_params("language-dub", options), [])
         self.assertEqual(variant_matrix.step_params("ratio-reframe", options), [])
 

@@ -95,13 +95,14 @@
     {
       "id": 8,
       "prompt": "The selected full-colour storyboard looks perfect. Attach the board as @Image 1 so Seedance copies its framing exactly.",
-      "expected_output": "Keeps the board planning-only; permits a separately selected clean derivative only with current hashes, lineage, approved role and verified operation support.",
+      "expected_output": "The board and board-origin derivatives remain planning-only; translates staging into text. Only independently authored non-board production stills or independent animated blockouts may qualify through their own evidence and selection.",
       "files": [],
       "assertions": [
         "Does not bind the board or grid merely because it was selected for planning, or because control_only changed.",
-        "Explains that panel numbers, labels and the board look leak into video and raise output-copyright rejections.",
-        "Translates framing, blocking and end state into text; any clean derivative has explicit selection, source lineage, current hashes and a supported binding role.",
-        "Plans take QA for leaked labels, borders, style and copyright; missing evidence leaves conditioning unresolved."
+        "Keeps crops, redraws and regeneration from panel prompts ineligible even after approval or a new render.",
+        "Translates framing, blocking and end state into text without creating or attaching a board-derived substitute.",
+        "Independent non-board stills and independent animated blockouts need their own selection, source lineage, current hashes, rights, applicable consent, exact-role support and artifact-specific QA.",
+        "Explains the workspace planning-origin policy without claiming that the provider cannot accept boards; missing evidence leaves independent conditioning unresolved."
       ]
     },
     {
