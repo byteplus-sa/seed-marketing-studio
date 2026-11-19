@@ -41,6 +41,8 @@ Copy each file to a **reader-friendly name** first (for example
    video belongs, in chunks (create the skeleton, then `append` section by
    section; one huge write can time out).
 2. For each video:
+   Reconcile the receipt before retrying, then upload only if no matching
+   acknowledged upload or intended placement exists.
 
    ```bash
    lark-cli docs +media-insert --as user --doc "$DOC" \
@@ -70,6 +72,25 @@ keeps the filename. Replace each image once with
 `<img src="TOKEN" width="380" name="Reader title" caption="..."/>` (token taken
 from a fetch) so the reader-facing name is stored.
 
+### Receipt and interrupted-write recovery
+
+Use the installed `lark-demo-doc-builder` playable-media reference's receipt
+contract. Bind each receipt to the document id, source SHA-256 and intended
+target section/row/cell; capture actual upload responses and post-write fetches
+immediately. Keep tokens, current block IDs, revision and evidence internally.
+
+Before retrying, compare the receipt with fresh document state and served bytes.
+If the target is already correct, do not upload again. If the upload exists only
+at the document end, reuse its current token and finish placement. A timeout
+with no reconciled outcome remains unknown; stop rather than blindly retrying.
+Changed target content requires reassessment, not overwriting concurrent edits.
+Delete only task-owned staging blocks after verifying the intended placement.
+
+Preserve acceptance for the same hash and scope across retries and placement.
+An accepted identical file does not need repeated approval; changed rendered
+bytes require review under the applicable approval mode. Lark placement never
+changes creative selections or approval records.
+
 ### 4. Verify what the reader will receive
 
 After the last write, fetch with `--detail with-ids` and, for every Preview
@@ -83,6 +104,8 @@ lark-cli docs +media-download --as user --token "$TOKEN" --output ./served/$TOKE
 
 Confirm identical SHA-256, `moov` near the start and a clean decode. Also check
 the final write counts: expected number of figures, images, and `<pre>` blocks.
+Record structural placement, served identity/decode and in-client playback
+separately. A hash or decode pass does not establish actual audiovisual review.
 
 ### 5. Say what is and is not verified
 

@@ -2,6 +2,15 @@
 
 When the source material comes from internal prompting or generation workflows:
 
+Exact prompt cells are exempt from cleanup. Preserve the frozen UTF-8 text
+byte for byte after XML entity decoding and reconstruction of original newlines.
+Do not normalize whitespace, rename references, shorten, or insert labels
+inside exact prompts. Keep any reference legend outside the code block.
+If a reader-facing excerpt is requested, label it `Generation prompt excerpt`,
+never `Exact prompt`, and preserve the original snapshot separately.
+
+For non-exact excerpts and reader-facing prose only:
+
 - preserve the exact business-relevant prompt wording when possible;
 - remove internal-only labels, scratch notes, and local storage references;
 - rewrite path-like references into readable descriptions;
@@ -18,10 +27,9 @@ If a prompt includes named references, convert them into external-facing labels 
 
 If the source prompt uses many internal reference labels, add a short "Reference legend" near the prompt so external readers understand the role of each reference without seeing internal asset names or storage details.
 
-### Soft-wrap prompt code blocks (default lint)
+### Native-wrap prompt code blocks
 
-Every prompt code block is soft-wrapped by default. Never write a prompt as
-one long unwrapped line that forces horizontal scrolling in a table cell.
+Enable native wrapping on every prompt code block without changing its text.
 
 `lark-cli docs` does not expose code-block wrap on `<pre>`, but the docx API
 does. After all writes, set native wrap on every prompt code block (this is the
@@ -36,20 +44,11 @@ lark-cli api PATCH /open-apis/docx/v1/documents/$DOC/blocks/$BLOCK_ID --as user 
 ```
 
 Re-apply after any `block_replace` that rebuilds a table containing prompts,
-because rebuilt code blocks come back with `wrap: false`. Manual soft-wrapping
-below remains the fallback when the API route is unavailable.
-
-- Break long prompt lines at natural boundaries — after `@Image N` /
-  `@Video N` / `@Audio N` reference bindings, after `[Shot N (start–end)]`
-  timestamp blocks, at sentence ends, and at commas or clause boundaries.
-- Target a line length of roughly 100–120 characters so a prompt reads
-  without horizontal scrolling in a table cell.
-- Never break mid-token, mid-word, or inside `{dialogue}` / `<sound effect>`
-  / `(music)` syntax.
-- Soft-wrap is presentation-only: the inserted line breaks do not change
-  prompt wording, order, or content. The verbatim check still applies —
-  a prompt must match its frozen snapshot after normalizing presentation
-  whitespace (see lark-demo-doc-builder's Completeness & accuracy review).
+because rebuilt code blocks come back with `wrap: false`. Never insert line
+breaks to wrap an exact prompt. If the API route is unavailable, preserve the
+text and report native wrapping as unresolved. Do not silently substitute a
+reformatted prompt. Verify decoded code text against the snapshot without
+whitespace normalization; native wrapping is a separate style check.
 
 ### Scene-by-scene label cleanup
 
