@@ -1,6 +1,6 @@
 ---
 name: lark-showcase-aigc
-description: Orchestrates ffmpeg-scene-transitions, lark-demo-doc-builder, lark-doc, lark-wiki, lark-drive, and design-doc-mermaid to build enterprise-facing Lark documents that showcase AIGC (AI-generated content) with prompts, results, and inline media. When the showcase spans multiple locked videos, assemble them into one compilation highlight video first (via ffmpeg-scene-transitions), then place the compilation at the top of the document in an initial "Production Overview & Capabilities Matrix" + "Highlight Video" section. Invoke when the user wants a standalone customer guide or showcase article in Lark.
+description: Orchestrates Lark document capabilities to build customer-facing AIGC showcases with prompts, results and inline media. Uses existing videos unchanged; compilation and audio editing are explicitly requested capabilities.
 ---
 
 # Showcase AIGC
@@ -29,11 +29,13 @@ The final document should:
 
 This skill is an orchestrator — it sequences these skills and tools as needed:
 
-- `ffmpeg-scene-transitions` to assemble multiple locked scene videos into one
-  compilation highlight video (with crossfades and locked A/V sync) before
-  building the document. For a plain showreel of equal-looking clips with
-  crossfades and open/close fades, `scripts/assemble_showreel.py` does it in one
-  command and writes a web-ready file (see the playable video delivery guide).
+- `ffmpeg-scene-transitions` only for an explicitly requested compilation.
+  Existing videos with native audio suffice unchanged. For explicitly requested
+  crossfades, audio conforming and open/close fades, `scripts/assemble_showreel.py`
+  writes a web-ready derivative. Both `--crossfade` and `--fade` are required;
+  `--fade 0` omits opening/closing fades. This helper resamples, pads/trims,
+  inserts silence for silent inputs and crossfades sound: disclose these changes
+  and obtain that scope before invoking it (see the playable video delivery guide).
   It is a convenience wrapper for that simple case (24 fps, the first clip's size,
   one crossfade length); for hard cuts, per-boundary transition plans or mixed
   frame rates use `ffmpeg-scene-transitions`.
@@ -73,10 +75,10 @@ For a customer-facing showcase containing several commercials or campaign
 directions, use the **project showcase** layout unless the user requests a
 different structure:
 
-1. Place a playable showreel near the beginning, after the title and concise
-   introduction. Assemble it from approved videos by default. When the user
-   explicitly asks to include another existing video, include it in the
-   showreel without altering that video's approval record.
+1. Place playable existing videos near the beginning, after the title and concise
+   introduction. Assemble a showreel only when requested; do not make audio
+   editing a prerequisite for a showcase. Including another existing video
+   never changes its approval record.
 2. Create one top-level section per project or campaign direction, in showreel
    order.
 3. Within every project section, place three separate tables: `Elements`,

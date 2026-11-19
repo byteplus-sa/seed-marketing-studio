@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Assemble clips into one web-ready showreel with crossfades and locked A/V sync."""
+"""Apply explicitly requested crossfades, fades and audio conforming to a showreel."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import math
 import shutil
 import subprocess
 import sys
@@ -44,6 +45,8 @@ def probe(path: Path) -> dict[str, Any]:
 def plan(durations: list[float], crossfade: float, fade: float) -> dict[str, Any]:
     if len(durations) < 2:
         raise ShowreelError("at least two clips are required")
+    if any(not math.isfinite(value) for value in [*durations, crossfade, fade]) or fade < 0:
+        raise ShowreelError("timing must be finite and fade must be nonnegative")
     if crossfade <= 0 or any(d <= crossfade * 2 for d in durations):
         raise ShowreelError("crossfade must be positive and shorter than half of every clip")
     cumulative = durations[0]
@@ -78,9 +81,13 @@ def build_filter(info: list[dict[str, Any]], crossfade: float, fade: float, fps:
         parts.append(f"[{video_prev}][v{index}]xfade=transition=fade:duration={crossfade}:offset={offset}[vx{index}]")
         parts.append(f"[{audio_prev}][a{index}]acrossfade=d={crossfade}:c1=tri:c2=tri[ax{index}]")
         video_prev, audio_prev = f"vx{index}", f"ax{index}"
-    start = schedule["fade_out_start"]
-    parts.append(f"[{video_prev}]fade=t=in:st=0:d={fade},fade=t=out:st={start}:d={fade}[vout]")
-    parts.append(f"[{audio_prev}]afade=t=in:st=0:d={fade},afade=t=out:st={start}:d={fade}[aout]")
+    if fade:
+        start = schedule["fade_out_start"]
+        parts.append(f"[{video_prev}]fade=t=in:st=0:d={fade},fade=t=out:st={start}:d={fade}[vout]")
+        parts.append(f"[{audio_prev}]afade=t=in:st=0:d={fade},afade=t=out:st={start}:d={fade}[aout]")
+    else:
+        parts.append(f"[{video_prev}]null[vout]")
+        parts.append(f"[{audio_prev}]anull[aout]")
     return ";".join(parts), schedule
 
 
@@ -137,8 +144,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("clips", nargs="+", type=Path, help="clips in play order")
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--crossfade", type=float, default=0.4)
-    parser.add_argument("--fade", type=float, default=0.5)
+    parser.add_argument("--crossfade", type=float, required=True, help="requested audio/video overlap in seconds")
+    parser.add_argument("--fade", type=float, required=True, help="requested opening/closing fade in seconds; 0 disables")
     parser.add_argument("--crf", type=int, default=21)
     parser.add_argument("--record", type=Path, help="write the assembly record JSON here")
     parser.add_argument("--overwrite", action="store_true", help="replace an existing output file")

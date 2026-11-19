@@ -91,13 +91,14 @@ between modalities.
 | Score, ambience, SFX or dialogue audio | `seed-audio-prompt` |
 | Narrative audio commercial | `seed-audio-commercial` |
 | Per-shot coverage, camera, lens intent and light for a scene | `seedance-shot-design` |
-| Seedance video prompt for any selected exact model | `seedance-prompt` |
-| Non-English or multilingual video dialogue | `seedance-prompt-25-dialogue` with `seedance-prompt` |
+| Seedance 2.5 video prompt | `seedance-prompt-25` |
+| Non-English or multilingual video dialogue | `seedance-prompt-25-dialogue` with `seedance-prompt-25` |
+| Seedance 2.0 video prompt | `seedance-prompt-20` |
 | Footage-driven VFX prompt | `seedance-vfx-prompt` |
 | End-to-end Seedance 2.0 VFX shot | `seedance-vfx-pipeline` |
 | Model submission, polling, artifact access, speech-to-text | `ark-mcp` |
 | Animated exact graphics or timed overlays | appropriate HyperFrames skill |
-| Assembly, media transforms, captions, word-scoped audio patches | appropriate HyperFrames or FFmpeg skill; the result is placed in Studio and rendered with `studio_project.py render` |
+| Requested assembly, media transforms, captions or explicit audio edits | appropriate HyperFrames or FFmpeg skill; the result is placed in Studio and rendered with `studio_project.py render` |
 | Studio project, stage gates, review and selection | `studio_project.py` with the `hyperframes-studio` conventions; pre-Studio canvas projects use `showcase-html` |
 
 <!-- markdownlint-enable MD013 -->
@@ -112,19 +113,15 @@ Read [production defaults](references/production-defaults.md) before the first
 paid video submission and again at assembly. In short:
 
 1. **Mode-aware sampling, draft-first video.** Default produces one image;
-   strict uses three. Both start new generation on exact legacy native bindings
-   in the execution-profile contract with explicit `resolution: "480p"` and
-   boolean `draft: true`, without a skip-draft exception. Other models use their
-   verified operation profile for native or ordinary preview mechanics, or
-   optional absent preview. Required ordinary preview selection is hash-bound
-   to separately registered final intent and rechecked at submitting.
-   Explicit image counts win. Resolve schema or transport conflicts
-   without dropping required native controls. Promotion requires unchanged inputs.
-2. **Audio route from the brief.** Native dialogue keeps native audio.
-   Ambience-only, score-driven and wordless pieces generate picture with
-   `generate_audio: false` and build the bed in post, because a "no music" line
-   does not reliably hold. Explicit native soundscape or single-generation
-   sound-led requests override that preference without adding audio tasks.
+   strict uses three. Both start every new Seedance 2.5 generation with explicit
+   `resolution: "480p"` and boolean `draft: true`; other models without native
+   Draft use a plain 480p test. Explicit image counts win; new 2.5 generations
+   have no skip-draft exception. Resolve schema or transport conflicts
+   without dropping the native flag. Promotion requires unchanged inputs.
+2. **Preserve audio.** Native generated audio is sufficient unchanged, including
+   ambience, score and wordless pieces. Only explicitly requested silence,
+   exact-master attachment or audio edits select a different supported route.
+   Finalization does not authorize audio processing or native suppression.
 3. **Idea-led coverage for ads and TVCs.** Develop the hook, viewer motivation,
    progression, payoff and product connection before shot detail. Record
    internal shots separately from source generations; preserve an explicit
@@ -143,8 +140,9 @@ paid video submission and again at assembly. In short:
    in post; no AI or fictional labels by default.
 7. **Ungraded assembly** in original colours, exact-length intermediates, one
    final encode.
-8. **Narrow fixes.** Word-scoped audio patches, re-voicing that keeps the
-   source soundtrack, and speech-to-text as the word authority.
+8. **Scoped fixes.** Report heard defects and offer a retake or audio repair
+   within explicit authorization. No automatic word surgery, normalization or
+   re-voicing. Speech-to-text supports word verification, not listening.
 
 ## Run one stage at a time
 
@@ -242,8 +240,9 @@ Write every revision as:
 - **Invalidation scope:** dependent artifacts that return to `review` if inputs
   change.
 
-Prefer a bounded edit over full regeneration after composition or performance is
-approved: a post repair, a word-scoped audio patch, or one corrected shot.
+After composition or performance is approved, offer a bounded revision that
+matches the user's requested delta. An audio repair requires explicit scope;
+a generic finish request never selects a word splice or re-dub.
 Preserve rejected history and never overwrite source media.
 
 ## Finish the run

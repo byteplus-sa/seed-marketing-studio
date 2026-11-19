@@ -64,6 +64,26 @@ evidence, save a short schema-valid hash-bound sanity record of actual checks,
 inspection method, coverage, observations and limitations, not a fabricated
 full checklist. Keep the existing decision and lock writers.
 
+Unapproved candidate inspection uses `prepare_request.py --inspect-ref
+<path>:<role>:<manifest>` rather than `--ref`. This version-2 path is restricted
+to Ark MCP `understand` with `seed_understand`'s verified bindings
+`dola-seed-evolving` or `dola-seed-2-1-turbo-260628` and image/video reference
+roles, or `seed_audio_understand`'s verified fixed binding
+`seed-2-0-lite-260428` with `reference_audio` only. These model/role pairs
+are not interchangeable. Audio evidence must preserve the full soundtrack or
+explicitly disclose its extracted interval and source hash; a derived audio
+file needs its own inspection manifest and current variant hash. Audio
+understanding is not speech timing authority or native full-speed video review.
+New bindings need an explicit reviewed contract update, not an inferred
+exception. Each input must belong to the manifest's `variants` list; its file,
+path and manifest SHA-256 are bound into the request. Normal `--ref` inputs
+still require selection evidence, including in understanding operations.
+Inspection inputs follow all normal inputs in binding order. Registration,
+capability checks, current project/prompt hashes, submission reconciliation and
+containment still apply. Inspection never creates a selection or decision and
+does not make the candidate eligible for generation. Review the actual answer
+and use the existing decision writer only after a genuine passing inspection.
+
 Neither review mode grants rights, likeness/voice consent or
 publishing scope. Marketing claims still need supported market-scoped facts;
 testimonials cannot be fabricated; brand rules and platform-required

@@ -18,7 +18,7 @@ the repo scripts. Local state follows the repo naming contract: prompt snapshot
 | --- | --- |
 | Photo as `first_frame`, `last_frame` or `reference_image` | `ark_job_submit` with `tool_name: "media_upload"`, `arguments.input: {media_type, mime_type, file_path, key_prefix, expires_in_seconds}`. The result URL is a signed, expiring transport value: pass it into the request, never write it to a file or a message |
 | Missing start frame (giant frame, destination image, water wall, palm-up frame) | `seedream_generate_image` through `ark_job_submit`, the user's photo as `@Image 1` bound for identity only, size matching the target ratio. Do not pass `output_path` through the job |
-| Source clip for `v2v-restyle` | Follow the video-to-video inputs contract and `seedance-restyle`; the muted master and Virtual Portrait identity anchors replace the steps below |
+| Source clip for `v2v-restyle` | Follow the video-to-video inputs contract and `seedance-restyle`; the selected source and Virtual Portrait identity anchors replace the steps below |
 
 A generated or edited image is not usable as a reference until it is saved
 locally, hashed, inspected and approved: write a candidate review (criteria,
@@ -88,7 +88,7 @@ Review is bound to the request hash, so the order is hash first.
      --prompt scenes/scene-01/s01_sh010/prompt_s01_sh010_t01_v01.md \
      --model dreamina-seedance-2-5-260628 --operation generate \
      --param 'resolution="480p"' --param duration=10 \
-     --param generate_audio=false --param watermark=false --param draft=true \
+     --param generate_audio=true --param watermark=false --param draft=true \
      --expected-output scenes/scene-01/s01_sh010/s01_sh010_t01_v01.mp4 \
      --operation-id seedance-s01-sh010-t01-v01 --schema-version 2 \
      --ref scenes/scene-01/s01_kf01_v01.png:first_frame:scenes/scene-01/keyframe.md \
@@ -100,7 +100,8 @@ Review is bound to the request hash, so the order is hash first.
      --write --register
    ```
 
-   JSON values are quoted inside `--param`; paths for `--review`,
+   This example assumes supported native audio; explicit silence or post-owned
+   sound selects its own verified controls. JSON values are quoted inside `--param`; paths for `--review`,
    `--capabilities` and `--ref` are project-relative. Omit `ratio` for a
    first-frame route (it locks to the image) and set it for `reference_image`.
    The request hash covers prompt bytes, parameters and ordered reference
@@ -206,7 +207,7 @@ forbade them.
 | Split-screen stack (painting effects) | `ffmpeg -i person.mp4 -loop 1 -i painting.png -filter_complex "[0]scale=W:W[a];[1]scale=W:W[b];[a][b]vstack" -t D out.mp4`; the painting is a public-domain scan with source URL and SHA-256 recorded. From a 9:16 clip: crop a 9:8 band (`crop=iw:iw*8/9:0:Y`, Y chosen so the head stays in), scale it to 720x640, stack it over a 720x640 painting panel for a 720x1280 result |
 | Fisheye (animal ride) | Recipe for a 9:16 clip: scale to 720x1280, pad to a 1280 square, `v360=input=flat:output=fisheye:ih_fov=90:iv_fov=90:h_fov=90:v_fov=90:w=1280:h=1280`, black mask outside a circle of radius 630, crop the centre 720x1280. Review the chosen FOV and centre magnification on the current composite; the circle is wider than the frame, so black arcs show only at top and bottom |
 | Stepped 10 to 12 fps cadence (restyle looks) | Drop to the stepped rate then hold-frame back to 24 fps (`fps=12,fps=24`) |
-| Ambience or sound effects bed | `seed_audio_generate`, "no voices, no music" last in the prompt, loudness-normalise, mux over the stream-copied picture; the bed is not frame-synced |
+| Explicitly requested ambience or sound effects bed | Generate only the requested sound, verify timing and attach within scope; no default loudness processing or frame-sync guarantee |
 | Chained second clip (eyes-in destination) | A separate draft whose first frame is the destination image, joined in FFmpeg |
 
 ## Failure behavior
@@ -219,5 +220,5 @@ forbade them.
 | Reference image rejected (privacy detection) | Keep and diagnose the error; any alternative needs current capability and rights checks, never a restriction bypass |
 | Last-frame-only rejected | Add a generated first frame; verify support before using the same file as first and last frame |
 | Output audio rejected | Keep the error as evidence; retake with a recorded audio-sentence change or `generate_audio: false` |
-| Native audio contains speech or music | Regenerate with audio off or add a post bed; do not claim the take is clean |
+| Native audio conflicts with the requested sound | Report the actual defect and obtain a scoped repair or retake decision; no automatic muting or post bed |
 | Provider task failed | Evidence to review, not an automatic resubmission |

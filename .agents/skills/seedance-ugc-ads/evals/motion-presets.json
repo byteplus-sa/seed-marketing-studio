@@ -65,7 +65,7 @@
         "The output notes duration locks to the ~12s source (within ~0.3s) and the ratio derives from the source video.",
         "The red jacket is bound to the supplied reference image for identity.",
         "The source is within the recommended edit-task limits (under 20s).",
-        "The output carries the asset:// Virtual Portrait or authorized-asset input requirement for a person in source footage, with current documented exceptions preserved; proposes a muted source and audio in post without submitting, and offers a fresh-generation variant when no valid asset exists."
+        "The output carries the asset:// Virtual Portrait or authorized-asset input requirement for a person in source footage, with current documented exceptions preserved; keeps source audio scope with verified support and no mandatory mute or post pass, and offers a fresh-generation variant when no valid asset exists."
       ]
     },
     {

@@ -219,7 +219,7 @@ prompt. Summary:
 | Axis | Route | Specialists | Provider step |
 | --- | --- | --- | --- |
 | `hook` | Resolve the minimum duration from the selected operation profile, preserve the hero's opening span and propose any required trim before splicing in Studio | `seedance-ugc-ads` hook library, `seedance-prompt` | yes |
-| `talent`, `product`, `outfit`, `location` | Object Swap on the muted hero master; keeps motion, framing, cuts and timing | `source-subject-map`, then `seedance-object-swap` | yes |
+| `talent`, `product`, `outfit`, `location` | Object Swap on the selected hero master; keeps motion, framing, cuts, timing and audio scope | `source-subject-map`, then `seedance-object-swap` | yes |
 | `talent` + `location` in one row | One Motion Transfer instead of two swaps; costs one `motion-recast` unit | `seedance-motion-recast` | yes |
 | `language` | Re-voice the locked script, then per-language captions | `audio-dubbing`, `seedance-prompt-25-dialogue`, `ad-captions` | yes (audio) |
 | `market` | Adapt the variant for one market at the per-element levels recorded in that market's `inventory.md` (captions, voice, talent, cultural or full transcreation; the card holds `level_default`) | `ad-localize` | none from the planner; `ad-localize` registers its own |

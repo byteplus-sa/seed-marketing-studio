@@ -1,14 +1,14 @@
 # Video-to-Video Inputs
 
-This contract covers identity references, source footage, muted submission and
-post audio for Seedance video-to-video work: Motion Transfer
+This contract covers identity references, source footage and audio scope
+for Seedance video-to-video work: Motion Transfer
 (`seedance-motion-recast`), Object Swap (`seedance-object-swap`), Restyle
 (`seedance-restyle`) and the shot runner (`seedance-vfx-pipeline`).
 
 - [Identity references: Virtual Portrait assets](#identity-references-virtual-portrait-assets)
 - [Source footage](#source-footage)
-- [Muted source master](#muted-source-master)
-- [Post audio](#post-audio)
+- [Audio scope](#audio-scope)
+- [Requested audio edits](#requested-audio-edits)
 - [Provider rejections](#provider-rejections)
 
 ## Identity references: Virtual Portrait assets
@@ -70,8 +70,8 @@ character.
   - *Edit routes* preserve the selected source timeline; frame-count patterns
     do not guarantee exact output timing.
   - An approved trim is a separate, frame-exact derivative. Record its source
-    span, command and hashes; derive muted picture and saved audio from that
-    same span. With no approved trim, use the full source.
+    span, command and hashes, including any authorized audio consequences.
+    With no approved trim, use the full source.
 
   Example only for an approved trim:
   ```bash
@@ -83,62 +83,56 @@ character.
   rejects any realistic person in a video input, including an invented person in
   a text-generated clip, with `InputVideoSensitiveContentDetected.PrivacyInformation`
   (HTTP 400, before a task is created). Registering image assets of that person
-  does not clear it. Register the muted master as a video asset in the private
+  does not clear it. Register the selected source as a video asset in the private
   asset library (Advanced Creation Rights) and bind `@Video 1` as its
   `asset://` URI. When no `ark_asset_*` tool is available, the user registers
   the clip in the console and supplies the asset ID. Record the asset ID beside
-  the muted master and its hash. A source with no people can still be uploaded
+  the selected source and its hash. A source with no people can still be uploaded
   and bound by presigned URL.
 - **Derivatives.** The original source hash stays the identity of the take: a
-  subject map and the rights decision bind to it. The trimmed file, the muted
-  master and the saved audio are recorded as derivatives of that hash, with
+  subject map and the rights decision bind to it. Any authorized preparation
+  files are recorded as derivatives of that hash, with
   their own SHA-256 and the command that produced them.
 
-## Muted source master
+## Audio scope
 
-Submit only a muted master; never the source with its audio. Keep the audio as
-a separate file for post. Here `<source>` is the full original or the approved
-trim derivative; both commands use the same selected span.
+Native generated audio is sufficient unchanged. Bind the selected source with
+its existing sound when the verified model, operation and transport support it.
+Do not require a muted derivative, saved audio extraction, `generate_audio:
+false`, a separate `@Audio` binding or a post mux for ordinary video-to-video
+work. Native output is not a guarantee of exact source-audio preservation.
 
-```bash
-ffmpeg -i <source>.mp4 -map 0:a:0 -vn -c:a pcm_s24le source/<stem>_audio.wav
-ffmpeg -i <source>.mp4 -map 0:v:0 -an -c:v copy source/<stem>_muted.mp4
-```
+Record the brief's audio intent and resolve supported controls before submission.
+If native input/output support is unknown or incompatible with the request,
+report the limitation and ask for a scoped alternative; do not infer provider
+capability from this policy. Explicit silence may use `generate_audio: false`
+when supported. An exact supplied/source soundtrack needs verified preservation
+or explicitly authorized stream-copy attachment, not automatic regeneration.
 
-1. Skip the first command when the source has no audio stream, and record that.
-2. Confirm with `ffprobe` that the muted master has no audio stream and the same
-   frame count and duration as the source.
-3. Record the source, muted master and audio file with SHA-256 in the shot
-   manifest. Upload and bind only the muted master as `@Video 1`.
-4. Submit with `generate_audio: false` and no `@Audio` bindings. The prompt's
-   audio line states that the output is silent and sound is added in post.
+## Requested audio edits
 
-Native audio generation is not part of these workflows. Use it only when the
-user explicitly asks for it on a named take, and record that exception.
-
-## Post audio
-
-Pick one route per shot from the requirement and record it in the shot
-manifest.
+Only a requested audio change selects one of these capabilities. A generic
+visual edit or finalization does not.
 
 | Route | Use when | Method |
 | --- | --- | --- |
-| **Original** | Timing is preserved and the source sound stays | Mux the saved source audio |
+| **Original** | The user requires the exact source soundtrack | Verify native preservation first; if needed, attach the source audio by compatible stream copy under that scope |
 | **New** | The brief asks for new music, SFX, ambience or voice | Generate with Seed Audio or use an approved library track, then mux |
 | **Mixed** | Keep one layer (usually dialogue) and replace the rest | Separate the saved audio with the VOD voice/background tool, mix the kept stem with the new stem |
 | **Re-voiced** | New words or a new voice over the same picture | Post voice overlay through `audio-dubbing`; lip-sync work follows the [audio-video alignment contract](audio-video-alignment.md) and is opt-in |
 
-Measure picture and audio timing before muxing. Do not use padding or
-`-shortest` to hide a mismatch. The following recipe is only for an agreed
-picture timeline with user-approved audio padding or truncation:
+Measure picture and audio timing before an authorized mux. Do not use padding
+or `-shortest` to hide a mismatch. This attachment preserves compatible audio
+packets and independent tails without an extraction step:
 
 ```bash
-ffmpeg -i <generated>.mp4 -i <audio>.wav -map 0:v:0 -map 1:a:0 \
-  -c:v copy -af apad -c:a aac -b:a 192k -shortest <final>.mp4
+ffmpeg -i <generated>.mp4 -i <source>.mp4 -map 0:v:0 -map 1:a:0 \
+  -c copy <final>.mp4
 ```
 
-- Keep the silent generated master. The muxed file is a derivative with its own
-  SHA-256 and a recorded recipe.
+- Keep the generated and source masters. A muxed file is a derivative with its
+  own SHA-256 and recorded recipe. Incompatible codecs need a disclosed,
+  approved transport decision; do not silently transcode.
 - Measure decoded frame timestamps, duration, playback speed and cut boundaries
   against the approved source span for both routes. Report mismatches; no
   frame-count recipe or blanket tolerance establishes a pass. Obtain user
@@ -147,8 +141,8 @@ ffmpeg -i <generated>.mp4 -i <audio>.wav -map 0:v:0 -map 1:a:0 \
 - Output frame rate may differ from the source. Audio aligns by time; check two
   or three sync points (hits, claps, plosives) by playback.
 - When a person speaks on screen, the mouth follows the source mouth motion.
-  Check plosives and open vowels. A visible drift routes to Re-voiced or to a
-  new take; it is never accepted silently.
+  Check plosives and open vowels. Report visible drift and obtain a scoped
+  repair or retake decision; never silently re-voice.
 - Voice reuse or timbre cloning of a real person needs that person's recorded
   voice consent, separate from footage rights.
 

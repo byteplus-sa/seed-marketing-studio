@@ -4,12 +4,12 @@ Focused reference for `seedance-object-swap`. Read [the entrypoint](../SKILL.md)
 for routing and caller responsibilities.
 
 - [Picture checks](#picture-checks)
-- [Audio checks after mux](#audio-checks-after-mux)
+- [Audio checks](#audio-checks)
 - [Failures and repairs](#failures-and-repairs)
 
 ## Picture checks
 
-Inspect the silent output side by side with the source, frame by frame around
+Inspect the output side by side with the source, frame by frame around
 each contact window and cut. Record each item as pass, fail or not applicable.
 
 - **Residual original.** No frame shows the original element, a blend of old
@@ -34,18 +34,18 @@ each contact window and cut. Record each item as pass, fail or not applicable.
   halo.
 - **Everything else untouched.** Faces, wardrobe, accessories, other props,
   background, camera, cuts and mouth movement match `@Video 1`.
-- **Technical.** The silent output decodes cleanly and has no audio stream.
+- **Technical.** The output decodes cleanly; audio matches the requested scope.
   Measure duration, frame timestamps, cut boundaries and playback speed against
   the approved source span. No 8n+1 frame guarantee or blanket 0.3 s tolerance
   replaces this check. Report mismatches against the agreed target; do not
   silently trim or retime. Check for unintended black side bars.
 
-## Audio checks after mux
+## Audio checks
 
-Apply after the post-audio route is muxed, following the
-[video-to-video inputs contract](../../../contracts/video-to-video-inputs.md#post-audio).
+Apply to the actual output, following the
+[video-to-video inputs contract](../../../contracts/video-to-video-inputs.md#audio-scope).
 
-- The final duration matches the agreed picture timeline; any authorized
+- Preserve independent audio tails and the agreed picture timeline; any authorized
   padding or trim is recorded on a derivative, with originals preserved.
 - Two or three sync points (set-downs, hits, plosives) land on the picture.
 - On-screen speech stays on the mouths. A visible offset needs a scoped timing

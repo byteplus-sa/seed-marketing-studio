@@ -232,7 +232,7 @@ Level-specific checks are in [levels](references/levels.md).
   target text, word by word; a listening pass for pronunciation, accent,
   register and speaker identity, which a transcript cannot certify.
 - **Soundtrack (L2).** Music, effects and room tone intact across each replaced
-  line; loudness matched; video stream identical to the source (MD5) when the
+  line; loudness changes only when requested; video stream identical to the source (MD5) when the
   picture did not change.
 - **Picture (L3 to L5).** Identity against the bound asset, wardrobe, product,
   setting, continuity and the opening window re-checked on every new take.

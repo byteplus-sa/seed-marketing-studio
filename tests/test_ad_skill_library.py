@@ -13,7 +13,7 @@ SKILLS = ROOT / ".agents/skills"
 AD_SKILLS = {
     "seedance-ugc-ads",
     "seedance-product-demo-ads",
-    "seedance-story-ads",
+    "seedance-drama-ads",
     "ad-motion-graphics",
     "seedance-testimonial-ads",
     "seedance-musical-ads",
@@ -113,7 +113,7 @@ class AdSkillLibraryTests(unittest.TestCase):
                 self.assertEqual(catalog[name]["kind"], expected)
 
     def test_full_consolidation_removes_legacy_entrypoints(self):
-        for name in ("ugc-ad-modes", "ugc-motion-presets"):
+        for name in ("ugc-ad-modes", "ugc-motion-presets", "seedance-story-ads"):
             self.assertFalse((SKILLS / name).exists())
             self.assertFalse((ROOT / ".claude/skills" / name).is_symlink())
 
@@ -132,19 +132,75 @@ class AdSkillLibraryTests(unittest.TestCase):
         paths = [
             ROOT / "README.md",
             ROOT / ".agents/catalog/skills.json",
+            ROOT / ".agents/catalog/integrity.json",
             ROOT / "skills-lock.json",
+            *(ROOT / ".agents/contracts").glob("*.md"),
+            *(ROOT / "tests/fixtures").glob("*.json"),
             *(ROOT / ".agents/scripts").glob("*.py"),
             *SKILLS.rglob("*.md"),
             *SKILLS.rglob("*.json"),
             *SKILLS.rglob("*.yaml"),
         ]
-        legacy = re.compile(r"\bugc-(?:ad-modes|motion-presets)\b")
+        legacy = re.compile(r"\b(?:ugc-(?:ad-modes|motion-presets)|seedance-story-ads)\b")
         offenders = [
             str(path.relative_to(ROOT))
             for path in paths
             if legacy.search(path.read_text())
         ]
         self.assertEqual(offenders, [])
+
+    def test_drama_skill_lock_points_to_the_canonical_entrypoint(self):
+        lock = json.loads((ROOT / "skills-lock.json").read_text())["skills"]
+        self.assertNotIn("seedance-story-ads", lock)
+        entry = lock["seedance-drama-ads"]
+        self.assertEqual(
+            entry["skillPath"], ".agents/skills/seedance-drama-ads/SKILL.md"
+        )
+        self.assertTrue((ROOT / entry["skillPath"]).is_file())
+
+    def test_drama_skill_leaves_creative_form_open(self):
+        text = (SKILLS / "seedance-drama-ads/SKILL.md").read_text()
+        normalized = " ".join(text.split())
+        for retired in (
+            "## Short-drama creative default",
+            "### Reject a mood film before coverage",
+            "Use spoken interaction as the starting audio proposal",
+            "Reject music-and-slow-movement padding",
+        ):
+            with self.subTest(retired=retired):
+                self.assertNotIn(retired, normalized)
+        self.assertIn("Create beautiful, original stories around any product", normalized)
+        self.assertIn(
+            "Do not prescribe conflict, dialogue, physical action, twists or a "
+            "product-solving payoff as defaults", normalized
+        )
+        self.assertIn(
+            "A product may have a functional, emotional, symbolic or incidental role",
+            normalized,
+        )
+
+    def test_drama_reference_removes_the_puzzle_handoff_template(self):
+        text = (
+            SKILLS / "seedance-drama-ads/references/evaluation-cases.md"
+        ).read_text()
+        for retired in (
+            "Hypothetical worked example",
+            "quiet puzzle",
+            "finishing the shared puzzle",
+            "You should place it.",
+            "Complete source prompt:",
+        ):
+            with self.subTest(retired=retired):
+                self.assertNotIn(retired, text)
+        for case in (
+            "Open creative brief",
+            "Requested dialogue",
+            "Requested physical action",
+            "Story fit without a formula",
+            "Creative reset versus narrow repair",
+        ):
+            with self.subTest(case=case):
+                self.assertIn(case, text)
 
     def test_new_capabilities_ship_evaluation_cases(self):
         for name in sorted(AD_SKILLS):

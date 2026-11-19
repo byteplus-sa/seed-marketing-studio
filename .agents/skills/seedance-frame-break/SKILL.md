@@ -129,9 +129,8 @@ example.
    except during the named break-outs.
 5. **Camera.** Locked off, no movement, zoom or cuts; only the subject moves.
 6. **Audio.** Requested sound arc in the `seedance-prompt` bracket syntax.
-   A "no music" line under native audio often does not hold; when music or
-   speech must be absent, suggest `generate_audio: false` and build the sound
-   in post.
+   Native generated audio is sufficient unchanged. Inspect actual sound and
+   report unwanted music or speech; post sound and muting require explicit scope.
 7. **Closing exclusions.** Short: no text, captions, logos or watermarks, no
    held props, bars unmarked. Keep necessary exclusions to one or two lines.
 
@@ -207,8 +206,8 @@ duration in prompt text.
       no lettering.
 - [ ] The clip duration is absent from the prompt text.
 - [ ] No on-screen text or logo is requested; any text is planned for post.
-- [ ] The audio request states whether music is wanted; a music-free piece
-      suggests `generate_audio: false` with sound built in post.
+- [ ] Audio matches the brief and verified support; no default native suppression
+      or post bed, including for music-free pieces
 
 ## Usage limitations
 

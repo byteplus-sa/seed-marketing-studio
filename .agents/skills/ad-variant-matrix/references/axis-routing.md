@@ -25,7 +25,8 @@ Do this once per hero, before any row prompt:
 2. Inspect it per the
    [video-to-video inputs contract](../../../contracts/video-to-video-inputs.md):
    duration, frame rate, ratio, audio streams, cuts and a recorded rights
-   decision. Make the muted master that swap rows bind as `@Video 1`.
+   decision. Swap rows bind the selected source as `@Video 1`, preserving audio
+   intent and verifying current input support.
 3. Run `source-subject-map` once on the hero. Every swap row cites the same
    subject, object and cut IDs; an unresolved ambiguity blocks every swap row.
 4. Record the hero's opening-beat length (normally 0–2 s, at most 3 s) and the
@@ -67,7 +68,7 @@ copy, CTA, supported claims, product identity and the hero's remaining body.
 ## Talent, product, outfit, location
 
 **Route:** `source-subject-map` on the hero (once, shared by every swap row),
-then Object Swap on the muted hero master with `seedance-object-swap`. It
+then Object Swap on the selected hero master with `seedance-object-swap`. It
 keeps motion, framing, cuts and timing and replaces one element class. A swap
 is a source-preserving edit, so its register command records that exemption
 instead of requiring the shot-plan rules.
@@ -83,12 +84,13 @@ axis. Review that preservation rather than requiring a new performance plan.
 | `location` | Location sheet or plate | Environment behind kept subjects |
 
 - Parameters follow the verified swap operation profile and source locks.
-  `@Video 1` is the muted master under the video-to-video contract. Exact legacy
+  `@Video 1` is the selected source under the video-to-video contract. Exact legacy
   native bindings retain explicit `resolution: "480p"` and boolean `draft: true`;
   other bindings use evidenced preview controls. Audio-only and delivery rows
   never acquire video parameters or video prerequisites.
-- Sound returns in post: the hero's audio track, re-cut if the swap changed
-  any timing.
+- Native audio is sufficient unchanged. Do not extract, mute or mux by default.
+  Exact-master attachment or audio edits need explicit scope; timing mismatches
+  are reported rather than hidden by an automatic re-cut.
 
 ## Language
 

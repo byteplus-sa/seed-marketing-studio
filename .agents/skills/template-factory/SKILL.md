@@ -214,9 +214,9 @@ pin_local → breakdown_draft → breakdown_approved → elements_draft
    scanlines, halation) are not reliably produced by prompt words; record them
    as a post treatment in the recipe and apply them only when the run locks
    them. Otherwise assemble in the takes' original colours with no grade,
-   from exact-length intermediates encoded once. Measure take loudness and
-   normalise delivery masters (e.g. `loudnorm` -16 LUFS / -1.5 dBTP) after
-   mode-authorized take locks; place the result in Studio and deliver it with
+   from exact-length intermediates encoded once when needed. Native generated
+   audio is sufficient unchanged; loudness measurements are diagnostic, not
+   permission to normalize or process sound. Place the result in Studio and deliver it with
    `studio_project.py render`.
    When the picture needs several clips, follow the shot budget, trim-point,
    state-ledger, and continuous-audio rules in

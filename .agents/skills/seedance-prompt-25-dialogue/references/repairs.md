@@ -13,16 +13,19 @@ take or language-specific experiment does not establish a universal rule.
    is unavailable, keep the judgment unresolved.
 2. **Classify.** Wrong word, mispronounced word, delivery, pacing, speaker or
    alignment.
-3. **Choose the smallest repair.**
+3. **Offer a scoped repair.** Finalization alone authorizes no audio edits.
+   Retakes and audio processing follow the user's explicit change scope.
 
 | Problem | Repair |
 | --- | --- |
-| One word wrong or mispronounced in an otherwise good take | Retake the clip with one pronunciation cue outside the braces; if the retake changes the performance, splice only the word instead |
+| One word wrong or mispronounced in an otherwise good take | Offer a targeted retake with a pronunciation cue; word splicing is an alternative only when explicitly requested or approved |
 | Delivery or intent weak | Revise the delivery direction, not the words |
 | Several words wrong across a clip | Retake the clip with the same words; do not re-voice the whole series |
 | Line cannot be pronounced after a retake | Offer an alternative wording as a draft for the user to accept |
 
 ## Word-scoped splice review
+
+Apply only to an explicitly requested splice, never as a finishing requirement.
 
 - Replace only the wrong word. Keep the original voice for everything else.
 - Listen at normal speed across both boundaries and in the full phrase.

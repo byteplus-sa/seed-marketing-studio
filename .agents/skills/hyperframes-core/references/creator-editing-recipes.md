@@ -4,7 +4,7 @@ Use these copyable contracts after `tracks-and-clips.md`. Global math: **consume
 
 Before any edit, run `npx hyperframes timeline` (add `--json` for a machine-readable list) to see the project's tracks and clips instead of reading the HTML.
 
-These recipes keep a video's sound on the `<video>` (`data-has-audio="true"`, no `muted`), so cutting the video cuts its sound. Use a separate `<audio>` only when picture and sound must be cut independently (J/L cuts, replacement audio) or for other sound (music, voiceover) — the recipes that do say so. Silent footage or b-roll: replace `data-has-audio="true"` with `muted` in these blocks.
+These recipes keep a video's sound on the `<video>` (`data-has-audio="true"`, no `muted`), so a requested audiovisual cut cuts both. Use a separate `<audio>` when picture and sound must be cut independently or for explicitly requested additional sound. Native audio is sufficient unchanged. Use `muted` only for verified silent footage or explicitly requested suppression, never merely because a clip is B-roll. Preserve independent audio tails when picture-only edits are requested.
 
 **Every `<video>` and `<audio>` below carries an `id`, and that is not cosmetic**: `lint` errors with `media_missing_id` on timed media without one, and an id-less `<audio>` is never picked up by the mixer, so the render comes out silent. Keep the ids when you copy a recipe.
 
@@ -374,7 +374,7 @@ Write what Studio writes when a person drops a file on the timeline, so an agent
 - **Image: `data-duration` is optional and defaults to 3 seconds**, the same as a dropped image, because a still has no length of its own. Write it only for another length. A test keeps the 3 equal to the default in code.
 - **Video and audio: `data-start` is enough.** The length comes from the media itself. An authored `data-duration` shorter than the file is a trim, never a requirement; leave it out unless the request asks for a shorter clip.
 - **Start: the playhead or the requested time, never a silent `0`.** Studio's asset-panel Add uses the playhead time on track `0`; a drop uses the drop point.
-- Give every clip `id`, `class="clip"`, `data-start` and `data-track-index`. A video with sound is `playsinline data-has-audio="true"`; silent footage and b-roll is `muted playsinline`. Audio carries `data-volume="1"`.
+- Give every clip `id`, `class="clip"`, `data-start` and `data-track-index`. A video with sound, including B-roll, is `playsinline data-has-audio="true"`; verified silent or explicitly muted footage is `muted playsinline`. Audio carries `data-volume="1"`.
 - Then make sure the root composition's `data-duration` is at least the clip's end (`data-start` plus its length: 3 for an image unless you set another, the media's length for video and audio): Studio raises a declared root duration to cover the new clip, so an agent must too, or the clip lies past the end and never plays.
 - **Images and video fill the whole frame**: absolutely positioned at `left: 0; top: 0`, `width` and `height` equal to the composition's `data-width` and `data-height`, `object-fit: contain`. Studio does not know a dropped file's natural size, so it does not centre a smaller one.
 - `z-index` is the number of top-level clips already in that file plus one (at least `1`); later clips stack above earlier ones.
@@ -398,7 +398,7 @@ Write what Studio writes when a person drops a file on the timeline, so an agent
   src="assets/broll.mp4"
   data-start="4"
   data-track-index="2"
-  muted
+  data-has-audio="true"
   playsinline
   style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; object-fit: contain; z-index: 3"
 ></video>

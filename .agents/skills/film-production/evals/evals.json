@@ -7,9 +7,9 @@
       "expected_output": "A staged plan that develops the product-linked idea, records the source count and audio route, and takes only authorized sources to requested 480p drafts.",
       "files": [],
       "expectations": [
-        "Runs brief-intake first and records a picture_only audio route, ungraded original colours and the logo/end card as post overlays in project.md.",
+        "Runs brief-intake first and preserves native audio unchanged unless a separate soundtrack is explicitly requested; records ungraded original colours and logo/end card as post overlays in project.md.",
         "Develops hook, motivation, progression, payoff and product role before coverage; records internal shots separately from authorized source generations.",
-        "Submits only authorized sources as requested 480p drafts with verified native Draft support and picture-only audio, after registration and mode-appropriate review, without requiring a run budget, known price or spending approval.",
+        "Submits only authorized sources as requested 480p drafts with verified native Draft and audio support, after registration and mode-appropriate review, without requiring a run budget, known price or spending approval.",
         "Plans shot count, holds or moves and timing around readable beats and authorized source counts; no cadence, variety, turn or wow quota applies.",
         "Plans sound/editorial attention and payoff before generation and defines brief-specific artistic criteria for actual playback.",
         "Does not bind any storyboard image as a Seedance reference."
@@ -35,18 +35,18 @@
         "Keeps original Seedance colours and asks or records before adding any grade, grain, halation or vignette, because no look is locked in the brief.",
         "Builds exact-length lossless intermediates, joins with the concat demuxer and encodes once; chooses decoding from actual pix_fmt, color_range, color_primaries, color_transfer and color_space rather than a model-family assumption.",
         "Unknown or conflicting stream metadata remains unresolved; full-range SDR and HDR require their own measured decode/transform decisions.",
-        "Places the result in Studio and renders the master with studio_project.py render; adds no AI label."
+        "Places the result in Studio and renders the master with studio_project.py render; adds no AI label or default audio normalization, fades, carving, padding or trimming."
       ]
     },
     {
       "id": 4,
       "prompt": "In the final master, the narrator mispronounces one product name in shot 3. Re-dub the narration.",
-      "expected_output": "A word-scoped fix that keeps the rest of the soundtrack and picture untouched.",
+      "expected_output": "An explicitly requested narration dub that preserves protected picture and non-voice sound; word surgery is not mandatory.",
       "files": [],
       "expectations": [
-        "Proposes patching only the wrong word window instead of re-dubbing the whole track.",
-        "Uses speech_to_text word times, pitch and loudness matching, short fades, and proves samples outside the window are unchanged.",
-        "If a model re-voices the word, sends the original clip with its audio and muxes the full returned audio over the untouched picture.",
+        "Honors the requested dub extent, offering a narrower repair only as an alternative rather than imposing a word splice.",
+        "Verifies words, voice and timing by transcript and listening without mandatory gain, fades or normalization.",
+        "Keeps protected music, ambience and picture; any attachment preserves independent audio tails and records derivative provenance.",
         "Returns the affected picture/audio locks to review and re-renders in Studio."
       ]
     },
@@ -84,6 +84,40 @@
         "Keeps B range-preserving; PQ or HLG with BT.2020 requires an HDR-preserving or explicitly authorized tone-mapping decision.",
         "Does not treat BT.2020 SDR as BT.709 or apply A's matrix/range recipe to it.",
         "Leaves E unresolved, preserves all source masters, and makes no transformation or playback-quality claim in either review mode."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Finalize this approved native audiovisual take unchanged. Its music already sits under the voice, loudness is -24 LUFS, and its sound tail extends beyond the last picture frame. Do not edit audio.",
+      "expected_output": "Preserve native audio unchanged and its independent tail; no finishing processor is required.",
+      "files": [],
+      "expectations": [
+        "Does not normalize, limit, carve, duck, fade, splice, pad, trim, extract, mux or replace the audio merely to finalize.",
+        "Keeps the source and reports any renderer/timeline conflict without silently truncating the tail.",
+        "Preserves actual inspection, Studio provenance and final-lock requirements separately from audio processing."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Compare three instruction-only delivery scopes: A keeps native sound unchanged, B must be silent, C must use this exact supplied song master. No media generation or editing now.",
+      "expected_output": "Three separate scoped routes, with no invented blanket audio post-production requirement.",
+      "files": [],
+      "expectations": [
+        "A needs no audio processing; B uses supported silence controls without adding a bed.",
+        "C verifies exact preservation and offers compatible stream-copy attachment only under that explicit scope, disclosing required transcoding or timeline changes.",
+        "Does not treat native generation as proof that a source song is preserved byte-for-byte, and does not use -shortest to hide independent tails.",
+        "Unknown operation support stays unresolved; no media is changed."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Finalize our wordless native-sound ad. We have a clean decode and loudness measurements, but no tool or person can listen to it yet. Do not add generation or audio repair.",
+      "expected_output": "Keep audio unchanged and report listening validation as unresolved.",
+      "files": [],
+      "expectations": [
+        "Does not mark listening passed from decode, loudness, waveform or ASR alone.",
+        "Does not replace native sound with a post bed, word surgery or a normalization pass.",
+        "Requests actual permitted listening evidence before the existing final acceptance gate."
       ]
     }
   ]

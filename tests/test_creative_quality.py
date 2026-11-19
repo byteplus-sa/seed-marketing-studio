@@ -101,7 +101,7 @@ class CreativeQualityEvaluationTests(unittest.TestCase):
         )
         indexed = quality.indexed_cases(scenarios)
         formats = {'seedance-ugc-ads', 'seedance-product-demo-ads',
-                   'seedance-story-ads', 'ad-motion-graphics',
+                   'seedance-drama-ads', 'ad-motion-graphics',
                    'seedance-testimonial-ads', 'seedance-musical-ads',
                    'seedance-match-cut-ads', 'seedance-fashion-ads',
                    'seedance-pov-ads', 'seedance-deadpan-ads',
@@ -111,6 +111,59 @@ class CreativeQualityEvaluationTests(unittest.TestCase):
                          'batch_repetition', 'technical_camouflage',
                          'missing_evidence', 'narrow_revision'} <= set(indexed))
         self.assertEqual(scenarios['scope'], 'offline_prompt_quality')
+
+    def test_drama_cases_cover_short_form_and_preservation_boundaries(self):
+        scenarios = json.loads(
+            (ROOT / 'tests/fixtures/ad_development_cases.json').read_text()
+        )
+        indexed = quality.indexed_cases(scenarios)
+        required = {
+            'drama_hook_twist_reveal', 'drama_missing_brand_facts',
+            'drama_treatment_routing', 'drama_multi_product_scope',
+            'drama_narrow_brand_revision', 'drama_locked_no_turn',
+            'drama_runtime_conflict',
+            'drama_creative_freedom', 'drama_dialogue_opposition',
+            'drama_physical_escalation', 'drama_story_fit',
+            'drama_creative_reset', 'drama_distinct_stories',
+        }
+        self.assertTrue(required <= set(indexed))
+        for case_id in required:
+            with self.subTest(case=case_id):
+                self.assertEqual(indexed[case_id]['skill'], 'seedance-drama-ads')
+                self.assertEqual(
+                    set(indexed[case_id]['criteria']), {'idea', 'craft', 'preservation'}
+                )
+
+    def test_drama_cases_retain_creative_freedom_and_no_media_scope(self):
+        scenarios = json.loads(
+            (ROOT / 'tests/fixtures/ad_development_cases.json').read_text()
+        )
+        indexed = quality.indexed_cases(scenarios)
+        required = {
+            'drama_creative_freedom', 'drama_dialogue_opposition',
+            'drama_physical_escalation', 'drama_story_fit',
+            'drama_creative_reset', 'drama_distinct_stories',
+        }
+        selected = {'cases': [indexed[case_id] for case_id in sorted(required)]}
+        before = {'outputs': {case_id: 'Synthetic baseline requiring actual judgment.'
+                              for case_id in required}}
+        after = {'outputs': {case_id: 'Synthetic candidate requiring actual judgment.'
+                             for case_id in required}}
+        pack, key = quality.blind_pairs(selected, before, after, 23)
+        self.assertEqual(key['pack_sha256'], quality.digest(pack))
+        self.assertEqual(len(pack['cases']), 6)
+        for case in pack['cases']:
+            with self.subTest(case=case['id']):
+                self.assertEqual(case['criteria'], indexed[case['id']]['criteria'])
+                self.assertNotEqual(case['criteria']['idea'], case['criteria']['craft'])
+        self.assertEqual(scenarios['scope'], 'offline_prompt_quality')
+        self.assertIn(
+            'No mandatory conflict, dialogue, action, twist or product-solving payoff.',
+            indexed['drama_creative_freedom']['criteria']['preservation'],
+        )
+        self.assertIn('Structural tests validate the suite, not creative quality.',
+                      scenarios['instructions'])
+        self.assertIn('No media generation is authorized.', scenarios['instructions'])
 
     def test_defaults_fixture_runs_through_existing_cli_without_media_or_judgments(self):
         cases_path = ROOT / 'tests/fixtures/creative_quality_defaults_cases.json'

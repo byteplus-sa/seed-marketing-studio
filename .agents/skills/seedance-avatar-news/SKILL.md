@@ -93,9 +93,11 @@ usage basis, in `broll/PROVENANCE.md`.
 Get word timings with `stt_words.py`, write a contiguous `edl.json`, and
 build the edit with `uv run …/scripts/render_short.py`. The details are in
 [edit recipes](references/edit-recipes.md). The script validates the EDL, then
-builds layouts, the framed card, caption pills timed to the speech, badges and
-loudness. It also checks every segment's frame count, so picture and speech
-cannot drift. The deliverable is not the script's output: place that edit in
+builds layouts, the framed card, caption pills timed to the speech and badges.
+It copies the take's optional soundtrack unchanged, with no normalization,
+fades or audio-tail cutoff; the EDL controls picture length only.
+It checks segment frame counts, but actual sync still needs listening and
+playback. The deliverable is not the script's output: place that edit in
 Studio as a clip and render it with `studio_project.py render`. Make a 12-frame contact sheet and write `NOTES.md` (topic,
 script, task IDs, QA, defects).
 

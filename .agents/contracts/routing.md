@@ -46,7 +46,7 @@ Production requests retain the existing project, registry and review policy.
 | --- | --- | --- |
 | Creator-led UGC, unboxing, casual try-on, hook or named motion preset | `seedance-ugc-ads` | One consolidated mode and motion library; preserve preset IDs and only load the requested recipe |
 | Show a product mechanism solving a problem | `seedance-product-demo-ads` | Demonstration is not proof of unsupported efficacy; exact software UI belongs to motion graphics |
-| Entertain through a short story or twist | `seedance-story-ads` | Product-linked story; general screenplay structure remains scene craft |
+| Short drama, micro-drama or story ad with a hook, twist and reveal | `seedance-drama-ads` | Product-linked narrative; visual medium is a separate treatment, pure jingles stay musical, and general screenplay structure remains scene craft |
 | Explain through exact graphics, UI or data | `ad-motion-graphics` | Declared orchestrator for agent-authored HyperFrames, optional Seedance plates and hypermotion inserts; `seedance-motion-design` remains the prompt-layer specialist |
 | Present a real customer's authorized experience | `seedance-testimonial-ads` | Source testimony owns facts; a synthetic presenter cannot invent customer history |
 | Sell through song or product sounds | `seedance-musical-ads` | Ad message owns the sequence; a song-led artist video remains `seedance-music-video` |

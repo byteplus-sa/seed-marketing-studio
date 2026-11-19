@@ -113,11 +113,10 @@ A **Rebuild Plan** returned to the caller:
    Plan a shot list of 5-8 distinct setups, each generated once at natural
    length and cut to many short appearances; the EDL stays the cut authority.
 7. **Audio decision.** Keep the reference track only with a recorded rights
-   basis; otherwise brief a replacement conformed to the beat grid. Generated
-   shots under a music bed run with `generate_audio: false`, because native
-   audio leaks music and speech into the cut. A meme or UGC segment that needs
-   its own sync sound gets an explicit question (native or post sound) rather
-   than a silent default.
+   basis. Native generated audio is sufficient unchanged; do not suppress it
+   just because a music bed is present. A separately requested exact track,
+   silence or replacement selects its supported route. Report conflicting
+   ownership or unavailable rights before substituting sound.
 8. **Cost reporting.** Layers cost no credits. Generated shots draft at 480p
    first, with native `draft: true` for Seedance 2.5. Report available
    estimates per shot or unknown; estimates never gate generation. Promote

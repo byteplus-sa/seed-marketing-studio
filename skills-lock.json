@@ -18,7 +18,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-creative-check/SKILL.md",
-      "computedHash": "f92ec640dd4e721eada29f219c96961eb4794c34f0128c9e993e410526c5dd5a"
+      "computedHash": "b12b68a6fbfe7b0acdb948091ae1c69867d49eb33a75853e9b720106ad86d57f"
     },
     "ad-delivery-formats": {
       "source": "./local",
@@ -30,7 +30,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-localize/SKILL.md",
-      "computedHash": "e1de3a708da77b4677768fcbd9b9fc0227d42008ec82b0bf71a42c27feca1d2e",
+      "computedHash": "17030ddfe698ddf1240ce864468a73ded096a9b83384413ee9765ddc2560a2ba",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "ad-performance-loop": {
@@ -43,7 +43,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-variant-matrix/SKILL.md",
-      "computedHash": "085dbbaf293f2aad459e7d3f3ffed8d89458b14f29890f8d61ed67f9290e2141",
+      "computedHash": "1b1d4ba40c174b42eb72510fe83baacae5a1bb03de326aa52b27d292679056c4",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "ark-mcp": {
@@ -57,7 +57,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/audio-dubbing/SKILL.md",
-      "computedHash": "5b6a720ab963fdc70212e68bff9bbcbb9d89b863080537fe472afcab9def6357"
+      "computedHash": "5ca82feb8e2d5588d646c46e6ef38d88f9b68fa70fd0d0c9676b46a27c068098"
     },
     "audio-split": {
       "source": "./local",
@@ -75,7 +75,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/brief-intake/SKILL.md",
-      "computedHash": "59d1722f77686035fb82004f19c8d6490d43d370d2ca60e78d33aa011d987bc5",
+      "computedHash": "3da1caafe7c87e881bfb6642f6724db79c5c187afbe1d7c8cb87d0a1853e84b0",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "color-grade-palettes": {
@@ -88,13 +88,14 @@
       "source": "digitalsamba/claude-code-video-toolkit",
       "sourceType": "github",
       "skillPath": ".agents/skills/ffmpeg/SKILL.md",
+      "sourceNotes": "2026-11-19 project audio overlay in SKILL.md: native audio needs no finishing pass; audio transforms and duration conforming require explicit scope. Upstream computedHash retained; installed file hashes live in .agents/catalog/integrity.json.",
       "computedHash": "8d5161a994a722d3da88e1183d73bcc2b024291f2773c7e9036b602da2ad579e"
     },
     "ffmpeg-scene-transitions": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ffmpeg-scene-transitions/SKILL.md",
-      "computedHash": "3c3ea86c6ac5a82e06ada512f6a6bde0448c86bbf59cd2b83dc2f99637a1bc7d"
+      "computedHash": "c731a7d6e8023881328824cd74e7e521b1d4483274761f308a87045b6416b7bd"
     },
     "ffmpeg-side-by-side-comparison": {
       "source": "./local",
@@ -106,13 +107,14 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/film-production/SKILL.md",
-      "computedHash": "05471ca8137fe63e0cf010d22115469fe6433b64accbee39a0b9801dda8c0fd5",
+      "computedHash": "63b42a1f153cbbf87d9fe2ef4808bb8a32f40be13610ae693b9ea973c55a1bfe",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "general-video": {
       "source": "heygen-com/hyperframes",
       "sourceType": "github",
       "skillPath": "skills/general-video/SKILL.md",
+      "sourceNotes": "2026-11-19 project audio overlay in SKILL.md: remove automatic voiceover carve from assembly; native sound suffices unchanged. Upstream computedHash and existing privacy overlays retained; installed hashes live in .agents/catalog/integrity.json.",
       "computedHash": "6e0aad276db66d31791bdb19abdd12f3650ce03b7f7329d1c2d2c9176d87214c"
     },
     "html-graphic-render": {
@@ -125,6 +127,7 @@
       "source": "heygen-com/hyperframes",
       "sourceType": "github",
       "skillPath": "skills/hyperframes/SKILL.md",
+      "sourceNotes": "2026-11-19 project audio overlay in references/production-loop.md: separate audio and mixing are explicitly requested, not a render prerequisite. Upstream computedHash and existing privacy overlays retained; installed hashes live in .agents/catalog/integrity.json.",
       "computedHash": "a277e9e46b3b5b8619639a353a4af3f46f8ae4f2e622ba802d5af730d135f410"
     },
     "hyperframes-animation": {
@@ -137,6 +140,7 @@
       "source": "heygen-com/hyperframes",
       "sourceType": "github",
       "skillPath": "skills/hyperframes-audio/SKILL.md",
+      "sourceNotes": "2026-11-19 project audio overlay in SKILL.md and references/attributes.md: remove required/default carving and limit processors to explicit audio edits. scripts/carve.mjs is unchanged. Upstream computedHash retained; installed hashes live in .agents/catalog/integrity.json.",
       "computedHash": "03007db5f0ea61f093c401f681e30d686c4a490f7462c6fd34949722e881b278"
     },
     "hyperframes-cli": {
@@ -149,6 +153,7 @@
       "source": "heygen-com/hyperframes",
       "sourceType": "github",
       "skillPath": "skills/hyperframes-core/SKILL.md",
+      "sourceNotes": "2026-11-19 project audio overlay in references/creator-editing-recipes.md: preserve native B-roll sound and independent tails; silence or suppression requires explicit scope. Upstream computedHash retained; installed hashes live in .agents/catalog/integrity.json.",
       "computedHash": "18ac7784765cc29af5a4d88f2a63a15deaf5395985009af188b5e3718edcfe3d"
     },
     "hyperframes-creative": {
@@ -179,7 +184,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/lark-showcase-aigc/SKILL.md",
-      "computedHash": "b213b997863ae591fab8f2ffca3e0767f381cf58237272f7c6e6f01b815efe4d"
+      "computedHash": "2933d8aa00b528825e53a80f8ccea7f6f49eb598683ba2b73f9c1f133dac6aea"
     },
     "media-review": {
       "source": "./local",
@@ -210,7 +215,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/reference-edit-rebuild/SKILL.md",
-      "computedHash": "60a57e4fec68f4ce47fdc292eb0a94da0ed9045333f28c453c55a062c47d5106"
+      "computedHash": "e66359bb352d380c9c5f9da56bfe291eee2a1083e7d5db710313a3f23d59fdc1"
     },
     "seed-audio-commercial": {
       "source": "./local",
@@ -222,7 +227,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seed-audio-prompt/SKILL.md",
-      "computedHash": "203c98dca19653957e87bac00231f517fae3581a469e1c599450408b287b2ccb"
+      "computedHash": "1f41d33e2d375e063db2611445cf8f979aa4a9b8578a110ae6b84c87acf3825d"
     },
     "seedance-acting-console": {
       "source": "./local",
@@ -247,7 +252,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-avatar-news/SKILL.md",
-      "computedHash": "447f2c104756909e32565511e51c0399b81609c8bd9a2429ae0ab08af10b5cfa"
+      "computedHash": "bb3a2e6cc0d5229709db9d0a6faa590d13c9ed300379df0b9ad557f5e65acde4"
     },
     "seedance-camera-presets": {
       "source": "./local",
@@ -265,13 +270,13 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-effects-studio/SKILL.md",
-      "computedHash": "205096dad6b37fe8ea356184a304253a91616494ceccb5fe9384a535a7ff6b51"
+      "computedHash": "6fd1b50e1ed65204379a2806e7d05226df63ec91d1f17398fa57e3036c23db28"
     },
     "seedance-frame-break": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-frame-break/SKILL.md",
-      "computedHash": "8d7326df7311a590619e1c960822187c9fc086956c00ee5370a8459a00f855b8"
+      "computedHash": "bcd952b64e13a67b02edb64d9c00fb4e6828953f41a75b920a917561c1e38a71"
     },
     "seedance-cinematic-broll-ads": {
       "source": "./local",
@@ -308,7 +313,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-motion-recast/SKILL.md",
-      "computedHash": "b24273e973aa4e04980cdebb48c00384c711b4ba71f2e9691c3468309d3f3c6c"
+      "computedHash": "ab043589d61fab59ebf0465545fbd615876a2d39749cddfb467b136dea730176"
     },
     "seedance-music-video": {
       "source": "./local",
@@ -320,7 +325,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-object-swap/SKILL.md",
-      "computedHash": "e889e2efafef18bf6dbcda6da9b44ac7791e6a5cf52d382a3058d617e02eaf26"
+      "computedHash": "369e7109a0e9df61ac070245509463d643de60fa2d56767e09c7893539dc90d5"
     },
     "seedance-pacing-presets": {
       "source": "./local",
@@ -339,19 +344,19 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-prompt-25-dialogue/SKILL.md",
-      "computedHash": "61d0f6f889ed31affa15483aa249a5c3c1e98c39162f155c7592605b9f859f7a"
+      "computedHash": "4247cc9823b5ad40a615b6dca6072030c56068777b8d3ec51ff47a7f08074fa1"
     },
     "seedance-restoration": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-restoration/SKILL.md",
-      "computedHash": "98da5a8f224a42dc74a2e20fc172b894096841446b02c95728da2b846cf3b64a"
+      "computedHash": "e01bfaeb7b50cf8d4ff68cb3aedb5868ce081bde70e871ec4f05c6d4e387399d"
     },
     "seedance-restyle": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-restyle/SKILL.md",
-      "computedHash": "37e1ef5759e1020bd2ab1a5147977db31b8962316a4a79f14b3a3a6e5b6d4d51"
+      "computedHash": "98d06ddab33df5b4b556fb02c29af23a0185cc70130721ca27c87b91b71d9628"
     },
     "seedance-shot-design": {
       "source": "./local",
@@ -364,7 +369,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-vfx-pipeline/SKILL.md",
-      "computedHash": "6a4ffc6e8411b2e895a5902abbe5a97787e2532870cabd615e755717180b04d4"
+      "computedHash": "1edef94d0f0a42fe81b1d6f1adbd88322a2e577847801bbeafecfc41c7bfca6d"
     },
     "seedance-vfx-prompt": {
       "source": "./local",
@@ -376,7 +381,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-virtual-portrait/SKILL.md",
-      "computedHash": "2a265a654a696bc544d788519fba9921faae507fd03949dd8ba0644c90533feb"
+      "computedHash": "2e10605cab6d6df6a56fb92ee0eef8a624bb23465b28fa7f8eb007775553ef42"
     },
     "seedream-character-outfit": {
       "source": "./local",
@@ -456,13 +461,13 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/showcase-html/SKILL.md",
-      "computedHash": "5ccbcbdbe25229c061dd9b92d052a66958be7369b78405ca9e11f9c2416d6c88"
+      "computedHash": "b1d3a9c22cb2158a01bfbcc642020707f4e9116eecc171d207c2aa85b0135c74"
     },
     "source-subject-map": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/source-subject-map/SKILL.md",
-      "computedHash": "82f56a15589cfc876353234b6d8389033d7fef202286cddf9b2912995e0c2017"
+      "computedHash": "406802c435db89395ad597a112e0094f8f7fc6feecbf7a25be954d773f9c7f72"
     },
     "static-ad-batch": {
       "source": "./local",
@@ -474,7 +479,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/template-factory/SKILL.md",
-      "computedHash": "f096841c23dbf884602048e7a538cfce20ef0bf8e753fd45ae07d2e0f80cd998"
+      "computedHash": "bd34757c1a305df5cecac8d8ee8814443bb4c5b706cf59335222769da5a7c785"
     },
     "blocking-map": {
       "source": "./local",
@@ -494,7 +499,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-ugc-ads/SKILL.md",
-      "computedHash": "a3dd640735b19df86ef1703cb5137412f985b2b09b207c7e33e6d57e39375f69"
+      "computedHash": "6015f004b29cdf4d0398846dd728989c739d485bbe9c1635eafef31fb045a7da"
     },
     "seedance-product-demo-ads": {
       "source": "./local",
@@ -502,11 +507,12 @@
       "skillPath": ".agents/skills/seedance-product-demo-ads/SKILL.md",
       "computedHash": "bac69bf3dd1ea12a43c637a4f8c4d31d26867acfbeeb07074181b53312177c16"
     },
-    "seedance-story-ads": {
+    "seedance-drama-ads": {
       "source": "./local",
       "sourceType": "local",
-      "skillPath": ".agents/skills/seedance-story-ads/SKILL.md",
-      "computedHash": "c99c5ac1cd07dbd019fe329782f9a851a5ee9a040cbc6dd8269d4b8a04cd1cfc"
+      "skillPath": ".agents/skills/seedance-drama-ads/SKILL.md",
+      "sourceNotes": "Original local prompt-only drama-ad guidance informed by Higgsfield's public Drama Ads introduction at https://higgsfield.ai/drama-ads-intro, page text retrieved 2026-11-16. No external skill or code imported, no example video inspected, and no output-quality, performance or feature-parity claim. Source interpretation and local boundaries are documented in references/format-notes.md.",
+      "computedHash": "5e1c0e69cd304e361d967861f37abc37370945c6a9ec8af1703e8e46a200eb81"
     },
     "ad-motion-graphics": {
       "source": "./local",

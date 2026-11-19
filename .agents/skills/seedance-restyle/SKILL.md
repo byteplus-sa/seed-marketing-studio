@@ -8,8 +8,8 @@ description: >-
   positions, motion, camera path, cuts and timing. Covers the style catalog, the
   style-only reference role, medium-matched Virtual Portrait identity anchors,
   an environment-image recipe that restyles the background while keeping the
-  same place, edit and reference routes, a muted source master with audio added
-  in post, a 480p test ladder, and restyle QA. Use to turn live
+  same place, edit and reference routes, source-audio preservation,
+  a 480p test ladder, and restyle QA. Use to turn live
   action into animation, change the medium of an animated clip, or match a
   house style. Not for replacing the cast or world (seedance-motion-recast),
   swapping one element (seedance-object-swap), grading or relighting the
@@ -42,17 +42,17 @@ Input:
 - A source clip inspected per the
   [video-to-video inputs contract](../../contracts/video-to-video-inputs.md),
   with a recorded rights decision covering the footage and the people in it.
-- The muted master and the saved source audio.
+- The selected source with its existing sound and verified input support.
 - One style: a catalog ID from the [style catalog](references/style-catalog.md),
   or one to three custom style reference images (user-owned or approved
   generated frames, each hashed).
 - Optional identity anchors: Virtual Portrait `asset://` views of recurring
   characters, designed in the target style.
-- The post-audio route.
+- Audio intent; native audio suffices unchanged, other routes need explicit scope.
 
 Output: a restyle package with ordered bindings, roles and hashes, the content
 inventory, the style block, the prompt, the route and parameters, the
-post-audio route, and the test-ladder rung.
+audio route, and the test-ladder rung.
 
 ## Hard rules
 
@@ -71,9 +71,9 @@ post-audio route, and the test-ladder rung.
 5. **Identity anchors are Virtual Portraits** designed in the target medium.
    Liveness verification is not used. A photoreal sheet under a drawn style
    leaks photoreal skin.
-6. **Submit the muted master** with `generate_audio: false`, per the
-   [video-to-video inputs contract](../../contracts/video-to-video-inputs.md#muted-source-master);
-   sound returns in post.
+6. **Preserve audio scope**, per the
+   [video-to-video inputs contract](../../contracts/video-to-video-inputs.md#audio-scope).
+   Native audio is sufficient unchanged; no mandatory mute, extraction or mux.
 7. **No baked text.** Source signage becomes abstract shapes in the style;
    captions and copy are added in post.
 8. **Test ladder**: follow the workspace draft policy with currently supported
@@ -107,7 +107,7 @@ padding or retiming without current capability evidence and user approval for th
 specific adaptation. If the selected route cannot accept the source unchanged,
 explain alternatives and leave the decision open. An approved adaptation is a
 separate derivative with its source span, hashes and timing/audio consequences
-recorded; derive muted picture and saved audio from the same span. A frame-count
+recorded; preserve independent audio tails unless explicitly changed. A frame-count
 recipe never replaces measurement of the returned output.
 
 Both routes bind `@Video 1` as an `asset://` video when the source shows a
@@ -145,8 +145,8 @@ Review the actual draft before making claims about another style or resolution.
 ## Procedure
 
 1. **Route check.** The request changes the look, not the cast or one element.
-2. **Source intake.** Inspect, record rights, and specify a muted derivative and
-   saved audio while preserving the original source and its timeline.
+2. **Source intake.** Inspect and record rights while preserving the original
+   source, its soundtrack and timeline.
 3. **Content inventory.** List subjects with observable descriptors, key
    props, set layout, cuts, fast-motion windows and on-screen text.
 4. **Style.** Pick a catalog entry or write a custom recipe from the user's
@@ -158,8 +158,8 @@ Review the actual draft before making claims about another style or resolution.
 6. **Prompt.** Assemble the route template in
    [restyle grammar](references/restyle-grammar.md).
 7. **Package** for prompt-review and submission by the caller.
-8. **QA and audio.** Run [restyle QA](references/restyle-qa.md), then mux the
-   post-audio route.
+8. **QA and audio.** Run [restyle QA](references/restyle-qa.md) and inspect
+   actual audio and sync. Audio edits require explicit scope.
 
 Medium recipes in `seedance-animation-styles` and look presets in
 `seedance-motion-recast` share vocabulary with this catalog; they are
@@ -179,7 +179,7 @@ in the
 - [ ] Request changes the medium and keeps the place; cast or element changes
       routed elsewhere
 - [ ] Source inspected and hashed; rights decision recorded
-- [ ] Muted master bound as `@Video 1`; `generate_audio: false`; audio saved
+- [ ] Selected source bound as `@Video 1`; audio intent and support verified
 - [ ] Content inventory covers every subject, key prop, cut and text surface
 - [ ] Whole-frame medium covers the background; any environment image is
       justified, approved and preserves the same place and layout
@@ -192,4 +192,4 @@ in the
 - [ ] Stop-motion cadence note present when the style steps motion
 - [ ] Source text disposition stated; no new copy requested
 - [ ] Verified route and ladder rung stated; any probe addresses a current need
-- [ ] Post-audio route recorded
+- [ ] Audio scope recorded

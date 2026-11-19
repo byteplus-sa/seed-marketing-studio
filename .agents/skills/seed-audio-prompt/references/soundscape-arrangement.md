@@ -114,8 +114,8 @@ As [triggering action], [sound source] produces a [acoustic character] "[optiona
 ### Sonic motifs and voice treatment
 
 A scene can give a power, an ordeal or a possession its own sound. These are
-craft heuristics, not verified model controls; listen to the result, and build
-a layer in post when the model merges or drops it.
+craft heuristics, not verified model controls; listen to the result and report
+missing layers. A post layer requires explicit scope.
 
 | Motif | Use when | Prompt shape |
 | --- | --- | --- |
@@ -137,11 +137,10 @@ deliver the lead voice clean and add the chorus layer in post.
 
 ### Ambience or score bed for a video clip
 
-Use a standalone bed when a clip must carry only ambience or only score, or
-when its native video audio leaked speech, chants, cheering or music. A
-negative "no music, no spoken words" line in a video prompt often does not
-hold (in one batch, two of three ambient-only clips leaked speech or score),
-and regenerating the video to fix sound would change an approved picture.
+Use a standalone bed only when explicitly requested. Native generated audio
+is sufficient unchanged, including ambience-only and score-led clips. Report
+unwanted speech or music and obtain a scoped decision before replacing sound;
+a negative prompt is not a guarantee, nor permission for an automatic post bed.
 
 1. Keep the picture untouched: stream-copy it, or generate it without native
    audio when the audio plan is post-only from the start.
@@ -150,8 +149,10 @@ and regenerating the video to fix sound would change an approved picture.
 3. Describe what the bed contains positively, layer by layer, then close with
    one sentence that limits it, for example `Only wind, surf and distant gulls
    throughout; no voices and no music.`
-4. Loudness-normalise the bed to the project target and mux it over the
-   stream-copied picture as a derived post master; keep the provider master.
+4. Attach only the requested bed, preserving compatible streams and independent
+   tails; keep the provider master and record the derivative. Normalization,
+   fades and other processing are not implied. Disclose required transcoding
+   or timeline changes and obtain approval before applying them.
 5. Record that the bed is **not frame-synced**. A sound tied to a visible
    action (a door slam, a footfall) is placed as a separate effect in the edit
    or accepted as loose sync.

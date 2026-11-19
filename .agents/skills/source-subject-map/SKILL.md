@@ -136,7 +136,8 @@ Write `subject_map.json` and `subject_map.md`, set `status`, and report the
 open ambiguities to the user as questions. Also tell the consumer whether any
 realistic person is visible and whether the source has audio: a video input that
 shows a person needs the `asset://` video route of the video-to-video inputs
-contract, and saved audio decides the post-audio route. Resolutions come from the user or
+contract; audio intent and verified support decide any separate sound work,
+not a mandatory extraction or post route. Resolutions come from the user or
 from further frame inspection, never from guessing; record each in its
 `resolution` field and re-derive `status`.
 

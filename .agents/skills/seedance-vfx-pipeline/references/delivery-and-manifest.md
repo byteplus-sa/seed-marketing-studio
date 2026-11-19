@@ -33,9 +33,10 @@ projects/<project>/scenes/scene-NN/sNN_shNNN/sNN_shNNN_t01_v01_lastframe.png
 
 > **Delivery transcode (HEVC → H.264).** Seedance 2.5 edit outputs are usually
 > HEVC (`video_codec: hevc`). Lark/doc previews and many players need H.264. Keep
-> the HEVC master as the archival take and produce a browser-safe derivative:
+> the HEVC master as the archival take. Convert only when needed for the requested
+> delivery, copying compatible audio unchanged; disclose any audio transcoding:
 >
-> `ffmpeg -i <take>.mp4 -c:v libx264 -pix_fmt yuv420p -profile:v high -crf 20 -c:a aac -b:a 128k -movflags +faststart <take>_lark_h264.mp4`
+> `ffmpeg -i <take>.mp4 -map 0:v:0 -map 0:a? -c:v libx264 -pix_fmt yuv420p -profile:v high -crf 20 -c:a copy -movflags +faststart <take>_lark_h264.mp4`
 
 ## Step 6 — Write the shot.md manifest
 
@@ -66,7 +67,7 @@ seed: null
 params:
   resolution: <submitted supported resolution>
   omni_reference_task_type: edit
-  audio: true
+  audio: <actual submitted audio setting, if supported>
   watermark: false
   return_last_frame: true
   submission_mode: single
@@ -87,7 +88,7 @@ artifacts:
     width: <probed width>
     height: <probed height>
     duration: <actual duration>
-    audio_channels: 2
+    audio_channels: <probed channels, or absent>
     audio_sample_rate: <from MCP>
     completion_tokens: <from MCP>
     cost_usd: <per-take cost>
@@ -115,11 +116,10 @@ safety_identifier: <project>-<scene>-<shot>
 - **Resolution**: <probed width and height>
 - **Ratio**: <probed aspect ratio>
 - **Duration**: <N>s
-- **generate_audio**: `true` (native diegetic audio); `false` for Object Swap,
-  Motion Transfer and Restyle
-- **Muted master** (Object Swap, Motion Transfer, Restyle): `<path>` — SHA-256 `<hash>`
-- **Saved source audio**: `<path or none>` — SHA-256 `<hash>`
-- **Post-audio route**: `<original | new | mixed | re-voiced>` — final mux `<path>`, SHA-256 `<hash>`
+- **generate_audio**: actual submitted supported setting matching the brief
+- **Audio scope**: native unchanged, or explicitly requested silence, exact master or audio edit
+- **Source**: `<path>` — SHA-256 `<hash>`, with actual audio presence and timing
+- **Audio derivative, only when requested**: `<path>` — SHA-256 `<hash>`, authorized changes and independent tails
 - **watermark**: `false`
 - **return_last_frame**: `true` (for shot chaining)
 - **safety_identifier**: `<project>-<scene>-<shot>`

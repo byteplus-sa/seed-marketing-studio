@@ -301,8 +301,7 @@
               "path",
               "sha256",
               "role",
-              "binding",
-              "approval_evidence"
+              "binding"
             ],
             "properties": {
               "path": {
@@ -433,11 +432,25 @@
                   }
                 ]
               },
+              "inspection_evidence": {
+                "type": "object",
+                "required": ["manifest", "manifest_sha256", "field"],
+                "properties": {
+                  "manifest": {"type": "string", "minLength": 1},
+                  "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                  "field": {"const": "variants"}
+                },
+                "additionalProperties": false
+              },
               "control_only": {
                 "type": "boolean"
               }
             },
-            "additionalProperties": false
+            "additionalProperties": false,
+            "oneOf": [
+              {"required": ["approval_evidence"]},
+              {"required": ["inspection_evidence"]}
+            ]
           }
         },
         "params": {

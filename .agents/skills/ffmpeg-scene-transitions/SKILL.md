@@ -21,6 +21,13 @@ transitions, fades, and locked audio/video sync. This is the assembly step for
 multi-scene videos (including AI-generated scenes whose audio stream is often a
 little shorter than the video).
 
+**Workspace audio overlay:** this is an explicitly requested editing capability,
+not a required finishing pass. Native generated audio is sufficient unchanged.
+Choose hard cuts without audio effects unless crossfades or fades are requested.
+Audio padding, trimming, resampling and mixing require explicit scope after
+their consequences are disclosed. Preserve source masters and independent tails;
+read-only diagnostics and actual listening remain available.
+
 ## When to use
 
 - Combine several scene/clip files into one deliverable film.
@@ -43,9 +50,9 @@ the video stream, and the direction is not guaranteed:
 When you crossfade, the video chain advances by each clip's *video* duration
 while the audio chain advances by each clip's *audio* duration. Either
 mismatch accumulates at every boundary — a 0.3-0.5 s lip-sync drift by the
-last scene after several joins. The fix is the same regardless of direction:
-**make every audio branch exactly match its video duration before
-crossfading**, so both chains walk the same timeline.
+last scene after several joins. Report this mismatch and choose a scoped
+assembly strategy. If matching audio to picture is explicitly approved, the
+following filters can conform the selected branches before crossfading:
 
 - audio shorter than video → `apad=whole_dur=<D>` pads it up to `D`.
 - audio longer than video → `atrim=0:<D>` trims it down to `D`.
@@ -78,8 +85,7 @@ Decide per boundary:
 - **Crossfade (dissolve)**: smooth, standard between scenes. Duration 0.3–1 s.
 - **Hard cut**: no transition. Use where a cut reads better (e.g. a deliberate
   time/location jump), or per the user's direction.
-- **Open/close fades**: typically 0.5 s fade-in at the start and fade-out at the
-  end of the whole film.
+- **Open/close fades**: only when requested, using the agreed durations.
 
 Write the plan as an ordered list of boundaries with their transition type and
 duration, e.g. `cut, 0.5s, 0.5s, 0.5s` for four boundaries.
@@ -152,7 +158,8 @@ Template for 5 clips (0=first … 4=last). Adjust the number of `-i` inputs, the
 `xfade`/`acrossfade` links, and the offsets to your plan. The key details:
 
 - `settb=AVTB` on every video branch prevents an `xfade` timebase mismatch.
-- Every audio branch must end at exactly its clip's video duration `D`:
+- For this explicitly authorized audio-conform recipe, each branch ends at its
+  approved duration `D`:
   `apad=whole_dur=<D>` when audio is shorter than video, `atrim=0:<D>` (plus
   `asetpts=N/SR/TB` to restart the timeline) when audio is longer than video.
 - `afade`/`fade` handle the open and close.
@@ -188,8 +195,9 @@ Notes:
 
 - The fade-out `st` = final_duration - fade_duration (148.41 - 0.5 ≈ 147.9).
 - `apad=whole_dur` pads audio that is *shorter* than its video. If a clip's
-  audio is *longer* than its video, trim it first with `atrim=0:$D` (the
-  preflight in Step 1 tells you which case each clip is in).
+  audio is *longer* than its video, `atrim=0:$D` would discard the tail. Use
+  that only when the exact trim is approved; otherwise preserve the tail and
+  return the assembly conflict for a scoped decision.
 - For a hard cut at a boundary, use `concat` (or `concat` the pair first) instead
   of `xfade` for that join — the `settb=AVTB` on the `concat` output keeps the
   timebase uniform for the following `xfade`.
@@ -239,10 +247,10 @@ boundary. Then open the film to eyeball the cuts.
 | Symptom | Cause | Fix |
 |---|---|---|
 | `xfade` fails: "main timebase … do not match" | mixed timebases (e.g. a `concat` output feeding `xfade`) | add `settb=AVTB` to every video branch |
-| audio leads/lags video, worse in later scenes | per-clip audio shorter than video, or longer than video; `acrossfade` walked a different timeline | normalize every audio branch to its clip's video duration first: `apad=whole_dur=$D` (shorter) or `atrim=0:$D,asetpts=N/SR/TB` (longer) |
-| audio drifts despite `apad` | a clip's audio is *longer* than its video, so `apad` could not shorten it | use `atrim=0:$D,asetpts=N/SR/TB` on that branch instead of `apad` |
+| audio leads/lags video, worse in later scenes | differing audio and picture timelines | report measured offsets and obtain a scoped assembly decision; padding or trimming is not automatic |
+| audio drifts despite `apad` | audio may be longer than picture | inspect independent tails; trim only with explicit approval of the discarded span |
 | jump/cut where a crossfade was wanted | wrong offset or a missing `xfade` link | recompute offsets from Step 3 (cumulative method for mixed durations) |
-| audio resampled unexpectedly | clips have different sample rates | re-encode all clips to one sample rate first |
+| audio resampled unexpectedly | clips have different sample rates | disclose the required transport conversion before an authorized re-encode |
 | last scene audio ends early | fade-out `st` too large | set `st = final_duration - fade_duration` |
 
 ## Worked example — mixed durations, audio longer than video

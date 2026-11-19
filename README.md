@@ -58,7 +58,7 @@ implicit. Slash-command discovery depends on the host agent.
 | --- | --- |
 | Creator-led UGC, hooks, unboxing, try-on and 45 motion presets | `seedance-ugc-ads` |
 | Product demonstrations and problem-solution ads | `seedance-product-demo-ads` |
-| Entertainment-first short stories | `seedance-story-ads` |
+| Original short stories around any product | `seedance-drama-ads` |
 | Authorized testimonials and customer stories | `seedance-testimonial-ads` |
 | Deadpan sketches and fictional mockumentary ads | `seedance-deadpan-ads` |
 | Editorial fashion films and first-person ads | `seedance-fashion-ads`, `seedance-pov-ads` |
@@ -287,7 +287,7 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 | **product-intake** | Turn a product URL or images into a sourced product card: facts with verbatim quotes and statuses plus hashed acquired images; only supported claims reach copy. |
 | **ad-delivery-formats** | Turn one approved ad master into per-placement cuts: regenerate or reframe per ratio, lay out text inside dated safe zones, and check with overlay contact sheets. |
 | **ad-captions** | Write per-language SRT/WebVTT ad captions from the locked script and measured timing, with an optional HyperFrames burn-in layer inside the placement safe zone. |
-| **ad-creative-check** | Honest pre-spend pass/fail/needs-human checklist for a finished ad cut: reveal, logo, opening, safe zone, claims, speech, loudness and disclosure; no performance prediction. |
+| **ad-creative-check** | Honest pre-spend pass/fail/needs-human checklist for a finished ad cut: reveal, logo, opening, safe zone, claims, speech, requested loudness targets and disclosure; no performance prediction. |
 | **ad-performance-loop** | Rank a user-exported ad results CSV by variant (hook rate, CTR, CVR, CPA) within the account, flag fatigue, and draft the next variant matrix. |
 
 ### Ads, UGC and trend formats
@@ -296,7 +296,7 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 |---|---|
 | **seedance-ugc-ads** | Combine nine ad modes, hooks, settings, script formulas and 45 motion presets into grounded Seedance UGC prompts or scoped direction blocks. |
 | **seedance-product-demo-ads** | Design product demonstrations with supported mechanisms, visible action and result, continuity records and honest evidence boundaries. |
-| **seedance-story-ads** | Develop entertainment-first short-story ads with a product-linked payoff, clear staging and a prompt/edit handoff. |
+| **seedance-drama-ads** | Create beautiful, original stories around any product with an open creative approach, preserving product facts and the user's scope. |
 | **ad-motion-graphics** | Orchestrate agent-authored HyperFrames explainers and motion-graphics ads with exact UI, copy and data, optional Seedance plates and hypermotion inserts. |
 | **seedance-testimonial-ads** | Adapt authorized customer testimony into ads while preserving quotations, consent, qualifiers and the distinction between evidence and illustration. |
 | **seedance-musical-ads** | Design musical and sound-led ads around a sonic product motif, authorized soundtrack, cue map and picture/audio handoff. |
@@ -319,7 +319,7 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 | Skill | Summary |
 |---|---|
 | **seedance-prompt** | Compose Seedance prompts, edits and extensions with flexible 2.5-based guidance, ordered references and source locks; preserve exact models and verify executable controls separately. |
-| **seedance-prompt-25-dialogue** | Direct spoken dialogue for Seedance in any language: native-language check, register and accent, code-switching, and word-scoped repairs. |
+| **seedance-prompt-25-dialogue** | Direct spoken dialogue for Seedance in any language: native-language check, register and accent, code-switching, and explicitly scoped repairs. |
 | **seedance-animation-styles** | Writes Seedance animation prompts for claymation, needle felt, wood puppets, toy miniatures, vintage rubber hose, painterly 2D, cubist ink, stylized 3D, silicone creatures, wax crayon, and custom animation media. Preserves handcrafted texture and material-specific motion. |
 | **seedance-music-video** | Develop track-informed music-video treatments with intentional escalation, restraint, repetition or counterpoint and optional evidence-based synchronization. |
 
@@ -344,9 +344,9 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 |---|---|
 | **seedance-vfx-pipeline** | Run a complete Seedance video-to-video VFX, Object Swap, Motion Transfer or Restyle shot, or batch variants of one take, and keep source, prompt, outputs, comparison and QA synchronized in the project manifests and Studio project. |
 | **seedance-vfx-prompt** | Write Seedance 2.5 video-to-video edit prompts for background replacement, object integration, relighting, weather and timed effects, with a may-change/must-preserve contract. |
-| **seedance-object-swap** | Write Seedance 2.5 Object Swap prompts that replace one character, outfit, product, prop, object or location in existing footage and keep the rest of the shot, with the five-part swap contract, Virtual Portrait characters, a muted source with post audio and swap QA. |
-| **seedance-motion-recast** | Write Seedance 2.5 Motion Transfer prompts that keep a clip's motion, camera and cuts while rebuilding cast, wardrobe, product, location and style from locked references, with per-subject dispositions, Virtual Portrait identities, a muted source with post audio and a 480p probe ladder. |
-| **seedance-restyle** | Write Seedance 2.5 Restyle prompts that redraw a whole clip in one of 24 visual styles or a custom style reference while keeping its content, motion, camera and cuts, with medium-matched Virtual Portrait anchors, an environment-image recipe that keeps the same place and restyles the background too, a muted source with post audio and a 480p probe ladder. |
+| **seedance-object-swap** | Write Seedance 2.5 Object Swap prompts that replace one character, outfit, product, prop, object or location in existing footage and keep the rest of the shot, with the five-part swap contract, Virtual Portrait characters, source-audio preservation and swap QA. |
+| **seedance-motion-recast** | Write Seedance 2.5 Motion Transfer prompts that keep a clip's motion, camera and cuts while rebuilding cast, wardrobe, product, location and style from locked references, with per-subject dispositions, Virtual Portrait identities, source-audio preservation and a 480p probe ladder. |
+| **seedance-restyle** | Write Seedance 2.5 Restyle prompts that redraw a whole clip in one of 24 visual styles or a custom style reference while keeping its content, motion, camera and cuts, with medium-matched Virtual Portrait anchors, an environment-image recipe that keeps the same place and restyles the background too, source-audio preservation and a 480p probe ladder. |
 | **seedance-restoration** | Write Seedance 2.5 video-to-video restoration prompts that remove film grain, noise, scratch lines, dust, and flicker from aged or archival footage while preserving the shot. |
 | **source-subject-map** | Map a source clip's cuts, subjects, objects, contacts, speakers and on-screen text into a hash-bound subject_map.json before recast, swap or VFX edits; open ambiguities block prompt writing. |
 
@@ -424,7 +424,7 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 
 | Skill | Summary |
 |---|---|
-| **lark-showcase-aigc** | Orchestrates ffmpeg-scene-transitions, lark-demo-doc-builder, lark-doc, lark-wiki, lark-drive, and design-doc-mermaid to build enterprise-facing Lark documents that showcase AIGC (AI-generated content) with prompts, results, and inline media. |
+| **lark-showcase-aigc** | Build customer-facing Lark showcases with prompts, results and existing inline media unchanged; compilation and audio editing only when requested. |
 | **showcase-html** | Maintain the HTML production canvas of pre-Studio canvas projects and build ad-hoc comparison pages (optional for Studio projects). |
 | **media-review** | Emergency OS-player fallback when the required HTML/browser review surface is unavailable. |
 | **setup** | Interview users and remember safe workspace or production preferences across sessions without starting generation. |
