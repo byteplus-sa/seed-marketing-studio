@@ -387,7 +387,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-character-outfit/SKILL.md",
-      "computedHash": "18fd696a4de0acef055b4f201eef244628592ae84f29058e3b3b9113f2601078"
+      "computedHash": "2449e0053eea2413085c089dcd808f0cfb49711ce295a2a1c5948a5249ae29bd"
     },
     "seedream-character-sheet": {
       "source": "./local",
@@ -399,13 +399,13 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-character-sheet-cleanup/SKILL.md",
-      "computedHash": "d9365d96d38e9b60af6bcd02d54ffc19cf6f3224213f98e472642f8452890acb"
+      "computedHash": "30a1adb2782a43caa4f829155f9421f37f4c4c2a2dc445cab8eceeb9b83d155c"
     },
     "seedream-edit": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-edit/SKILL.md",
-      "computedHash": "ac5f3e9535f4b6e26e5ddf8cd085fa3e6ddd01f3d3aee7853a0bfa9699f575c6"
+      "computedHash": "0072ed0bd701ba444413af97e14edfa3cce07081dec722b6ee176b5145e6aee9"
     },
     "seedream-handcrafted-3d": {
       "source": "./local",
@@ -429,7 +429,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-prompt/SKILL.md",
-      "computedHash": "b0d8f6ccab7207800968cf4d6e78e3aa9563a656422cb97f6707eb215f99d62e"
+      "computedHash": "f7db67f69d0b2f749900e4abb33ee957f514add5f61622406ac5801b70c3c2b3"
     },
     "seedream-prop-asset": {
       "source": "./local",

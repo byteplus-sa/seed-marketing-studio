@@ -10,12 +10,16 @@ mode selection and caller responsibilities.
 
 ### 10. Generate variants when requested or authorized
 
-For actual image creation:
+For authorized image creation, the caller submits `seedream_generate_image`
+through `ark_job_submit` after selected-model and tool verification:
 
-- use `seedream_generate_image` for a single panel, a single-image grid, or a
-  sequence-capable batch of separate images;
-- use `seedream_generate_image_variations` for independent alternatives;
-- use `seedream_edit_image` for point- or bounding-box-guided corrections;
+- use one image for a single panel or a whole grid;
+- use `variations` for independent samples (separate calls, not native batch);
+- use `max_images` above one only for verified native sequential output.
+  Seedream 5.5 and Pro do not support native batches; do not downgrade models
+  to obtain them or combine native batches with `variations` above one;
+- for corrections, put the source first in `images` and use structured `point`
+  or `bbox` integer coordinates in 0-999, without raw tags in the prompt;
 - set `persist: true`;
 - use the lowest suitable size for the requested target; default mode has no
   automatic draft-first pass;
@@ -23,7 +27,7 @@ For actual image creation:
 - use `prompt_optimization: standard` only when the selected model and tool
   expose it. `fast` needs verified support (documented for Pro, not 5.5);
   latency preference alone does not authorize it.
-- Upload and pass the resolved local Element files as ordered reference inputs;
+- Pass Element files as HTTPS URLs or schema-supported base64, never local filepaths;
   keep their `@Image N` indices identical in the prompt, request, and manifest.
 
 In default review mode, generate one sample: `p010 v01` for a one-panel board,

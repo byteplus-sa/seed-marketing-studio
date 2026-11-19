@@ -7,16 +7,19 @@ mode selection and caller responsibilities.
 
 ## Recommended prompt structure — Image generation
 
-Use this order for the sections that apply. Do not add empty boilerplate sections:
+Lead with the requested task, then describe the subject and scene, composition,
+visual style and constraints. This is a readability convention, not a weighting
+law. A short natural-language paragraph is enough for a simple request; use only
+the sections that clarify the result and do not add empty boilerplate.
 
 ```
 References:          # only when images are provided
-Task:                # include when the mode needs clarification
+Task:                # requested result or edit
 Subject:
 Setting:             # when environment matters
+Composition:         # when framing matters
 Style:               # when style is specified or useful
 Lighting:            # when lighting matters
-Composition:         # when framing matters
 Text in image:       # only when readable text is requested
 Constraints:         # only useful quality or exclusion requirements
 ```
@@ -47,8 +50,29 @@ Rules for references:
   `Use the face and hairstyle from @Image 1 for the main character, apply the
   oil-paint texture from @Image 2 to the full scene, and use the leather from
   @Image 3 on the sofa.`
-- Use the exact `@Image N` token every time; do not drop the `@` or replace the
-  token with an ambiguous phrase such as “the references.”
+- Keep `@Image N` labels consistent with the actual input order, rather than
+  using ambiguous phrases such as "the references." This is the workspace's
+  naming convention, not a required provider API token.
+
+For multi-image work, specify each reference's role, target, preserved features,
+excluded features and conflict priority. Use only what matters to the request.
+For example, identity may override material shape while the environment
+reference contributes only background and light. A style reference does not
+authorize changing identity, language, approved text or protected geometry.
+Ask when conflicting references have no specified precedence.
+
+Fictional binding example:
+
+```text
+Use the ceramic vase in @Image 1 for its silhouette and handles. Apply only the
+surface texture from @Image 2 to that vase; ignore the donor object's shape
+and lettering. Use @Image 3 only for the room and side-light direction.
+The silhouette from @Image 1 takes precedence over the texture reference.
+```
+
+For a structured MCP edit, the actual edit target must be the first image.
+Renumber the inventory and all inline bindings together when reordering.
+Do not invent a missing reference or describe an uninspected image as verified.
 
 ### 2. Task type
 
@@ -170,6 +194,10 @@ Examples:
 - "Golden hour backlight, rim light on subject's hair, warm amber tones."
 - "Moody low-key lighting, single overhead source, deep shadows, cool blue moonlight through window."
 
+Relate reflections, contact shadows, perspective and material response to the
+same light sources and scene geometry. Describe concrete surface behavior
+instead of stacking quality adjectives; inspect physical coherence afterward.
+
 ### 7. Composition
 
 Specify shot type, viewing angle, and composition method.
@@ -184,6 +212,10 @@ Composition:
 **Viewing angles**: high angle, low angle, eye level, bird's eye view, worm's eye view, Dutch angle.
 
 **Composition methods**: symmetric, diagonal, rule of thirds, leading lines, frame within a frame, negative space, golden ratio.
+
+For approximate placement boxes, safe areas or channel adaptation, read
+[Layout and Typography](layout-and-typography.md). Prompt boxes and structured
+edit coordinates are distinct controls, neither a guarantee of exact geometry.
 
 ### 8. Text in image (when non-exact model text is expressly accepted)
 
@@ -206,6 +238,9 @@ Rules:
   the requested language, and keep exact copy in the deterministic layer.
 - Small text may still be unstable. If fidelity matters, remove it from the
   generative layer and render it deterministically.
+- For expressive text, specify hierarchy, line breaks, alignment, weight,
+  spacing and safe margins, then proofread the actual output. Detailed patterns
+  live in [Layout and Typography](layout-and-typography.md).
 
 ### 9. Constraints (when useful)
 
@@ -219,8 +254,9 @@ Negative: [no watermarks, no signatures, no text overlays, no distorted anatomy]
 
 All constraints go inline in the text prompt. The Seedream API has no separate `negative_prompt` field.
 
-- Resolution and aspect ratio are request parameters (`size`), not prompt words;
-  "4K" or "16:9" in the text does not change the output size.
+- Use supported explicit `widthxheight` in `size` when dimensions or aspect
+  ratio matter. A tier such as `2K` is not proof of a particular delivered
+  shape, and a "4K" quality adjective is not a resolution setting.
 - A negation does not remove a strong visual prior. Describe the wanted shape,
   surface, or light positively first ("a soft round pool of lamplight", "a
   plain white jug, smooth solid glaze, nothing printed"), then add a short
@@ -229,3 +265,6 @@ All constraints go inline in the text prompt. The Seedream API has no separate `
   grow pseudo-text. When no text is wanted, say the surface is plain with
   nothing printed. Images that become video references carry that text into
   every shot.
+- For a transparent canvas, cutout, translucent material or interior holes,
+  read [Transparent Assets](transparent-assets.md); a background description
+  is not evidence of an actual alpha channel.
