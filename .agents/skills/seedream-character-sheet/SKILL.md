@@ -18,8 +18,8 @@ Use this skill when the user wants:
 
 This skill is designed to partner with:
 - `seedream-prompt` for general Seedream image prompting
-- `seedream-character-sheet-cleanup` after generation when a full-body panel
-  still shows a readable extra face
+- `seedream-character-sheet-cleanup` only when an explicit single-face
+  reference policy requires it or the user requests cleanup
 - `seedream-edit` for cleanup or local post-generation fixes
 
 Do **not** use this skill for:
@@ -314,13 +314,22 @@ Quality: film-photo finish, consistent identity across all panels
 Negative: no extra panels, no 3/4 view, no profile view, no props, no missing limbs, no prosthesis, no glossy skin, no light reflection on the skin, no exaggerated expressions, no smiling, no frowning, no strong emotions, no watermarks, no text overlays
 ```
 
+## Virtual Portrait registration
+
+Upload the approved three-panel character sheet unchanged as one source image
+through `seedance-virtual-portrait`. Keep all three views together and record
+the original selected file's path and SHA-256.
+Virtual Portrait registration does not require cleanup. Do not crop, split
+panels or regenerate a single-view portrait for registration.
+
 ## Workflow pairing
 
 Recommended sequence:
 1. Use this skill to write the character-sheet prompt.
 2. Generate the sheet with Seedream.
-3. Inspect the body panels for extra readable faces.
-4. If needed, optionally compose with `seedream-character-sheet-cleanup`.
+3. Inspect all panels for consistent identity, costume and the requested layout.
+4. Only if a requested single-face policy requires it or the user asks, compose
+   with `seedream-character-sheet-cleanup`; registration alone is not a trigger.
    For a new outfit on an approved sheet, compose with
    `seedream-character-outfit` instead of regenerating the identity.
 5. Save each generated result under `elements/<character-id>/` beside `character.md`.

@@ -91,6 +91,19 @@ Rules that decide the route:
 4. **Same project.** Assets work only with endpoints in the same
    `project_name` as the registration.
 
+## Invented character sheets
+
+Upload the approved three-panel character sheet unchanged as one source image
+for Virtual Portrait registration. The back full-body, front full-body and
+face close-up panels are views of one character, not different subjects.
+Do not crop, split panels, clean up or regenerate a single-view portrait for
+registration. This workspace source policy overrides per-view preparation
+suggestions in upstream asset-library guidance.
+
+Keep the sheet's source path and SHA-256 in the ledger, wait for `Active`, then
+bind the registered sheet's `asset://` URI. If the provider rejects the source,
+report the exact error and stop; do not silently process or replace the sheet.
+
 ## When Seedance flags a real-person input
 
 The guardrail that rejects raw real-person media is why this program exists:

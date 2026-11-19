@@ -9,6 +9,10 @@ Inspect a Seedance-bound character sheet against the requested reference policy.
 Use this cleanup only when an extra readable face violates that policy or the
 user explicitly requests the edit.
 
+Virtual Portrait registration does not require cleanup. Upload the approved
+three-panel character sheet unchanged through `seedance-virtual-portrait`;
+multiple panels showing the same character are not a cleanup trigger.
+
 The purpose is simple: a character sheet with multiple readable faces can
 confuse Seedance during downstream video generation. If the front full-body
 panel shows a second readable face, the model can drift between faces over time.
@@ -41,8 +45,8 @@ Do not invoke this skill when:
 
 ## Core Rule
 
-For Seedance-facing character sheets, keep exactly one readable face on the
-sheet: the close-up panel.
+When the requested single-face policy or explicit cleanup request applies,
+keep exactly one readable face on the sheet: the close-up panel.
 
 The front full-body panel should preserve:
 - pose

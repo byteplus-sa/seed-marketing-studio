@@ -313,7 +313,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-motion-recast/SKILL.md",
-      "computedHash": "ab043589d61fab59ebf0465545fbd615876a2d39749cddfb467b136dea730176"
+      "computedHash": "672615efb9bc17035d559aa894895a6f819aea3dde65a9cd9be4ff9076800ac6"
     },
     "seedance-music-video": {
       "source": "./local",
@@ -381,7 +381,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-virtual-portrait/SKILL.md",
-      "computedHash": "2e10605cab6d6df6a56fb92ee0eef8a624bb23465b28fa7f8eb007775553ef42"
+      "computedHash": "cac9543dc06e494cda05a5e6780d285a5d727b8920a09d7a421ee05c7d00b82f"
     },
     "seedream-character-outfit": {
       "source": "./local",
@@ -393,13 +393,13 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-character-sheet/SKILL.md",
-      "computedHash": "4dd2638947d1ed10675893d263ba32d8ac4e6d9259b6ce714743b209f11831a2"
+      "computedHash": "a6eb695eee73848f948085f1bbd47346fb53722bd86da000b0066f5de7c7333f"
     },
     "seedream-character-sheet-cleanup": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedream-character-sheet-cleanup/SKILL.md",
-      "computedHash": "30a1adb2782a43caa4f829155f9421f37f4c4c2a2dc445cab8eceeb9b83d155c"
+      "computedHash": "f7d023d2d99b4622017adea76308062030b990be584f26d6c196ffcaf3595e9d"
     },
     "seedream-edit": {
       "source": "./local",

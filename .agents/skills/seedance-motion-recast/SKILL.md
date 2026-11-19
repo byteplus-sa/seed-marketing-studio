@@ -50,9 +50,11 @@ Input:
   agent's own inspection of the source (see
   [multi-subject mapping](references/multi-subject-mapping.md)). Use a subject
   map only when its `status` is `ready`; open ambiguities block prompt writing.
-- Approved target elements with hashes, one image per view. Characters are
-  Virtual Portrait `asset://` assets; products, props and locations are
-  approved sheets or authorized downloads.
+- Approved target elements with hashes. Register the approved three-panel
+  character sheet unchanged as one source image for a Virtual Portrait
+  `asset://` reference, or reuse an existing valid asset. Do not split panels
+  or synthesize single-view portraits for registration. Products, props and
+  locations are approved sheets or authorized downloads.
 - The requested style (a named preset or free text) and audio intent.
 
 Output: a recast prompt package containing the ordered `@Video`/`@Image`
@@ -118,8 +120,9 @@ full-duration native Draft before supported promotion by `draft_task_id`.
    removed, or kept as a background extra. Never write "replace everyone" or
    any wording that leaves the model to guess who becomes whom.
 2. **References come only from approved elements** (Seedream sheets or
-   authorized downloads) with current SHA-256. Use separate images per view;
-   never collages or turnaround strips.
+   authorized downloads) with current SHA-256. Keep the character sheet's
+   three views together in its registered asset; registration does not
+   require per-view processing.
 3. **Every new character is a Virtual Portrait**, and the source footage
    carries a recorded rights decision, both per the
    [video-to-video inputs contract](../../contracts/video-to-video-inputs.md).
@@ -239,7 +242,8 @@ bundle or route per retry.
 - [ ] Subject map ambiguities resolved, or own inspection covers every cut
 - [ ] Every visible source subject and swappable object has a disposition
 - [ ] Each mapped subject has an observable descriptor (position, clothing, action)
-- [ ] References approved, hashed, one image per view, ordered and role-bound
+- [ ] References approved, hashed, ordered and role-bound; character sheets
+      registered unchanged or existing valid assets reused
 - [ ] Reference count within recommended range, or warning and split proposed
 - [ ] Motion Authority names what `@Video 1` supplies and excludes its appearance
 - [ ] Guards: exact people count, wardrobe only from references, residual originals

@@ -18,25 +18,28 @@ Seedance Virtual Portrait asset: an Advanced Creation Rights AIGC asset,
 referenced as `asset://<asset_id>`. This is the BytePlus-recommended path.
 
 - **What qualifies.** An approved invented character element, either a
-  Seedream sheet view or a user-supplied invented design. A Virtual Portrait
-  must not resemble a real, identifiable person. A brief that needs a specific
-  real person as the target is outside these workflows; offer a Virtual
-  Portrait character instead.
+  Seedream character sheet or a user-supplied invented design. A Virtual
+  Portrait must not resemble a real, identifiable person. A brief that needs
+  a specific real person as the target is outside these workflows; offer a
+  Virtual Portrait character instead.
 - **One subject per group.** Register with
   `ark_asset_create(subject="<exact element name>", sources=[...])`. Never mix
   two characters in one group. A medium-specific design, such as a clay or
   anime version of a character, is its own subject (`"Mara (claymation)"`).
-- **Sources.** One image per view, never a collage or turnaround strip. The
-  best set is a front-facing close-up plus a full-body view in portrait
-  orientation. Sources are public HTTPS URLs or `media_upload` object keys.
+- **Sources.** Upload the approved three-panel character sheet unchanged as
+  one source image. Its panels show views of the same character, not separate
+  subjects. Do not crop, split panels, clean up or regenerate a single-view
+  portrait for registration. Sources are public HTTPS URLs or `media_upload`
+  object keys for the original selected files.
 - **Activation.** Wait for `all_active`, or `ark_asset_get` status `Active`,
   before binding. Assets work only with endpoints in the same `project_name`.
 - **Order of work.** Seedream rejects `asset://` inputs, so design and approve
-  the sheet first, then register the approved views.
+  the sheet first, then register that file unchanged. Existing valid assets
+  remain reusable; do not re-register them solely because of this source policy.
 - **Record.** In the element manifest, store the subject name, `group_id`, each
-  view's `asset_id`, the source file path and SHA-256, the status and the
-  registration time. Approval binds to the source hash. When the approved
-  source changes, register a new asset and invalidate dependent reviews.
+  registered source's `asset_id`, the source file path and SHA-256, the status
+  and the registration time. Approval binds to the source hash. When the
+  approved source changes, register a new asset and invalidate dependent reviews.
 - **Prompt wording.** Refer to each asset by its binding position
   (`@Image 1`), never by asset ID. A short production label tied to that
   binding (`Mara: @Image 1 and @Image 2`) may name the character in later

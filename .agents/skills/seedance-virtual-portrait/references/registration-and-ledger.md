@@ -8,6 +8,7 @@
 | Real-person flow, formats, consistency check, accept to Active | BytePlus docs, *Add real-human assets to asset library* | Read 2026-10-11 |
 | Authorization reuse and authorized image/video/audio asset references | [Real-human assets](https://docs.byteplus.com/en/docs/modelark/upload-real-person-portrait-assets), [Portrait video guide](https://docs.byteplus.com/en/docs/modelark/seedance-portrait-asset-guide) | Official search-index body checked 2026-10-11; direct reads returned shells |
 | AIGC groups for invented characters, `ark_asset_*` tool names, subject per group, `asset://` use, Seedream and Seed Audio rejection, same `project_name` | `ark-mcp` skill, Private Asset Library Workflow | Local contract; the tools were not loaded in the authoring session |
+| Upload the approved three-panel character sheet unchanged as one source image | Workspace registration source policy | Local workflow instruction; not a new provider capability test |
 | Console Virtual Portrait library page | BytePlus docs, *Private virtual portrait library* | Page body not machine-readable when written; re-read before relying on details |
 
 ## Trusted model outputs (no registration)
@@ -38,12 +39,19 @@ passed straight from the provider and accepted on a probe.
 2. `ark_asset_create(subject="<exact element name>", sources=[...])`. This
    reuses or creates that subject's AIGC group. Use a separate subject for a
    medium variant (`"Mara (claymation)"`).
-3. Sources: one image per view, never a collage; a front close-up plus a
-   portrait-orientation full-body view is the best set; public HTTPS URLs or
-   `media_upload` object keys.
+3. Upload the approved three-panel character sheet unchanged as one source
+   image. Its panels are three views of the same character; keep one subject
+   per group. Use a public HTTPS URL or `media_upload` object key for the
+   original selected file. Do not crop, split panels, clean up or regenerate
+   a single-view portrait for registration. This workspace source policy
+   overrides per-view preparation suggestions in upstream asset-library guidance.
 4. Wait for `all_active`, or `ark_asset_get` status `Active`.
 5. Across several replicas, pre-create the group and pass its `group_id` to
    avoid a duplicate-name race.
+
+If the provider rejects the source, report the exact error and stop; do not
+silently process or replace the sheet. Existing valid registrations remain
+reusable; this source policy does not require replacing them.
 
 Without `ark_asset_*` tools, the user registers in the console (My assets) and
 supplies the asset IDs; record the source as user-supplied.
@@ -73,7 +81,7 @@ new asset.
   "assets": [
     {
       "asset_id": "asset-...",
-      "view": "front close-up | full body | video | audio",
+      "view": "three-panel character sheet | front close-up | full body | video | audio",
       "source_path": "relative path or null",
       "source_sha256": "hex or null",
       "status": "Active",
