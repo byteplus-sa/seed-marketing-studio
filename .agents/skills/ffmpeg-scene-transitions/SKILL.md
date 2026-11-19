@@ -214,12 +214,33 @@ ffprobe -v error -select_streams a:0 -show_entries stream=duration -of csv=p=0 f
 ffmpeg -v error -i film_v01.mp4 -f null -
 ```
 
-Pass criteria:
+Container and duration checks:
 
-- video duration ≈ expected final duration (from Step 3);
-- audio duration within ~10 ms of the video duration (this proves the drift fix
-  held through the whole chain);
+- video duration matches the frame-accurate plan within the declared tolerance;
+- audio duration and independent tails match the authorized plan, not an
+  automatic audio-to-picture length requirement;
 - decode reports no errors.
+
+Matching durations do not prove synchronization. Record segment-level timing
+evidence: source hashes, picture frame counts/time bases, decoded audio sample
+rate, intended placements and measured lead/lag at distinct audible events near
+the start and end of each segment. Compare source and rendered waveform windows
+outside crossfades using a documented bounded lag search. Silence or repetitive
+sound may make alignment ambiguous; report unresolved rather than inventing an
+offset. Inspect hard-cut boundaries and both sides of dissolves separately.
+
+Declare tolerance before testing from the requested timing and renderer's actual
+time/sample quantization. Preserve failed strict comparisons; any bounded verdict
+is separate and must explain measured residuals, not silently weaken a threshold.
+Equal durations, a contact sheet or a waveform match does not prove lip sync.
+Complete full-speed playback and listening of the actual rendered file under
+the applicable approval mode; unavailable perception remains unresolved.
+
+Input seeking, codec priming and renderer timestamp rounding can shift events
+while leaving duration unchanged. A previously measured 1,024-sample loss is
+diagnostic evidence for one renderer/input combination only. Never apply that
+compensation universally. Measure the current path, disclose consequences and
+obtain repair scope; preserve originals and verify the corrected derivative.
 
 **Boundary contact sheet (standard step).** A single xstack contact sheet with
 one frame from the midpoint of every crossfade catches black frames, wrong
@@ -228,19 +249,24 @@ decode check:
 
 ```bash
 # One frame at each crossfade midpoint. For each boundary i, sample at
-# (offset_i - transition_duration/2). Adjust -ss values and xstack layout to
+# (offset_i + transition_duration/2). Adjust -ss values and xstack layout to
 # the number of boundaries.
 ffmpeg -y -v error \
- -ss 29.29 -i film_v01.mp4 \
- -ss 42.83 -i film_v01.mp4 \
- -ss 72.38 -i film_v01.mp4 \
+ -ss 29.89 -i film_v01.mp4 \
+ -ss 59.53 -i film_v01.mp4 \
+ -ss 89.08 -i film_v01.mp4 \
  -filter_complex "[0:v][1:v][2:v]xstack=inputs=3:layout=0_0|w0_0|w0+w1_0,scale=1920:-1[out]" \
  -map "[out]" -frames:v 1 /tmp/boundaries_contact.png
 ```
 
-Each strip should show the two neighboring scenes visibly mixing — never black,
-never a hard jump. Also spot-check the opening, the ending, and any hard-cut
-boundary. Then open the film to eyeball the cuts.
+These three samples correspond to the first three transitions in the five-clip
+template: offsets `29.74`, `59.28`, `88.83` and durations `0.3`, `0.5`, `0.5`.
+The midpoint is inside the overlap, not before its start. For hard cuts, sample
+the last frame before and first frame after the boundary instead.
+
+Each strip should show the intended neighboring scenes visibly mixing. Also
+spot-check the opening, ending and every remaining boundary. The contact sheet
+checks sampled picture only; perform the full playback/listening check above.
 
 ## Troubleshooting
 

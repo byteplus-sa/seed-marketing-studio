@@ -84,7 +84,9 @@ Incorrect (never do this):
 <td vertical-align="top">Task: Text-to-Image (T2I) Subject: A dark fantasy knight...</td>
 ```
 
-Additionally, long prompts must be **soft-wrapped at authoring time** (see "Soft-wrap prompt code blocks" below) to avoid horizontal scrolling inside the cell.
+Enable native wrap after insertion using
+[prompt cleanup rules](guide-prompt-cleanup-rules.md). Preserve the frozen text
+unchanged; never add line breaks at authoring time to make exact prompts fit.
 
 ### When NOT to consolidate
 

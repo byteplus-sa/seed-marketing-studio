@@ -11,17 +11,21 @@ scan.
 
 ### Document order
 
-1. Title and a one- or two-sentence purpose statement.
-2. `Watch the videos` with existing playable videos unchanged. Use
-   `Watch the showreel` only for an explicitly requested compilation.
-3. `How each ad was made` as a short numbered list — one line per step, no
-   more than five steps.
+Choose `showcase-only` or `tutorial` from the requested layout. For "no
+explanatory material", omit the purpose, walkthrough, project descriptions and
+table intros below. Keep required disclosures and claim qualifications.
+
+1. Title; a purpose statement only in tutorial mode.
+2. Place extra existing videos or a showreel near the top only when requested.
+   Creating a reel needs explicit compilation scope; placement alone does not
+   authorize rendering, audio editing or changes to source approvals.
+3. `How each ad was made` only in tutorial mode, as a short numbered list.
 4. One h1 project section per commercial or campaign direction, in the same
    order as the videos. Each starts with one sentence describing the ad.
-5. Within each project, three separate h2 sections, each with one plain line
-   above its table:
+5. Within each project, derive separate h2 sections from available artifacts.
+   Tutorial mode may have one plain line above each table:
    - `Elements` — characters, locations, props and products used.
-   - `Storyboard` — one row per storyboard page.
+   - `Storyboard` — only where matching generated boards exist, one row per page.
    - `Video` — one row for the final video.
    Keep storyboard and video in **separate tables**; never mix them.
 6. Optional `Posters` h1 for still key visuals: one h2 per poster with a
@@ -88,12 +92,13 @@ tables, exact prompt count, image count, and Preview-video count. After editing:
 - verify the intended project sections and headers remain in order;
 - verify each new or retained video has the intended `video/mp4` Preview in its
   own result cell;
-- compare every exact prompt with its frozen source after presentation
-  whitespace normalization only;
+- compare decoded exact prompts with frozen UTF-8 bytes, preserving original
+  newlines and all whitespace; do not normalize or insert wraps;
 - check that untouched tables, media, and concurrent edits were retained;
 - run the customer-language scan outside `<pre>` blocks, including the
   reference-ad and internal-note terms in the jargon blocklist;
-- confirm every prompt code block has `wrap: true` (see prompt cleanup rules).
+- confirm native wrap is enabled on every prompt code block (`wrap: true`;
+  see prompt cleanup rules).
 
 To split an existing combined table, `block_replace` the heading-through-table
 range with the new headings and tables, reusing existing media by token

@@ -5,10 +5,14 @@ description: Orchestrates Lark document capabilities to build customer-facing AI
 
 # Showcase AIGC
 
-Create a polished external-facing Lark Document that combines two goals at once:
+Create a polished external-facing Lark Document in the requested mode:
 
-1. **Showcase** what was produced and why it matters.
-2. **Teach** the reader how the workflow works step by step.
+1. **Showcase-only** presents the selected assets and exact prompts.
+2. **Tutorial** explains the workflow when requested, or when no layout is specified.
+
+For "no explanatory material", use showcase-only: omit intros, purpose
+paragraphs, how-it-was-made sections, diagrams and table explanations. Required
+disclosures and claim qualifications remain; raise unresolved issues in chat.
 
 Use this skill when the user wants a customer-ready Lark document that feels like a strong product article or breakdown page adapted for enterprise readers and delivered as a Lark Document.
 
@@ -81,8 +85,9 @@ different structure:
    never changes its approval record.
 2. Create one top-level section per project or campaign direction, in showreel
    order.
-3. Within every project section, place three separate tables: `Elements`,
-   then `Storyboard`, then `Video`. Never combine storyboard and video rows in
+3. Derive tables from the inventory: `Elements`, then `Storyboard` only where
+   matching generated boards exist, then `Video`. Never generate missing
+   boards for document completeness. Never combine storyboard and video rows in
    one table, and do not leave an empty heading or table. Still posters go in a
    `Posters` section with `Elements` and `Poster` tables per poster.
    When one project holds several deliverables (spots, episodes, cut-downs)

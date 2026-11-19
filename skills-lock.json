@@ -95,7 +95,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ffmpeg-scene-transitions/SKILL.md",
-      "computedHash": "c731a7d6e8023881328824cd74e7e521b1d4483274761f308a87045b6416b7bd"
+      "computedHash": "2150e751f5f385a0eff202e989839a6e079c66951cda3390db63559dd58b7c08"
     },
     "ffmpeg-side-by-side-comparison": {
       "source": "./local",
@@ -184,7 +184,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/lark-showcase-aigc/SKILL.md",
-      "computedHash": "2933d8aa00b528825e53a80f8ccea7f6f49eb598683ba2b73f9c1f133dac6aea"
+      "computedHash": "ffde7533cc4d56fc9de4849ab134c4a8a56c9ed8016c374b9f4eb9dc1ab31473"
     },
     "media-review": {
       "source": "./local",
