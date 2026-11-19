@@ -179,6 +179,46 @@ class AdSkillLibraryTests(unittest.TestCase):
             normalized,
         )
 
+    def test_drama_caller_boundary_binds_preview_policy_to_exact_destination(self):
+        text = (SKILLS / "seedance-drama-ads/SKILL.md").read_text()
+        boundary = " ".join(text.split("## Caller boundary", 1)[1].lower().split())
+        self.assertNotIn("every new seedance 2.5 generation requires", boundary)
+        for phrase in (
+            "selected exact model",
+            "provider",
+            "operation",
+            "transport",
+            "schema revision",
+            "exact legacy native bindings",
+            "seedance-execution-profiles.md",
+            'resolution: "480p"',
+            "draft: true",
+            "both review modes",
+            "unknown",
+            "unresolved",
+            "prompt-only",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, boundary)
+
+    def test_drama_caller_boundary_keeps_preview_kinds_and_final_lineage_distinct(self):
+        text = (SKILLS / "seedance-drama-ads/SKILL.md").read_text()
+        boundary = " ".join(text.split("## Caller boundary", 1)[1].lower().split())
+        for phrase in (
+            "verified operation profile",
+            "non-promotable ordinary preview",
+            "optional evidenced absent preview",
+            "required ordinary preview",
+            "hash-bound selection",
+            "separately registered final",
+            "native promotion",
+            "verified support",
+            "never invent",
+            "never silently switch",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, boundary)
+
     def test_drama_reference_removes_the_puzzle_handoff_template(self):
         text = (
             SKILLS / "seedance-drama-ads/references/evaluation-cases.md"

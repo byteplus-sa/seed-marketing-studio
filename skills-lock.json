@@ -107,7 +107,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/film-production/SKILL.md",
-      "computedHash": "63b42a1f153cbbf87d9fe2ef4808bb8a32f40be13610ae693b9ea973c55a1bfe",
+      "computedHash": "ad1db399d4751303b1e66ab6babf0faf9b6709aec35d987ef96389478e1fa776",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "general-video": {
@@ -313,7 +313,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-motion-recast/SKILL.md",
-      "computedHash": "ab043589d61fab59ebf0465545fbd615876a2d39749cddfb467b136dea730176"
+      "computedHash": "2fba14e6258bc59c4c617f636dd71c5bf4cfa20254dd8ca01c73595482652600"
     },
     "seedance-music-video": {
       "source": "./local",
@@ -350,7 +350,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-restoration/SKILL.md",
-      "computedHash": "e01bfaeb7b50cf8d4ff68cb3aedb5868ce081bde70e871ec4f05c6d4e387399d"
+      "computedHash": "45707afa854874ad05e9d8bc1895d994a15f540ae7301cac60e94264eb1c45b1"
     },
     "seedance-restyle": {
       "source": "./local",
@@ -512,7 +512,7 @@
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-drama-ads/SKILL.md",
       "sourceNotes": "Original local prompt-only drama-ad guidance informed by Higgsfield's public Drama Ads introduction at https://higgsfield.ai/drama-ads-intro, page text retrieved 2026-11-16. No external skill or code imported, no example video inspected, and no output-quality, performance or feature-parity claim. Source interpretation and local boundaries are documented in references/format-notes.md.",
-      "computedHash": "5e1c0e69cd304e361d967861f37abc37370945c6a9ec8af1703e8e46a200eb81"
+      "computedHash": "a200cec9f67946acb7fe1a1a8fc6d0f46635c5894926a3f1ed90c9d61c06772d"
     },
     "ad-motion-graphics": {
       "source": "./local",
