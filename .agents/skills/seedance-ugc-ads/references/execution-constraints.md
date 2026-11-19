@@ -14,7 +14,7 @@ detail. All parameters below are tool/API values, never prompt text.
 | `resolution` | Every new Seedance 2.5 generation uses explicit `resolution: "480p"` and boolean `draft: true` in both modes, with no skip-draft exception. Resolve schema or transport conflicts without dropping the flag; promote only selected native Drafts. For a 4K request follow the 4K routing in [routing.md](../../../contracts/routing.md). |
 | `ratio` | `9:16` default for UGC unless the request says otherwise. Locked to the first image on first/last-frame tasks and auto-derived from the source on edit tasks — never set it there. |
 | Locked camera | Locked-off selfie/posing and spectacle demos state the lock in the prompt and record `format_static_by_design`; the Seedance 2.5 tool exposes no `camera_fixed` field. |
-| `generate_audio` | Enables native audio when supported. The caller checks for leaked music, chants or stray speech. For silence or muted-source edits, propose `false`; a separate ambience bed is an optional finishing choice, not a sibling invocation. |
+| `generate_audio` | Enables native audio when supported; sufficient unchanged. Check actual sound against the brief. Only explicitly requested silence or post-owned sound proposes `false`; visual edits never require muting or extraction. |
 | `watermark` | Propose `false` only when the operation supports it, unless requested otherwise. |
 | `return_last_frame` | `true` chains a scene into the next one's `first_frame` — used by multi-shot and long lifestyle recipes. |
 | `priority` | 0–9; leave unset unless the caller specifies. |
@@ -37,8 +37,8 @@ on 2.5.
   cost, unless each person is bound as an `asset://` Virtual Portrait or
   authorized asset. Carry that input constraint into the handoff; preserve any
   documented current account exception and never infer consent from an asset
-  scheme. The caller prepares the source muted (`generate_audio: false`) with
-  sound in post. Without valid assets, offer the fresh-generation variant,
+  scheme. Preserve audio scope and verify input support; no default mute or
+  post sound. Without valid assets, offer the fresh-generation variant,
   not a silent conversion of an edit request; long arcs can use new single-pass
   clips instead of `extend`. Never claim rejection, cost or inspection for a
   task that has not run.

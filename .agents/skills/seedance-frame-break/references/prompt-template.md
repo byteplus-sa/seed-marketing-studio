@@ -50,7 +50,7 @@ No on-screen text, captions, logos or watermarks; no held props; the bars stay p
 | Bars, early sentence | Said once right after the main idea: fixed graphics, perfectly straight horizontal inner edges, same height in every frame. |
 | Frame and layer order | Back to front, with the bars as flat static graphics under the subject, the constant-height phrase repeated, the rule that whatever covers them never changes them, and the window stated as the large majority of the frame height. Avoid the word letterbox. |
 | Scale | Scale grows only for the extending limb or hem. Keep the surrounding bar edge readable; a one-third-frame limit is a staging suggestion, not a validated failure boundary. |
-| Audio | State the sound arc and whether music is wanted. Verify by listening, since effects-only requests may still produce light music or a chime; when music must be absent, suggest `generate_audio: false` and post sound. |
+| Audio | State the requested sound arc and verify by listening. Native audio suffices unchanged; report deviations, and apply muting or post sound only within explicit scope. |
 | Closing exclusions | One or two lines. Necessary exclusions are allowed; positive direction comes first. |
 
 Stage times are budgets scaled to the clip duration the caller selects (equal

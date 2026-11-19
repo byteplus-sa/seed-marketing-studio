@@ -104,6 +104,9 @@ the status is `needs_human`.
 
 ### loudness_target
 
+Only an explicitly requested target activates this acceptance check. With no
+target, record `not_applicable`; native audio suffices unchanged. Optional
+diagnostic measurements remain available and never authorize processing.
 Measure with FFmpeg and record `input_i` and `input_tp`:
 
 ```bash
@@ -114,12 +117,11 @@ Record them as `measured.integrated_lufs` and `measured.true_peak_dbtp`. The
 report recomputes the result against `loudness_target` and rejects a status
 that disagrees with the numbers.
 
-The default target follows the audio-video alignment contract: -16 LUFS
-integrated with peaks at or below -1.5 dBFS. `loudnorm` reports true peak, which
-is never below the sample peak, so the check requires `true_peak_dbtp` at or
-below -1.5; passing it also meets the contract's -1.5 dBFS ceiling. The ±1 LU
-integrated tolerance (`tolerance_lu`) is a workspace heuristic, not a contract
-value; a delivery record may set its own.
+There is no default target. Supply all three values in `loudness_target` only
+when requested: `integrated_lufs`, `true_peak_dbtp`, `tolerance_lu`.
+The sample command's filter settings do not establish delivery requirements;
+its null output leaves the media unchanged. Missing inspection for a requested
+target stays `needs_human`, not a pass. Failed measurements do not authorize a fix.
 
 ### disclosure_recorded
 
@@ -146,6 +148,7 @@ value; a delivery record may set its own.
   "paid": true,
   "placement": "meta-instagram-reels",
   "reveal_time_s": 1.5,
+  "loudness_target": {"integrated_lufs": -16.0, "true_peak_dbtp": -1.5, "tolerance_lu": 1.0},
   "checks": [
     {
       "id": "product_reveal",
@@ -170,5 +173,6 @@ value; a delivery record may set its own.
 }
 ```
 
-The real checklist lists all ten checks exactly once. `video` is relative to
+This example assumes that target was explicitly requested. Otherwise omit it
+and use `not_applicable` for its check. The real checklist lists all ten checks exactly once. `video` is relative to
 the `projects/` folder and `video_sha256` is the hash of that exact file.

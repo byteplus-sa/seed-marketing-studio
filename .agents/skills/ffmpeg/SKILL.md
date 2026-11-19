@@ -7,6 +7,12 @@ description: Video and audio processing with FFmpeg. Use for format conversion, 
 
 FFmpeg is the essential tool for video/audio processing. This skill covers single-clip operations and format conversion for video projects (Seedance/Seedream assembly and Remotion alike).
 
+**Workspace audio overlay:** native generated audio is sufficient unchanged.
+These are explicit editing capabilities, not required finishing steps. Apply
+audio fades, gain, padding, trimming, mixing, extraction or replacement only
+within requested scope. Prefer compatible stream copy for picture-only work;
+disclose needed transcoding. Diagnostics remain read-only and available.
+
 ## Routing
 
 - Multi-clip **chronological** assembly / crossfade → `ffmpeg-scene-transitions`
@@ -133,7 +139,7 @@ padding). `xfade` advances the video timeline by *video* duration while
 accumulates per boundary (4 boundaries → ~0.36 s of lip-sync drift by the last
 scene).
 
-Check first, then fix:
+Measure first; report a mismatch before choosing an authorized fix:
 
 ```bash
 # Per-clip A/V durations
@@ -141,8 +147,9 @@ ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=p=0 c
 ffprobe -v error -select_streams a:0 -show_entries stream=duration -of csv=p=0 clip.mp4
 ```
 
-If audio < video, pad each audio input to the exact video duration before the
-`acrossfade` chain so both chains use the same per-clip length and stay locked:
+Only when the user explicitly requests crossfades and approves padding short
+audio to the picture timeline, this recipe aligns the two chains. It is not a
+default assembly requirement; preserve independent tails otherwise:
 
 ```bash
 ffmpeg -i a.mp4 -i b.mp4 -filter_complex "\
@@ -340,7 +347,8 @@ Increase CRF (23→28) or reduce resolution
 
 ## Platform-Specific Output Optimization
 
-After Remotion renders your video (typically to `out/video.mp4`), use FFmpeg to optimize for each distribution platform.
+Use these optional exports only for a requested delivery conversion. A rendered
+master does not need an FFmpeg pass merely to finalize.
 
 ### Workflow Integration
 

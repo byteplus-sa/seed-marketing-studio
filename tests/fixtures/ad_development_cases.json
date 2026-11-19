@@ -25,12 +25,142 @@
     },
     {
       "id": "story_consequence",
-      "skill": "seedance-story-ads",
+      "skill": "seedance-drama-ads",
       "prompt": "Propose a 15-second fictional stagehand story for a zip pouch, one multi-shot source. Goal: deliver the actor's cue card before an entrance. The usual hook is empty; a colleague appears to block the doorway but has kept the card ready in the pouch. Product facts support opening and storage only. Make behavior earn the audience's changed verdict without a late slogan doing the work.",
       "criteria": {
         "idea": "The failed search returns information and leads causally to the handoff; the deadline is readable.",
         "craft": "The apparent blocker is reappraised through revealed action, not a pouch opening mislabeled as a value shift.",
         "preservation": "Product remains a storage object, one source and no invented efficacy or real testimony."
+      }
+    },
+    {
+      "id": "drama_hook_twist_reveal",
+      "skill": "seedance-drama-ads",
+      "prompt": "Concept only: a fictional 25-second 9:16 drama ad for a zip pouch. Use a hook, twist and reveal. Two friends prepare for a small stage performance; one misreads the other's behavior. Supported facts are zipper opening and storage only. Product must be identifiable by 5 seconds. CTA is Explore the pouch. Keep the story warm and visually understandable without speech; do not write full source prompts yet.",
+      "criteria": {
+        "idea": "An opening question earns a later reinterpretation through planted behavior; the product belongs to the action.",
+        "craft": "Early product recognition and later story reveal are distinct; payoff and CTA have readable space without imposing fixed shot counts.",
+        "preservation": "Concept only, warm tone, early reveal deadline and claim limits survive; no invented references, customer history or generation."
+      }
+    },
+    {
+      "id": "drama_missing_brand_facts",
+      "skill": "seedance-drama-ads",
+      "prompt": "Make a drama-ad concept from my product website. The caller reports the page is inaccessible; only a front photograph of a plain bottle is supplied. No logo file, verified selling points, audience or language are available. Suggest the next useful step without making up product benefits or claiming you checked the site.",
+      "criteria": {
+        "idea": "Asks for the consequential missing product and audience context while allowing a clearly provisional premise.",
+        "craft": "Separates observable appearance from unknown brand values and factual capability; keeps missing fields explicit.",
+        "preservation": "No invented benefit, palette hex, logo, market, voice, product binding or retrieval claim; no production setup."
+      }
+    },
+    {
+      "id": "drama_treatment_routing",
+      "skill": "seedance-drama-ads",
+      "prompt": "Planning only: distinguish a singing product jingle without a plot from a short story about two talking mugs, and a felt-rendered friendship drama. Do they all need this drama skill? State the primary creative owner and any optional treatment; do not load other skills or generate.",
+      "criteria": {
+        "idea": "Distinguishes narrative purpose from singing, anthropomorphism and visual medium.",
+        "craft": "Keeps story-led talking objects and felt drama here while routing the pure jingle to musical ads; does not force a twist into a product song.",
+        "preservation": "No sibling invocation, voice cloning, known song, automatic animation generation or claim that a style is inherently trending."
+      }
+    },
+    {
+      "id": "drama_multi_product_scope",
+      "skill": "seedance-drama-ads",
+      "prompt": "Plan only: two drama-ad concepts for product P1, an approved zip pouch with opening/storage facts, and one for P2, an approved blank notebook with page-turning facts. Both use the supplied quiet brand tone. Give exactly the requested three compact concept rows with distinct story questions; source-generation counts are not supplied. Do not write full prompts or submit anything.",
+      "criteria": {
+        "idea": "Produces two P1 concepts and one P2 concept with genuinely distinct openings and payoffs, not simple noun swaps.",
+        "craft": "Keeps product-specific facts and identity separate, shares only the supplied brand tone, and distinguishes ad counts from source counts.",
+        "preservation": "Exactly three planned ads, source counts unresolved, no factorial expansion, cross-product claim transfer, files or generation."
+      }
+    },
+    {
+      "id": "drama_narrow_brand_revision",
+      "skill": "seedance-drama-ads",
+      "prompt": "Only make the final friend's reaction warmer in an approved pouch drama. Keep the same logo asset, blue palette, understated tone, cast, wardrobe, 20-second runtime, English line 'You kept it.', product reveal at 4 seconds, ending and one-source count. The friend currently looks down after receiving a card. Return the changed beat only.",
+      "criteria": {
+        "idea": "A small observable response to the card expresses warmth without rewriting the premise.",
+        "craft": "Names the changed attention or response and any necessary adjacent continuity, not a full replacement script.",
+        "preservation": "All brand, copy, cast, timing, reveal and source locks remain; no new tagline, generation or brand re-extraction."
+      }
+    },
+    {
+      "id": "drama_locked_no_turn",
+      "skill": "seedance-drama-ads",
+      "prompt": "Keep this approved observational ad with no twist: two friends silently pass a notebook back and forth, each adding one line to a shared fictional poem. One continuous 12-second 16:9 take. Revise only the handoff staging so page orientation stays consistent. No product performance claim and no need for a new story framework.",
+      "criteria": {
+        "idea": "Recognizes the locked observational form without inventing conflict, betrayal or a surprise.",
+        "craft": "Clarifies observable grip, orientation and transfer while preserving the unbroken scene.",
+        "preservation": "No forced hook-twist-reveal, vertical crop, dialogue, framework questionnaire, added sources or rewritten poem."
+      }
+    },
+    {
+      "id": "drama_runtime_conflict",
+      "skill": "seedance-drama-ads",
+      "prompt": "I want a 55-second drama ad in exactly one native source. For this test, the caller verified the selected model supports at most 15 seconds per source. Keep all approved dialogue and the ending. Can the under-a-minute format promise make this work? Explain the smallest decisions needed; do not submit.",
+      "criteria": {
+        "idea": "Identifies the conflict between finished-ad length and verified source duration rather than hiding it with timestamps.",
+        "craft": "Offers an explicitly authorized source-count or runtime/copy change and leaves the conflict unresolved pending a choice.",
+        "preservation": "No claim of 55-second native support, silent multi-source split, model switch, rushed speech or dropped payoff."
+      }
+    },
+    {
+      "id": "drama_creative_freedom",
+      "skill": "seedance-drama-ads",
+      "prompt": "Concept only: create two beautiful, original 30-second 16:9 stories around a fictional collectible for adult collectors in English. Appearance references are supplied. Form, tone, pace, sound and ending are open. The product need not solve a problem. No full source prompts, files or generation.",
+      "criteria": {
+        "idea": "Offers original stories with a natural place for the product; beauty or emotional meaning need not come from a problem-solution plot.",
+        "craft": "Chooses form, pace, sound and ending to suit each idea rather than imposing a preset beat sequence, intensity or framework questionnaire.",
+        "preservation": "No mandatory conflict, dialogue, action, twist or product-solving payoff. Exactly two concepts, English, 30 seconds and 16:9; no invented factual capability, generation or source-count assumption."
+      }
+    },
+    {
+      "id": "drama_dialogue_opposition",
+      "skill": "seedance-drama-ads",
+      "prompt": "Script only: a 30-second English comic rivalry between two fictional adult contestants about who gets to display an approved collectible. The product is inert; identity/appearance facts only. Make the conversation and physical choices develop the contest, with a satisfying reversal. No dialogue is locked yet. Do not write a sentimental gift scene, generate media or use a real contest organization.",
+      "criteria": {
+        "idea": "Competing intentions create specific leverage, a bluff or a changing bargain; the ending follows planted behavior rather than arbitrary reconciliation.",
+        "craft": "Replies challenge, evade, expose or counter the preceding attempt; action changes the options while the words are spoken. More lines or shouting alone do not satisfy development.",
+        "preservation": "Proposed fictional words, 30-second fit, two adults and inert product retained; no fabricated product benefit, endorsement, accepted copy or provider submission."
+      }
+    },
+    {
+      "id": "drama_physical_escalation",
+      "skill": "seedance-drama-ads",
+      "prompt": "Treatment only: one 20-second native-cut source for a harmless fictional backstage umbrella farce. Two adult performers disagree about taking the prop onstage and an entrance is imminent. Supported product operation is manual opening only; no fixed dialogue, camera or ending. Give a physical attempt, partner counteraction and consequence, with short English exchanges. No rendering or extra sources.",
+      "criteria": {
+        "idea": "The approaching entrance gives the opposed attempt urgency; an obstruction, concealment or exposure changes the next choice and earns the payoff.",
+        "craft": "Physical action carries the argument with legible geography and natural speech timing, rather than an orbit, object touch and smile. Avoids unsafe stunts and unreadable action stacking.",
+        "preservation": "One 20-second source, native cuts and English proposal retained; manual opening is not an automatic mechanism or weather-performance claim. No generation."
+      }
+    },
+    {
+      "id": "drama_story_fit",
+      "skill": "seedance-drama-ads",
+      "prompt": "Planning-only critique: a 30-second lyrical story around a fictional keepsake case uses music, memory and quiet visual moments, with no confrontation or spoken dialogue. The product has an emotional association, not a problem-solving function. The brief asks for a beautiful story and leaves form open. Assess its meaning and imagery without assuming that silence or slow movement makes it bad. No footage is supplied; do not render.",
+      "criteria": {
+        "idea": "Assesses the story's emotional meaning and natural product association rather than demanding pursuit, opposition or a twist.",
+        "craft": "Gives specific reasoning about imagery, pacing and the intended experience; does not auto-pass beauty cues or reject the chosen form on principle.",
+        "preservation": "No forced dialogue, action or product-solving role; assessment is not media inspection or generation approval. Keeps the 30-second target and factual limits."
+      }
+    },
+    {
+      "id": "drama_creative_reset",
+      "skill": "seedance-drama-ads",
+      "prompt": "Script revision only: I reject the restrained handoff concept that the agent chose. Replace it with a lively short drama with dialogue and physical action. Keep our supplied fictional product, two invented adults, English and 30 seconds; the prior whispered lines, pauses and gentle ending may change. Retain all historical prompts and selections. Give a new compact story proposal, not a gesture repair or generated assets.",
+      "criteria": {
+        "idea": "Recognizes authorization to replace the rejected concept and proposes a materially new story suited to the requested lively approach.",
+        "craft": "Uses active exchanges and changing physical choices; does not preserve agent-chosen restraint as a user preference or reduce the reset to a warmer smile.",
+        "preservation": "Only the permitted story layer changes; product, cast, language, runtime and historical records stay intact. Proposal is not approval to regenerate, clone or promote."
+      }
+    },
+    {
+      "id": "drama_distinct_stories",
+      "skill": "seedance-drama-ads",
+      "prompt": "Plan exactly three original 30-second English stories, one each around a fictional scarf, mug and blank notebook with supplied appearance references. Audience is adult gift shoppers. Genre, relationships, structure, sound and ending are open; the products need not solve a problem. No source counts supplied, no full prompts, generation or performance claims.",
+      "criteria": {
+        "idea": "Offers original stories rather than mechanically swapping product nouns; distinction may be emotional, visual, relational or structural.",
+        "craft": "Each product fits its story naturally without a prescribed conflict mechanism, dialogue requirement or functional payoff.",
+        "preservation": "Exactly one concept per product, 30 seconds and English; source counts remain unresolved and no efficacy, real testimony, task submissions or factorial expansion is invented."
       }
     },
     {

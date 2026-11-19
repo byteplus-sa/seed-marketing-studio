@@ -28,12 +28,12 @@
     {
       "id": 3,
       "prompt": "In take 2 the actor says the wrong name in an otherwise perfect clip. Fix it.",
-      "expected_output": "Chooses a word-scoped repair and keeps the performance.",
+      "expected_output": "Offers a scoped retake or explicitly requested audio repair while preserving the approved performance; no mandatory word surgery.",
       "files": [],
       "expectations": [
         "Verifies with a transcript diff and listening.",
-        "Proposes a retake with one cue or a word-only splice.",
-        "Keeps the repair word-scoped unless the user authorizes a broader change.",
+        "Proposes a targeted retake; a word-only splice is an explicitly approved alternative, not a default.",
+        "Keeps the repair within explicit scope without inferring audio-processing authorization from a generic fix request.",
         "Judges continuity by actual listening against the agreed voice and delivery target, not a universal percentage or splice count."
       ]
     },
@@ -68,7 +68,7 @@
       "expectations": [
         "Uses the listening report rather than treating the matching transcript as proof of correct pronunciation.",
         "Keeps the product name and regional accent locked, with any pronunciation cue outside braces.",
-        "Proposes a word-scoped repair and verifies its tail and continuity rather than imposing a fixed silence duration.",
+        "Offers a pronunciation-cue retake or explicitly approved audio repair and verifies tails and continuity without imposing fixed silence or word splicing.",
         "Does not replace the line or voice without authorization."
       ]
     }

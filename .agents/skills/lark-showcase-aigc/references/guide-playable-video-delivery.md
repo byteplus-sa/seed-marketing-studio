@@ -16,14 +16,18 @@ human check confirms it.
 
 ### 1. Delivery copy
 
-Never overwrite the master. Name the copy `<master-stem>_lark_h264.mp4`:
+Inspect the existing file first; no conversion is required if it already plays.
+Never overwrite the master. When a picture conversion is needed and authorized,
+copy compatible audio unchanged and name the copy `<master-stem>_lark_h264.mp4`:
 
 ```bash
 ffmpeg -i master.mp4 -c:v libx264 -pix_fmt yuv420p -profile:v high -crf 22 \
-  -c:a aac -b:a 128k -ar 48000 -movflags +faststart master_lark_h264.mp4
+  -map 0:v:0 -map 0:a? -c:a copy -movflags +faststart master_lark_h264.mp4
 ```
 
-Verify with `ffprobe` (H.264 + AAC, expected size), a full decode
+If the audio codec is incompatible with delivery, disclose and obtain a scoped
+transcoding decision instead of silently re-encoding. Verify with `ffprobe`
+(H.264 plus the expected preserved audio streams and tails, expected size), a full decode
 (`ffmpeg -v error -i f -f null -`), and that `moov` sits near the start of the
 file. A showreel from `scripts/assemble_showreel.py` is already web-ready.
 

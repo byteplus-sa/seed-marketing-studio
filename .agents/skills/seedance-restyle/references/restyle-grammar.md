@@ -15,7 +15,7 @@ routing, rules and caller responsibilities.
 
 | Input | Owns | Supplies none of |
 | --- | --- | --- |
-| `@Video 1` muted master | Subjects and their count, their screen positions, actions, poses, props, the furniture they use, camera path, cuts, timing, and which place the scene is in | Rendering medium, surface texture, grade |
+| `@Video 1` selected source | Subjects and their count, their screen positions, actions, poses, props, the furniture they use, camera path, cuts, timing, and which place the scene is in | Rendering medium, surface texture, grade |
 | Optional environment `@Image N` | How the same place looks in the target medium: surface, palette and texture | People, a different place, changed geometry or props the shot lacks |
 | Style `@Image N` | Medium, palette, line quality, texture, light quality | Subjects, layout, characters, text |
 | Identity anchor `@Image N` | One character's design in the target medium | Pose, background, lighting of the sheet |
@@ -61,7 +61,7 @@ whole performance from @Video 1.
 <catalog fragment or custom recipe>
 
 [Audio]
-Silent output. Sound is added in post.
+<Requested sound intent; native audio is sufficient unchanged.>
 ```
 
 Optional blocks, added before `[Edit Scope]`:
@@ -120,7 +120,7 @@ foreground; <background extras>. No lettering appears anywhere.
 <catalog fragment or custom recipe>
 
 [Audio]
-Silent output. Sound is added in post.
+<Requested sound intent; native audio is sufficient unchanged.>
 ```
 
 ## A different place, only when requested
@@ -170,8 +170,8 @@ Constructed prompt-only example; no generated result or measured improvement
 is claimed. Assume an authorized six-second tabletop demo: a hand opens one
 plain storage case, places a cable inside and closes it. A shelf and lamp are
 visible behind the table. The camera moves slowly right. The brief asks for
-claymation throughout and no additional images; saved source audio returns in
-post. Timing cues below are supplied events, not measurements.
+claymation throughout and no additional images; keep the soundtrack intent.
+Timing cues below are supplied events, not measurements.
 
 ```text
 [Edit Goal]
@@ -200,14 +200,15 @@ Plasticine claymation throughout, with visible tool marks, a matte sheen and
 slightly stepped motion. Preserve the source lamp's motivated light direction.
 
 [Audio]
-Silent output. Sound is added in post.
+Preserve the source sound intent, including the case opening and closing.
 ```
 
 Package: verify the current edit schema and source binding requirements, use
-explicit `resolution: "480p"`, boolean `draft: true` and `generate_audio: false`,
+explicit `resolution: "480p"`, boolean `draft: true` and verified audio controls,
 resolving schema or transport conflicts without dropping the flag, and preserve the original
 source. Do not round or trim its frame count. Review medium coverage, geometry,
-contacts and actual timing before muxing the authorized source audio.
+contacts, actual audio and timing. Native output needs no finishing pass;
+exact-master attachment or audio edits require explicit scope.
 
 If a reviewed draft leaves the shelf photographic, first name that missed
 surface in a scoped repair. An environment image can be offered if the user

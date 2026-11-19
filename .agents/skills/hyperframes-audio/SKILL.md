@@ -17,6 +17,12 @@ description: >
 
 # HyperFrames Audio
 
+**Workspace audio overlay:** native generated or supplied audio is sufficient
+unchanged. Use these processors only for explicitly requested audio edits.
+Finalization, music under voice, and Studio rendering do not authorize a carve,
+gain change, fade or other processing. Diagnostics and listening remain
+available; report defects before applying a scoped repair.
+
 A mix is a set of relationships, not a stack of processors. Two tracks that each
 sound right alone can be unlistenable together, and the fix is almost never "turn
 one down" — it is finding what they are fighting over and giving it to whichever
@@ -362,16 +368,12 @@ heard as an effect rather than as room for the voice. Drop the strength when the
 bed is the point and the voice is sparse. `0` is spectral only — one band, no
 level match at all.
 
-**Carve by default — required whenever music plays under a voice.** A bed
-under any voice track (narration, avatar speech, interview, voiceover) gets a
-carve as part of finishing the mix, not as a polish step to get to if there is
-time. Place both tracks, run the command below (default strength `0.8`; add
-`--bed` / `--voice` when detection picks wrong), confirm the written
-`data-fx-carve`, `data-fx-chain` and `data-automation` with `npx hyperframes check`,
-and only then render. A volume duck on its own is not a finished mix: it leaves
-the voice and the bed fighting in the 1–3 kHz band and costs the bed all of its
-presence for the whole voiceover. Skip the carve only when there is no voice for
-the music to sit under — a music video, a title card, a montage cut to the track.
+**Carve only for an explicitly requested mix change.** Music beneath speech
+does not itself require processing. When carving is authorized, place the
+selected tracks, run the command below and inspect the resulting
+`data-fx-carve`, `data-fx-chain` and `data-automation`. Verify the requested
+change through checks and listening. An unchanged soundtrack or a requested
+volume-only adjustment is valid without a carve.
 
 **It always follows the voice.** There is no static mode: a fixed depth thins the
 bed through every pause, and once you have heard both there is no reason to want it.
@@ -385,14 +387,11 @@ the bed sits and writes a `gain` stage driven by an envelope. That envelope rele
 purpose — music that snaps back to full the instant a word ends sounds like a
 machine doing it.
 
-**Running it.** In Studio the carve is one module at the top of a track's effect
-rack — voice, strength, and the analysis it produced, in one card. It is
-there whenever another track could be the voice, and a bed with exactly **one**
-candidate above it is carved by default, at the default strength:
-that is what a bed under narration wants, and the module is where you change or
-switch it off. Several candidates leaves the picker waiting rather than guessing.
-Headless —
-which is the path when you are authoring a composition rather than editing one:
+**Running it after authorization.** Studio exposes a carve control in the
+track's effect rack. Do not enable or accept inferred processing just because
+a voice candidate is present; inspect the authored effects. The headless tool
+below writes processing when explicitly invoked, so use it only for the
+approved mix change:
 
 ```bash
 node <SKILL_DIR>/scripts/carve.mjs --comp index.html

@@ -1,6 +1,7 @@
 import hashlib
 import io
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -47,7 +48,7 @@ class SubtitleContractTests(unittest.TestCase):
     def render(self):
         self.write_manifest()
         with patch.object(portfolio, 'duration', return_value=1.0), patch.object(portfolio.subprocess, 'run'):
-            portfolio.build(self.out, [self.root], 'Hub', '', False, -16.0, 0.79)
+            portfolio.build(self.out, [self.root], 'Hub', '', False)
         return (self.out / 'index.html').read_text()
 
     def test_explicit_language_and_label_control_track_and_vtt(self):
@@ -113,6 +114,29 @@ class SubtitleContractTests(unittest.TestCase):
         self.assertNotIn('<track', self.render())
 
 
+class ShowreelPreflightTests(unittest.TestCase):
+    def test_missing_or_invalid_timing_never_falls_back_to_container_duration(self):
+        for invalid in (None, '', 'N/A', 'nan', 'inf', 0, -1):
+            with self.subTest(invalid=invalid):
+                result = subprocess.CompletedProcess([], 0, json.dumps({'streams': [
+                    {'codec_type': 'video', 'duration': '1'},
+                    {'codec_type': 'audio', 'duration': invalid, 'sample_rate': '48000'},
+                ]}), '')
+                with patch.object(portfolio.subprocess, 'run', return_value=result), self.assertRaises(ValueError):
+                    portfolio.showreel_has_audio([Path('source.mp4')])
+
+    def test_mixed_silent_and_audible_clips_need_explicit_assembly(self):
+        video = {'codec_type': 'video', 'duration': '1'}
+        audio = {'codec_type': 'audio', 'duration': '1', 'sample_rate': '48000'}
+        results = [subprocess.CompletedProcess([], 0, json.dumps({'streams': streams}), '')
+                   for streams in ([video], [video, audio])]
+        with (
+            patch.object(portfolio.subprocess, 'run', side_effect=results),
+            self.assertRaisesRegex(ValueError, 'no synthetic silence'),
+        ):
+            portfolio.showreel_has_audio([Path('silent.mp4'), Path('audible.mp4')])
+
+
 @unittest.skipUnless(HAS_FFMPEG, 'ffmpeg is required')
 class PortfolioTests(unittest.TestCase):
     def setUp(self):
@@ -139,7 +163,7 @@ class PortfolioTests(unittest.TestCase):
     def test_page_uses_locked_masters_and_marks_unlocked_projects(self):
         projects = [self.project('alpha'), self.project('beta', locked=False)]
         out = self.base / 'hub'
-        manifest = portfolio.build(out, projects, 'Hub', 'Two stories', False, -16.0, 0.79)
+        manifest = portfolio.build(out, projects, 'Hub', 'Two stories', False)
         page = (out / 'index.html').read_text()
         self.assertIn('../alpha/assembly/alpha_master_v01.mp4', page)
         self.assertIn('In production', page)
@@ -169,24 +193,80 @@ class PortfolioTests(unittest.TestCase):
     def test_showreel_requires_every_final_lock(self):
         projects = [self.project('alpha'), self.project('beta', locked=False)]
         with self.assertRaisesRegex(ValueError, 'missing: beta'):
-            portfolio.build(self.base / 'hub', projects, 'Hub', '', True, -16.0, 0.79)
+            portfolio.build(self.base / 'hub', projects, 'Hub', '', True)
 
-    def test_showreel_matches_loudness_and_records_inputs(self):
+    def test_showreel_keeps_source_levels_and_records_inputs(self):
         projects = [self.project('alpha', volume=0.05), self.project('beta', volume=0.5)]
-        manifest = portfolio.build(self.base / 'hub', projects, 'Hub', '', True, -20.0, 0.79)
+        manifest = portfolio.build(self.base / 'hub', projects, 'Hub', '', True)
         record = manifest['showreel']
         self.assertAlmostEqual(record['duration_s'], 2.0, delta=0.2)
-        gains = [item['gain_db'] for item in record['inputs']]
-        self.assertGreater(gains[0], gains[1])
+        self.assertNotIn('target_lufs', record)
+        self.assertNotIn('limiter_linear', record)
+        self.assertTrue(all('gain_db' not in item for item in record['inputs']))
+        levels = []
+        for start in (0.15, 1.15):
+            result = subprocess.run([
+                'ffmpeg', '-v', 'info', '-ss', str(start),
+                '-i', str(self.base / 'hub/showreel.mp4'), '-t', '0.6',
+                '-af', 'volumedetect', '-f', 'null', '-',
+            ], capture_output=True, text=True, check=True)
+            levels.append(float(re.search(r'mean_volume: ([-\d.]+) dB', result.stderr)[1]))
+        self.assertGreater(levels[1] - levels[0], 17)
         self.assertEqual(record['inputs'][0]['start_s'], 0.0)
         self.assertTrue((self.base / 'hub/showreel.json').exists())
         self.assertIn('showreel.mp4', (self.base / 'hub/index.html').read_text())
+
+    def test_removed_audio_flags_are_rejected(self):
+        for flag in ('--target-lufs', '--limit'):
+            with self.subTest(flag=flag), redirect_stderr(io.StringIO()):
+                with self.assertRaises(SystemExit) as error:
+                    portfolio.main([str(self.base / 'out'), str(self.base / 'project'), flag, '-16'])
+                self.assertEqual(error.exception.code, 2)
+
+    def test_empty_showreel_is_rejected_before_processing(self):
+        with patch.object(portfolio.subprocess, 'run') as run:
+            with self.assertRaisesRegex(ValueError, 'at least one'):
+                portfolio.build_showreel([], self.base / 'empty.mp4')
+            run.assert_not_called()
+
+    def test_unequal_stream_tails_need_scoped_assembly_not_padding(self):
+        for audio_duration in (0.5, 1.5):
+            with self.subTest(audio_duration=audio_duration):
+                source = self.base / 'unequal.mp4'
+                subprocess.run([
+                    'ffmpeg', '-v', 'error', '-y', '-f', 'lavfi',
+                    '-i', 'color=s=72x128:r=24:d=1', '-f', 'lavfi',
+                    '-i', f'sine=duration={audio_duration}', '-c:v', 'libx264',
+                    '-c:a', 'aac', str(source),
+                ], check=True)
+                output = self.base / 'reel.mp4'
+                with self.assertRaisesRegex(ValueError, 'independent.*tails'):
+                    portfolio.build_showreel([{
+                        'master': source, 'master_sha256': portfolio.sha256(source), 'slug': 'source',
+                    }], output)
+                self.assertFalse(output.exists())
+
+    def test_all_silent_showreel_stays_silent(self):
+        source = self.base / 'silent.mp4'
+        subprocess.run([
+            'ffmpeg', '-v', 'error', '-y', '-f', 'lavfi', '-i',
+            'color=s=72x128:r=24:d=1', '-c:v', 'libx264', str(source),
+        ], check=True)
+        output = self.base / 'silent-reel.mp4'
+        portfolio.build_showreel([{
+            'master': source, 'master_sha256': portfolio.sha256(source), 'slug': 'silent',
+        }] * 2, output)
+        streams = subprocess.run([
+            'ffprobe', '-v', 'error', '-select_streams', 'a', '-show_streams',
+            '-of', 'json', str(output),
+        ], capture_output=True, text=True, check=True)
+        self.assertEqual(json.loads(streams.stdout)['streams'], [])
 
     def test_changed_master_after_lock_is_rejected(self):
         root = self.project('alpha')
         (root / 'assembly/alpha_master_v01.mp4').write_bytes(b'changed')
         with self.assertRaisesRegex(ValueError, 'changed after its lock'):
-            portfolio.build(self.base / 'hub', [root], 'Hub', '', False, -16.0, 0.79)
+            portfolio.build(self.base / 'hub', [root], 'Hub', '', False)
 
 
 if __name__ == '__main__':

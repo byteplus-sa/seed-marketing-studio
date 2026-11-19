@@ -5,7 +5,7 @@ description: >-
   by its declared reveal time, logo legible and undistorted against the brand
   kit, a visible change in the opening seconds, CTA and offer inside the
   placement safe zone and readable with the sound off, every claim supported,
-  speech intelligible, loudness on target, and a recorded disclosure decision
+  speech intelligible, loudness against an explicitly requested target, and a recorded disclosure decision
   for paid delivery. Samples frames with FFmpeg, uses video understanding and
   speech-to-text as evidence, and writes a pass, fail or needs-human report
   with timestamps and frame paths. Use before an ad is uploaded or a variant is
@@ -40,7 +40,7 @@ regenerate media, approve a variant, decide a disclosure or upload an ad.
 | Brand kit | the campaign's pinned `brand.json` and its logo files | `logo_legible` and `brand_copy` are `needs_human` |
 | Product facts | `elements/<product-id>/facts.json` | `claims_supported` fails for any claim |
 | Locked script and supers | the script or copy plan | `speech_intelligible` compares against what was heard only, and says so |
-| Loudness target | the delivery record; default from the [audio contract](../../contracts/audio-video-alignment.md): -16 LUFS integrated, peaks at or below -1.5 dBFS, checked here as true peak at or below -1.5 dBTP (stricter, so it also meets the contract); the ±1 LU integrated tolerance is a workspace heuristic, not part of the contract | use the default and say so |
+| Loudness target | Only an explicitly requested delivery target, with integrated LUFS, true-peak ceiling and tolerance | record `not_applicable`; native audio is sufficient unchanged |
 | Paid flag and disclosure record | `projects/<campaign>/delivery/disclosure_<deliverable-id>.json`, read in place (never copied into the check folder) | a paid deliverable fails `disclosure_recorded` |
 
 Check the cut's SHA-256 against the render record before starting. A check
@@ -65,8 +65,9 @@ re-hashes the cut named in `checks.json` and refuses a checklist whose
 
 Status values: `pass`, `fail`, `needs_human` (the evidence is ambiguous or a
 required input is missing) and `not_applicable` (with the reason in
-`evidence`; not allowed for `product_reveal`, `opening_change` or
-`loudness_target`). The detailed criteria and question wording for each check
+`evidence`; not allowed for `product_reveal` or `opening_change`).
+`loudness_target` is `not_applicable` only when no target was requested.
+The detailed criteria and question wording for each check
 are in [check procedure](references/check-procedure.md); load it before the
 first check.
 
@@ -94,7 +95,9 @@ project that owns the deliverable (a localized deliverable's own project).
    the verdict: confirm each one against the frames.
 4. **Transcribe speech.** Run `speech_to_text` on the cut's audio and compare
    with the locked script. Save `transcript.json`.
-5. **Measure loudness** with the FFmpeg command in the check procedure.
+5. **Inspect loudness when relevant** with the read-only FFmpeg command.
+   Without a requested target, record `not_applicable`; optional measurements
+   do not impose a target. A defect is reported, not automatically repaired.
 6. **Map claims and copy.** List every claim and line from the frames and the
    transcript; match each to `facts.json` and the brand kit copy rules.
 7. **Check the disclosure record** for a paid deliverable. If none exists,

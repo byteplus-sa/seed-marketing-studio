@@ -7,6 +7,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / ".agents/skills/lark-showcase-aigc/scripts/assemble_showreel.py"
@@ -39,6 +40,31 @@ def stream_durations(path: Path) -> dict[str, float]:
 
 
 class PlanTests(unittest.TestCase):
+    def test_zero_fade_emits_no_opening_or_closing_filters(self) -> None:
+        graph, _ = showreel.build_filter(
+            [{"duration": 2.0, "has_audio": True}] * 2, 0.3, 0, 24, (320, 180)
+        )
+        self.assertNotIn("]afade=", graph)
+        self.assertNotIn("]fade=", graph)
+
+    def test_invalid_timing_is_rejected(self) -> None:
+        for durations, crossfade, fade in [
+            ([2.0, 2.0], 0.3, -1), ([2.0, 2.0], float("nan"), 0),
+            ([2.0, float("inf")], 0.3, 0), ([2.0, 2.0], 0.3, float("nan")),
+        ]:
+            with (
+                self.subTest(durations=durations, crossfade=crossfade, fade=fade),
+                self.assertRaises(showreel.ShowreelError),
+            ):
+                showreel.plan(durations, crossfade, fade)
+
+    def test_crossfade_helper_requires_explicit_audio_edit_settings(self) -> None:
+        with contextlib.redirect_stderr(io.StringIO()), patch.object(showreel, "assemble") as assemble:
+            with self.assertRaises(SystemExit) as raised:
+                showreel.main(["one.mp4", "two.mp4", "--out", "reel.mp4"])
+            self.assertEqual(raised.exception.code, 2)
+            assemble.assert_not_called()
+
     def test_offsets_walk_the_timeline(self) -> None:
         schedule = showreel.plan([8.0, 8.0, 9.5], 0.4, 0.5)
         self.assertEqual(schedule["offsets"], [7.6, 15.2])
@@ -142,7 +168,7 @@ class AssemblyTests(unittest.TestCase):
 
     def test_cli_returns_error_code_for_bad_input(self) -> None:
         with contextlib.redirect_stderr(io.StringIO()):
-            code = showreel.main([str(self.tmp / "a.mp4"), str(self.tmp / "b.mp4"), "--out", str(self.tmp / "o.mp4")])
+            code = showreel.main([str(self.tmp / "a.mp4"), str(self.tmp / "b.mp4"), "--out", str(self.tmp / "o.mp4"), "--crossfade", "0.3", "--fade", "0.3"])
         self.assertEqual(code, 2)
 
 

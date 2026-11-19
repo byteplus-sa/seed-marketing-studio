@@ -32,6 +32,30 @@
       "exceptions": []
     },
     {
+      "id": "inspection.only_understanding",
+      "severity": "error",
+      "applies_to": ["preflight"],
+      "owner_path": ".agents/contracts/production-policy.md",
+      "summary": "Unapproved candidates are limited to verified Ark understanding model/role pairs and inspection operations.",
+      "exceptions": []
+    },
+    {
+      "id": "inspection.manifest_hash",
+      "severity": "error",
+      "applies_to": ["preflight"],
+      "owner_path": ".agents/contracts/production-policy.md",
+      "summary": "Inspection binds the unchanged candidate manifest SHA-256.",
+      "exceptions": []
+    },
+    {
+      "id": "inspection.candidate_binding",
+      "severity": "error",
+      "applies_to": ["preflight"],
+      "owner_path": ".agents/contracts/production-policy.md",
+      "summary": "Each inspection input belongs to its contained manifest variants list.",
+      "exceptions": []
+    },
+    {
       "id": "references.control_only",
       "severity": "error",
       "applies_to": [
@@ -360,19 +384,6 @@
       "exceptions": []
     },
     {
-      "id": "v2v.muted_source",
-      "severity": "error",
-      "applies_to": [
-        "editing",
-        "recast"
-      ],
-      "owner_path": ".agents/contracts/video-to-video-inputs.md",
-      "summary": "A video-to-video request binds the recorded muted source master with generate_audio false and adds sound in post.",
-      "exceptions": [
-        "A recorded, user-requested native-audio exception for a named take."
-      ]
-    },
-    {
       "id": "v2v.virtual_portrait_identity",
       "severity": "error",
       "applies_to": [
@@ -436,10 +447,8 @@
         "narrative_video"
       ],
       "owner_path": ".agents/skills/seedance-prompt/references/audio-performance-camera.md",
-      "summary": "Sound ownership follows the brief: requested native diegetic sound, including wordless action or ambience; an exact master or controlled post soundtrack; or purposeful silence with no added bed. Speech-free alone does not require picture-only. Preserve exact masters and approved native sound; use supported controls and verify unwanted audio, sync and master fidelity through playback and listening, again after promotion. Negative wording is not proof of compliance. Missing or conflicting ownership stays unresolved; preserve rights, consent and approvals.",
-      "exceptions": [
-        "A recorded, user-requested native-audio exception for a named take."
-      ]
+      "summary": "Native generated audio is sufficient unchanged. Sound ownership follows the brief: native sound including wordless action, ambience or score; an explicitly requested exact master or controlled post soundtrack; or purposeful silence with no added bed. Speech-free alone does not require picture-only. Preserve exact masters and approved native sound; use supported controls and verify unwanted audio, sync and master fidelity through playback and listening, again after promotion. Finalization does not authorize audio edits. Negative wording is not proof of compliance. Missing or conflicting ownership stays unresolved; preserve rights, consent and approvals.",
+      "exceptions": []
     },
     {
       "id": "prompt.positive_direction",

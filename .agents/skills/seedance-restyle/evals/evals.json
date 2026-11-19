@@ -4,12 +4,12 @@
     {
       "id": 1,
       "prompt": "Turn our 10-second office comedy clip into 2D anime. Same two coworkers, same gags, same camera. We own the footage.",
-      "expected_output": "A same-office cel-anime-2d restyle package preserving both coworkers, layout and source timing, with a muted derivative, original-audio post route and a reviewed draft. An environment image is conditional, not required.",
+      "expected_output": "A same-office cel-anime-2d restyle package preserving both coworkers, layout, source timing and audio scope with a reviewed draft. An environment image is conditional, not required.",
       "files": [],
       "assertions": [
         "The edit scope redraws every person, object and surface in the style and states exactly two people.",
         "Each coworker keeps identity cues (hair shape, wardrobe colours) described from the source, not by name.",
-        "@Video 1 is the muted master, generate_audio is false and the saved source audio is the recorded post-audio route.",
+        "@Video 1 is the selected source with verified audio support; native audio suffices unchanged, without mandatory muting, extraction or muxing.",
         "The prompt explicitly applies the medium to the office background as well as the people without requiring an environment image.",
         "Any proposed environment image is justified by this input, request or an observed failure, requires approval, and preserves the source place and geometry.",
         "The original is preserved; no 8n+1 trim or whole-second rounding is imposed without current capability evidence and approval.",

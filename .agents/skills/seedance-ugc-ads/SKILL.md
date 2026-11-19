@@ -31,7 +31,7 @@ onto every ad or an ad onto every preset. A missing mode or preset can remain
 unselected when unnecessary. Unknown facts remain unknown.
 
 Specific non-UGC requests are better served by `seedance-product-demo-ads` for
-product demonstrations, `seedance-story-ads` for narrative spots,
+product demonstrations, `seedance-drama-ads` for narrative spots,
 `seedance-testimonial-ads` for evidence-led testimonials and
 `seedance-fashion-ads` for editorial garment ads. These are prose routing hints
 for the caller, not dependencies or instructions to load another skill. Retain

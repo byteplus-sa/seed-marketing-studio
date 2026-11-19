@@ -12,12 +12,12 @@ scan.
 ### Document order
 
 1. Title and a one- or two-sentence purpose statement.
-2. `Watch the showreel` with a playable compilation and one plain sentence
-   ("All five ads back to back, in the same order as below.").
+2. `Watch the videos` with existing playable videos unchanged. Use
+   `Watch the showreel` only for an explicitly requested compilation.
 3. `How each ad was made` as a short numbered list — one line per step, no
    more than five steps.
 4. One h1 project section per commercial or campaign direction, in the same
-   order as the showreel. Each starts with one sentence describing the ad.
+   order as the videos. Each starts with one sentence describing the ad.
 5. Within each project, three separate h2 sections, each with one plain line
    above its table:
    - `Elements` — characters, locations, props and products used.

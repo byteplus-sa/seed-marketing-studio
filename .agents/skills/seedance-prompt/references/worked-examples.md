@@ -115,5 +115,7 @@ Except for the object or area explicitly modified above, keep all other people, 
 content, camera movements, cuts, and event order from @Video 1 unchanged.
 ```
 
-Request parameters: `resolution: "480p"`, `draft: true`; ratio and duration follow the source; `generate_audio:
-false` with the source's own audio restored in post.
+Request parameters: `resolution: "480p"`, `draft: true`; ratio and duration
+follow the source. Audio controls follow the brief and verified operation
+support. Native sound is sufficient unchanged; exact-master attachment is
+separately scoped, not a mandatory mute/extract/mux route.

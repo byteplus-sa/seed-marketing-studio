@@ -43,14 +43,13 @@ Decision rules:
 Resolve the selected model, operation and transport through the project
 [execution profile](../../../contracts/seedance-execution-profiles.md).
 The following table retains the historical 2.5 route vocabulary, not a family guarantee.
-Object Swap, Motion Transfer and Restyle bind the muted source master as `@Video 1` (`videos[].role = "reference_video"`),
+Object Swap, Motion Transfer and Restyle bind the selected source as `@Video 1` (`videos[].role = "reference_video"`),
 element sheets and Virtual Portrait `asset://` views as
-`images[].role = "reference_image"`, `generate_audio: false` and no `@Audio`
-bindings, per the
+`images[].role = "reference_image"`, with audio intent and support verified per the
 [video-to-video inputs contract](../../../contracts/video-to-video-inputs.md).
-Sound returns in post through the row's recorded post-audio route; this
-overrides the `generate_audio: true` example in [Submission](submission.md)
-and the manifest template in [Delivery And Manifest](delivery-and-manifest.md).
+Native generated audio is sufficient unchanged. Neither muting nor extraction
+nor post muxing is required. Explicit silence, exact-master attachment and audio
+edits remain separate scoped routes.
 Apply every other rule in [Submission](submission.md); only these fields
 differ.
 
@@ -85,7 +84,7 @@ requires explicit extra generation scope, and never replaces full-source QA:
 
 Run `source-subject-map` once per approved source clip, before any prompt for
 any row. It writes `subject_map.json` (and a readable table) beside the source
-clip, bound to the original source SHA-256; the muted master and any trim are
+clip, bound to the original source SHA-256; any authorized preparation files are
 recorded as derivatives of that hash. All variant rows share that one map.
 
 - Every row's prompt cites subject, object and cut IDs from the shared map, so
@@ -119,7 +118,7 @@ main agent owns this file; rows change only by an explicit user decision.
 | `product` | Element ID of the replacement product, or `keep` |
 | `location` | Element ID of the replacement location, or `keep` |
 | `preset` | Named look from `seedance-motion-recast` or style from `seedance-restyle`, or `none` |
-| `audio` | Post-audio route: `original`, `new`, `mixed` or `re-voiced` |
+| `audio` | Native unchanged, or explicitly requested silence, exact master, new, mixed or re-voiced audio |
 | `resolution` | Final resolution for this row; lowest suitable |
 | `route` | Derived from [Route selection](#route-selection) |
 | `shot` | Assigned shot ID for the row's folder |
@@ -247,7 +246,7 @@ the production policy ([production policy](../../../contracts/production-policy.
 - **Source footage.** A recorded user rights decision covers the footage and the
   people visible in it, with its scope. The subject map describes people by
   observable descriptors only; never name or infer who they are.
-- **Person in the source video.** A muted master that shows a person is bound
+- **Person in the source video.** A selected source that shows a person is bound
   as an `asset://` video registered in the private asset library; image assets
   of the person do not clear the provider's video check.
 - **Replacement talent.** Every new character is a Virtual Portrait asset
@@ -283,8 +282,8 @@ Studio frame (pre-Studio canvas: canvas entry).
       subject map records them; no floating or merged objects.
 - [ ] **Motion fidelity.** Poses, screen positions, camera path, cut timing and
       duration match the source within the route's expectations.
-- [ ] **Post audio.** The muxed route matches the row's `audio` column, the
-      final length equals the picture, and speaking subjects stay in sync.
+- [ ] **Audio.** The output matches the row's audio intent, preserves independent
+      tails, and speaking subjects stay in sync. No automatic audio processing.
 - [ ] **No baked text.** No captions, taglines, CTAs or new signage copy in the
       footage; add on-screen text in post.
 - [ ] **Logo and label fidelity.** Real product labels match the approved

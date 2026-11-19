@@ -21,7 +21,10 @@ work follows `project.md` approval mode for the creative script decision.
 
 This workflow copies video frames. It does not re-render mouth movement or guarantee lip synchronization. Transcription-only work, generic TTS, soundscape composition, and visual editing belong to their respective capabilities.
 
-A take with a few mispronounced or wrong words is a **word-scoped fix**, not a dub: patch only those word windows and keep every other sample of the original. Never re-dub a whole track to fix a few words. Regenerate only the affected line or word window with the same voice references and splice it in at its recorded offset, then re-verify the whole track.
+Honor the requested repair extent. Wrong words do not automatically authorize
+splicing or re-dubbing; offer a scoped retake or audio edit. A requested
+word-only patch preserves everything outside its approved interval, while an
+explicit full dub remains supported. Finalization alone never invokes this tool.
 
 ## Load only the needed reference
 
@@ -117,7 +120,8 @@ a rejected result.
    (`'background.wav:0'`). Separation quality varies by source; listen to the
    background stem for voice residue before using it. This route is a
    recommendation, not yet verified in this bundle.
-3. Gain the final mix to the original's integrated loudness before muxing.
+3. Match gain only when requested as part of the dub; no automatic loudness
+   normalization is required before muxing.
 4. After muxing, assert the picture is untouched: the video stream MD5 of the
    output equals the source's.
 

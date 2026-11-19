@@ -29,7 +29,8 @@ cause of a failed swap.
    negative only for a residual original seen in review.
 5. **Preservation.** Everything outside the swapped element stays as in
    `@Video 1`: identity, wardrobe, hands, performance, mouth movement, camera,
-   cuts and lighting. Sound is not part of the edit; it returns in post.
+   cuts, lighting and sound. Native audio suffices unchanged with verified
+   support; an exact-master attachment or audio edit requires explicit scope.
 
 Target reference rules:
 

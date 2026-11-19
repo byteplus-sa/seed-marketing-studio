@@ -39,11 +39,11 @@ MAY_NOT_APPLY = {
     "claims_supported",
     "brand_copy",
     "speech_intelligible",
+    "loudness_target",
 }
 DISCLOSURE_DECISIONS = {"disclose", "not_required", "declined"}
 DEFAULT_REVEAL_S = 2.0
 DEFAULT_OPENING_S = 2.0
-DEFAULT_LOUDNESS = {"integrated_lufs": -16.0, "true_peak_dbtp": -1.5, "tolerance_lu": 1.0}
 FRAME_PATTERN = "frame_%05d.png"
 MAX_INTERVAL_S = 10.0
 
@@ -198,7 +198,13 @@ def timing_errors(check: dict[str, Any], limit: float) -> list[str]:
     return [f"{check['id']}: pass needs evidence at or before {limit} s, first is {first} s"]
 
 
-def loudness_errors(check: dict[str, Any], target: dict[str, float]) -> list[str]:
+def loudness_errors(check: dict[str, Any], target: dict[str, float] | None) -> list[str]:
+    if target is None:
+        return [] if check["status"] == "not_applicable" else [
+            "loudness_target: no requested target; record not_applicable"
+        ]
+    if check["status"] == "not_applicable":
+        return ["loudness_target: a requested target cannot be skipped"]
     if check["status"] not in ("pass", "fail"):
         return []
     measured = check.get("measured")
@@ -267,7 +273,7 @@ def check_errors(
     if name == "opening_change":
         errors += timing_errors(check, document.get("opening_window_s", DEFAULT_OPENING_S))
     if name == "loudness_target":
-        errors += loudness_errors(check, document.get("loudness_target", DEFAULT_LOUDNESS))
+        errors += loudness_errors(check, document.get("loudness_target"))
     if name == "disclosure_recorded":
         errors += disclosure_errors(check, document, project)
     return errors

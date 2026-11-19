@@ -4,12 +4,12 @@ Focused reference for `seedance-restyle`. Read [the entrypoint](../SKILL.md)
 for routing and caller responsibilities.
 
 - [Picture checks](#picture-checks)
-- [Audio checks after mux](#audio-checks-after-mux)
+- [Audio checks](#audio-checks)
 - [Failures and repairs](#failures-and-repairs)
 
 ## Picture checks
 
-Play the silent output at full speed, then step through it beside the source.
+Play the output at full speed, then step through it beside the source.
 Record each item as pass, fail or not applicable.
 
 - **Medium coverage.** Every person, prop, surface, sky and effect is in the
@@ -34,12 +34,12 @@ Record each item as pass, fail or not applicable.
   duration tolerance. A mismatch needs review against the agreed target, not
   an automatic trim or retime. Check for unintended black side bars.
 
-## Audio checks after mux
+## Audio checks
 
-Apply after the post-audio route is muxed, following the
-[video-to-video inputs contract](../../../contracts/video-to-video-inputs.md#post-audio).
+Apply to the actual output, following the
+[video-to-video inputs contract](../../../contracts/video-to-video-inputs.md#audio-scope).
 
-- The final duration matches the agreed picture timeline; any authorized
+- Preserve independent audio tails and the agreed picture timeline; any authorized
   padding or trim is recorded on a derivative, with originals preserved.
 - Two or three sync points land on the picture.
 - Listen in full and inspect on-screen speech against the redrawn mouths.

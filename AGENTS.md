@@ -57,7 +57,7 @@ Load only the contract relevant to the current stage:
 | Canon, props, screens and control references | [Element identification](.agents/contracts/element-identification.md) |
 | File prefixes and numbering | [Asset naming](.agents/contracts/asset-naming.md) |
 | Requested dialogue synchronization and assembly | [Audio-video alignment](.agents/contracts/audio-video-alignment.md) |
-| Video-to-video identity references, muted source and post audio | [Video-to-video inputs](.agents/contracts/video-to-video-inputs.md) |
+| Video-to-video identity references, source preservation and audio scope | [Video-to-video inputs](.agents/contracts/video-to-video-inputs.md) |
 | Shot plan, camera, lens, lighting, acting and other axes | [Directorial axes](.agents/contracts/seedance-reference.md) |
 | Source-bound acting, cue encoding and actual-take acceptance | [Performance direction](.agents/contracts/performance-direction.md) |
 | Ad claims, testimonials, brand copy rules, placement safe zone and paid-ad AI disclosure | [Ad compliance](.agents/contracts/ad-compliance.md) |
@@ -202,6 +202,14 @@ references and UI metadata. Do not refresh hashes to hide unexplained changes.
 
 ## Production invariants
 
+- Native generated audio is sufficient unchanged. Finalization alone never
+  authorizes normalization, fades, padding, trimming, mixing, carving, word
+  splicing or soundtrack replacement. Do not mute native sound to manufacture
+  post work. Silence, exact-master attachment and audio edits require explicit
+  scope; diagnostics and actual listening remain available. Preserve independent
+  audio tails and report defects before repair. Studio provenance and delivery
+  rendering remain separate requirements, not an audio-editing mandate. See
+  [Audio-video alignment](.agents/contracts/audio-video-alignment.md).
 - For new vague moving-image briefs, resolve a compact creative premise,
   attention and payoff before execution. Offer alternatives when materially
   different ideas remain open; settled single-prompt and scoped edits do not

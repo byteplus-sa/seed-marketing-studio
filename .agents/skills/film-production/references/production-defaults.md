@@ -60,23 +60,21 @@ Record one audio route in the brief and carry it into every shot request:
 
 | Route | When | Request setting | Sound built |
 | --- | --- | --- | --- |
-| Native dialogue | Characters speak on camera and lip sync matters | `generate_audio: true` | In the clip; patch words in post when needed |
-| Picture only, post audio | Ambience-only, score-driven, music-video or wordless spots | `generate_audio: false` | Seed Audio score, ambience and SFX in post |
+| Native audio | Dialogue, ambience, score or wordless scenes | `generate_audio: true` when supported | In the clip; sufficient unchanged |
+| Picture only, post audio | Explicitly requested exact master or post soundtrack | `generate_audio: false` when supported | Only the requested soundtrack |
 | Separate lip-sync audio | Only when the user asks for it | Audio reference bound per the alignment contract | Before the shot |
 | Silent | The deliverable is silent | `generate_audio: false` | None |
 
-An explicit request for an original native soundscape, musical ad or
-one-generation audiovisual draft uses native audio when supported. Preserve
-that scope; do not substitute silent footage or add separate audio generation.
+Native generated audio is sufficient unchanged, including a musical ad or
+one-generation audiovisual draft. Preserve that scope; do not substitute silent
+footage or add separate audio generation merely to finalize.
 Choose sound density, contrast and recurrence for the idea, not "no music"
 as a default for fictional or claim-free products.
 
-With native audio on, a "no music, no spoken words" line often does not hold:
-in observed ambient-only runs, speech, chants or score leaked into about two
-thirds of clips. Do not rely on a negative audio line for a piece whose sound
-must stay ambient or score-led; generate the picture silent and build the bed
-in post. Say in the brief that post beds are laid to the cut and are not
-frame-synced to on-screen action unless SFX are placed by timestamp.
+Native output can deviate from requested sound. Inspect actual playback and
+listening, report defects, and obtain a scoped repair or retake decision.
+Unwanted speech or music is not permission to suppress all native audio.
+Explicit post beds follow the measured cut; frame sync is not guaranteed.
 
 Plan sound and editorial intent before generation in the existing brief or
 scene notes: anticipation, what a cut reveals or withholds, and the purpose of
@@ -130,8 +128,8 @@ the identities are registered `asset://` Virtual Portrait assets. Plan for it:
   clips at natural duration, held together by a locked blocking map and
   matching first frames, then assemble.
 - With assets, follow the video-to-video inputs contract: bind identities as
-  `asset://` references, submit a muted source (`generate_audio: false`), and
-  add original or new audio in post.
+  `asset://` references and preserve source audio scope. Native audio suffices
+  unchanged when supported; muting, extraction and post muxing are not required.
 - A last-frame-only request is rejected; use first and last frames together.
 
 ## 6. Text, overlays and labels
@@ -143,7 +141,8 @@ one only when the user, platform or brief requires it.
 
 ## 7. Assembly defaults
 
-Technical assembly uses **conform, trim, crop, overlays, end card and mix**.
+Technical assembly uses only the requested conform, cuts, crop and overlays.
+Audio mixing, trimming or other processing requires explicit audio scope.
 It also needs artistic acceptance against the brief, not just clean joins.
 Inspect full-speed playback and listen when audio is in scope. In existing
 review evidence, cite timestamps for the intended attention, revealed or
@@ -171,18 +170,18 @@ mandatory report is required.
   before conversion, never guess or silently retag. Preserve the source master.
   Avoid FFmpeg `vignette` inside a high-bit-depth chain; it drops to 8-bit YUV
   and can shift hues.
-- Render each clip to an **exact-length lossless intermediate** in whole frames,
-  pad or trim its audio to the same length, join with the concat demuxer and
-  encode once. The concat filter needs `setsar=1`. Read the video-stream
-  duration, not the container duration.
+- For requested picture assembly, use exact-length intermediates when needed
+  and encode once. Preserve the soundtrack and its independent tail; never
+  pad or trim audio to match picture by default. Read both stream durations,
+  not just container duration. Disclose required transport conversion.
 - Check frame edges: the model sometimes draws rounded black side bars; a small
   centre punch-in on that clip removes them.
-- Normalize to the delivery loudness target from the alignment contract, then
-  place the result in Studio and render it there.
+- Place the result in Studio and render it there. Studio provenance is separate
+  from audio processing; there is no normalization or loudness target by default.
 
 ## 8. Review and fix loop
 
-Run these checks before a take passes, and use the narrowest fix.
+Run these checks before a take passes. Report defects before a scoped fix.
 
 - **Words:** `speech_to_text` on the local file is the authority for spoken
   words. A model summary is not evidence. Accent and pronunciation verdicts need
@@ -192,22 +191,16 @@ Run these checks before a take passes, and use the narrowest fix.
   action, and speech fills to the clip end. Trimming a clip's head does not
   lengthen the tail after the last word; fix a short tail with a retake that
   shortens pre-line action, a freeze-hold, or a recorded waiver.
-- **Word-scoped audio fixes:** patch only the wrong word windows; never re-dub a
-  whole track. Transcribe with word times, splice pitch- and loudness-matched
-  replacements with short fades, and prove that samples outside each window are
-  identical. A replacement whose pitch differs from the speaker by more than
-  about 10% is heard as a voice change; leaving a mild mispronunciation can be
-  the better choice.
-- **Re-voicing keeps the source soundtrack:** when a model re-voices a clip,
-  send the original video with its audio, name the words to fix, take the full
-  audio back, normalize to the original loudness and mux it over the untouched
-  picture (copy the video stream and confirm its hash is unchanged). Measure the
-  original first: loudness over time, its own transcript and its non-voice
-  sounds, then confirm they survive.
+- **Dialogue defects:** offer a targeted retake or explicitly requested repair.
+  Do not choose word splicing, pitch matching, fades or re-dubbing merely to
+  finalize. Honor the requested repair extent, including a full dub when asked.
+- **Requested re-voicing:** preserve protected picture, music, ambience and
+  effects. Record the approved change and source hashes; verify the returned
+  soundtrack and sync. Normalization and other effects are not implied.
 - **Music beds:** provider audits reject a share of music generations; diagnose
-  each rejection before revising or retrying. Tempo and arc timing are only roughly obeyed, so measure and
-  pad or splice in assembly. Short lines truncate unless the prompt states the
-  clip length and trailing silence.
+  each rejection before revising or retrying. Tempo and arc timing are only
+  roughly obeyed; measure and report mismatches rather than automatically
+  padding or splicing. Preserve final words and tails.
 - **Retakes:** fix hard-gate failures within the requested scope with one targeted
   change per retake, written as a revision (locked decisions, delta,
   acceptance, known rejections, invalidation scope).

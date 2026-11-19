@@ -230,8 +230,14 @@ uv run python $S reopen projects/<project> --stage assembly-review \
 
    `portfolio.py OUT_DIR PROJECT...` builds one page for several projects from
    their final-master locks, with subtitle tracks and canvas links. With
-   `--showreel` it joins every locked master back to back, gain-matched to
-   `--target-lufs` (default -16) with a limiter, and writes a build record.
+   `--showreel` it explicitly assembles locked masters back to back at source
+   levels, without gain matching or a limiter, and writes a build record.
+   This optional hard-cut assembly encodes AAC and needs compatible timelines.
+   It refuses independent tails differing by more than one source audio sample,
+   missing stream timing, multiple audio tracks and mixed silent/audible inputs;
+   disclose transport changes and obtain a scoped decision instead of padding,
+   trimming or adding silence. All-silent inputs remain silent. A gallery alone never
+   requires an assembled showreel or an audio-processing pass.
 
    Portfolio subtitle metadata belongs on the selected delivery-stage `sources`
    entry, for example `{"path":"assembly/master.srt","kind":"data","language":"es","label":"Spanish"}`.

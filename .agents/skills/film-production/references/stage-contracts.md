@@ -81,9 +81,8 @@ brief also records:
   Final assets are not required early; timing is provisional until measured;
 - **artistic acceptance** tied to the brief, using a small relevant set of
   observable criteria rather than generic "cinematic" polish or activity counts;
-- the **audio route**: native dialogue or explicitly requested native soundscape,
-  picture only with score, ambience and
-  SFX built in post, opt-in separate lip-sync audio, or silent;
+- the **audio route**: native audio unchanged, or explicitly requested
+  picture-only/post sound, separate lip-sync audio, exact master or silence;
 - the **look intent**: ungraded original model colours unless a grade or a
   capture-format look is requested, in which case it is a post treatment;
 - the **on-screen copy** (titles, captions, CTA, end card) that post will add,
@@ -239,8 +238,9 @@ Expose the audio player, prompt and timing evidence in `audio-preparation`.
 Exit: audio duration fits the planned video and dialogue mappings are verified.
 
 When the user has not requested lip-synced audio, skip this stage and proceed
-directly to shot generation. Seedance's native audio handles dialogue by
-default. A music track that the cut must follow (music video, beat-led spot)
+directly to shot generation unless another explicit audio requirement applies.
+Native audio suffices unchanged for dialogue, music and ambience.
+A music track that the cut must follow (music video, beat-led spot)
 may be prepared here so shot durations can be planned to it. Score and ambience
 for a picture-only project are otherwise built after picture lock, at
 assembly, to the cut's measured length.
@@ -326,16 +326,20 @@ Entry: approved takes and any requested audio assets exist.
 
 Required output: ordered edit, review render, transition and continuity review,
 audio presence check, technical decode QA, artistic playback evidence and
-outstanding notes. Technical assembly uses conform, trim, crop, overlays, end card and mix with no grade, from
-exact-length intermediates encoded once; post beds for picture-only projects
-are built here to the measured cut. Audio defects are fixed word by word, and
-re-voicing keeps the source soundtrack (see
+outstanding notes. Technical assembly performs only requested picture work,
+with exact-length intermediates when needed. Native sound stays unchanged;
+post beds, mixing, word splicing and re-voicing require explicit audio scope,
+not merely finalization (see
 [production defaults](production-defaults.md)). The `assembly-review` stage
 keeps its approved inputs and comparison renders together.
 
-Exit: picture and audio have separate mode-authorized locks bound to the exact
-artifact and passing review hashes. Audio lock is required when audio is in
-scope. In `ask_for_approval`, wait for explicit user locks. Full editorial,
+Exit: picture and any separately prepared audio have mode-authorized locks
+bound to the exact artifact and passing review hashes. The audio lock is
+required unless `audio-preparation` was skipped, per the production policy.
+Native audio unchanged uses that existing skipped-stage path; do not extract
+or process a soundtrack merely to create a lock. Final playback/listening,
+picture and final-master locks still apply. In `ask_for_approval`, wait for
+explicit user locks. Full editorial,
 color, and sound-post department contracts are future work tracked in the
 lifecycle specification.
 

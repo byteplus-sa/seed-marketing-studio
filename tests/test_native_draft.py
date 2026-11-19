@@ -278,6 +278,42 @@ class NativeDraftTests(unittest.TestCase):
         self.write_registry(source)
         self.assertTrue(validate_request.prepared_evidence_findings(self.root, request))
 
+    def test_profiled_promotion_uses_output_controls_without_requiring_new_draft(self):
+        source = self.profiled_source()
+        evidence = source["extensions"]["execution_profile"]["evidence"]
+        evidence["parameters"].pop("draft_task_id")
+        evidence["parameters"].update(
+            variations={"type": "integer", "minimum": 1, "maximum": 5},
+            output_format={"enum": ["mp4", "mov"]},
+            watermark={"type": "boolean"},
+        )
+        evidence["required_parameters"] = ["resolution", "draft", "variations", "output_format"]
+        source["params"].update(variations=1, output_format="mp4", watermark=False)
+        self.rehash(source)
+        self.write_registry(source)
+        request = self.request({
+            "draft_task_id": "selected-task", "resolution": "1080p",
+            "variations": 1, "output_format": "mp4", "watermark": False,
+        })
+        request["extensions"]["execution_profile"] = copy.deepcopy(source["extensions"]["execution_profile"])
+        self.rehash(request)
+        before = copy.deepcopy(source)
+        self.assertEqual(validate_request.validate_request(self.root, request, evidence), [])
+        self.assertEqual(source, before)
+        for key, value in (
+            ("variations", 2), ("variations", True), ("output_format", "avi"),
+            ("draft_task_id", ""), ("draft_task_id", "unknown-task"),
+            ("duration", 30), ("draft", False),
+        ):
+            with self.subTest(parameter=key, value=value):
+                changed = copy.deepcopy(request)
+                changed["params"][key] = value
+                self.rehash(changed)
+                self.assertTrue(validate_request.validate_request(self.root, changed, evidence))
+        evidence["promotion"]["support"] = "unknown"
+        self.rehash(request)
+        self.assertTrue(validate_request.validate_request(self.root, request, evidence))
+
     def test_profile_omission_and_operation_mismatch_cannot_begin_submission(self):
         source = self.profiled_source()
         request = self.request({"draft_task_id": "selected-task", "resolution": "1080p"})

@@ -67,6 +67,7 @@ def checklist(**overrides: Any) -> dict[str, Any]:
         "duration_s": 15.0,
         "paid": True,
         "placement": "meta-instagram-reels",
+        "loudness_target": {"integrated_lufs": -16.0, "true_peak_dbtp": -1.5, "tolerance_lu": 1.0},
         "checks": passing_checks(),
     }
     document.update(overrides)
@@ -205,6 +206,32 @@ class ReportTests(unittest.TestCase):
         document["loudness_target"] = {"integrated_lufs": -14.0, "true_peak_dbtp": -1.0, "tolerance_lu": 0.5}
         code, _ = self.run_report(document)
         self.assertEqual(code, 0)
+
+    def test_no_requested_target_needs_no_loudness_processing_or_measurement(self) -> None:
+        document = replace_check(checklist(), "loudness_target", status="not_applicable",
+                                 evidence="Native audio unchanged; no requested loudness target.")
+        document.pop("loudness_target")
+        document["checks"][8].pop("measured")
+        code, result = self.run_report(document)
+        self.assertEqual(code, 0, result)
+
+    def test_diagnostic_readings_without_target_do_not_fail_native_audio(self) -> None:
+        document = replace_check(checklist(), "loudness_target", status="not_applicable",
+                                 measured={"integrated_lufs": -30.0, "true_peak_dbtp": -0.2})
+        document.pop("loudness_target")
+        self.assertEqual(self.run_report(document)[0], 0)
+
+    def test_target_cannot_be_invented_or_skipped(self) -> None:
+        document = checklist()
+        document.pop("loudness_target")
+        self.assert_invalid(document, "no requested target")
+        self.assert_invalid(replace_check(checklist(), "loudness_target",
+                                         status="not_applicable"), "requested target")
+
+    def test_invalid_explicit_targets_fail_without_fallback(self) -> None:
+        for target in (None, {}, "", {"integrated_lufs": -16}):
+            with self.subTest(target=target):
+                self.assert_invalid(checklist(loudness_target=target), "loudness_target")
 
     def test_unpaid_deliverable_records_disclosure_not_applicable(self) -> None:
         internal = replace_check(

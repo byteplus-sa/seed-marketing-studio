@@ -7,7 +7,7 @@ description: >-
   delivery, and handle unsupported languages through annotation, a supported
   spoken language with subtitles, or an explicitly requested audio-first
   track. Diagnose a specific heard pronunciation or delivery problem before
-  proposing a word-scoped retake or splice. Use for ads, UGC, narrative and
+  proposing a scoped retake or explicitly requested audio repair. Use for ads, UGC, narrative and
   other video prompts with non-English or multilingual dialogue; this
   independent prompt-only leaf returns a dialogue layer and does not submit
   generation tasks. Optional market packs add language-specific depth.
@@ -54,8 +54,9 @@ direction.
    hypothesis, not an observed failure.
 5. **Make the smallest repair.** Prefer delivery direction for delivery
    problems and a targeted note for a verified pronunciation issue. After a take
-   exists, prefer a word-scoped repair: retake with a cue or splice that word.
-   Broader re-voicing needs authorization. Judge continuity by listening against
+   exists, report the defect and propose a scoped retake or explicitly
+   requested audio repair. Do not default to word splicing or re-voicing.
+   Judge continuity by listening against
    the agreed target, not a universal percentage or splice count. See
    [repairs](references/repairs.md).
 6. **Keep spoken words separate from guidance.** Copy dialogue inside

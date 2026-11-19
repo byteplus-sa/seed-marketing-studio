@@ -14,12 +14,12 @@ each template needs.
 
 ## Shared rules
 
-Fill every `<...>` from source inspection or the subject map. Every template
-ends with the same audio block, because `@Video 1` is the muted master:
+Fill every `<...>` from source inspection or the subject map. Keep the requested
+audio scope; native audio suffices unchanged with verified operation support:
 
 ```text
 [Audio]
-Silent output. Sound is added in post.
+Preserve the requested soundtrack; no audio replacement or cleanup.
 ```
 
 Add the face-protection line whenever a face stays visible:
@@ -206,13 +206,13 @@ Keep every person's identity, performance, mouth movement and lighting from
 
 Hypothetical example; no result evidence is attached.
 
-Source: `@Video 1`, the 6 s, 16:9 muted master of a static medium shot at a
+Source: `@Video 1`, the 6 s, 16:9 source of a static medium shot at a
 café terrace. A woman in a denim jacket and gold hoop earrings lifts a red
 aluminium soda can from the table with her right hand (frame-left) at about 0:01, drinks at 0:02–0:04 while her
 fingers wrap the can's front, and sets it down at about 0:05. One can is
 visible throughout; no cuts. Target: `@Image 1`, the approved packshot of
 `@slim-can-black`, a matte-black slim 330 ml can with a copper ring-pull and a
-vertical copper wordmark. Post-audio route: original.
+vertical copper wordmark. Keep the source sound intent.
 
 ```text
 [Edit Goal]
@@ -259,10 +259,11 @@ left, with a soft copper highlight on the ring-pull. Real human skin with pores
 and catchlights — never waxy, smoothed, or warped.
 
 [Audio]
-Silent output. Sound is added in post.
+Preserve the source sound intent, including the set-down.
 ```
 
 Submit with `omni_reference_task_type: edit`, `@Video 1` first and `@Image 1`
-second, `generate_audio: false`, explicit `resolution: "480p"` and boolean
-`draft: true` for every new 2.5 test. After QA, mux the saved
-source audio so the set-down sound lands at 0:05.
+second, verified audio controls, explicit `resolution: "480p"` and boolean
+`draft: true` for every new 2.5 test. Check actual sound and set-down sync.
+An exact source-audio requirement needs verified preservation or a scoped
+stream-copy attachment, not mandatory extraction or muxing.

@@ -196,8 +196,8 @@ states what is missing.
     draft task ID. Promotion follows the project approval mode and existing
     generation scope, with its own registered operation (see the generation flow).
     Report available estimates or unknown; costs never gate promotion.
-    Apply the recipe's **Post** steps (overlay text, split-screen
-    stack, fisheye, ambience bed) only after the picture is accepted.
+    Apply requested **Post** steps (overlay text, split-screen stack, fisheye)
+    after picture acceptance. Audio additions require explicit scope.
 
 A project folder is required for any submission: `projects/<name>/` with
 `project.md`, `task_ids.json` and, once a take exists, the Studio project
@@ -212,7 +212,7 @@ package; no files, no submission.
 | `i2v-first-frame` | One image with role `first_frame` | The photo is the opening frame; ratio locks to it |
 | `i2v-first-and-last` | `first_frame` and `last_frame` images | Both ratios match; a `last_frame` alone is rejected, so build the missing first frame (`earth-zoom`, `lidar`) |
 | `reference-images` | Images with role `reference_image` | The clip does not open on the photo; state ratio; add identity-only wording; a face or body crop of a person can be rejected, so keep the first-frame fallback in the recipe ready |
-| `v2v-restyle` | Source clip, muted master | Delegate to `seedance-restyle`; its rules replace this table. A clip showing a realistic person is rejected (`PrivacyInformation`) unless each person is an `asset://` asset |
+| `v2v-restyle` | Selected source with its soundtrack | Delegate to `seedance-restyle`; its rules replace this table. A clip showing a realistic person is rejected (`PrivacyInformation`) unless each person is an `asset://` asset |
 | `composite` | Generated clip plus a deterministic step | FFmpeg stack, HyperFrames overlay or `html-graphic-render` layout named in the recipe |
 
 A first-frame image cannot be combined with reference images. Parameters that the
@@ -240,13 +240,11 @@ Provider rules (details and wording in
    beats to suit a taste; revise through the Decide stage.
 2. **No text inside generated video.** HUD, labels, captions, UI and city names
    are added in post with HyperFrames or `html-graphic-render`.
-3. **Native audio is off** unless the user asks for it or the recipe needs
-   sync-critical foley. When it is on, describe the requested sound effects
-   and ambience, then check the
-   draft's track before promoting, and check the final's track again (the
-   promotion reuses the audio setting, but the final's audio is not
-   byte-identical). A clean ambience or SFX bed comes from Seed Audio in post and
-   is not frame-synced.
+3. **Native generated audio is sufficient unchanged.** Verify supported
+   controls and describe the brief's sound intent, including music or ambience.
+   Inspect the draft and final tracks; promotion need not preserve exact audio.
+   Silence, exact-master attachment and post beds require explicit scope.
+   Report sound defects instead of silently muting, normalizing or repairing.
 4. **Counts are explicit** at every timestamp, copies share one face and one
    outfit, and the reported count is the one found on a full-size frame.
 5. **Always a draft first.** 480p native draft, inspect, then select and

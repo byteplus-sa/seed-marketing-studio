@@ -136,8 +136,8 @@ settles one (a "silent" spot is `silent`), record it in one line without a
 question; static images and sound-only briefs skip the ones that do not apply.
 
 - **Audio route.** Choose by sound ownership, not the presence of speech.
-  `native` serves on-camera dialogue and requested diegetic sound, including
-  wordless scenes; `picture_only` serves an exact master or controlled post
+  `native` is sufficient unchanged for dialogue, score, diegetic ambience and wordless
+  scenes; `picture_only` serves an explicitly requested exact master or controlled post
   sound, with silent picture and the authorized bed added in post; `silent`
   preserves purposeful silence. Separate lip-sync audio remains opt-in:
   use `lipsync_audio` only for a requested separate dialogue track. Preserve
@@ -306,7 +306,7 @@ directorial_axes:
     source: defaulted
   audio_mode:
     value: picture_only
-    rationale: an ambience-and-score piece; native audio tends to add speech or music, so the bed is built in post
+    rationale: the user explicitly selected a separate post ambience bed
     source: user_confirmed
     approval_evidence: "User accepted silent picture with a post ambience bed."
 locked:

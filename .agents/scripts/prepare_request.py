@@ -167,12 +167,16 @@ def canvas_finding(root: Path, request: dict[str, Any]) -> Finding | None:
     return None
 
 
-def build_references(root: Path, items: list[str]) -> list[dict[str, Any]]:
+def build_references(
+    root: Path, items: list[str], inspection_items: list[str] | None = None
+) -> list[dict[str, Any]]:
     counters = {"Image": 0, "Video": 0, "Audio": 0}
     references: list[dict[str, Any]] = []
-    for item in items:
+    inputs = [(item, False) for item in items]
+    inputs.extend((item, True) for item in inspection_items or [])
+    for item, inspection in inputs:
         parts = item.split(":")
-        if len(parts) not in (3, 4, 5):
+        if (inspection and len(parts) != 3) or len(parts) not in (3, 4, 5):
             raise ValueError(
                 f"Expected path:role:manifest[:field[:key]] reference: {item}"
             )
@@ -185,13 +189,21 @@ def build_references(root: Path, items: list[str]) -> list[dict[str, Any]]:
         evidence: dict[str, Any] = {"manifest": manifest, "field": field}
         if len(parts) == 5:
             evidence["key"] = parts[4]
+        if inspection:
+            evidence = {
+                "manifest": manifest,
+                "manifest_sha256": hashlib.sha256(
+                    contained_path(root, manifest).read_bytes()
+                ).hexdigest(),
+                "field": "variants",
+            }
         references.append(
             {
                 "path": path,
                 "sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
                 "role": role,
                 "binding": f"@{kind} {counters[kind]}",
-                "approval_evidence": evidence,
+                "inspection_evidence" if inspection else "approval_evidence": evidence,
             }
         )
     return references
@@ -229,13 +241,18 @@ def build_request(root: Path, args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("Asset ID must contain only letters, digits, _ and -")
     prompt_file = relative_path(args.prompt)
     prompt_bytes = contained_path(root, prompt_file).read_bytes()
-    references = build_references(root, args.ref)
+    inspection_items = getattr(args, "inspect_ref", [])
+    references = build_references(root, args.ref, inspection_items)
     params = parse_params(args.param)
     version = args.schema_version or (
-        2 if declares_approval_mode(root) or canvas_contract_version(root) >= 1 else 1
+        2 if inspection_items or declares_approval_mode(root) or canvas_contract_version(root) >= 1 else 1
     )
+    if inspection_items and version != 2:
+        raise ValueError("--inspect-ref requires a version-2 inspection request")
     legacy = parse_legacy(args.ref_legacy)
-    unknown = set(legacy) - {reference["path"] for reference in references}
+    unknown = set(legacy) - {
+        reference["path"] for reference in references if "approval_evidence" in reference
+    }
     if unknown:
         raise ValueError(f"--ref-legacy names no --ref path: {min(unknown)}")
     if legacy and version != 2:
@@ -243,9 +260,10 @@ def build_request(root: Path, args: argparse.Namespace) -> dict[str, Any]:
     mode: dict[str, Any] = {}
     if version == 2:
         for reference in references:
-            reference["approval_evidence"] = decision_evidence(
-                root, reference, legacy.get(reference["path"])
-            )
+            if "approval_evidence" in reference:
+                reference["approval_evidence"] = decision_evidence(
+                    root, reference, legacy.get(reference["path"])
+                )
         approval_mode, project_sha256 = project_mode_snapshot(root)
         mode = {"approval_mode": approval_mode, "project_sha256": project_sha256}
     operation_id = args.operation_id or "-".join(
@@ -425,6 +443,10 @@ def parser() -> argparse.ArgumentParser:
     parser.add_argument("--operation", required=True)
     parser.add_argument("--param", action="append", default=[])
     parser.add_argument("--ref", action="append", default=[])
+    parser.add_argument(
+        "--inspect-ref", action="append", default=[],
+        help="Candidate path:role:manifest for Ark understanding only; ordered after --ref inputs",
+    )
     parser.add_argument("--expected-output", required=True)
     parser.add_argument(
         "--transport", choices=("ark-mcp", "arkcli", "curl"), default="ark-mcp"

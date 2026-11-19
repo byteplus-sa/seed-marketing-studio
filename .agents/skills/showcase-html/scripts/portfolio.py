@@ -2,8 +2,9 @@
 
 Each project contributes its final-master lock from showcase.json. A project
 without a final_master lock is shown as in production. With --showreel, the
-locked masters are joined back to back with hard cuts and per-project gain to
-one loudness target, and a build record is written beside the video.
+locked masters are joined back to back with hard cuts at their source levels,
+and a build record is written beside the video. This requested assembly encodes
+a new video; it is not a byte-identical master transport.
 
 Selected delivery SRT sources accept language and label metadata. Language
 falls back only to an explicit .<language>.srt suffix; unknown language fails.
@@ -17,6 +18,7 @@ import argparse
 import hashlib
 import html
 import json
+import math
 import os
 import re
 import subprocess
@@ -125,22 +127,60 @@ def srt_to_vtt(source: Path, target: Path) -> None:
     target.write_text("WEBVTT\n\n" + re.sub(r"(\d\d:\d\d:\d\d),(\d\d\d)", r"\1.\2", text), encoding="utf-8")
 
 
-def build_showreel(entries: list[dict[str, Any]], out: Path, target_lufs: float, limit: float) -> dict[str, Any]:
+def showreel_has_audio(masters: list[Path]) -> bool:
+    audio_presence = []
+    for path in masters:
+        result = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_streams", "-of", "json", str(path)],
+            capture_output=True, text=True, check=True,
+        )
+        streams = json.loads(result.stdout).get("streams", [])
+        video = [stream for stream in streams if stream.get("codec_type") == "video"]
+        audio = [stream for stream in streams if stream.get("codec_type") == "audio"]
+        if len(video) != 1 or len(audio) > 1:
+            raise ValueError(f"{path}: showreel needs one video and at most one audio stream")
+        audio_presence.append(bool(audio))
+        if not audio:
+            continue
+        try:
+            picture_duration = float(video[0]["duration"])
+            sound_duration = float(audio[0]["duration"])
+            sample_rate = float(audio[0]["sample_rate"])
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError(f"{path}: reliable stream durations and sample rate are required") from error
+        if any(not math.isfinite(value) or value <= 0 for value in (picture_duration, sound_duration, sample_rate)):
+            raise ValueError(f"{path}: invalid stream timing")
+        if abs(picture_duration - sound_duration) > 1 / sample_rate:
+            raise ValueError(f"{path}: independent picture/audio tails need a scoped assembly decision; no automatic padding or trimming")
+    if any(audio_presence) and not all(audio_presence):
+        raise ValueError("mixed silent and audible clips need a scoped assembly decision; no synthetic silence")
+    return all(audio_presence)
+
+
+def build_showreel(entries: list[dict[str, Any]], out: Path) -> dict[str, Any]:
+    if not entries:
+        raise ValueError("showreel needs at least one locked master")
     masters = [entry["master"] for entry in entries]
-    gains = [round(target_lufs - integrated_lufs(path), 2) for path in masters]
+    has_audio = showreel_has_audio(masters)
     inputs: list[str] = []
     parts: list[str] = []
-    labels = ""
-    for index, (path, gain) in enumerate(zip(masters, gains)):
+    video_labels, audio_labels = "", ""
+    for index, path in enumerate(masters):
         inputs += ["-i", str(path)]
         parts.append(f"[{index}:v]setpts=PTS-STARTPTS,format=yuv420p[v{index}]")
-        parts.append(f"[{index}:a]asetpts=PTS-STARTPTS,volume={gain}dB,alimiter=limit={limit}:level=false[a{index}]")
-        labels += f"[v{index}][a{index}]"
-    parts.append(f"{labels}concat=n={len(masters)}:v=1:a=1[v][a]")
+        video_labels += f"[v{index}]"
+        if has_audio:
+            parts.append(f"[{index}:a]asetpts=PTS-STARTPTS[a{index}]")
+            audio_labels += f"[a{index}]"
+    parts.append(f"{video_labels}concat=n={len(masters)}:v=1:a=0[v]")
+    audio_options = ["-an"]
+    if has_audio:
+        parts.append(f"{audio_labels}concat=n={len(masters)}:v=0:a=1[a]")
+        audio_options = ["-map", "[a]", "-c:a", "aac", "-b:a", "192k", "-ar", "48000"]
     subprocess.run(
         ["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(parts),
-         "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-profile:v", "high", "-preset", "slow",
-         "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
+         "-map", "[v]", "-c:v", "libx264", "-profile:v", "high", "-preset", "slow",
+         "-crf", "18", "-pix_fmt", "yuv420p", *audio_options,
          "-movflags", "+faststart", str(out)],
         check=True,
     )
@@ -152,12 +192,11 @@ def build_showreel(entries: list[dict[str, Any]], out: Path, target_lufs: float,
         "output": out.name,
         "output_sha256": sha256(out),
         "duration_s": duration(out),
-        "target_lufs": target_lufs,
-        "limiter_linear": limit,
+        "audio_processing": "source levels; AAC encoding for requested assembly" if has_audio else "no audio",
         "transitions": "hard cuts between complete episodes",
         "inputs": [
-            {"project": entry["slug"], "path": str(entry["master"]), "sha256": entry["master_sha256"], "gain_db": gain, "start_s": start}
-            for entry, gain, start in zip(entries, gains, starts)
+            {"project": entry["slug"], "path": str(entry["master"]), "sha256": entry["master_sha256"], "start_s": start}
+            for entry, start in zip(entries, starts)
         ],
     }
     out.with_suffix(".json").write_text(json.dumps(record, indent=2) + "\n")
@@ -192,8 +231,7 @@ article video,.pending{{width:100%;aspect-ratio:9/16;background:#000;display:blo
 """
 
 
-def build(out_dir: Path, projects: list[Path], title: str, subtitle: str, showreel: bool,
-          target_lufs: float, limit: float) -> dict[str, Any]:
+def build(out_dir: Path, projects: list[Path], title: str, subtitle: str, showreel: bool) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
     out_dir = out_dir.resolve()
     entries = [project_entry(project.resolve()) for project in projects]
@@ -228,7 +266,7 @@ def build(out_dir: Path, projects: list[Path], title: str, subtitle: str, showre
             missing = [entry["slug"] for entry in entries if entry["master"] is None]
             raise ValueError(f"showreel needs a final_master lock for every project; missing: {', '.join(missing)}")
         reel_name = "showreel.mp4"
-        reel_record = build_showreel(locked, out_dir / reel_name, target_lufs, limit)
+        reel_record = build_showreel(locked, out_dir / reel_name)
     (out_dir / "index.html").write_text(page(title, subtitle, cards, reel_name), encoding="utf-8")
     manifest = {
         "title": title,
@@ -250,12 +288,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--title", default="Portfolio")
     parser.add_argument("--subtitle", default="")
     parser.add_argument("--showreel", action="store_true")
-    parser.add_argument("--target-lufs", type=float, default=-16.0)
-    parser.add_argument("--limit", type=float, default=0.79, help="limiter ceiling as linear gain (0.79 is about -2 dBFS)")
     args = parser.parse_args(argv)
     try:
         manifest = build(Path(args.out_dir), [Path(p) for p in args.projects], args.title, args.subtitle,
-                         args.showreel, args.target_lufs, args.limit)
+                         args.showreel)
     except (ValueError, OSError, subprocess.CalledProcessError) as error:
         print(json.dumps({"ok": False, "error": str(error)}), file=sys.stderr)
         return 1

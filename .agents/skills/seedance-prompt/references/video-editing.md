@@ -15,8 +15,8 @@ provider tolerance used to relax a source lock. Verify input compatibility and
 ratio/duration controls for the exact model, operation and destination.
 
 Keep applicable portrait authorization and the workspace video-to-video input
-contract. Outside an explicit audio edit, the caller's authorized execution
-uses a muted source and post audio under that contract, with supported controls.
+contract. Outside an explicit audio edit, native audio is sufficient unchanged.
+Preserve source sound with verified support; no mandatory mute, extraction or mux.
 This leaf does not mute, upload or probe a source. Preserve denied probes and
 words-only scope; unknown support stays unresolved. The caller may compose
 specialized `seedance-object-swap`, `seedance-motion-recast` or `seedance-restyle`

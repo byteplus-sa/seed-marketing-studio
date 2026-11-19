@@ -159,9 +159,10 @@ Pick one route per voice:
    the audio separation tool and keep the background stem. Never ship a
    dialogue-only track over a cut that had music or effects.
 4. Every audio operation is prompt-reviewed, registered and saved locally with
-   hashes. Fix wrong words with a word-scoped patch, never a second full dub.
+   hashes. Report wrong words and choose only an explicitly scoped repair;
+   do not impose word surgery or prohibit a requested full dub.
 5. Place the new audio in the localized Studio project and render a new
-   master; loudness-match to the delivery target.
+   master. Loudness matching is only for an explicitly requested audio change.
 
 **QA:** speech-to-text diff per line against the locked target text; a
 listening pass; soundtrack continuity across every replaced line; video
@@ -183,8 +184,8 @@ motion, camera, cuts and timing.
    account; otherwise offer an invented Virtual Portrait.
 3. One character: `seedance-object-swap` (character class). Whole cast:
    `seedance-motion-recast` with a disposition for every visible subject.
-   Both take the muted, text-free selected take of each shot and add audio in
-   post.
+   Both take the text-free selected source with audio scope preserved.
+   Native audio suffices unchanged; verify support without mandatory muting.
 4. Voice: a new face with the source voice is a mismatch to flag. Re-voice
    through L2 with a voice suited to the new character, or keep the source
    voice only when the user chooses it. When a shot is regenerated with

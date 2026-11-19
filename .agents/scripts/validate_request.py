@@ -24,6 +24,11 @@ LEGACY_NATIVE_DRAFT_MODELS = frozenset({
     "dreamina-seedance-2-5-premium-261001",
 })
 DESTINATION_FIELDS = ("model", "provider", "operation", "transport", "tool_schema_revision")
+INSPECTION_MODEL_ROLES = {
+    "dola-seed-evolving": frozenset({"reference_image", "reference_video"}),
+    "dola-seed-2-1-turbo-260628": frozenset({"reference_image", "reference_video"}),
+    "seed-2-0-lite-260428": frozenset({"reference_audio"}),
+}
 
 
 @dataclass(frozen=True)
@@ -101,6 +106,11 @@ def compute_request_hash(
             }
             for ref in references
         ]
+        for bound, reference in zip(body["references"], references, strict=True):
+            if "inspection_evidence" in reference:
+                bound.pop("approval_evidence")
+                bound["path"] = reference["path"]
+                bound["inspection_evidence"] = reference["inspection_evidence"]
     if execution_profile is not None:
         body["execution_profile"] = execution_profile
     return hashlib.sha256(
@@ -530,8 +540,45 @@ def legacy_approval_findings(root: Path, ref: dict[str, Any]) -> list[Finding]:
     return findings
 
 
+def inspection_reference_findings(
+    root: Path, ref: dict[str, Any], target: Path
+) -> list[Finding]:
+    evidence = ref["inspection_evidence"]
+    try:
+        manifest = contained_path(root, evidence["manifest"])
+        content = manifest.read_bytes()
+        if hashlib.sha256(content).hexdigest() != evidence["manifest_sha256"]:
+            return [
+                Finding(
+                    "inspection.manifest_hash", "Candidate manifest changed",
+                    evidence["manifest"],
+                )
+            ]
+        variants = parse_frontmatter(content.decode("utf-8")).get("variants")
+        if not isinstance(variants, list) or not variants:
+            raise ValueError("Inspection requires an explicit manifest variants list")
+        for variant in variants:
+            if not isinstance(variant, str) or not variant:
+                raise ValueError("Candidate variants must be nonempty relative paths")
+            for relative in (
+                variant,
+                (manifest.parent.relative_to(root) / variant).as_posix(),
+            ):
+                try:
+                    candidate = contained_path(root, relative)
+                except ValueError:
+                    continue
+                if candidate == target:
+                    return []
+        raise ValueError("Inspection input is not a member of the manifest variants")
+    except (OSError, ValueError, TypeError, UnicodeError, YAMLError) as error:
+        return [Finding("inspection.candidate_binding", str(error), ref["path"])]
+
+
 def reference_findings(
-    root: Path, references: list[dict[str, Any]], prompt: str, schema_version: int = 1
+    root: Path, references: list[dict[str, Any]], prompt: str, schema_version: int = 1,
+    *, operation: str | None = None, model: str | None = None,
+    transport: str | None = None,
 ) -> list[Finding]:
     findings: list[Finding] = []
     counters = {"Image": 0, "Video": 0, "Audio": 0}
@@ -555,7 +602,22 @@ def reference_findings(
             findings.append(
                 Finding("references.current_hashes", "Reference content changed", path)
             )
-        if schema_version == 2:
+        if "inspection_evidence" in ref:
+            if (
+                schema_version != 2
+                or operation != "understand"
+                or transport != "ark-mcp"
+                or ref["role"] not in INSPECTION_MODEL_ROLES.get(model or "", frozenset())
+            ):
+                findings.append(
+                    Finding(
+                        "inspection.only_understanding",
+                        "Candidate inputs are limited to verified Ark understanding model/role pairs",
+                        path,
+                    )
+                )
+            findings.extend(inspection_reference_findings(root, ref, target))
+        elif schema_version == 2:
             findings.extend(approval_decision_findings(root, ref, target))
         elif not approval_matches(root, ref, target):
             findings.append(
@@ -747,7 +809,9 @@ def native_draft_findings(request: dict[str, Any], evidence: Any = None) -> list
             "priority",
             "execution_expires_after",
             "safety_identifier",
-        }:
+            "variations",
+            "output_format",
+        } and type(params.get("variations", 1)) is int and params.get("variations", 1) == 1:
             return []
     elif (
         "draft_task_id" not in params
@@ -968,11 +1032,31 @@ def capability_findings(request: dict[str, Any], evidence: Any) -> list[Finding]
                 "model.supported_mode", "Parameter evidence must be a schema mapping"
             )
         ]
+    required_parameters = evidence.get("required_parameters", [])
+    if (
+        "draft_task_id" in request["params"]
+        and evidence.get("schema_version") == 2
+        and evidence["preview"]["kind"] == "native_draft"
+        and evidence["promotion"]["support"] == "verified"
+    ):
+        properties = {
+            **properties,
+            "draft_task_id": properties.get(
+                "draft_task_id", {"type": "string", "minLength": 1}
+            ),
+        }
+        inherited_parameters = {
+            "draft", "duration", "ratio", "generate_audio", "omni_reference_task_type",
+        }
+        required_parameters = [
+            parameter for parameter in required_parameters
+            if parameter not in inherited_parameters
+        ]
     schema = {
         "type": "object",
         "properties": properties,
         "additionalProperties": False,
-        "required": evidence.get("required_parameters", []),
+        "required": required_parameters,
     }
     if evidence.get("parameter_constraints"):
         schema["allOf"] = evidence["parameter_constraints"]
@@ -1097,7 +1181,9 @@ def prepared_evidence_findings(
         findings.append(Finding("request.current_hash", str(error)))
     findings.extend(
         reference_findings(
-            root, request["references"], prompt_text, request["schema_version"]
+            root, request["references"], prompt_text, request["schema_version"],
+            operation=request["operation"], model=request["model"],
+            transport=request["transport"],
         )
     )
     findings.extend(project_mode_findings(root, request))

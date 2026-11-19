@@ -4,7 +4,7 @@ Use this structure by default, trimming or expanding only when the user asks.
 
 1. **Title**
 2. **Production Overview & Capabilities Matrix** — a compact table inventorying every showcase item (`#`, Title, Style/Genre, Format, Primary Technical Demonstration) so the reader sees the whole deliverable set at a glance (see the "Capabilities matrix" subsection below)
-3. **Highlight Video** — the single strongest result first: the assembled compilation of all locked videos (or the single hero clip), embedded as a playable inline video right under the matrix. This replaces the older standalone "Hero outcome" section; when a single hero clip is used it also carries the outcome statement. See the "Highlight video compilation" section below
+3. **Highlight Video** — the strongest existing result first, unchanged, embedded as a playable inline video right under the matrix. A compilation is optional and explicitly requested. See the "Highlight video compilation" section below
 4. **Audience and purpose**
 5. **Executive summary**
 6. **What this workflow demonstrates**
@@ -43,13 +43,11 @@ Columns (in order):
 ### Highlight video compilation
 
 The highlight video is the strongest customer-facing result and should sit
-immediately after the matrix, before any explanation. For multi-scene
-showcases, **assemble the locked videos into one compilation** and embed the
-compilation as the highlight, rather than embedding a single clip.
+immediately after the matrix, before any explanation. Existing videos suffice
+unchanged. Assemble a compilation only when explicitly requested.
 
-**When to use:** the user asks to combine/showcase "all the videos" or "all the
-scenes" in one place, the showcase has 2+ approved scene videos, or the user
-explicitly names a highlight/compilation.
+**When to use:** the user explicitly asks to combine clips into one video.
+Showing all videos in a document does not itself request assembly or audio edits.
 
 **Assembly (local, before any Lark work):**
 
@@ -59,14 +57,12 @@ explicitly names a highlight/compilation.
 2. Determine the play order (the user's requested order, or matrix order when
    unspecified). Confirm any requested custom ordering (e.g. "put video X
    first, then the rest in section order").
-3. Run the `ffmpeg-scene-transitions` skill to crossfade the clips into one
-   film with locked A/V sync. Its template handles the audio-shorter-than-video
-   `apad` case and the mixed-duration cumulative-offset math; when a clip's
-   audio is *longer* than its video (Seedance clips can come back ~30-40 ms
-   longer), trim each audio track to its exact video duration first (see the
-   skill's troubleshooting table).
+3. Use hard cuts at source audio levels by default for requested assembly.
+   Crossfades, fades, padding, trimming or mixing need explicit audio scope.
+   Preserve independent tails and disclose any required transcoding; a
+   mismatch needs a scoped decision rather than silent correction.
 4. Verify the assembled film: ffprobe total duration, video/audio stream
-   durations within ~10 ms of each other, and a full decode with no errors.
+   durations and independent tails against the requested timeline, and a full decode with no errors.
    Optionally produce a boundary contact sheet at each crossfade midpoint.
 5. Name the master `gaming_showcase_compilation_v01.mp4` (or
    `<project>_compilation_vNN.mp4`) in the project root.
