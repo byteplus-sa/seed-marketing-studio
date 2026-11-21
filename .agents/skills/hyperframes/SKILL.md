@@ -94,7 +94,7 @@ If the matched workflow's `SKILL.md` is present under `.agents/skills/<workflow-
 | Motion rules, scene blueprints, transitions, runtime adapters                                                                               | `/hyperframes-animation` |
 | Seek-safe GSAP, CSS, Anime.js, WAAPI, FLIP, paths, masks, SVG, 3D keyframes, or `hyperframes keyframes` diagnostics                         | `/hyperframes-keyframes` |
 | Design specs, concept, palette, typography, narration, beat planning                                                                        | `/hyperframes-creative`  |
-| Images, icons, logos, audio, captions, grades, LUTs, reusable media                                                                         | `/media-use`             |
+| Images, icons, logos, audio, captions, grades or LUTs | [Workspace media routing](../../contracts/routing.md) |
 | Voiceover carve, audio effect chains, automation envelopes, or one chain/fader across several tracks (submix bus)                           | `/hyperframes-audio`     |
 | Init, lint, check, snapshots, compare, batch render, Studio, render, publish, or diagnostics                                                | `/hyperframes-cli`       |
 | Registry blocks and components                                                                                                              | `/hyperframes-registry`  |
@@ -110,20 +110,13 @@ Creator edit phrases are cross-domain requests. Load every skill named in the ma
 | fade, crossfade, track gain/volume, automation, duck/carve, audio effects, or one effect across several tracks     | `/general-video` + `/hyperframes-core` + `/hyperframes-audio`; core places clips, audio mixes placed tracks — including a submix bus over a group of them.                        |
 | picture and sound edits that combine cuts with camera motion or mixing                                             | `/general-video` + `/hyperframes-core` + `/hyperframes-keyframes` when there is visual motion + `/hyperframes-audio` when sound is faded, mixed, ducked, automated, or processed. |
 | lay out a project so it reads well in Studio: caption track, tracks per element kind, sub-compositions, safe zones | `/hyperframes-studio` + `/hyperframes-core`; studio owns the layout conventions, core owns each edit.                                                                             |
-| source or generate media, or preprocess an unsupported mid-source freeze                                           | `/media-use`; sourcing/generation/preprocessing only, never placed-track mixing.                                                                                                  |
+| Source or generate media, or preprocess a mid-source freeze | [Workspace media routing](../../contracts/routing.md) for sourcing, generation and preprocessing. |
 
 Constant `data-playback-rate` is render-safe for picture and pitch-preserved
 sound. Speed ramps are a `rate` lane in `data-automation`.
 For copyable edit contracts, load `/hyperframes-core` → `references/creator-editing-recipes.md`.
 
-Broad feedback about how photographic media looks or behaves also routes to
-`/media-use`, even when the user never says “color grading” or “effect”: fix
-dark/flat/boring footage, stylize a clip, hide a face, or improve a media
-reveal. Read `../media-use/references/media-treatments.md` before editing a
-treatment; it governs how footage is treated, never whether media may be used.
-Do not substitute a generic LUT, CSS filter/overlay, or opacity tween for an
-existing canonical treatment primitive. Keep text/layout/motion-only edits in
-their owning domain.
+Use [workspace media routing](../../contracts/routing.md) for footage treatment, sourcing and generation. Use authorized assets, FFmpeg or HyperFrames for grades and finishing, and the selected Ark route for provider work. Preserve layout and motion ownership.
 During a build with important photographic media, include one grounded
 media-polish scan in the final quality pass; leaving suitable media unchanged is
 a valid result.

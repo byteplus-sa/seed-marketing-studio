@@ -185,7 +185,7 @@ states what is missing.
    capability files and `--write --register` so the prepared operation is in the
    project `task_ids.json` before any submission. Read
    [generation flow](references/generation-flow.md) for the exact calls.
-8. **Draft.** Submit every new 2.5 generation through `ark-mcp` with explicit `resolution: "480p"` and boolean `draft: true` in both review modes, including video-to-video effects. Resolve schema or transport conflicts without dropping the flag. Save the
+8. **Draft.** Submit every new retained native 2.5 generation through `ark-mcp` with explicit `resolution: "480p"` and boolean `draft: true` in both review modes, including video-to-video effects. Resolve schema or transport conflicts without dropping the flag. Save the
    provider task ID as soon as it is acknowledged. Poll the same task; never
    resubmit after a timeout.
 9. **Persist and QA.** Save the video locally, record bytes, SHA-256 and actual

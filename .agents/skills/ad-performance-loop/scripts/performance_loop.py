@@ -299,23 +299,25 @@ def ratio(numerator: float | None, denominator: float | None) -> float | None:
     return numerator / denominator
 
 
-def kpi_values(totals: dict[str, float | None]) -> dict[str, float | None]:
-    return {
-        name: ratio(totals[numerator], totals[denominator])
-        for name, (numerator, denominator, _) in KPIS.items()
-    }
-
-
-def aggregate(records: list[dict[str, Any]]) -> dict[str, float | None]:
+def aggregate(records: list[dict[str, Any]]) -> dict[str, Any]:
     totals = {field: total(records, field) for field in SUMMED}
     totals["frequency"] = frequency(records, totals)
-    return {**totals, **kpi_values(totals)}
+    coverage = {}
+    rates = {}
+    for name, (numerator, denominator, _) in KPIS.items():
+        covered = sum(
+            record.get(numerator) is not None and record.get(denominator) is not None
+            for record in records
+        )
+        coverage[name] = covered
+        rates[name] = ratio(totals[numerator], totals[denominator]) if covered == len(records) else None
+    return {**totals, **rates, "coverage": coverage}
 
 
 def frequency(
     records: list[dict[str, Any]], totals: dict[str, float | None]
 ) -> float | None:
-    if records and all(record.get("reach") for record in records):
+    if records and all(record.get("reach") is not None and record.get("impressions") is not None for record in records):
         return ratio(totals["impressions"], totals["reach"])
     if not records or any(
         record.get("frequency") is None or record.get("impressions") is None
@@ -345,6 +347,8 @@ def ineligible_reason(
     numerator, denominator, _ = KPIS[kpi]
     if metrics[numerator] is None or metrics[denominator] is None:
         return f"missing {numerator if metrics[numerator] is None else denominator}"
+    if metrics["coverage"][kpi] < metrics["rows"]:
+        return f"incomplete {kpi} coverage: {metrics['coverage'][kpi]} of {metrics['rows']} rows"
     if not metrics[denominator]:
         return f"zero {denominator}"
     if metrics["impressions"] is None and min_impressions > 0:
@@ -374,13 +378,12 @@ def rank(
     variants = metrics_document.get("variants") or {}
     entities: list[dict[str, Any]] = []
     for (key, matched), records in group(metrics_document["records"]).items():
-        metrics = aggregate(records)
+        metrics = {"rows": len(records), **aggregate(records)}
         entities.append(
             {
                 "key": key,
                 "matched": matched,
                 "group": comparable_group(key, matched, variants, across_groups),
-                "rows": len(records),
                 **metrics,
                 "reason": ineligible_reason(metrics, kpi, min_impressions),
             }
@@ -453,17 +456,13 @@ def fatigue_status(series: list[dict[str, Any]]) -> tuple[str, str]:
     previous, latest = usable[-2], usable[-1]
     if previous["frequency"] is None or latest["frequency"] is None:
         return "insufficient_data", "no reach or frequency column for both windows"
-    falling = [
-        name
-        for name in ("ctr", "hook_rate")
-        if previous[name] is not None
-        and latest[name] is not None
-        and latest[name] < previous[name]
-    ]
+    comparable = [name for name in ("ctr", "hook_rate")
+                  if previous[name] is not None and latest[name] is not None]
+    if not comparable:
+        return "insufficient_data", "no shared CTR or hook rate in the latest two windows"
+    falling = [name for name in comparable if latest[name] < previous[name]]
     if latest["frequency"] > previous["frequency"] and falling:
         return "fatigued", f"frequency rose while {' and '.join(falling)} fell"
-    if previous["ctr"] is None and previous["hook_rate"] is None:
-        return "insufficient_data", "no clicks or 3-second views to compare"
     return "stable", "no rising frequency with a falling rate in the latest window"
 
 

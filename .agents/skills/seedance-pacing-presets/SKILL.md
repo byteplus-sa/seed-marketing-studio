@@ -248,10 +248,7 @@ list before generation.
   stock footage in workspace reviews; the shot-design skill's optional
   cinematic sequence pattern can repair demonstrated overload. It is not a
   fixed clip-length or shot-count quota and does not override source locks.
-- **Per-scene natural duration 4-30s — do not pad.** Set `duration` to the
-  length the scene actually needs (7s for a single beat, 12s for a short
-  dialogue exchange, 20s for a multi-stage action). 30s is the ceiling, not the
-  target.
+- **Use the scene’s natural duration.** Resolve supported duration against the selected exact operation. Preserve source timing and avoid padding a shorter beat.
 - **Dialogue scenes: align pacing to audio.** When dialogue exists with
   `generate_audio: true`, the pacing timestamps should align to the spoken
   beats. For lip-sync-critical scenes, optionally compose with
@@ -274,7 +271,7 @@ Before a pacing block is submitted as part of a Seedance 2.5 prompt, verify:
 4. No frame-accurate or impossible-frequency promises are made.
 5. Dialogue scenes align pacing to spoken beats; lip-sync-critical scenes pair
    with `seed-audio-prompt`.
-6. `duration` is within 4-30s and not padded to fill 30s.
+6. The requested duration fits the verified operation and the intended action.
 7. Any cut list uses consecutive, non-overlapping time ranges with ordered shot
    content.
 8. Generation parameters (duration, resolution, aspect ratio) are absent from

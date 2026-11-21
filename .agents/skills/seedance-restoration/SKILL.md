@@ -31,7 +31,8 @@ Use this skill when the user wants to:
 Do **not** use for deterministic VOD AI enhancement (`vod_enhance_video`) or
 FFmpeg denoisers — this skill is the Seedance generative-edit route. For the
 general edit grammar and the full six-part formula, compose with
-`seedance-prompt-25`; for the submission lifecycle, use the `ark-mcp` tools.
+`seedance-prompt`; preserve the selected exact model. For the submission
+lifecycle, use the `ark-mcp` tools.
 
 > **Known ceiling.** Seedance re-renders the picture; aggressive cleanup trades
 > fine-detail fidelity for smoothness, and there is a real limit to how far a
@@ -109,7 +110,7 @@ It is not delivery and never changes the full source target. Record its span
 and hashes separately; a passing probe cannot replace the full-duration native
 Draft or approve untested opening/ending content.
 
-Every new Seedance 2.5 generation uses explicit `resolution: "480p"` and boolean
+Every new retained native 2.5 generation uses explicit `resolution: "480p"` and boolean
 `draft: true` in every review mode, including an approved probe. Missing native
 Draft controls stop the package until capability or transport conflicts are
 resolved; never drop `draft` or substitute plain 480p. Review and select the
@@ -142,7 +143,7 @@ full-duration native Draft before supported promotion by `draft_task_id`.
    explicit and dominant; never bury it in a mixed list.
 6. **Package for review.** Return the prompt, parameters and ladder rung; the
    caller runs prompt review against the Seedance 2.5 edit checklist before
-   submission. Every new 2.5 generation uses explicit `resolution: "480p"`
+   submission. Every new retained native 2.5 generation uses explicit `resolution: "480p"`
    and boolean `draft: true` in both modes; resolve schema or transport
    conflicts without dropping the flag. Start with the full-span native Draft;
    an additional defect-window probe is optional and needs explicit scope

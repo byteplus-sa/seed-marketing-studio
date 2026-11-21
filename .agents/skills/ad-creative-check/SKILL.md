@@ -54,7 +54,7 @@ re-hashes the cut named in `checks.json` and refuses a checklist whose
 | --- | --- | --- | --- |
 | `product_reveal` | | The product is identifiable (shape, pack and colour match the product card) at or before `reveal_time_s` | first timestamp and frame showing it |
 | `logo_legible` | | The logo matches the brand kit file: correct proportions, colours and orientation, readable at phone size, not warped, cropped or mirrored | timestamps and frames for every logo appearance |
-| `opening_change` | | A visible motion, cut or strong contrast change happens within the first `opening_window_s` (default 2.0 s) | timestamp and the frames either side of it |
+| `opening_change` | | When the brief calls for change, visible motion, a cut or a strong contrast change happens within the first `opening_window_s` (default 2.0 s) | timestamp and the frames either side of it |
 | `cta_safe_zone` | `ad.safe_zone` | CTA, offer, logo and required lines sit inside the placement safe zone | frames with the zone drawn or measured |
 | `sound_off_readable` | `ad.safe_zone` | The offer and CTA are understandable from on-screen copy alone, at phone size, for long enough to read | frames and on-screen durations |
 | `claims_supported` | `ad.claims_supported` | Every on-screen and spoken claim maps to a `supported` (or current `perishable`) fact; comparatives show their conditions | claim list with timestamps and fact IDs |
@@ -65,7 +65,7 @@ re-hashes the cut named in `checks.json` and refuses a checklist whose
 
 Status values: `pass`, `fail`, `needs_human` (the evidence is ambiguous or a
 required input is missing) and `not_applicable` (with the reason in
-`evidence`; not allowed for `product_reveal` or `opening_change`).
+`evidence`; unavailable for `product_reveal`). An intentional opening hold may use `not_applicable` with the brief rationale and timestamped opening frame evidence (including a frame in the opening window).
 `loudness_target` is `not_applicable` only when no target was requested.
 The detailed criteria and question wording for each check
 are in [check procedure](references/check-procedure.md); load it before the

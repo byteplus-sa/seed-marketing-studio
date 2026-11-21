@@ -158,8 +158,7 @@ class VariantMatrixTests(unittest.TestCase):
         self.project = self.root / "project"
         decision = self.project / HERO_DECISION
         decision.parent.mkdir(parents=True)
-        decision.write_text('{"decision": "approved"}')
-        (self.project / "project.md").write_text("---\nreview_mode: strict\n---\n")
+        self.approve_hero_for_brief("---\nreview_mode: strict\n---\n")
         take = self.project / HERO_TAKE_FILE
         take.parent.mkdir(parents=True)
         take.write_bytes(HERO_BYTES)
@@ -187,8 +186,45 @@ class VariantMatrixTests(unittest.TestCase):
     def project_files(self):
         return sorted(path for path in self.project.rglob("*"))
 
+    def approve_hero_for_brief(self, text):
+        (self.project / "project.md").write_text(text)
+        review = {
+            "schema_version": 1, "artifact_path": HERO_TAKE_FILE, "artifact_sha256": HERO_HASH,
+            "status": "pass", "inspection_method": "playback", "coverage": "Entire take",
+            "checks": [{"criterion": "product", "status": "pass", "evidence": "Product visible"}],
+            "observations": ["Product visible throughout"], "limitations": [], "recommendation": "select",
+        }
+        review_path = self.project / "decisions/hero-review.json"
+        review_path.write_text(json.dumps(review))
+        decision = {
+            "schema_version": 1, "decision_id": Path(HERO_DECISION).stem,
+            "decision_type": "variant_selection", "asset_id": "s01_sh010",
+            "selected_variant": Path(HERO_TAKE_FILE).name, "selected_sha256": HERO_HASH,
+            "subject_path": HERO_TAKE_FILE, "actor": "user", "result": "approved",
+            "approval_mode": "ask_for_approval" if "ask_for_approval" in text else "approve_for_me",
+            "project_sha256": hashlib.sha256(text.encode()).hexdigest(),
+            "review_path": "decisions/hero-review.json",
+            "review_sha256": hashlib.sha256(review_path.read_bytes()).hexdigest(),
+            "reason": "Product and opening match", "decided_at": "2026-11-01T00:00:00Z",
+            "upstream_sha256": {}, "authorization": {"source": "local_ui", "evidence": "Selected in UI"},
+        }
+        (self.project / HERO_DECISION).write_text(json.dumps(decision))
+
+    def test_register_requires_current_decision_for_this_hero(self):
+        path = self.project / HERO_DECISION
+        approved = json.loads(path.read_text())
+        for changes in ({"result": "rejected"}, {"asset_id": "other"}, {"selected_variant": "other.mp4"},
+                        {"project_sha256": "a" * 64}, {"selected_sha256": "a" * 64},
+                        {"approval_mode": "ask_for_approval"}):
+            with self.subTest(changes=changes):
+                path.write_text(json.dumps({**approved, **changes}))
+                code, result = self.register(base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS)
+                self.assertNotEqual(code, 0, result)
+        path.write_text("unreadable")
+        self.assertNotEqual(self.register(base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS)[0], 0)
+
     def test_audio_only_and_mixed_commands_reuse_exact_operation_bindings_offline(self):
-        (self.project / "project.md").write_text("---\nreview_mode: default\n---\n")
+        self.approve_hero_for_brief("---\nreview_mode: default\n---\n")
         (self.project / "studio").mkdir()
         audio = profile()
         audio.update(
@@ -282,7 +318,7 @@ class VariantMatrixTests(unittest.TestCase):
         (fixture.root / "caps.json").write_text(json.dumps(evidence))
         matrix = base_matrix(axes={"hook": ["hook-callout"]})
         matrix["hero"].update(
-            take_file="cup_t01.mp4", decision_ref="decisions/select-draft.json",
+            shot_id=decision["asset_id"], take_file="cup_t01.mp4", decision_ref="decisions/select-draft.json",
             sha256=hashlib.sha256((fixture.root / "cup_t01.mp4").read_bytes()).hexdigest(),
         )
         path = self.write(matrix)
@@ -370,7 +406,7 @@ class VariantMatrixTests(unittest.TestCase):
         matrix = base_matrix(axes={"hook": ["hook-callout"]})
         decision = json.loads((fixture.root / "decisions/select-draft.json").read_text())
         matrix["hero"].update(
-            take_file="cup_t01.mp4", decision_ref="decisions/select-draft.json",
+            shot_id=decision["asset_id"], take_file="cup_t01.mp4", decision_ref="decisions/select-draft.json",
             sha256=decision["selected_sha256"],
         )
         matrix_path = fixture.root / "matrix.json"
@@ -499,7 +535,7 @@ class VariantMatrixTests(unittest.TestCase):
         matrix = base_matrix(axes={"hook": ["hook-callout"]})
         decision = json.loads((fixture.root / "decisions/select-preview.json").read_text())
         matrix["hero"].update(
-            take_file="cup.mp4", decision_ref="decisions/select-preview.json",
+            shot_id=decision["asset_id"], take_file="cup.mp4", decision_ref="decisions/select-preview.json",
             sha256=decision["selected_sha256"],
         )
         matrix_path = fixture.root / "matrix.json"
@@ -605,7 +641,7 @@ class VariantMatrixTests(unittest.TestCase):
         return {finding["rule_id"] for finding in result["findings"]}
 
     def test_default_mode_omits_blanket_craft_rules_but_keeps_draft_first(self):
-        (self.project / "project.md").write_text("---\ntitle: Fixture\n---\n")
+        self.approve_hero_for_brief("---\ntitle: Fixture\n---\n")
         code, result = self.run_cli(
             "register",
             self.write(base_matrix()),
@@ -638,7 +674,7 @@ class VariantMatrixTests(unittest.TestCase):
                 )
 
     def test_default_mode_can_draft_before_delivery_target_is_known(self):
-        (self.project / "project.md").write_text("# Legacy brief\n")
+        self.approve_hero_for_brief("# Legacy brief\n")
         code, result = self.run_cli(
             "register",
             self.write(base_matrix()),
@@ -652,7 +688,7 @@ class VariantMatrixTests(unittest.TestCase):
 
     def test_seedance_native_draft_flags_reach_every_emitted_video_command(self):
         for mode in ("default", "strict"):
-            (self.project / "project.md").write_text(f"---\nreview_mode: {mode}\n---\n")
+            self.approve_hero_for_brief(f"---\nreview_mode: {mode}\n---\n")
             for model in ("seedance-2.5", "dreamina-seedance-2-5-premium-261001"):
                 flags = [
                     model if flag == "video-model-a" else flag for flag in VIDEO_FLAGS
@@ -686,7 +722,7 @@ class VariantMatrixTests(unittest.TestCase):
             self.assertNotIn("operations", result)
 
     def test_native_matrix_hash_command_prepares_boolean_draft_without_provider(self):
-        (self.project / "project.md").write_text("---\nreview_mode: default\n---\n")
+        self.approve_hero_for_brief("---\nreview_mode: default\n---\n")
         flags = [
             "seedance-2-5" if flag == "video-model-a" else flag for flag in VIDEO_FLAGS
         ]
@@ -744,7 +780,7 @@ class VariantMatrixTests(unittest.TestCase):
         self.assertTrue({"motion-recast", "object-swap", "language-dub"} <= routes)
 
     def test_invalid_review_mode_refuses_variant_commands(self):
-        (self.project / "project.md").write_text("---\nreview_mode: quick\n---\n")
+        self.approve_hero_for_brief("---\nreview_mode: quick\n---\n")
         code, result = self.run_cli(
             "register",
             self.write(base_matrix()),
@@ -867,7 +903,7 @@ class VariantMatrixTests(unittest.TestCase):
 
     def test_no_budget_or_prices_allows_plan_cost_and_registration(self):
         for mode in ("default", "strict"):
-            (self.project / "project.md").write_text(f"---\nreview_mode: {mode}\n---\n")
+            self.approve_hero_for_brief(f"---\nreview_mode: {mode}\n---\n")
             for command in ("plan", "cost", "register"):
                 with self.subTest(mode=mode, command=command):
                     flags = (
@@ -1313,7 +1349,7 @@ class VariantMatrixTests(unittest.TestCase):
     def test_character_hook_requires_acting_in_both_modes_even_with_static_camera(self):
         for mode in ("default", "strict"):
             for approval in ("approve_for_me", "ask_for_approval"):
-                (self.project / "project.md").write_text(
+                self.approve_hero_for_brief(
                     f"---\nreview_mode: {mode}\napproval_mode: {approval}\n---\n"
                 )
                 flags = ["seedance-2.5" if flag == "video-model-a" else flag for flag in VIDEO_FLAGS]
@@ -1340,7 +1376,7 @@ class VariantMatrixTests(unittest.TestCase):
 
     def test_non_performance_hook_omits_acting_without_omitting_campaign_gates(self):
         for mode in ("default", "strict"):
-            (self.project / "project.md").write_text(f"---\nreview_mode: {mode}\n---\n")
+            self.approve_hero_for_brief(f"---\nreview_mode: {mode}\n---\n")
             code, result = self.register(
                 base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS,
                 "--hook-performance", "non-performance",

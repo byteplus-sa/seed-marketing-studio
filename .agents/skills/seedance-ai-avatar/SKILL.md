@@ -55,7 +55,7 @@ video.
    workspace production policy. A sub-agent reports job and provider task IDs
    to the main agent, which owns `task_ids.json`; after an MCP restart resume
    the provider task ID rather than resubmitting.
-7. Seedream and Seedance prompts pass `prompt-review` before submission.
+7. Run inline preflight in default mode or full prompt review in strict mode before submission.
 8. Outputs are an AI likeness of a real person. Keep them private unless the
    presenter signs off, and use the platform's AI-content disclosure when
    posted. Captions and badges are added in the edit, never generated.
@@ -68,9 +68,11 @@ projects/<slug>/elements/<id>/
   refs/ref_voice-timbre.wav              8–15s isolated voice (+ ref_voice-timbre-long.wav)
   prompt_char_<id>_turnaround_v01.md
   char_<id>_turnaround_vNN.png           generated sheets; one selected
-  character.md                           descriptor, outfit, scene-only props, voice, selected_variant
+  element.md                           descriptor, outfit, scene-only props, voice, selected_variant
   PROVENANCE.md                          consent, likeness-policy approval, sources, hashes, decisions
 ```
+
+For new Studio characters, `element.md` owns the selected variant. Preserve existing legacy character sidecars in place.
 
 ## Stages
 
@@ -84,8 +86,7 @@ the presenter out of split-screen frames for a clean wardrobe and setting ref.
 Write the prompt with `seedream-character-sheet` (I2I): headshot for face,
 reference crop for wardrobe, mid shot for build. Put the on-camera outfit on
 the sheet, for example a knit crew-neck, chain and watch. Keep scene-only props
-such as a lav mic off it. Generate 3 seeds, show them next to the real
-headshot, and let the user pick. Record `selected_variant` in `character.md`.
+such as a lav mic off it. Compare the requested count of candidates against the headshot (one by default, three in strict mode). Follow approval mode for selection and retain the presenter’s explicit consent. Record `selected_variant` in `element.md`.
 
 ### 3. Voice clip
 Separate the presenter's voice from their own video and cut an 8–15s clean
@@ -105,7 +106,7 @@ including pauses, onset and tail, within the supported clip length. About
 1 s for onset and at least 0.4 s of tail initially, then check actual delivery.
 Preserve the requested language and exact script; propose retiming or splitting
 before an authorized rewrite. Without delivery evidence, timing is provisional.
-Run prompt-review, save the request JSON,
+Apply the selected review mode, save the request JSON,
 submit once, and poll the provider task.
 
 ### 5. Take QA

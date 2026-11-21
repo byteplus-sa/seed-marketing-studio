@@ -11,7 +11,7 @@ detail. All parameters below are tool/API values, never prompt text.
 | Parameter | Value and notes |
 |---|---|
 | `duration` | Integer seconds, 4–30; `-1` for auto. Integer only — no sub-second values. |
-| `resolution` | Every new Seedance 2.5 generation uses explicit `resolution: "480p"` and boolean `draft: true` in both modes, with no skip-draft exception. Resolve schema or transport conflicts without dropping the flag; promote only selected native Drafts. For a 4K request follow the 4K routing in [routing.md](../../../contracts/routing.md). |
+| `resolution` | Every new retained native 2.5 generation uses explicit `resolution: "480p"` and boolean `draft: true` in both modes, with no skip-draft exception. Resolve schema or transport conflicts without dropping the flag; promote only selected native Drafts. For a 4K request follow the 4K routing in [routing.md](../../../contracts/routing.md). |
 | `ratio` | `9:16` default for UGC unless the request says otherwise. Locked to the first image on first/last-frame tasks and auto-derived from the source on edit tasks — never set it there. |
 | Locked camera | Locked-off selfie/posing and spectacle demos state the lock in the prompt and record `format_static_by_design`; the Seedance 2.5 tool exposes no `camera_fixed` field. |
 | `generate_audio` | Enables native audio when supported; sufficient unchanged. Check actual sound against the brief. Only explicitly requested silence or post-owned sound proposes `false`; visual edits never require muting or extraction. |

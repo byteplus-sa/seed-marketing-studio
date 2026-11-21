@@ -11,67 +11,24 @@ mode selection and caller responsibilities.
 Persist the exact prompt snapshot and prepared operation in `task_ids.json`
 before submission. Bind the completed review to its request hash, model, edit
 mode, and change contract. Submit through the selected tool only after preflight.
-The sample below is for the supported legacy `seedance_create_task` branch;
-use the 2.5 branch parameters below for the default model.
-
-**MCP request structure** (submit through `ark_job_submit`, the default path):
+Resolve the selected exact operation first. The example shows the retained native 2.5 edit route. Supply only accepted reference roles and replace placeholders with the selected model and approved inputs.
 
 ```json
 {
   "input": {
     "tool_name": "seedance_create_task",
-    "arguments": {
-      "input": {
-        "prompt": "<full VFX prompt text from Step 1>",
-        "videos": [
-          {
-            "kind": "url",
-            "url": "<presigned source video URL>",
-            "role": "reference_video"
-          }
-        ],
-        "images": [
-          {
-            "kind": "base64",
-            "data": "<base64-encoded character/location sheet>",
-            "mime_type": "image/png",
-            "role": "reference_image"
-          }
-        ],
-        "model": "dreamina-seedance-2-0-260128",
-        "omni_reference_task_type": "edit_video",
-        "resolution": "1080p",
-        "ratio": "16:9",
-        "duration": 5,
-        "generate_audio": true,
-        "watermark": false,
-        "return_last_frame": true,
-        "execution_expires_after": 3600,
-        "priority": 0,
-        "safety_identifier": "<project>-<scene>-<shot>"
-      }
-    }
+    "arguments": {"input": {
+      "model": "<selected exact model>",
+      "prompt": "<approved prompt>",
+      "videos": [{"kind": "url", "url": "<authorized source>", "role": "reference_video"}],
+      "omni_reference_task_type": "edit", "resolution": "480p", "draft": true
+    }}
   }
 }
 ```
 
-Key parameters for VFX:
+Use the [execution profile](../../../contracts/seedance-execution-profiles.md) for model-specific resolution, duration and edit controls. Keep source ratio and duration locked when required. Ordinary output resolution, native Draft and promotion have separate capability evidence.
 
-**Seedance 2.5 (default for full-duration edits):** use `seedance_2_5_create_task`
-instead, with `"omni_reference_task_type": "edit"` (2.5 accepts
-`auto|reference|edit|extend`; `edit_video` is 2.0-only and will be rejected).
-Omit `ratio` and `duration` — they auto-lock to the source. 2.5 caps at 1080p.
-2.0 (`edit_video`) caps output at ~5s, so use 2.5 for any edit longer than ~5s.
-- **`videos[].role = "reference_video"`** — the source clip to edit. This is
-  what makes it a video-to-video (VFX) task rather than text-to-video.
-- **`images[].role = "reference_image"`** — element references (character
-  sheets, location sheets, prop sheets) for identity consistency.
-- **Resolution** — every new Seedance 2.5 generation sets explicit
-  `resolution: "480p"` and boolean `draft: true` in both modes, with no
-  skip-draft exception. Resolve schema or transport conflicts without dropping
-  the flag; promote only selected native Drafts. Final requests require
-  their own registration and request review, and final outputs require fresh QA.
-  Evaluate face/detail fidelity in output QA; resolution is not a guarantee.
 - **Audio controls** follow the brief and verified model/operation support.
   Native audio is sufficient unchanged for VFX, Object Swap, Motion Transfer
   and Restyle. Do not require silent input or a post soundtrack, per the
@@ -81,45 +38,20 @@ Omit `ratio` and `duration` — they auto-lock to the source. 2.5 caps at 1080p.
 - **`safety_identifier`** — set to `<project>-<scene>-<shot>` for
   traceability.
 
-`ark_job_submit` returns an Ark job ID; the finished job result carries the
-provider task ID (`cgt-...`). Store the task, shot, take, version, model,
-status, intended asset path, and submission time in
-`projects/<project>/task_ids.json` as soon as the provider ID exists and before
-polling, and keep the Ark job ID beside it (`extensions.ark_job_id`). A local timeout never
-authorizes a duplicate submission; resume the recorded task until terminal.
+Save the Ark job ID from `ark_job_submit` immediately. Poll that job with `ark_job_get`. A completed create result can contain several `tasks[]` entries; store each accepted provider task ID with its registered operation before polling, and record variation-specific errors or ambiguous acceptance separately.
 
 ## Step 4 — Poll for completion
 
-Poll `seedance_get_task` in the foreground with `persist_output` off, waiting
-the `recommended_poll_after_ms` from creation between calls:
+Poll known provider IDs together in the foreground, respecting the returned polling interval:
 
 ```json
-{"task_id": "<task_id from Step 3>", "persist_output": false}
+{"input":{"task_ids":["<provider task ID>"],"persist_output":false}}
 ```
 
-Once the status is terminal and succeeded, persist the output once through a
-background job:
+Call `gen_task_get` with that input. Read each task’s status and errors by ID. Once terminal, persist successful outputs by submitting this job and retrieving its result by job ID:
 
 ```json
-{
-  "input": {
-    "tool_name": "seedance_get_task",
-    "arguments": {"input": {"task_id": "<task_id from Step 3>", "persist_output": true}}
-  }
-}
+{"input":{"tool_name":"gen_task_get","arguments":{"input":{"task_ids":["<successful provider task ID>"],"persist_output":true}}}}
 ```
 
-Task states transition through: `queued` → `running` → `succeeded` / `failed`
-/ `cancelled` / `expired`.
-
-Poll until the status is terminal:
-- **`succeeded`** — proceed to Step 5. The response includes `artifacts` (the
-  generated video, and optionally the last frame image if
-  `return_last_frame=true`), `usage` (token counts, cost), and `settings`.
-- **`failed`** — check the `error` field. Common causes: content safety
-  rejection, invalid reference format, prompt too long. Report the error and
-  retry guidance to the user.
-- **`cancelled`** — the task was cancelled (manually or by timeout). Report
-  and ask the user whether to resubmit.
-- **`expired`** — the provider confirms terminal expiration. Record the evidence;
-  an authorized new take requires a new prepared operation and reviewed request.
+Record per-task outputs and inspect the returned artifacts. On a timeout, recover the known job or task. Retry only retrieval or persistence for an already generated output. A failed, cancelled or expired task requires a separately authorized new operation to generate again.

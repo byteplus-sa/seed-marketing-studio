@@ -264,6 +264,6 @@ Preserve the source sound intent, including the set-down.
 
 Submit with `omni_reference_task_type: edit`, `@Video 1` first and `@Image 1`
 second, verified audio controls, explicit `resolution: "480p"` and boolean
-`draft: true` for every new 2.5 test. Check actual sound and set-down sync.
+`draft: true` for every new retained native 2.5 test. Check actual sound and set-down sync.
 An exact source-audio requirement needs verified preservation or a scoped
 stream-copy attachment, not mandatory extraction or muxing.

@@ -210,7 +210,7 @@ from ASR, stills, a provider response or a prompt alone.
 
 Current `review_mode` and `approval_mode` govern downstream production.
 Prompt-only work generates nothing and adds no review or approval policy.
-Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
+Every new retained native 2.5 generation requires `resolution: "480p"` and boolean
 `draft: true` in both review modes. Promote only selected native Drafts.
 Surface source-count conflicts before generation; never bypass drafts or
 silently expand scope. Rights, generation scope and disclosure remain separate.

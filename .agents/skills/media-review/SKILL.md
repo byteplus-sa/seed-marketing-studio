@@ -63,16 +63,23 @@ from PIL import Image, ImageDraw
 
 def contact_sheet(images, labels, out, cols=3, cell_pad=10, header_h=60, bg=(255,255,255)):
     """images: list of PIL Images (assumed same size), labels: list of str."""
+    if not images or cols <= 0 or len(images) != len(labels):
+        raise ValueError("Supply at least one image, a label per image, and positive columns")
     W, H = images[0].size
+    measure = ImageDraw.Draw(images[0])
+    boxes = [measure.multiline_textbbox((0, 0), label) for label in labels]
+    cell_w = max(W, *(box[2] - min(0, box[0]) for box in boxes))
+    header_h = max(header_h, *(box[3] - min(0, box[1]) for box in boxes))
     rows = (len(images) + cols - 1) // cols
-    sheet = Image.new('RGB', (cols*W + (cols+1)*cell_pad, rows*H + (rows+1)*cell_pad + header_h), bg)
-    d = ImageDraw.Draw(sheet)
+    sheet = Image.new('RGB', (cols*cell_w + (cols+1)*cell_pad, rows*(H+header_h) + (rows+1)*cell_pad), bg)
+    draw = ImageDraw.Draw(sheet)
     for i, (im, lab) in enumerate(zip(images, labels)):
         r, c = divmod(i, cols)
-        x = cell_pad + c*(W+cell_pad)
-        y = header_h + cell_pad + r*(H+cell_pad)
+        x = cell_pad + c*(cell_w+cell_pad)
+        label_y = cell_pad + r*(header_h+H+cell_pad)
+        y = label_y + header_h
         sheet.paste(im, (x, y))
-        d.text((x, 12), lab, fill='black')
+        draw.multiline_text((x, label_y), lab, fill='black')
     return sheet
 
 def sheet_from_paths(paths, labels, out):

@@ -105,10 +105,18 @@ overlay a label, then two `hstack` rows joined by `vstack`. This FFmpeg build's
 (see [Adding labels](#adding-labels-before--after)).
 
 ```bash
-# label PNGs (PIL): /tmp/label_0.png .. label_5.png
+(
+set -eu
+: "${LABEL_FONT:?Set LABEL_FONT to a readable TrueType font}"
+test -r "$LABEL_FONT"
+LABEL_DIR=$(mktemp -d)
+export LABEL_DIR LABEL_FONT
+trap 'rm -rf "$LABEL_DIR"' EXIT
 python3 - <<'EOF'
+import os
+from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
-font = ImageFont.truetype('/System/Library/Fonts/Supplemental/Arial.ttf', 30)
+font = ImageFont.truetype(os.environ["LABEL_FONT"], 30)
 labels = ['50mm - base','24mm - wide','135mm - telephoto','fisheye','anamorphic','8mm - ultrawide']
 for i, text in enumerate(labels):
     d = ImageDraw.Draw(Image.new('RGBA',(10,10)))
@@ -118,13 +126,13 @@ for i, text in enumerate(labels):
     dr = ImageDraw.Draw(im)
     dr.rounded_rectangle([0,0,im.width-1,im.height-1], radius=8, fill=(0,0,0,150))
     dr.text((pad,pad), text, font=font, fill=(255,255,255,255))
-    im.save(f'/tmp/label_{i}.png')
+    im.save(Path(os.environ["LABEL_DIR"]) / f"label_{i}.png")
 EOF
 
 ffmpeg -y -v error \
   -i a.mp4 -i b.mp4 -i c.mp4 -i d.mp4 -i e.mp4 -i f.mp4 \
-  -i /tmp/label_0.png -i /tmp/label_1.png -i /tmp/label_2.png \
-  -i /tmp/label_3.png -i /tmp/label_4.png -i /tmp/label_5.png \
+  -i "$LABEL_DIR/label_0.png" -i "$LABEL_DIR/label_1.png" -i "$LABEL_DIR/label_2.png" \
+  -i "$LABEL_DIR/label_3.png" -i "$LABEL_DIR/label_4.png" -i "$LABEL_DIR/label_5.png" \
   -filter_complex "\
 [0:v]scale=960:540,setsar=1[v0];\
 [1:v]scale=960:540,setsar=1[v1];\
@@ -143,6 +151,7 @@ ffmpeg -y -v error \
 [r1][r2]vstack=inputs=2[v]" \
   -map "[v]" -map 0:a -c:v libx264 -crf 20 -preset medium -c:a aac -b:a 192k -movflags +faststart \
   grid.mp4
+)
 ```
 
 Notes:

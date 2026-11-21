@@ -1,20 +1,7 @@
 ---
 name: seedance-motion-recast
 description: >-
-  Write Seedance 2.5 Motion Transfer (recast) prompts that keep a source clip's
-  body motion, pose sequence, screen positions, camera path, framing changes,
-  cuts and timing while rebuilding cast, wardrobe, product, location and style
-  from locked reference images. Covers the motion-only authority split, an
-  explicit mapping or disposition for every visible source subject, bleed and
-  extra-people guards, Virtual Portrait asset:// identity references,
-  source-audio preservation, named look presets, and a 480p
-  key-beat probe ladder. Consumes a subject_map.json when available or
-  inspects the source itself. Use to recast performers, localize a take for
-  another market, or rebuild its world around the same performance. Not for
-  replacing one element while preserving source pixels (seedance-object-swap),
-  redrawing the same cast in a new medium (seedance-restyle), other edits
-  (seedance-vfx-prompt), new T2V/I2V shots, or task submission; the caller
-  owns the generation lifecycle.
+  Write Seedance motion-transfer prompts to rebuild cast and world around the motion of an existing clip. Use for performance-preserving recast. Use object swap for one changed element or restyle for the same cast in another medium.
 ---
 
 # Seedance Motion Recast
@@ -108,7 +95,7 @@ It is not delivery and never changes the full source target. Record its span
 and hashes separately; a passing probe cannot replace the full-duration native
 Draft or approve untested opening/ending content.
 
-Every new Seedance 2.5 generation uses explicit `resolution: "480p"` and boolean
+Every new retained native 2.5 generation uses explicit `resolution: "480p"` and boolean
 `draft: true` in every review mode, including an approved probe. Missing native
 Draft controls stop the package until capability or transport conflicts are
 resolved; never drop `draft` or substitute plain 480p. Review and select the
@@ -213,7 +200,8 @@ length as one natural-duration recast or assemble separate shots.
 Load only the references the request needs. A stylized medium such as
 claymation or toy miniature may also use the `seedance-animation-styles`
 recipes by name; the six-part formula and reference syntax stay with
-`seedance-prompt-25`. A shared subject map comes from `source-subject-map`.
+`seedance-prompt`, preserving the selected exact model. A shared subject map
+comes from `source-subject-map`.
 These are composition hints; this leaf does not load sibling skills.
 
 ## Submission boundary and failure behavior

@@ -50,7 +50,7 @@ separate from capability support (see [evidence status](evidence-status.md)).
 - **Video-to-video.** Restyle, edit and extend inputs that show a realistic
   person, generated or real, are rejected with `PrivacyInformation` unless each
   person is bound as an `asset://` Virtual Portrait or authorized asset.
-  Verify current asset and operation support. Every new 2.5 edit sets explicit
+  Verify current asset and operation support. Every new retained native 2.5 edit sets explicit
   `resolution: "480p"` and boolean `draft: true` in both modes. Resolve schema
   or transport conflicts before submission, never omit the flag.
 - **Lettering review.** Check generated surfaces for unwanted lettering; exact
@@ -128,10 +128,10 @@ Move the operation to `submitting` before the call
 (`operation_store.transition_operation`), then:
 
 ```text
-ark_job_submit {tool_name: "seedance_2_5_create_task",
-  arguments: {input: {prompt, images: [{kind: "url", role: "first_frame", url}],
+ark_job_submit {input: {tool_name: "seedance_create_task",
+  arguments: {input: {model: selected_exact_model, prompt, images: [{kind: "url", role: "first_frame", url}],
     resolution: "480p", duration, ratio?, generate_audio, watermark: false,
-    draft: true}}}
+    draft: true}}}}
 ```
 
 - The job result carries the provider task ID (`cgt-...`). **Wait for the job to
@@ -139,8 +139,8 @@ ark_job_submit {tool_name: "seedance_2_5_create_task",
   the Ark job ID in its place. Keep the Ark job ID in `extensions.ark_job_id`.
 - A draft is a normal 480p billing; the model has no `camera_fixed` or seed
   field. Express a locked camera in the prompt.
-- Poll with `ark_job_submit {tool_name: "seedance_get_task", arguments: {input:
-  {task_id, persist_output: true}}}`. Observed render times: 1 to 2.5 minutes for
+- Poll with `ark_job_submit {input: {tool_name: "gen_task_get", arguments: {input:
+  {task_ids: [task_id], persist_output: true}}}}`. Observed render times: 1 to 2.5 minutes for
   a 6 to 10 second draft. After a timeout keep the ID and resume the same task.
 - Two images use roles `first_frame` and `last_frame` and no `ratio`; the first
   frame locks it.
@@ -177,7 +177,7 @@ forbade them.
 - **Promote:** first verify current native Draft/promotion support in the live
   tool/model/operation. A 480p output alone is insufficient. If unavailable,
   resolve the capability or transport; do not substitute a non-draft 2.5
-  generation. For a supported native promotion, `seedance_2_5_create_task`
+  generation. For a supported native promotion, `seedance_create_task`
   with `draft_task_id` (the Draft task ID,
   at most 7 days old) and only `resolution`, `watermark`, `return_last_frame`.
   Prompt, images, duration and audio come from the draft. Promotion renders

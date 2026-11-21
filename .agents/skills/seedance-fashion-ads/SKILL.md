@@ -180,7 +180,7 @@ Inherit current project policy without introducing a production gate here:
 `review_mode` and `approval_mode` are independent. Missing values mean `default`
 and `approve_for_me` for new actions only; invalid values block production.
 Default has minimal preflight and actual final sanity; strict retains detailed
-review. Every new Seedance 2.5 generation requires `resolution: "480p"` and
+review. Every new retained native 2.5 generation requires `resolution: "480p"` and
 boolean `draft: true` in both review modes. Promote only selected native Drafts.
 Surface source-count conflicts before generation; never bypass drafts or
 silently expand scope. Prompt-only work generates nothing.

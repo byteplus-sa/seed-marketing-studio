@@ -57,7 +57,7 @@ Do not load every reference for a simple mix or mux request.
    mode-authorized, hash-bound decision may approve only a passing result. In
    `ask_for_approval`, show the recommendation and wait for the user.
 
-MCP is the durable in-agent generation path. Equivalent Ark CLI fallback follows the same preflight and recovery contract; changing transport never authorizes a duplicate uncertain submission.
+MCP is the durable in-agent generation path. When MCP is unavailable, hand off the prompt unless the user explicitly selected another transport. Recover an existing job by its recorded ID under the [generation access contract](../../contracts/generation-access.md).
 
 ## Planning limits
 

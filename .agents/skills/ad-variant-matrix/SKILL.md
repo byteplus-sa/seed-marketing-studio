@@ -143,7 +143,7 @@ flowchart LR
    - **Hero check.** `hero.decision_ref` and `hero.take_file` must each be a
      regular file inside `--project` (no absolute path, `..` or symlink
      escape; `matrix.hero_decision`, `matrix.hero_take`), and the take file
-     must still hash to `hero.sha256` (`matrix.hero_hash_mismatch`).
+     must still hash to `hero.sha256` (`matrix.hero_hash_mismatch`). The variant-selection decision must approve that exact shot, file and digest with a passing review, current project mode and unchanged upstream evidence.
    - **Generation target.** Both modes default to `--stage draft`; the exact
      operation profile supplies verified preview parameters and the supported
      hook minimum duration. Unknown support produces findings, not guessed

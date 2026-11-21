@@ -449,7 +449,8 @@ element manifest:
   each output, using `sheet` as the view for a multi-view sheet
 
 Record the approved filename as `selected_variant` in the project's element
-manifest (`prop.md` or `element.md`, whichever the project already uses), and
+manifest (`element.md` in Studio, including new props; retain an existing legacy
+`prop.md` in non-Studio projects), and
 note the planned views and the one-line reason beside it. An existing
 `prop_<prop-id>_hero_v<NN>.png` keeps its name.
 Acquired brand or product files record `generation: none` and have no
