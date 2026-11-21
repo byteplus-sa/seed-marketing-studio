@@ -24,11 +24,10 @@ entries: record the boundary window separately from consecutive shot ranges.
 
 A match cut needs an observable match, not just two related topics. A jump cut
 skips action within a setup; a smash cut creates a strong contrast. A wipe is
-a picture replacement, not a subject morph. A whip pan is both a camera move
-and a boundary: use the camera preset skill's whip-pan template (trigger time,
-direction, full-frame occluder, continuing movement) and resolve the camera
-path once in the complete prompt rather than duplicating contradictory camera
-blocks. About 0.8 s is a provisional generation-planning heuristic, not a
+a picture replacement, not a subject morph. A one-take whip pan moves to a new subject in the same scene:
+state the trigger, screen direction, landing and hold. For a whip-pan transition
+between shots, specify the cut point and carry motion into the next shot.
+About 0.8 s is a provisional generation-planning heuristic, not a
 provider limit or a guarantee of merged or dropped shots. Preserve requested
 rhythm and source timing without automatic retiming. Offer assembly for precise
 cuts or omitted action, including blink cuts, intercuts and vision flashes;
@@ -77,7 +76,7 @@ ambience>.`
 ## Review checks
 
 - Outgoing/incoming subjects, framing, and ordered states are explicit.
-- Match cues, wipe direction, or whip-pan occluder are observable and consistent.
+- Match cues, wipe direction, or requested whip-pan transition cover are observable and consistent.
 - Each transition has a trigger or window and a clear end state.
 - A bridge names whose sound crosses which picture boundary and when it ends.
 - Existing picture/audio locks and reference roles are preserved.

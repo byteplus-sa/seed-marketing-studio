@@ -138,10 +138,11 @@ evidence, not a guarantee; check a 480p draft.
 
 ### Named cuts and transitions
 
-For a requested jump cut, match cut, whip pan, cross dissolve, wipe, smash cut,
+For a requested jump cut, match cut, whip-pan transition, cross dissolve, wipe, smash cut,
 J-cut, or L-cut, read [Cut and transition prompts](references/cut-transitions.md).
 It supplies prompt-only boundary templates and audio relationships. Choose one
 picture transition per boundary; an audio J-cut or L-cut may accompany it.
+A one-take whip pan stays in the same shot. Specify its trigger, direction, landing and hold.
 These are directed visual/audio targets, not frame-accurate editing controls.
 
 ### Assembly cuts

@@ -104,6 +104,10 @@ uv run python .agents/skills/ad-captions/scripts/make_captions.py \
 5. Deliver sidecars beside the master and record their hashes; the burn-in
    layer ships inside the Studio render.
 
+For literal tag-shaped copy such as `<cold>`, select `--format vtt`.
+WebVTT escapes the text for playback. SubRip players can remove tag-shaped
+words or show entity escapes verbatim, so the SRT writer flags these cues before writing files.
+
 ## Script reference
 
 `scripts/make_captions.py` is stdlib-only. Caption flags: `--input`

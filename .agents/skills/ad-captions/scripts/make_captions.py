@@ -58,6 +58,7 @@ COMPOSITION_ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 WIDE_FACTOR = 1.0
 NARROW_FACTOR = 0.55
 LINE_HEIGHT = 1.25
+VERTICAL_PADDING_EM = 0.12
 DEFAULT_FONT_SHARE = 0.045
 HORIZONTAL_PADDING_EM = 0.8
 
@@ -522,6 +523,11 @@ def format_timestamp(milliseconds: int, separator: str) -> str:
 def render_srt(cues: list[Cue]) -> str:
     blocks = []
     for number, cue in enumerate(cues, 1):
+        if any(re.search(r"<[^\s<>][^<>]*>", line) for line in cue.lines):
+            raise CaptionError(
+                f"{cue.source_id}: SubRip players can discard literal angle-bracket text; "
+                "use --format vtt for WebVTT or deliver the burned-in layer with that sidecar"
+            )
         start = format_timestamp(cue.start_ms, ",")
         end = format_timestamp(cue.end_ms, ",")
         blocks.append(f"{number}\n{start} --> {end}\n" + "\n".join(cue.lines))
@@ -826,7 +832,7 @@ def layout_warnings(
                 f"{cue.source_id}: estimated line width {widest:.0f} px exceeds the safe width "
                 f"{layout.safe_width} px; shorten the line limit or the font size"
             )
-        block = len(cue.lines) * typography.size_px * LINE_HEIGHT
+        block = typography.size_px * (len(cue.lines) * LINE_HEIGHT + 2 * VERTICAL_PADDING_EM)
         if block > block_limit:
             warnings.append(
                 f"{cue.source_id}: caption block {block:.0f} px exceeds the safe height {block_limit} px"
@@ -885,7 +891,7 @@ def render_composition(
       <style>
 {font_face}      #root {{ position: absolute; inset: 0; }}
       .cue {{ position: absolute; left: {layout.x}px; width: {layout.safe_width}px; {vertical} display: flex; justify-content: center; text-align: center; }}
-      .cue span {{ font-family: {family}, sans-serif; font-size: {typography.size_px}px; line-height: {LINE_HEIGHT}; color: {typography.color}; background: {typography.box_color}; padding: 0.12em 0.4em; border-radius: 0.2em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }}
+      .cue span {{ font-family: {family}, sans-serif; font-size: {typography.size_px}px; line-height: {LINE_HEIGHT}; color: {typography.color}; background: {typography.box_color}; padding: {VERTICAL_PADDING_EM}em 0.4em; border-radius: 0.2em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }}
       </style>
       <div id="root" data-composition-id="{composition_id}" data-width="{layout.width}" data-height="{layout.height}">
 {chr(10).join(blocks)}

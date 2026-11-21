@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import copy
+import functools
 import hashlib
 import importlib.util
 import io
@@ -27,8 +28,14 @@ DELIVERABLE = "glow-serum_hook-question_9x16_15s_v01_meta-instagram-reels"
 FRAME = "frames/frame_00002.png"
 CAMPAIGN = "glow-serum"
 VIDEO = "glow-serum-9x16/studio/renders/cut.mp4"
-VIDEO_BYTES = b"synthetic cut bytes"
-VIDEO_SHA256 = hashlib.sha256(VIDEO_BYTES).hexdigest()
+@functools.cache
+def video_bytes() -> bytes:
+    return subprocess.check_output([
+        "ffmpeg", "-v", "error", "-f", "lavfi", "-i", "color=s=32x32:d=15:r=2",
+        "-c:v", "mpeg4", "-movflags", "frag_keyframe+empty_moov", "-f", "mp4", "pipe:1",
+    ])
+
+
 RECORD = f"delivery/disclosure_{DELIVERABLE}.json"
 
 
@@ -63,7 +70,7 @@ def checklist(**overrides: Any) -> dict[str, Any]:
         "schema_version": 1,
         "deliverable_id": DELIVERABLE,
         "video": VIDEO,
-        "video_sha256": VIDEO_SHA256,
+        "video_sha256": hashlib.sha256(video_bytes()).hexdigest(),
         "duration_s": 15.0,
         "paid": True,
         "placement": "meta-instagram-reels",
@@ -95,6 +102,7 @@ def replace_check(document: dict[str, Any], check_id: str, **fields: Any) -> dic
     return updated
 
 
+@unittest.skipUnless(FFMPEG_AVAILABLE and shutil.which("ffprobe"), "media tools required")
 class ReportTests(unittest.TestCase):
     def setUp(self) -> None:
         self.directory = tempfile.TemporaryDirectory(prefix="creative-check-test-")
@@ -108,7 +116,7 @@ class ReportTests(unittest.TestCase):
         self.record.write_text(json.dumps(decision()))
         self.video = self.projects / VIDEO
         self.video.parent.mkdir(parents=True)
-        self.video.write_bytes(VIDEO_BYTES)
+        self.video.write_bytes(video_bytes())
 
     def run_report(self, document: Any) -> tuple[int, dict[str, Any]]:
         path = self.root / "checks.json"
@@ -282,6 +290,28 @@ class ReportTests(unittest.TestCase):
         self.record.symlink_to(target)
         self.assert_invalid(checklist(), "regular file")
 
+    def test_stale_duration_and_evidence_at_picture_end_are_rejected(self) -> None:
+        self.assert_invalid(checklist(duration_s=30), "duration_s")
+        self.assert_invalid(replace_check(checklist(), "logo_legible", timestamps=[15.0]), "logo_legible")
+
+    def test_report_accepts_the_measured_span_of_a_variable_frame_rate_cut(self) -> None:
+        subprocess.run([
+            "ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "color=s=32x32:r=10:d=5",
+            "-vf", "select='eq(n,0)+eq(n,2)+eq(n,9)+eq(n,22)+eq(n,49)'",
+            "-fps_mode", "passthrough", "-c:v", "mpeg4", str(self.video),
+        ], check=True)
+        doc = checklist(duration_s=5, video_sha256=MODULE.sha256(self.video))
+        code, result = self.run_report(replace_check(doc, "logo_legible", timestamps=[4.95]))
+        self.assertEqual(code, 0, result)
+
+    def test_audio_tail_cannot_extend_picture(self) -> None:
+        subprocess.run([
+            "ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "color=s=32x32:d=1:r=10",
+            "-f", "lavfi", "-i", "anullsrc=d=15", "-c:v", "mpeg4", str(self.video),
+        ], check=True)
+        doc = checklist(video_sha256=MODULE.sha256(self.video))
+        self.assert_invalid(replace_check(doc, "logo_legible", timestamps=[14.5]), "duration_s")
+
     def test_video_must_exist(self) -> None:
         self.video.unlink()
         self.assert_invalid(checklist(), "video not found")
@@ -292,14 +322,14 @@ class ReportTests(unittest.TestCase):
     def test_video_in_the_campaign_project_itself_is_accepted(self) -> None:
         local = self.project / "studio/renders/cut.mp4"
         local.parent.mkdir(parents=True)
-        local.write_bytes(VIDEO_BYTES)
+        local.write_bytes(video_bytes())
         code, result = self.run_report(checklist(video=f"{CAMPAIGN}/studio/renders/cut.mp4"))
         self.assertEqual(code, 0, result)
 
     def test_video_outside_the_campaign_projects_is_refused(self) -> None:
         other = self.projects / "other-brand/studio/renders/cut.mp4"
         other.parent.mkdir(parents=True)
-        other.write_bytes(VIDEO_BYTES)
+        other.write_bytes(video_bytes())
         for video in ("other-brand/studio/renders/cut.mp4", "../cut.mp4", "/tmp/cut.mp4", "glow-serumx/cut.mp4"):
             self.assert_invalid(checklist(video=video), "video must")
 
@@ -366,21 +396,6 @@ class ReportTests(unittest.TestCase):
 
 
 class FrameCommandTests(unittest.TestCase):
-    def test_command_is_an_argument_array_with_rate_from_interval(self) -> None:
-        command = MODULE.frame_command(Path("cut file.mp4"), Path("qa/frames"), 0.5)
-        self.assertEqual(command[0], "ffmpeg")
-        self.assertIn("cut file.mp4", command)
-        self.assertEqual(command[command.index("-vf") + 1], "fps=2/1")
-        self.assertEqual(command[-1], str(Path("qa/frames") / "frame_%05d.png"))
-        self.assertNotIn("-t", command)
-
-    def test_fractional_intervals_and_until(self) -> None:
-        command = MODULE.frame_command(Path("cut.mp4"), Path("out"), 0.3, until=3)
-        self.assertEqual(command[command.index("-vf") + 1], "fps=10/3")
-        self.assertEqual(command[command.index("-t") + 1], "3")
-        two_seconds = MODULE.frame_command(Path("cut.mp4"), Path("out"), 2.0)
-        self.assertEqual(two_seconds[two_seconds.index("-vf") + 1], "fps=1/2")
-
     def test_invalid_intervals_are_rejected(self) -> None:
         for every in (0, -1, 10.5):
             with self.assertRaises(ValueError):
@@ -408,6 +423,26 @@ class FrameSamplingTests(unittest.TestCase):
             ],
             check=True,
         )
+
+    def test_sampling_preserves_opening_and_source_times_on_offset_vfr_picture(self) -> None:
+        video = self.root / "vfr.mkv"
+        subprocess.run([
+            "ffmpeg", "-v", "error", "-f", "lavfi", "-i", "color=black:s=32x32:r=10:d=2",
+            "-vf", ("drawbox=w=iw:h=ih:color=white:t=fill:enable='gte(t,0.2)',"
+                   "select='eq(n,0)+eq(n,2)+eq(n,7)+eq(n,12)+eq(n,19)',setpts=PTS+3/TB"),
+            "-fps_mode", "passthrough", "-c:v", "ffv1", str(video),
+        ], check=True)
+        result = MODULE.sample_frames(video, self.root / "vfr", 0.5, None)
+        self.assertEqual([entry["time_s"] for entry in result["frames"]], [0, 0.7, 1.2, 1.9])
+        shades = []
+        for entry in result["frames"]:
+            pixels = subprocess.check_output([
+                "ffmpeg", "-v", "error", "-i", str(self.root / entry["path"]),
+                "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", "pipe:1",
+            ])
+            shades.append(pixels[0])
+        self.assertEqual(shades, [0, 255, 255, 255])
+        self.assertAlmostEqual(MODULE.picture_duration(video), 2.0)
 
     def test_samples_frames_with_times(self) -> None:
         result = MODULE.sample_frames(self.video, self.root / "frames", 0.5, None)

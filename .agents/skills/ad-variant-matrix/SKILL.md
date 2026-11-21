@@ -166,7 +166,8 @@ flowchart LR
      `brand.copy_rules`, `library.pin_current`, `ad.variant_one_axis` and
      `ad.variant_count_gate`; video steps add `video.text_free`. Hook steps
      add `shot.plan_bound`, `shot.variety` and `shot.axis_carry` unless
-     `--static-by-design <format>` records a static-by-design exemption.
+     `--static-by-design <format> --static-camera-reason "<brief, source or preset lock>"`
+     records the camera constraint. A format label alone leaves the shot plan active.
      Swap and Motion Transfer steps record the source-preserving-edit
      exemption and dub steps the no-video-shot exemption in
      `shot_rule_exemption`; the reviewer cites that exemption. Default retains

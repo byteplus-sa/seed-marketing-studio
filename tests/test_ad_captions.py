@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -55,6 +56,21 @@ class TimestampAndRenderTests(unittest.TestCase):
     def test_timestamp_rolls_over_hours_minutes_and_seconds(self):
         self.assertEqual(MODULE.format_timestamp(3_723_456, ","), "01:02:03,456")
         self.assertEqual(MODULE.format_timestamp(0, "."), "00:00:00.000")
+
+    @unittest.skipUnless(shutil.which("ffmpeg"), "FFmpeg required for subtitle decoding")
+    def test_literal_subtitle_copy_survives_the_target_decoder(self):
+        for text, fmt in [("Shop now.", "srt"), ("R&D costs < 5%", "srt"), ("Fresh & <cold> all day.", "vtt")]:
+            with self.subTest(text=text, fmt=fmt):
+                cues, _ = build([make_line("sale", 0, 3, en=text)])
+                if fmt == "vtt":
+                    with self.assertRaisesRegex(CaptionError, "WebVTT"):
+                        MODULE.render_srt(cues)
+                content = MODULE.render_srt(cues) if fmt == "srt" else MODULE.render_vtt(cues)
+                decoded = subprocess.run([
+                    "ffmpeg", "-v", "error", "-f", "srt" if fmt == "srt" else "webvtt",
+                    "-i", "pipe:0", "-c:s", "ass", "-f", "ass", "pipe:1",
+                ], input=content, text=True, capture_output=True, check=True)
+                self.assertEqual(decoded.stdout.splitlines()[-1].split(",", 9)[-1], text)
 
     def test_webvtt_has_header_dot_timestamps_and_escapes_markup(self):
         cues, _ = build([make_line("a", 0.5, 2.5, en="Tom & Jerry <run>")])
@@ -546,7 +562,7 @@ class BurnInTests(unittest.TestCase):
                             "start_s": 0.5,
                             "end_s": 2.5,
                             "text": {
-                                "en": "Fresh & <cold> all day.",
+                                "en": "Fresh & cold all day.",
                                 "ar": "بارد طوال اليوم.",
                             },
                         },
@@ -603,7 +619,7 @@ class BurnInTests(unittest.TestCase):
         self.assertIn("left: 54px; width: 972px; bottom: 384px;", layer)
         self.assertIn('data-composition-id="captions-en"', layer)
         self.assertIn('data-start="0.5" data-duration="2"', layer)
-        self.assertIn("Fresh &amp; &lt;cold&gt; all day.", layer)
+        self.assertIn("Fresh &amp; cold all day.", layer)
         self.assertIn("<template>", layer)
         self.assertIn(
             'data-composition-src="compositions/captions-en.html"',
@@ -615,6 +631,18 @@ class BurnInTests(unittest.TestCase):
         for entry in report["files"]:
             digest = hashlib.sha256(Path(entry["path"]).read_bytes()).hexdigest()
             self.assertEqual(entry["sha256"], digest)
+
+    def test_srt_markup_error_leaves_no_partial_outputs_and_webvtt_preserves_copy(self):
+        document = json.loads(self.source.read_text())
+        document["lines"][0]["text"]["en"] = "Fresh & <cold> all day."
+        self.source.write_text(json.dumps(document))
+        flags = ("--size", "1080x1920", "--placement", "vertical-published")
+        code, _, error = self.run_cli(*flags, "--format", "both")
+        self.assertEqual(code, 2)
+        self.assertIn("WebVTT", error)
+        self.assertEqual(self.written_files(), [self.platforms, self.source])
+        self.assertEqual(self.run_cli(*flags, "--format", "vtt")[0], 0)
+        self.assertIn("&lt;cold&gt;", (self.compositions / "captions-en.html").read_text())
 
     def test_top_anchor_and_master_duration_drive_layer_geometry(self):
         code, stdout, _ = self.run_cli(
@@ -903,6 +931,32 @@ class BurnInTests(unittest.TestCase):
         )
         self.assertEqual(code, 2)
         self.assertIn("composition dir", stderr)
+
+    def test_padded_caption_height_agrees_with_chromium_for_one_and_two_lines(self):
+        browser = shutil.which("chromium") or shutil.which("google-chrome")
+        mac = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+        if browser is None and mac.is_file():
+            browser = str(mac)
+        if browser is None:
+            self.skipTest("Chromium required to measure the caption box")
+        typ = MODULE.Typography("Arial", None, 50, "#FFFFFF", "#000000", "bottom")
+        for lines, height in [(("SHOP NOW",), 65), (("SHOP NOW",), 100), (("SHOP", "NOW"), 130)]:
+            with self.subTest(lines=lines, height=height):
+                cue = MODULE.Cue(0, 2000, lines, "cta")
+                layout = MODULE.Layout(1080, 1920, 100, 1200, 880, height)
+                doc = MODULE.render_composition([cue], "en", "captions-en", layout, typ)
+                style = doc.split("<style>")[1].split("</style>")[0]
+                content = doc.split('</style>')[1].split('<script>')[0]
+                page = self.directory / "measure.html"
+                page.write_text(f"<style>{style} #root {{ height:1920px;width:1080px; }}</style>{content}"
+                                "<script>document.title=document.querySelector('.cue span').getBoundingClientRect().top</script>")
+                result = subprocess.run([browser, "--headless", "--disable-gpu", "--no-sandbox",
+                                         f"--user-data-dir={self.directory / 'browser'}", "--dump-dom", page.as_uri()],
+                                        capture_output=True, text=True, check=True, timeout=30)
+                top = float(result.stdout.split("<title>")[1].split("</title>")[0])
+                warnings = MODULE.layout_warnings([cue], layout, typ)
+                self.assertEqual(any("safe height" in message for message in warnings), top < layout.y)
+                self.assertEqual(top < layout.y, height in (65, 130))
 
     def test_line_wider_than_the_safe_width_is_warned(self):
         code, stdout, _ = self.run_cli(

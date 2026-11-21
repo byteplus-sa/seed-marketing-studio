@@ -463,6 +463,13 @@ class PinAndShowTests(BrandKitTestCase):
         self.assertEqual(code, 0)
         self.assertEqual(result["palette"], {"acme-red": "#D7261E", "paper": "#fafafa"})
         self.assertEqual(result["banned_words"], ["cheap"])
+        kit = json.loads(path.read_text())
+        self.assertEqual(result["voice"], kit["voice"])
+        self.assertEqual(result["fonts"][0]["weight"], 700)
+        logo = result["logos"][0]
+        self.assertEqual(logo["clear_space_ratio"], 0.25)
+        self.assertGreater(logo["min_height_px"], 32)
+        self.assertNotIn("dark", logo["allowed_backgrounds"])
         self.assertEqual(result["style_sentence"], "Soft window light on pale wood surfaces.")
         _, pinned = run("pin", str(path))
         self.assertEqual(result["pin_sha256"], pinned["sha256"])

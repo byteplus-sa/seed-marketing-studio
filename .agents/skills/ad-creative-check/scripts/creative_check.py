@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
+import re
 import shutil
 import subprocess
 import sys
@@ -57,29 +59,25 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def frame_rate(every: float) -> str:
-    if not 0 < every <= MAX_INTERVAL_S:
-        raise ValueError(f"--every must be greater than 0 and at most {MAX_INTERVAL_S}")
-    rate = 1 / Fraction(str(every)).limit_denominator(1000)
-    return f"{rate.numerator}/{rate.denominator}"
-
-
 def frame_command(
     video: Path, out: Path, every: float, until: float | None = None
 ) -> list[str]:
-    command = ["ffmpeg", "-v", "error", "-nostdin", "-y", "-i", str(video)]
+    if not 0 < every <= MAX_INTERVAL_S:
+        raise ValueError(f"--every must be greater than 0 and at most {MAX_INTERVAL_S}")
+    filters = ["setpts=PTS-STARTPTS"]
     if until is not None:
-        if until <= 0:
-            raise ValueError("--until must be greater than 0")
-        command += ["-t", f"{until:g}"]
-    command += [
-        "-vf",
-        f"fps={frame_rate(every)}",
-        "-start_number",
-        "0",
-        str(out / FRAME_PATTERN),
+        if not math.isfinite(until) or until <= 0:
+            raise ValueError("--until must be finite and greater than 0")
+        filters.append(f"trim=end={until}")
+    filters += [
+        f"select='isnan(prev_selected_t)+gt(floor(t/{every}+1e-9),floor(prev_selected_t/{every}+1e-9))'",
+        "showinfo=checksum=0",
     ]
-    return command
+    return [
+        "ffmpeg", "-hide_banner", "-nostats", "-nostdin", "-y", "-i", str(video),
+        "-map", "0:V:0", "-vf", ",".join(filters), "-fps_mode", "passthrough",
+        "-start_number", "0", str(out / FRAME_PATTERN),
+    ]
 
 
 def sample_frames(
@@ -93,17 +91,22 @@ def sample_frames(
     out.mkdir(parents=True, exist_ok=True)
     if any(out.glob("frame_*.png")):
         raise ValueError(f"{out} already holds sampled frames; use an empty folder")
-    subprocess.run(command, check=True, capture_output=True, text=True)
-    files = sorted(out.glob("frame_*.png"))
+    result = subprocess.run(command, check=True, capture_output=True, text=True)
+    timing = re.search(r"config in time_base:\s*(\d+/\d+)", result.stderr)
+    ticks = re.findall(r"Parsed_showinfo_[^]]+\] n:\s*\d+ pts:\s*(-?\d+)", result.stderr)
+    files = sorted(out.glob("frame_*.png"), key=lambda path: int(path.stem.removeprefix("frame_")))
     if not files:
         raise RuntimeError("ffmpeg produced no frames")
+    if not timing or len(ticks) != len(files):
+        raise RuntimeError("Could not match each sampled image to its decoded presentation timestamp")
+    time_base = Fraction(timing[1])
     return {
         "video": str(video),
         "video_sha256": sha256(video),
         "every_s": every,
         "frames": [
-            {"path": f"{out.name}/{path.name}", "time_s": round(index * every, 3)}
-            for index, path in enumerate(files)
+            {"path": f"{out.name}/{path.name}", "time_s": float(int(tick) * time_base)}
+            for path, tick in zip(files, ticks, strict=True)
         ],
     }
 
@@ -150,6 +153,35 @@ def video_errors(document: dict[str, Any], project: Path) -> list[str]:
     return []
 
 
+def picture_duration(path: Path) -> float:
+    command = [
+        "ffprobe", "-v", "error", "-select_streams", "V:0", "-show_entries",
+        "stream=time_base,start_pts,duration_ts:frame=best_effort_timestamp,duration,pkt_duration",
+        "-of", "json", str(path),
+    ]
+    result = subprocess.run(command, capture_output=True, text=True, check=True)
+    try:
+        probe = json.loads(result.stdout)
+        stream = probe["streams"][0]
+        frames = probe["frames"]
+        start = int(frames[0]["best_effort_timestamp"])
+        last = frames[-1]
+        last_start = int(last["best_effort_timestamp"])
+        last_duration = int(last.get("duration") or last.get("pkt_duration") or 0)
+        if last_duration > 0:
+            end = last_start + last_duration
+        else:
+            end = int(stream["start_pts"]) + int(stream["duration_ts"])
+        if end <= last_start or last_start < start:
+            raise ValueError
+        duration = (end - start) * Fraction(stream["time_base"])
+        if duration <= 0:
+            raise ValueError
+        return float(duration)
+    except (KeyError, IndexError, TypeError, ValueError, ZeroDivisionError) as error:
+        raise ValueError("could not determine the displayed picture span") from error
+
+
 def location_errors(checks: Path, document: dict[str, Any], project: Path) -> list[str]:
     folder = PurePosixPath("delivery", "qa", document["deliverable_id"])
     if checks.resolve().parent == (project / folder).resolve():
@@ -175,7 +207,7 @@ def coverage_errors(checks: list[dict[str, Any]]) -> list[str]:
 def evidence_errors(check: dict[str, Any], duration: float, base: Path) -> list[str]:
     name, status = check["id"], check["status"]
     timestamps = check.get("timestamps", [])
-    errors = [f"{name}: timestamp {value} is after the {duration} s cut" for value in timestamps if value > duration]
+    errors = [f"{name}: timestamp {value} is at or after the {duration} s cut" for value in timestamps if value >= duration]
     if name in FRAME_EVIDENCE and (status in ("pass", "fail") or (name == "opening_change" and status == "not_applicable")):
         if not timestamps:
             errors.append(f"{name}: {status} needs timestamps")
@@ -265,10 +297,10 @@ def disclosure_errors(
 
 
 def check_errors(
-    check: dict[str, Any], document: dict[str, Any], base: Path, project: Path
+    check: dict[str, Any], document: dict[str, Any], base: Path, project: Path, duration: float
 ) -> list[str]:
     name, status = check["id"], check["status"]
-    errors = evidence_errors(check, document["duration_s"], base)
+    errors = evidence_errors(check, duration, base)
     if status == "not_applicable" and name not in MAY_NOT_APPLY | {"disclosure_recorded"}:
         errors.append(f"{name}: not_applicable is not allowed for this check")
     if name == "product_reveal":
@@ -287,10 +319,20 @@ def validate(document: Any, checks: Path, project: Path) -> list[str]:
     if errors:
         return errors
     errors = location_errors(checks, document, project)
-    errors += video_errors(document, project)
+    video_issues = video_errors(document, project)
+    errors += video_issues
+    duration = document["duration_s"]
+    if not video_issues:
+        try:
+            duration = picture_duration(project.parent / document["video"])
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
+            errors.append(f"video: could not measure the displayed picture: {error}")
+        else:
+            if not math.isclose(duration, document["duration_s"], rel_tol=0, abs_tol=0.001):
+                errors.append(f"duration_s must match the displayed picture span of {duration:g} s")
     errors += coverage_errors(document["checks"])
     for check in document["checks"]:
-        errors += check_errors(check, document, checks.parent, project)
+        errors += check_errors(check, document, checks.parent, project, duration)
     return errors
 
 

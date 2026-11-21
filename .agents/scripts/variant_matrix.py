@@ -617,13 +617,13 @@ def apply_costs(
     return summary, findings
 
 
-def shot_rule_exemption(route: str, static_by_design: str | None) -> str | None:
+def shot_rule_exemption(route: str, static_by_design: str | None, camera_reason: str) -> str | None:
     if route in AUDIO_ROUTES:
         return "no video shot: audio re-voice of the hero soundtrack"
     if route in SOURCE_PRESERVING_ROUTES:
         return "source-preserving edit: keeps the hero's camera, cuts and timing"
-    if static_by_design:
-        return f"static-by-design format: {static_by_design}"
+    if static_by_design and camera_reason.strip():
+        return f"static-by-design format: {static_by_design}: {camera_reason.strip()}"
     return None
 
 
@@ -707,7 +707,7 @@ def operation_commands(
         selected = getattr(options, "ordinary_final_sources", {}).get(row["name"])
         if selected is not None and not audio:
             params = final_params(selected["source"], options)
-        exemption = shot_rule_exemption(route, options.static_by_design)
+        exemption = shot_rule_exemption(route, options.static_by_design, options.static_camera_reason)
         rules = step_rules(route, exemption, options.review_mode, options.hook_performance)
         performance = route == "hook-opening" and options.hook_performance == "character"
         skills = list(step["skills"])
@@ -1169,6 +1169,7 @@ def parser() -> argparse.ArgumentParser:
     register.add_argument("--final-resolution")
     register.add_argument("--take", default="t01")
     register.add_argument("--static-by-design", choices=STATIC_BY_DESIGN)
+    register.add_argument("--static-camera-reason", default="", help="Brief, source or selected preset camera lock")
     register.add_argument(
         "--hook-performance", choices=("character", "non-performance"), default="character",
         help="Character hooks require acting evidence in both modes; non-performance hooks record why it does not apply",

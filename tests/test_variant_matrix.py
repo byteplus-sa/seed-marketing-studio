@@ -1338,9 +1338,17 @@ class VariantMatrixTests(unittest.TestCase):
         )
         self.assertTrue(COMMON_RULES <= required_rules(dub["register_command"]))
 
+    def test_creator_format_without_a_camera_lock_keeps_the_shot_plan(self):
+        code, result = self.register(base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS, "--static-by-design", "ugc")
+        self.assertEqual(code, 0, result)
+        _, operation = self.hook_operation(result)
+        self.assertIn("seedance-shot-design", operation["skills"])
+        self.assertTrue(SHOT_RULES <= required_rules(operation["register_command"]))
+
     def test_static_by_design_hook_omits_shot_rules_and_records_why(self):
         _, result = self.register(
-            base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS, "--static-by-design", "ugc"
+            base_matrix(), *UNIT_COSTS, *VIDEO_FLAGS, "--static-by-design", "ugc",
+            "--static-camera-reason", "The approved preset fixes the phone to the desk tripod."
         )
         _, operation = self.hook_operation(result)
         self.assertFalse(SHOT_RULES & required_rules(operation["register_command"]))
@@ -1356,7 +1364,8 @@ class VariantMatrixTests(unittest.TestCase):
                 self.bind_fixture_profile(flags)
                 before = {path: path.read_bytes() for path in self.project_files() if path.is_file()}
                 code, result = self.register(
-                    base_matrix(), *UNIT_COSTS, *flags, "--static-by-design", "ugc"
+                    base_matrix(), *UNIT_COSTS, *flags, "--static-by-design", "ugc",
+                    "--static-camera-reason", "The approved preset fixes the phone to the desk tripod."
                 )
                 self.assertEqual(code, 0, result)
                 _, hook = self.hook_operation(result)
