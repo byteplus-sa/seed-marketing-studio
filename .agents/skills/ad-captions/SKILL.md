@@ -65,6 +65,9 @@ with cue counts, SHA-256 per file, host snippets and every warning.
    re-verify before paid delivery). For a placement whose safe zone is
    unpublished, the script refuses until a rectangle measured from the
    platform's own template is passed with `--safe-rect`.
+The burn-in helper measures each cue’s padded box after font loading in an
+   available Chromium browser. When measurements are unavailable, it flags
+   the layout for a Studio playback check.
 9. **Warnings are defects to look at.** Reading speed over the limit, a cue
    below the minimum, a trimmed overlap, a split run and an estimated line wider
    than the safe rectangle are reported. Fix the text, timing, line limit or
@@ -103,6 +106,10 @@ uv run python .agents/skills/ad-captions/scripts/make_captions.py \
    including every right-to-left or CJK language.
 5. Deliver sidecars beside the master and record their hashes; the burn-in
    layer ships inside the Studio render.
+
+For literal tag-shaped copy such as `<cold>`, select `--format vtt`.
+WebVTT escapes the text for playback. SubRip players can remove tag-shaped
+words or show entity escapes verbatim, so the SRT writer flags these cues before writing files.
 
 ## Script reference
 

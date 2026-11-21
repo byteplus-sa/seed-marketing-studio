@@ -184,6 +184,16 @@
         "Treats the count as insufficient to establish either coherence or failure; any proposed path is explicitly provisional.",
         "Does not claim verified readability, a finished generation-ready path or generated output."
       ]
+    },
+    {
+      "id": 16,
+      "prompt": "One uninterrupted take: whip right from the clock to the bell on the chime and hold.",
+      "expected_output": "A continuous rightward reframe landing and holding on the bell.",
+      "files": [],
+      "expectations": [
+        "The chime triggers the pan.",
+        "Stays in the same shot, with no invented cut or foreground occlusion."
+      ]
     }
   ]
 }

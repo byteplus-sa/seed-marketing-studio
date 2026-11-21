@@ -46,7 +46,10 @@ regenerate media, approve a variant, decide a disclosure or upload an ad.
 Check the cut's SHA-256 against the render record before starting. A check
 belongs to one exact file; a re-render needs a new check. The `report` command
 re-hashes the cut named in `checks.json` and refuses a checklist whose
-`video_sha256` does not match it.
+`video_sha256` does not match it. FFprobe measures the displayed video interval
+from the first frame through the end of the last one. Enter that measured
+`duration_s` to within one millisecond. Evidence times start at the first
+frame and must fall strictly before the end of the picture.
 
 ## The checks
 
@@ -87,7 +90,7 @@ project that owns the deliverable (a localized deliverable's own project).
 2. **Sample frames.** Run
    `uv run python .agents/skills/ad-creative-check/scripts/creative_check.py frames <cut> --out projects/<campaign>/delivery/qa/<deliverable-id>/frames --every 0.5`
    and a dense opening pass with `--every 0.25 --until 3 --out projects/<campaign>/delivery/qa/<deliverable-id>/opening`.
-   The command prints each frame's path and time. Look at the frames yourself.
+   The command retains the first decoded frame and prints each selected frame’s actual presentation time relative to it. Look at the frames yourself.
 3. **Ask the video model.** Run `seed_understand` (through `ark-mcp`) on the
    cut with the questions in the check procedure. Upload the cut with
    `media_upload` when it has no public HTTPS URL. Save the answers as

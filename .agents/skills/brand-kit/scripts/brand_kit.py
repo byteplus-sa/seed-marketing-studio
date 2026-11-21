@@ -383,10 +383,11 @@ def summary(kit: dict[str, Any]) -> dict[str, Any]:
         "pin_sha256": canonical_sha256(kit),
         "palette": {entry["name"]: entry["hex"] for entry in kit["palette"]},
         "fonts": [
-            {"role": font["role"], "family": font["family"], "file": font["file"]}
+            {"role": font["role"], "family": font["family"], "file": font["file"], "weight": font.get("weight")}
             for font in kit["typography"]
         ],
-        "logos": [{"role": logo["role"], "file": logo["file"]} for logo in kit["logos"]],
+        "logos": kit["logos"],
+        "voice": kit["voice"],
         "banned_words": kit["copy_rules"]["banned_words"],
         "required_lines": kit["copy_rules"]["required_lines"],
         "trademark_marks": kit["copy_rules"]["trademark_marks"],

@@ -5,8 +5,12 @@ import hashlib
 import html
 import json
 import math
+import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 import unicodedata
 from dataclasses import dataclass, replace
 from itertools import pairwise
@@ -58,6 +62,7 @@ COMPOSITION_ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 WIDE_FACTOR = 1.0
 NARROW_FACTOR = 0.55
 LINE_HEIGHT = 1.25
+VERTICAL_PADDING_EM = 0.12
 DEFAULT_FONT_SHARE = 0.045
 HORIZONTAL_PADDING_EM = 0.8
 
@@ -522,6 +527,11 @@ def format_timestamp(milliseconds: int, separator: str) -> str:
 def render_srt(cues: list[Cue]) -> str:
     blocks = []
     for number, cue in enumerate(cues, 1):
+        if any(re.search(r"<[^\s<>][^<>]*>", line) for line in cue.lines):
+            raise CaptionError(
+                f"{cue.source_id}: SubRip players can discard literal angle-bracket text; "
+                "use --format vtt for WebVTT or deliver the burned-in layer with that sidecar"
+            )
         start = format_timestamp(cue.start_ms, ",")
         end = format_timestamp(cue.end_ms, ",")
         blocks.append(f"{number}\n{start} --> {end}\n" + "\n".join(cue.lines))
@@ -814,22 +824,89 @@ def estimated_width(text: str, size_px: int) -> float:
     return glyphs + size_px * HORIZONTAL_PADDING_EM
 
 
+def chromium_executable() -> Path | None:
+    for executable in ("chromium", "google-chrome", "chromium-browser", "msedge"):
+        if found := shutil.which(executable):
+            return Path(found)
+    candidates = [Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
+                  Path("/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge")]
+    for key in ("PROGRAMFILES", "PROGRAMFILES(X86)"):
+        if directory := os.environ.get(key):
+            candidates.extend(Path(directory) / name for name in
+                              ("Google/Chrome/Application/chrome.exe", "Microsoft/Edge/Application/msedge.exe"))
+    return next((path for path in candidates if path.is_file()), None)
+
+
+def measure_caption_boxes(
+    content: str, typography: Typography, studio: Path
+) -> list[tuple[float, float]]:
+    browser = chromium_executable()
+    if browser is None:
+        raise ValueError("Chromium is unavailable")
+    script = """<script>
+const layer = document.querySelector("template").content.cloneNode(true);
+layer.querySelector("script").remove();
+document.body.append(layer);
+const root = document.querySelector("#root");
+root.style.width = root.dataset.width + "px";
+root.style.height = root.dataset.height + "px";
+const captions = Array.from(root.querySelectorAll(".cue span"));
+root.getBoundingClientRect();
+document.fonts.ready.then(() => {
+    if (Array.from(document.fonts).some(face => face.status === "error")) return;
+    const boxes = captions.map(span => {
+        const box = span.getBoundingClientRect();
+        return [box.width, box.height];
+    });
+    const result = document.createElement("pre");
+    result.id = "measured-captions";
+    result.textContent = JSON.stringify(boxes);
+    document.body.replaceChildren(result);
+});
+</script>"""
+    with tempfile.TemporaryDirectory(prefix="caption-bounds-") as folder:
+        scratch = Path(folder)
+        if typography.src:
+            font = scratch / typography.src
+            font.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(studio / typography.src, font)
+        page = scratch / "measure.html"
+        page.write_text(content.replace("</body>", script + "</body>"), encoding="utf-8")
+        rendered = subprocess.run([
+            str(browser), "--headless", "--disable-gpu", "--disable-background-networking",
+            "--allow-file-access-from-files", "--virtual-time-budget=4000",
+            f"--user-data-dir={scratch / 'browser'}", "--dump-dom", page.as_uri(),
+        ], capture_output=True, text=True, timeout=20, check=True)
+    match = re.search(r'<pre id="measured-captions">([^<]*)</pre>', rendered.stdout)
+    if not match:
+        raise ValueError("Chromium could not verify font loading and caption bounds")
+    return [(float(width), float(height)) for width, height in json.loads(match[1])]
+
+
 def layout_warnings(
-    cues: list[Cue], layout: Layout, typography: Typography
+    cues: list[Cue], layout: Layout, typography: Typography, content: str, studio: Path
 ) -> list[str]:
     warnings: list[str] = []
-    block_limit = layout.safe_height
-    for cue in cues:
+    try:
+        boxes = measure_caption_boxes(content, typography, studio)
+        if len(boxes) != len(cues):
+            raise ValueError("Chromium returned an incomplete cue list")
+    except (OSError, subprocess.SubprocessError, ValueError) as error:
+        warnings.append(f"Rendered caption bounds are unverified ({error}); check wrapping and fit in Studio.")
+        boxes = [(0.0, 0.0)] * len(cues)
+    for cue, (box_width, box_height) in zip(cues, boxes, strict=True):
         widest = max(estimated_width(line, typography.size_px) for line in cue.lines)
+        widest = max(widest, box_width)
         if widest > layout.safe_width:
             warnings.append(
                 f"{cue.source_id}: estimated line width {widest:.0f} px exceeds the safe width "
                 f"{layout.safe_width} px; shorten the line limit or the font size"
             )
-        block = len(cue.lines) * typography.size_px * LINE_HEIGHT
-        if block > block_limit:
+        block = typography.size_px * (len(cue.lines) * LINE_HEIGHT + 2 * VERTICAL_PADDING_EM)
+        block = max(block, box_height)
+        if block > layout.safe_height:
             warnings.append(
-                f"{cue.source_id}: caption block {block:.0f} px exceeds the safe height {block_limit} px"
+                f"{cue.source_id}: caption block {block:.0f} px exceeds the safe height {layout.safe_height} px"
             )
     return warnings
 
@@ -885,7 +962,7 @@ def render_composition(
       <style>
 {font_face}      #root {{ position: absolute; inset: 0; }}
       .cue {{ position: absolute; left: {layout.x}px; width: {layout.safe_width}px; {vertical} display: flex; justify-content: center; text-align: center; }}
-      .cue span {{ font-family: {family}, sans-serif; font-size: {typography.size_px}px; line-height: {LINE_HEIGHT}; color: {typography.color}; background: {typography.box_color}; padding: 0.12em 0.4em; border-radius: 0.2em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }}
+      .cue span {{ font-family: {family}, sans-serif; font-size: {typography.size_px}px; line-height: {LINE_HEIGHT}; color: {typography.color}; background: {typography.box_color}; padding: {VERTICAL_PADDING_EM}em 0.4em; border-radius: 0.2em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }}
       </style>
       <div id="root" data-composition-id="{composition_id}" data-width="{layout.width}" data-height="{layout.height}">
 {chr(10).join(blocks)}
@@ -1000,11 +1077,11 @@ def generate(arguments: argparse.Namespace) -> dict[str, Any]:
         if layout is None or typography is None:
             continue
         identifier = composition_id_for(arguments.composition_prefix, code)
+        content = render_composition(cues, code, identifier, layout, typography)
         warnings.extend(
             f"[{code}] {warning}"
-            for warning in layout_warnings(cues, layout, typography)
+            for warning in layout_warnings(cues, layout, typography, content, compositions.parent)
         )
-        content = render_composition(cues, code, identifier, layout, typography)
         target = Path(arguments.composition_dir) / f"{identifier}.html"
         outputs.append((target, content, code, "hyperframes", len(cues)))
         duration_ms = (

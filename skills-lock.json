@@ -12,13 +12,13 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-captions/SKILL.md",
-      "computedHash": "7d927e686365bd782f6edbf24b58b88bdcfe08c4de6ba5a299d29b7e73e8f789"
+      "computedHash": "d5db8a1ca2981e7c84210dc871cd9bea18458377a470525ed4fcbc7888f42728"
     },
     "ad-creative-check": {
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-creative-check/SKILL.md",
-      "computedHash": "36c453e14a694238e510378ae9e15e6032b60896a4eb004ba227b397d89bcce1"
+      "computedHash": "221f99c44fe727aacf80730834fa961416d0cf73f6b600345e6cc639e46c8d3c"
     },
     "ad-delivery-formats": {
       "source": "./local",
@@ -43,7 +43,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-variant-matrix/SKILL.md",
-      "computedHash": "5709f7bff236687050b17c7cb459a9a28abc53e115902074917d21ce73d615a5",
+      "computedHash": "d1f6baa6a6f06fa3d23b1ddfd2a2d272235617d1b30505093335e28415c32dc6",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "ark-mcp": {
@@ -101,7 +101,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ffmpeg-side-by-side-comparison/SKILL.md",
-      "computedHash": "1fc7414d6fd70a0dd0097a244b60967c6663d2d22720009dce2253fc1a0a3ef3"
+      "computedHash": "f766c5df2e92d4e3d5dc4e4d69a30d1725a6b368d39b29ef414a73b6562acbed"
     },
     "film-production": {
       "source": "./local",
@@ -258,7 +258,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-camera-presets/SKILL.md",
-      "computedHash": "382185e68897dc7f5672fcd500288493d3df2294b7d0fb80deabbb9ac37dbf29"
+      "computedHash": "460d29253fbb5ecca82d348385f1791fec4480be9480c7508f6cc9789144f681"
     },
     "seedance-cgi-advertising": {
       "source": "./local",
@@ -331,7 +331,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-pacing-presets/SKILL.md",
-      "computedHash": "bc3ae6b43a92b5a033957b149d2d6a7f61ee21973d23eadfdcc2da44a57e1cc9"
+      "computedHash": "359397ba3e880c6384f5ce0656b51132ad28637cba3502579fd9ba5f1b58164a"
     },
     "seedance-prompt": {
       "source": "./local",
@@ -362,7 +362,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/seedance-shot-design/SKILL.md",
-      "computedHash": "164a8217edd76d77b2b9a08268a1be985501c320101949ea20c62dddb0aac1c2",
+      "computedHash": "6f5e1dfdc93a9ba78dcda2d43e160e6321d9fb6928adca64529629e77744b5a0",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "seedance-vfx-pipeline": {
@@ -485,7 +485,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/blocking-map/SKILL.md",
-      "computedHash": "0d387e5116b4d05f9221a95106746bc3252fa697bcc514f57949ffcf978d079d",
+      "computedHash": "fdbe8675ae7aa0fb93dd8e9e3ccbfa4f81f06e3c122cafa60c8b36d80afec72d",
       "sourceNotes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
     "scene-craft": {
