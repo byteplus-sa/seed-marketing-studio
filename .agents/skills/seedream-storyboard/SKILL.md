@@ -83,9 +83,7 @@ Keep these artifacts distinct:
 
 - **Storyboard panel:** communicates a decisive story and staging state.
 - **Look frame:** locks style, palette, lighting, and materials.
-- **Video keyframe:** a separate full-colour, text-free frame authored from the
-  element references and an approved panel's staging text, with its own prompt,
-  review, and file. It is never the board file or a crop of it.
+- **Video keyframe:** an independently authored full-colour, text-free production still from canonical element references. A panel crop, redraw or regeneration from its prompt keeps its planning origin.
 
 ## Video boundary
 
@@ -156,9 +154,7 @@ are reviewed and promoted.
   small and each panel needs high-fidelity detail, or the user explicitly says
   "one image per panel" or "separate panels."
 - **Neither mode produces a video input.** Separate images make per-panel
-  editing and review easier; they do not make a panel bindable. A shot that
-  needs a first-frame keyframe gets a new full-colour keyframe prompt built
-  from the element references and the panel's staging text.
+  editing and review easier. Describe approved board staging in text. Select a separately authored non-board still, with its own lineage and QA, for a supported first-frame role.
 - **A one-panel board is always a single image** regardless of mode — the mode
   distinction applies only when the board has two or more narrative panels.
 

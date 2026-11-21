@@ -82,13 +82,12 @@ parameters, the audio route, and the test-ladder rung.
 3. **Preserve audio scope**, per the
    [video-to-video inputs contract](../../contracts/video-to-video-inputs.md#audio-scope).
    Native audio is sufficient unchanged; no mandatory mute, extraction or mux.
-4. **Reference budget**: 1–5 target images, one view per image, no collage.
-   Several views of one target state that the output contains only one.
+4. **Reference budget:** use supported counts and separate views for ordinary object references. For an identity, retain the approved sheet unchanged at registration and bind its active asset URI.
 5. **No baked text.** A label printed on a product is part of the product;
    captions, taglines, CTAs and end cards are added in post.
 6. **Test ladder**: follow the workspace draft policy with currently supported
    parameters. Propose a contact-window probe for a difficulty in the current
-   source or result, with user approval for its selected span. Every new 2.5
+   source or result, with user approval for its selected span. Every new retained native 2.5
    generation uses explicit `resolution: "480p"` and boolean `draft: true` in
    both review modes. Resolve schema or transport conflicts without dropping
    the flag; promote only selected native Drafts. Re-check final audio and
@@ -96,7 +95,7 @@ parameters, the audio route, and the test-ladder rung.
 
 ## Route and parameters
 
-Seedance 2.5 edit, through `seedance_2_5_create_task`:
+Seedance 2.5 edit, through `seedance_create_task`:
 
 - `videos`: the selected source as `@Video 1`, first in order; an `asset://` video
   when the source shows a person (see the
@@ -171,6 +170,6 @@ retry.
 - [ ] Preservation list names faces, accessories, hands, camera and lighting
 - [ ] Character target bound as a Virtual Portrait `asset://` reference
 - [ ] Target reference states what to ignore in the image
-- [ ] 1–5 target images, one view each
+- [ ] Reference count fits the verified edit schema; an approved identity sheet remains intact.
 - [ ] Audio scope recorded
 - [ ] Ladder rung stated

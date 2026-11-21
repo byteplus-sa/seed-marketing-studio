@@ -76,7 +76,7 @@ run silent and do not invent a post-production requirement for score or ambience
 | Setting | Value |
 |---|---|
 | Model | Resolve the current live binding and operation for the brief; the JSON model value is not capability evidence |
-| Draft resolution | Every new Seedance 2.5 generation uses explicit `resolution: "480p"` and boolean `draft: true` in both modes, with no skip-draft exception; resolve schema or transport conflicts without dropping the flag. Record delivery target separately |
+| Draft resolution | Every new retained native 2.5 generation uses explicit `resolution: "480p"` and boolean `draft: true` in both modes, with no skip-draft exception; resolve schema or transport conflicts without dropping the flag. Record delivery target separately |
 | Ratio | Current brief's supported ratio; JSON proposes 1:1 when no ratio is selected |
 | Duration | Sum of current planned shot durations; fit each request to verified clip limits and assemble as needed |
 | Storyboard | Sketch by default, one panel per current beat unless a panel budget is specified, 3 variants unless overridden, QA and selection under the current approval mode |

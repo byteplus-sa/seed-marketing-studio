@@ -58,8 +58,7 @@ the status is `needs_human`.
 ### opening_change
 
 - A cut, a clear camera move, subject motion across the frame, or a strong
-  brightness or colour change counts. Compression shimmer or a slow drift
-  does not.
+  brightness or colour change counts. Use the brief to judge a subtle drift. If the approved opening is intentionally held, record `not_applicable`, cite the brief rationale and include a timestamped opening frame. Missing evidence remains unresolved.
 - Cite the frames either side of the change.
 
 ### cta_safe_zone

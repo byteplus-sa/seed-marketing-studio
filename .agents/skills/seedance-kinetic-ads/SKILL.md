@@ -265,9 +265,8 @@ sequence into that record rather than designing a replacement sequence:
   any user-authorized override, including a fixed native-generation count.
 - Map each editorial shot to `id`, `duration_s`, `job`, `size`, `framing`,
   `featured`, `angle`, `angle_reason`, `move`, `move_reason`, `lens_intent`,
-  `depth_layers`, `light` and `contrast_with_previous`. Mark exactly one
-  scene `turn`, one `wow` per source clip, and applicable `static_reason`
-  values for holds; explain intentionally constant lighting.
+  `depth_layers`, `light` and `contrast_with_previous`. Mark a scene `turn` or `wow` when the brief calls for one. Give applicable
+  `static_reason` values for holds; explain intentionally constant lighting.
 - Keep provider source IDs separate from editorial shot IDs. Each source's
   shot manifest carries its slice; a single-pass multi-shot test has one
   source manifest with several internal shots, not several provider tasks.

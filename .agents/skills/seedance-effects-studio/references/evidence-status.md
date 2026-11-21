@@ -28,7 +28,7 @@ not in this reusable skill.
   a candidate review and a hash-bound decision.
 - The provider task ID is write-once in the registry; register the `cgt-` ID, not
   the Ark job ID.
-- `camera_fixed` and a seed are not exposed by `seedance_2_5_create_task`.
+- `camera_fixed` and a seed were absent from the historical 2.5 schema. Verify the discovered `seedance_create_task` schema for the selected model.
 - `seed_media_export_artifact` with a destination path is disabled without
   configured output roots; copy from the artifact store path.
 - Promotion with `draft_task_id` renders 1080p in the documented path; verify

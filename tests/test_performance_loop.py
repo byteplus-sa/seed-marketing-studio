@@ -82,6 +82,29 @@ class PerformanceLoopTests(unittest.TestCase):
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
 
+    def test_partial_rate_coverage_withholds_ranking(self):
+        for missing in ("clicks", "impressions"):
+            rows = [{"ad_name": HERO, "clicks": 100, "impressions": 1000},
+                    {"ad_name": HERO, "clicks": 10, "impressions": 9000, missing: None}]
+            result = loop.rank({"records": rows}, "ctr", 0)
+            self.assertFalse(result["ranked"])
+            self.assertIsNone(result["not_ranked"][0]["ctr"])
+            self.assertEqual(result["not_ranked"][0]["coverage"]["ctr"], 1)
+        rows = [{"ad_name": HERO, "clicks": 0, "impressions": 100}]
+        self.assertEqual(loop.rank({"records": rows}, "ctr", 0)["ranked"][0]["ctr"], 0)
+
+    def test_incomplete_latest_window_is_not_replaced_by_older_measurements(self):
+        first = {"impressions": 100, "frequency": 1, "ctr": .1, "hook_rate": None}
+        for impressions in (None, 0):
+            series = [first, first, {**first, "impressions": impressions}]
+            self.assertEqual(loop.fatigue_status(series)[0], "insufficient_data")
+
+    def test_fatigue_needs_a_shared_rate_in_both_latest_windows(self):
+        first = {"impressions": 100, "frequency": 1, "ctr": .1, "hook_rate": None}
+        for latest_hook_rate in (None, .2):
+            last = {**first, "frequency": 2, "ctr": None, "hook_rate": latest_hook_rate}
+            self.assertEqual(loop.fatigue_status([first, last])[0], "insufficient_data")
+
     def write(self, name, content):
         path = self.root / name
         path.write_text(content if isinstance(content, str) else json.dumps(content))

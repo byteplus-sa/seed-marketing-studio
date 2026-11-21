@@ -25,7 +25,7 @@ this skill joins on and turns the drafted next matrix into rows.
 range.** No hook rate, CTR or CPA is "good" or "bad" by an outside number here;
 vendor benchmarks disagree and none is official.
 
-## Inputs
+##  Inputs
 
 | Input | Required | Notes |
 | --- | --- | --- |
@@ -39,7 +39,9 @@ Ask which KPI matters when the user has not said. Suggest `cpa` for a
 conversion goal, `ctr` for traffic, and `hook_rate` for testing openings, but
 let the user decide.
 
-## Procedure
+Each ranked KPI requires paired numerator and denominator values for every included row. Reports give the number of covered rows per KPI. Missing values withhold the rate; observed zeros are retained. Fatigue requires a comparable rate in both windows.
+
+##  Procedure
 
 ```mermaid
 flowchart LR
@@ -103,7 +105,7 @@ run with `uv run python`. Every command prints JSON with `ok`.
 5. **Hand off.** Bind the draft's hero to the approved winning take (shot,
    take, SHA-256, decision), then plan and cost it with `ad-variant-matrix`.
 
-## Reading the results honestly
+##  Reading the results honestly
 
 Read [interpretation](references/interpretation.md) before presenting a
 ranking. In short:
@@ -120,7 +122,7 @@ ranking. In short:
   significance test. Suggest letting a close race run longer instead.
 - A fatigue flag is a prompt to refresh creatives, not proof of fatigue.
 
-## Boundaries
+##  Boundaries
 
 - No platform API, login or scraping; the user exports the file.
 - No invented data: missing values stay missing and are reported.

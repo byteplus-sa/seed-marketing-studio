@@ -1,22 +1,7 @@
 ---
 name: seedance-motion-design
-description: >
-  Write production-grade Seedance 2.5 motion-design and motion-graphics
-  prompts for marketing deliverables — launch videos, motion-on-footage
-  explainers, hypermotion product ads, 3D flythroughs, 2D explainers,
-  editorial explainers, logo reveals, kinetic type, product motion, and
-  data-driven explainers. Exact words, numbers, charts, logos, and UI are
-  authored as deterministic HTML-entrypoint graphics for post-composited
-  fidelity;
-  Seedream supplies only synthesized image layers and Seedance supplies
-  text-free footage or intentionally non-exact plate motion. Use whenever the
-  user asks for motion design, motion graphics, kinetic typography, a logo
-  reveal, product motion, an explainer video, an animated data story, or
-  any text/graphic-driven marketing motion. Composes in prose with
-  html-graphic-render for exact static graphics, seedance-prompt for the
-  six-part formula, seedream-prompt or seedream-storyboard for synthesized
-  image/keyframe layers, and seed-audio-prompt for voice/music. Does not call
-  the API itself.
+description: >-
+  Write text-free Seedance motion-design prompts for product motion, explainers, animated plates and launch footage. Use for prompt wording. Route exact UI, typography or end-card animation execution to ad-motion-graphics.
 ---
 
 # Seedance Motion Design
@@ -328,9 +313,7 @@ This skill is prompt-only. It **never calls generation tools.** It composes:
   intent, light) for footage-led ad and showcase shots.
 - Axis presets (`seedance-camera-presets`, `seedance-lighting-presets`,
   `seedance-pacing-presets`, `seedance-acting-console`) — to word the axes the
-  shot plan assigns or the user names. Do not let two skills fight: exactly one
-  grade per clip, one dominant lighting direction per shot, and 1–2 camera
-  moves per shot.
+  shot plan assigns or the user names. Preserve the brief’s compatible camera moves, lighting transitions and grade choices. Resolve genuine simultaneous conflicts in the shot plan.
 
 ## Reference discipline
 

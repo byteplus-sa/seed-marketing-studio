@@ -33,6 +33,7 @@ FRAME_EVIDENCE = {
     "sound_off_readable",
 }
 MAY_NOT_APPLY = {
+    "opening_change",
     "logo_legible",
     "cta_safe_zone",
     "sound_off_readable",
@@ -175,7 +176,7 @@ def evidence_errors(check: dict[str, Any], duration: float, base: Path) -> list[
     name, status = check["id"], check["status"]
     timestamps = check.get("timestamps", [])
     errors = [f"{name}: timestamp {value} is after the {duration} s cut" for value in timestamps if value > duration]
-    if status in ("pass", "fail") and name in FRAME_EVIDENCE:
+    if name in FRAME_EVIDENCE and (status in ("pass", "fail") or (name == "opening_change" and status == "not_applicable")):
         if not timestamps:
             errors.append(f"{name}: {status} needs timestamps")
         if not check.get("frames"):
@@ -190,7 +191,9 @@ def evidence_errors(check: dict[str, Any], duration: float, base: Path) -> list[
 
 
 def timing_errors(check: dict[str, Any], limit: float) -> list[str]:
-    if check["status"] != "pass" or not check.get("timestamps"):
+    if check["status"] != "pass" and not (check["id"] == "opening_change" and check["status"] == "not_applicable"):
+        return []
+    if not check.get("timestamps"):
         return []
     first = min(check["timestamps"])
     if first <= limit:

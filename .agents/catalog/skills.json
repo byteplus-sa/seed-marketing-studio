@@ -43,7 +43,7 @@
       "source_revision": "workspace",
       "upstream_hash": null,
       "overlay_notes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported.",
-      "description": "Orchestrator that adapts an approved ad to another market at the depth the user chooses, per element: L1 translated captions and re-rendered on-screen text, L2 voice (dub keeping voices or a line-scoped re-voice that keeps the source soundtrack), L3 talent replaced through authorized Virtual Portraits, L4 cultural adaptation of settings, props, wardrobe, product and soundtrack, or L5 full transcreation into a new hero ad. Keeps a market card of user-supplied facts, an inventory of every spoken line and on-screen text, a translation sheet with review statuses, market-scoped claims, a recorded native or local reviewer sign-off before final generation at L3 to L5, an honest lip-sync verdict, and a new version in its own project without touching the source. No market is built in. Use to localize, translate, dub, recast or transcreate a finished ad for another market or language. Not for writing a first ad, a caption file alone (ad-captions) or ratio cuts alone (ad-delivery-formats).",
+      "description": "Orchestrator for adapting an approved ad to another market or language, from translated copy and dubbing to talent changes and transcreation. Use for a localized deliverable. Standalone captions and aspect-ratio versions have separate routes.",
       "readme_summary": "Adapt an approved ad to another market at the depth chosen per element: captions/text, voice, talent, cultural adaptation or full transcreation, with native review gates."
     },
     "ad-performance-loop": {
@@ -435,7 +435,7 @@
     },
     "seedance-motion-design": {
       "kind": "leaf",
-      "description": "Write production-grade Seedance 2.5 motion-design and motion-graphics prompts for marketing deliverables \u2014 launch videos, motion-on-footage explainers, hypermotion product ads, 3D flythroughs, 2D explainers, editorial explainers, logo reveals, kinetic type, product motion, and data-driven explainers. Exact words, numbers, charts, logos, and UI are authored as deterministic HTML-entrypoint graphics for post-composited fidelity; Seedream supplies only synthesized image layers and Seedance supplies text-free footage or intentionally non-exact plate motion. Use whenever the user asks for motion design, motion graphics, kinetic typography, a logo reveal, product motion, an explainer video, an animated data story, or any text/graphic-driven marketing motion. Composes in prose with html-graphic-render for exact static graphics, seedance-prompt for the six-part formula, seedream-prompt or seedream-storyboard for synthesized image/keyframe layers, and seed-audio-prompt for voice/music. Does not call the API itself.",
+      "description": "Write text-free Seedance motion-design prompts for product motion, explainers, animated plates and launch footage. Use for prompt wording. Route exact UI, typography or end-card animation execution to ad-motion-graphics.",
       "readme_summary": "Write Seedance 2.5 motion-design prompts while routing exact typography and UI to deterministic post graphics and synthesized visual layers to Seedream.",
       "dependencies": [],
       "source_revision": "workspace",
@@ -444,7 +444,7 @@
     },
     "seedance-motion-recast": {
       "kind": "leaf",
-      "description": "Write Seedance 2.5 Motion Transfer (recast) prompts that keep a source clip's body motion, pose sequence, screen positions, camera path, framing changes, cuts and timing while rebuilding cast, wardrobe, product, location and style from locked reference images. Covers the motion-only authority split, an explicit mapping or disposition for every visible source subject, bleed and extra-people guards, Virtual Portrait asset:// identity references, source-audio preservation, named look presets, and a 480p key-beat probe ladder. Consumes a subject_map.json when available or inspects the source itself. Use to recast performers, localize a take for another market, or rebuild its world around the same performance. Not for replacing one element while preserving source pixels (seedance-object-swap), redrawing the same cast in a new medium (seedance-restyle), other edits (seedance-vfx-prompt), new T2V/I2V shots, or task submission; the caller owns the generation lifecycle.",
+      "description": "Write Seedance motion-transfer prompts to rebuild cast and world around the motion of an existing clip. Use for performance-preserving recast. Use object swap for one changed element or restyle for the same cast in another medium.",
       "readme_summary": "Write Seedance 2.5 Motion Transfer prompts that keep a clip's motion, camera and cuts while rebuilding cast, wardrobe, product, location and style from locked references, with per-subject dispositions, Virtual Portrait identities, source-audio preservation and a 480p probe ladder.",
       "dependencies": [],
       "source_revision": "workspace",

@@ -61,7 +61,7 @@ unless the brief records a look.
 
 ## Draft to final generation
 
-This handoff applies in both review modes. Every new Seedance 2.5 generation
+This handoff applies in both review modes. Every new retained native 2.5 generation
 uses explicit `resolution: "480p"` and boolean `draft: true`; a delivery target
 alone does not bypass it. Resolve schema or transport conflicts, never silently
 fall back to non-draft 2.5.
@@ -70,15 +70,13 @@ Pass the selected 480p draft paths and hashes, its provider task ID, passing
 review and selection records, exact prompt snapshot, ordered approved reference
 hashes, requested audio behavior and delivery resolution. For multi-shot work,
 include the reviewed draft assembly and picture/audio decisions. Record verified
-promotion constraints; new Seedance 2.5 generations cannot skip native Draft.
+promotion constraints; retained native bindings cannot skip native Draft.
 
 - A native Draft (`draft: true`) is promoted by its `draft_task_id` with only
   the output settings (`resolution`, `watermark`, optional chaining fields);
   the provider reuses its prompt, references, seed, duration and audio. Any
   input change means a new Draft, not a promotion.
-- Other models without native Draft use a plain 480p test. It is not promotable;
-  its final is a fresh generation that
-  may change picture, timing and audio.
+- For other bindings, use the verified ordinary preview resolution when the operation requires one. An evidenced optional absent preview is valid. An ordinary preview cannot be promoted. Its separately registered final may change picture, timing and audio.
 
 Either way, register and run mode-appropriate preflight on the final request as a new operation, then
 inspect its output again (playback, speech-to-text, listening) and select it

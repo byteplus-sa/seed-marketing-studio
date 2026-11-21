@@ -191,7 +191,7 @@ similarity or sincerity. Report pass, fail or untested with locators.
 
 Honor review_mode independently of approval_mode. Prompt-only work generates
 nothing; production checks remain caller-owned.
-Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
+Every new retained native 2.5 generation requires `resolution: "480p"` and boolean
 `draft: true` in both review modes. Promote only selected native Drafts.
 Surface source-count conflicts before generation; never bypass drafts or
 silently expand scope.

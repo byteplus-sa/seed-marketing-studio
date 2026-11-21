@@ -255,9 +255,7 @@ approval_mode: approve_for_me
 Missing fields use these defaults for new actions only; invalid values fail.
 Default review means minimal preflight and final sanity, one image and
 draft-first video. Strict review retains detailed checks and three-image
-sampling. Both modes require explicit `resolution: "480p"` and boolean
-`draft: true` for every new Seedance 2.5 generation, without a skip-draft
-exception. Other models without native Draft use a plain 480p test.
+sampling. Retained native bindings require explicit `resolution: "480p"` and boolean `draft: true` on every new generation. Other models follow their verified native, ordinary or optional absent preview profile. Keep unknown controls unresolved.
 Do not load strict checklists or request a prompt
 review report in default mode unless explicitly requested or required by
 applicable rules. Existing approval authority is unchanged: the agent makes

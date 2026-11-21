@@ -97,5 +97,4 @@ because of a language or a pronunciation concern. Return an unsupported or
 unverified requirement to the caller instead of inventing support.
 
 The caller owns production authorization, approved references, the exact
-request hash and complete prompt review. New text is a draft until the user
-accepts it. Unknown submission outcomes are reconciled, not duplicated.
+request hash and mode-appropriate preflight. Preserve locked dialogue. Select newly drafted dialogue under the project approval mode and retain any required language sign-off. Unknown submission outcomes are reconciled, not duplicated.

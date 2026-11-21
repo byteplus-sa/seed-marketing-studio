@@ -270,12 +270,11 @@ when the user explicitly requests sub-agent prompt review for the project or
 specific generation. The ordered `references:` array is verified 1:1
 against `shot.md` (same files, same order, same `@Image N` / `@Video N` /
 `@Audio N` bindings); the request's `generate_audio` matches the brief's audio
-route; no storyboard image is bound; and every new Seedance 2.5 generation uses
+route; no storyboard image is bound; and every new retained native 2.5 generation uses
 explicit `resolution: "480p"` and boolean `draft: true` in both review modes.
-Resolve schema or transport mismatches without dropping the flag. Other models
-without native Draft use a plain 480p test.
+Resolve schema or transport mismatches without dropping the flag. Other bindings use their evidenced preview controls or an optional absent preview. Unknown required capability stops submission.
 Initialize Studio at the delivery target, not the draft resolution. Seedance
-2.5 has no skip-draft exception; keep approval authority separate.
+retained native bindings have no skip-draft exception; keep approval authority separate.
 
 Required output: task registry entry, local media, exact prompt snapshot,
 provider metadata, actual media properties, cost fields, SHA-256, semantic QA

@@ -85,7 +85,7 @@ top of it.
    (`html-graphic-render` overlays).
 7. **Review and submit.** Every prompt passes `prompt-review` inline. Prepare
    and register each request with `prepare_request.py --register`, then
-   submit every new 2.5 generation with explicit `resolution: "480p"` and
+   submit every new retained native 2.5 generation with explicit `resolution: "480p"` and
    boolean `draft: true` in both review modes, review it, and select under the
    project's approval mode before native promotion. Resolve schema or transport
    conflicts without dropping the flag. Other models use verified operation

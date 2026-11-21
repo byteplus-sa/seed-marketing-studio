@@ -16,6 +16,7 @@ import variant_matrix
 
 class PreviewParameterTests(unittest.TestCase):
     setUp = fixtures.VariantMatrixTests.setUp
+    approve_hero_for_brief = fixtures.VariantMatrixTests.approve_hero_for_brief
     write = fixtures.VariantMatrixTests.write
 
     def evidence(self, values):
@@ -59,7 +60,7 @@ class PreviewParameterTests(unittest.TestCase):
         self.assertEqual(variant_matrix.step_params("ratio-reframe", options), [])
 
     def test_real_matrix_commands_preserve_json_looking_preview_strings(self):
-        (self.project / "project.md").write_text("---\nreview_mode: default\n---\n")
+        self.approve_hero_for_brief("---\nreview_mode: default\n---\n")
         (self.project / "studio").mkdir()
         values = {
             "style": "true", "label": "null", "variant": "123",

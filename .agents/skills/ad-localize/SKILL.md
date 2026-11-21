@@ -1,20 +1,7 @@
 ---
 name: ad-localize
 description: >-
-  Orchestrator that adapts an approved ad to another market at the depth the
-  user chooses, per element: L1 translated captions and re-rendered on-screen
-  text, L2 voice (dub keeping voices or a line-scoped re-voice that keeps the
-  source soundtrack), L3 talent replaced through authorized Virtual Portraits,
-  L4 cultural adaptation of settings, props, wardrobe, product and soundtrack,
-  or L5 full transcreation into a new hero ad. Keeps a market card
-  of user-supplied facts, an inventory of every spoken line and on-screen text,
-  a translation sheet with review statuses, market-scoped claims, a recorded
-  native or local reviewer sign-off before final generation at L3 to L5, an
-  honest lip-sync verdict, and a new version in its own project without
-  touching the source. No market is built in. Use to localize, translate, dub,
-  recast or transcreate a finished ad for another market or language. Not for
-  writing a first ad, a caption file alone (ad-captions) or ratio cuts alone
-  (ad-delivery-formats).
+  Orchestrator for adapting an approved ad to another market or language, from translated copy and dubbing to talent changes and transcreation. Use for a localized deliverable. Standalone captions and aspect-ratio versions have separate routes.
 ---
 
 # Ad Localize
@@ -181,10 +168,7 @@ records each element's level and lets one element sit below the default.
    cultural, transcreation, as the plan needs. Every generation-bound prompt
    is frozen, checked with mode-appropriate preflight and registered with
    `prepare_request.py --register`. Strict uses inline `prompt-review`.
-   Both modes start every new Seedance 2.5 generation with explicit
-   `resolution: "480p"` and boolean `draft: true`; no skip-draft exception
-   applies. Resolve schema or transport conflicts without dropping the flag.
-   Other models without native Draft use a plain 480p test.
+   Follow the [Seedance execution profile](../../contracts/seedance-execution-profiles.md). Retained native bindings require explicit `resolution: "480p"` and boolean `draft: true` on every new generation. Other bindings use their verified preview controls, including an optional absent preview.
    Run
    `market_card.py gate --level <L> [--element <id>] --stage final` before any
    final-resolution request; the gate uses the stricter of `--level` and the

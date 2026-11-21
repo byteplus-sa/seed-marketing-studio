@@ -206,29 +206,13 @@ Everything in this step belongs to the workspace transport, not to prompt
 composition. Before calling the tool, write the immutable exact prompt snapshot
 beside the planned output and record its SHA-256, ordered references,
 parameters, model, operation ID, request hash, and `submission_status: prepared`
-in `task_ids.json`. Obtain a complete prompt-review result for that exact
-request. Persist each variation as its own operation before submission. Then
-mark the operation `submitting` and call `seed_audio_generate` with the composed
-prompt:
+in `task_ids.json`. Perform mode-appropriate preflight. Persist each variation as a separate operation and mark it submitting before the background call.
 
-```python
-seed_audio_generate(
-    input={
-        "text_prompt": <composed_prompt>,
-        "output": {
-            "format": "mp3",
-            "sample_rate": 24000,
-            "subtitle": True,
-            "subtitle_type": "utterance"
-        },
-        "persist": True
-    }
-)
+```json
+{"input":{"tool_name":"seed_audio_generate","arguments":{"input":{"text_prompt":"<approved prompt>","variations":1,"output":{"format":"mp3","sample_rate":24000,"subtitle":true,"subtitle_type":"utterance"},"persist":true}}}}
 ```
 
-For multiple takes, use `seed_audio_generate_variations` with
-`variation_prompts` (up to 5 parallel variations). Each variation is an
-independent generation — partial failures are captured per variation.
+Record the returned job ID and use `ark_job_get` to retrieve its result. For multiple takes set `variations` (1–5); when supplying `variation_prompts` provide one per variation. Record successes and errors individually. Resume artifact persistence for a completed take without generating it again.
 
 **Timeouts**: a local timeout is not completion evidence. Record any provider
 ID at once, set `submission_status: submission_unknown` when acceptance is
@@ -337,8 +321,7 @@ promises a guaranteed pass.
 **Cost-saving tips:**
 - Prototype with shorter prompts first (60–80s) to validate the story arc
   before generating the full-length version.
-- Use `seed_audio_generate_variations` for parallel takes — it's the same
-  total cost as sequential calls but faster.
+- Use `seed_audio_generate` with the requested `variations` count for parallel takes. Record actual usage for each completed variation.
 - Each content-safety rejection still bills for the generation attempt (the
   audio is generated before the audit rejects it). Validate multilingual
   prompts carefully before submitting.

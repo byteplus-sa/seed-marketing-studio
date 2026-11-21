@@ -332,8 +332,10 @@ Recommended sequence:
    with `seedream-character-sheet-cleanup`; registration alone is not a trigger.
    For a new outfit on an approved sheet, compose with
    `seedream-character-outfit` instead of regenerating the identity.
-5. Save each generated result under `elements/<character-id>/` beside `character.md`.
-6. Record the approved filename as `selected_variant` in `character.md`; keep reference images in the same element folder using the `ref_<NN>_...` convention.
+5. Save each generated result under `elements/<character-id>/` beside `element.md`.
+6. Record the approved filename as `selected_variant` in `element.md`; keep reference images in the same element folder using the `ref_<NN>_...` convention.
+
+For new Studio characters, `element.md` owns the selected variant. Preserve existing legacy character sidecars in place.
 
 ## Example asset
 

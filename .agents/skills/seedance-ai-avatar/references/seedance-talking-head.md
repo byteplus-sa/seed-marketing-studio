@@ -5,8 +5,8 @@ reference, or the character sheet as `reference_image` where that route is
 sanctioned), `audios: [voice clip URL]`, `generate_audio: true`,
 `resolution: "480p"` with `draft: true` for the first take, `watermark: false`,
 and `duration` from measured or language-aware speech timing, including onset
-and final-word tail, within current tool limits. Submit the `seedance_2_5_create_task` tool through
-`ark_job_submit`, poll with `seedance_get_task`, and promote the selected draft
+and final-word tail, within current tool limits. Submit the `seedance_create_task` tool through
+`ark_job_submit`, poll with `gen_task_get`, and promote the selected draft
 by `draft_task_id`. Only send the likeness after the consent and real-likeness
 gates are recorded.
 

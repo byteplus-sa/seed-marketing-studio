@@ -214,7 +214,7 @@ prompt, a contact sheet or provider success.
 
 Current `review_mode` and `approval_mode` govern downstream review and
 selection. Prompt-only work generates nothing and adds no approval gates.
-Every new Seedance 2.5 generation requires `resolution: "480p"` and boolean
+Every new retained native 2.5 generation requires `resolution: "480p"` and boolean
 `draft: true` in both review modes. Promote only selected native Drafts.
 Surface source-count conflicts before generation; never bypass drafts or
 silently expand scope.

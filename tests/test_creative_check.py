@@ -171,6 +171,12 @@ class ReportTests(unittest.TestCase):
         code, _ = self.run_report(dict(late, reveal_time_s=4.0))
         self.assertEqual(code, 0)
 
+    def test_intentional_opening_hold_needs_frame_evidence(self) -> None:
+        document = replace_check(checklist(), "opening_change", status="not_applicable",
+                                 evidence="Approved brief calls for a fixed packshot.", timestamps=[0.2], frames=[FRAME])
+        self.assertEqual(self.run_report(document)[0], 0)
+        self.assert_invalid(replace_check(document, "opening_change", frames=[]), "needs frame paths")
+
     def test_late_opening_change_cannot_pass(self) -> None:
         document = replace_check(checklist(), "opening_change", timestamps=[2.5])
         self.assert_invalid(document, "opening_change: pass needs evidence at or before 2.0 s")

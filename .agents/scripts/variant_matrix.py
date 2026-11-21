@@ -17,6 +17,7 @@ from ruamel.yaml.error import YAMLError
 from validate_request import (
     Finding,
     capability_findings,
+    decision_findings,
     is_seedance_25,
     ordinary_final_findings,
     preview_params,
@@ -796,7 +797,8 @@ def file_sha256(path: Path) -> str:
 
 def hero_findings(hero: dict[str, Any], project: Path) -> list[Finding]:
     findings: list[Finding] = []
-    if project_file(project, hero.get("decision_ref")) is None:
+    decision_file = project_file(project, hero.get("decision_ref"))
+    if decision_file is None:
         findings.append(
             Finding(
                 "matrix.hero_decision",
@@ -805,6 +807,26 @@ def hero_findings(hero: dict[str, Any], project: Path) -> list[Finding]:
                 "hero.decision_ref",
             )
         )
+    else:
+        try:
+            decision = json.loads(decision_file.read_bytes())
+            validation = decision_findings(project, decision, require_current_project=True)
+            if validation:
+                findings.extend(validation)
+            elif (
+                decision["decision_type"] != "variant_selection"
+                or hero["decision_ref"] != f"decisions/{decision['decision_id']}.json"
+                or decision["asset_id"] != hero["shot_id"]
+                or decision["subject_path"] != hero.get("take_file")
+                or decision["selected_variant"] != Path(decision["subject_path"]).name
+                or decision["selected_sha256"] != hero["sha256"]
+            ):
+                findings.append(Finding(
+                    "matrix.hero_decision", "Decision must approve this shot, take file and digest",
+                    "hero.decision_ref",
+                ))
+        except (OSError, ValueError, UnicodeError) as error:
+            findings.append(Finding("matrix.hero_decision", str(error), "hero.decision_ref"))
     take = project_file(project, hero.get("take_file"))
     if take is None:
         findings.append(

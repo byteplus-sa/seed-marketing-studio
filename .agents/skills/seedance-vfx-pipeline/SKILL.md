@@ -84,7 +84,7 @@ flowchart TD
     VALIDATE[2. Validate inputs and references] --> PREPARE
     PREPARE[Persist exact prompt and reviewed request] --> SUBMIT
     SUBMIT[3. Submit via resolved model and operation tool] --> POLL
-    POLL[4. Poll via seedance_get_task until terminal] --> CHECK
+    POLL[4. Poll via gen_task_get until terminal] --> CHECK
     CHECK{status?} -->|succeeded| SAVE
     CHECK -->|failed/cancelled/expired| ERROR[Report error + retry guidance]
     SAVE[5. Download asset to scene shot directory] --> MANIFEST
@@ -121,7 +121,7 @@ The workspace's recurring pattern for a text-only before/after VFX demo:
 2. `media_upload` the BEFORE clip; record its `object_key` in the project
    `ref_cache.json` with content SHA-256 and storage scope. Re-presign unchanged
    objects on demand; re-upload only for changed content or a missing object.
-3. AFTER — `seedance_2_5_create_task`, verify the live edit-mode token, `resolution: "480p"`, `draft: true`,
+3. AFTER — `seedance_create_task`, verify the live edit-mode token, `resolution: "480p"`, `draft: true`,
    `@Video 1` = the BEFORE URL; `duration` and `ratio` auto-lock. Write the
    prompt with `seedance-vfx-prompt` (2.5 editing section). Review and select the
    draft comparison before final generation. Promote the selected BEFORE,
@@ -151,7 +151,7 @@ The workspace's recurring pattern for a text-only before/after VFX demo:
 | `scene` | Yes | Scene ID (e.g. `scene-01`) |
 | `shot` | Yes | Shot ID (e.g. `s01_sh010`) |
 | `element_refs` | No | List of element reference paths (characters, locations, props) |
-| `resolution` | No | Every new Seedance 2.5 generation requires explicit `resolution: "480p"` and boolean `draft: true` in both modes. Resolve schema or transport conflicts without dropping the flag; promote only selected native Drafts. No skip-draft exception; verify the selected path for 4K |
+| `resolution` | No | Every new retained native 2.5 generation requires explicit `resolution: "480p"` and boolean `draft: true` in both modes. Resolve schema or transport conflicts without dropping the flag; promote only selected native Drafts. No skip-draft exception; verify the selected path for 4K |
 | `duration` | No | For 2.5 edit, validate source length and omit auto-locked duration; legacy limits require live operation evidence |
 | `ratio` | No | Inherit the source in edit modes where ratio auto-locks; use supported explicit values only |
 | `return_last_frame` | No | Default `true` (enables shot chaining) |
@@ -213,7 +213,7 @@ Before submitting, verify:
    the legacy path. Include observable face-fidelity criteria when relevant.
 5. **Model and operation** — resolve the model, transport tool, edit operation,
    and reference mode before choosing a checklist. Default 2.5 edit uses
-   `seedance_2_5_create_task` with `omni_reference_task_type: edit`; 4K follows the
+   `seedance_create_task` with `omni_reference_task_type: edit`; 4K follows the
    4K routing in `.agents/contracts/routing.md` and needs live tool evidence for
    the chosen path. Faces
    require fidelity QA, not a model switch.
@@ -245,11 +245,7 @@ and debugging.
 
 ## Cost considerations
 
-VFX shots using Seedance 2.0 at 4K with audio are the **most expensive**
-generation mode in the workspace. Each 4K VFX take costs significantly more than
-a 1080p text-to-video take.
-
-Standard Seedance 2.5 at 720p is cheaper per generation but cannot produce 4K output — use 2.5 for structured editing and extension, and a supported 4K path (2.0, or whitelist-only 2.5 Premium) when 4K is explicitly needed.
+Estimate costs using the chosen model, resolution and operation when evidence is available. Verify ordinary 4K support separately from Draft promotion limits. Preserve model pins.
 
 Guidelines:
 - **Default to a single take** (`t01`) for VFX development. Generate multiple
@@ -279,9 +275,8 @@ Before declaring a VFX shot complete, verify:
 - [ ] **Chaining inputs** — requested last-frame output and the next shot
       reference roles are supported by the selected model/operation.
 - [ ] **Audio mode** — matches the request and uses only supported parameters.
-- [ ] **Task submitted** — the resolved tool acknowledged a task ID: normally
-      `seedance_2_5_create_task` for 2.5 edit; the verified legacy tool for 2.0.
-- [ ] **Task polled** — `seedance_get_task` returned `status: succeeded`
+- [ ] The completed create job returned per-variation task IDs, recorded before polling.
+- [ ] `gen_task_get` returned success for the selected task ID.
 - [ ] **Video saved locally** — asset in `scenes/scene-NN/sNN_shNNN/`
 - [ ] **Last frame saved** — PNG alongside the video (if chaining)
 - [ ] **`shot.md` manifest written** — full YAML frontmatter with model, prompt
