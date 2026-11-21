@@ -12,7 +12,7 @@
       "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ad-captions/SKILL.md",
-      "computedHash": "bf8fbf474461b03df44389f7ca43924b22d69821c56bd68ac4bc657bc7b17bf2"
+      "computedHash": "d5db8a1ca2981e7c84210dc871cd9bea18458377a470525ed4fcbc7888f42728"
     },
     "ad-creative-check": {
       "source": "./local",

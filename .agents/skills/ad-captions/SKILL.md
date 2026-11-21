@@ -65,6 +65,9 @@ with cue counts, SHA-256 per file, host snippets and every warning.
    re-verify before paid delivery). For a placement whose safe zone is
    unpublished, the script refuses until a rectangle measured from the
    platform's own template is passed with `--safe-rect`.
+The burn-in helper measures each cue’s padded box after font loading in an
+   available Chromium browser. When measurements are unavailable, it flags
+   the layout for a Studio playback check.
 9. **Warnings are defects to look at.** Reading speed over the limit, a cue
    below the minimum, a trimmed overlap, a split run and an estimated line wider
    than the safe rectangle are reported. Fix the text, timing, line limit or

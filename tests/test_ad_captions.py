@@ -14,6 +14,7 @@ import unittest
 import xml.etree.ElementTree as ET
 from itertools import pairwise
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / ".agents/skills/ad-captions/scripts/make_captions.py"
@@ -940,10 +941,11 @@ class BurnInTests(unittest.TestCase):
         if browser is None:
             self.skipTest("Chromium required to measure the caption box")
         typ = MODULE.Typography("Arial", None, 50, "#FFFFFF", "#000000", "bottom")
-        for lines, height in [(("SHOP NOW",), 65), (("SHOP NOW",), 100), (("SHOP", "NOW"), 130)]:
-            with self.subTest(lines=lines, height=height):
+        for lines, width, height in [(("SHOP NOW",), 880, 65), (("SHOP NOW",), 880, 100),
+                                     (("SHOP", "NOW"), 880, 130), (("SHOP NOW",), 285, 85)]:
+            with self.subTest(lines=lines, width=width, height=height):
                 cue = MODULE.Cue(0, 2000, lines, "cta")
-                layout = MODULE.Layout(1080, 1920, 100, 1200, 880, height)
+                layout = MODULE.Layout(1080, 1920, 100, 1200, width, height)
                 doc = MODULE.render_composition([cue], "en", "captions-en", layout, typ)
                 style = doc.split("<style>")[1].split("</style>")[0]
                 content = doc.split('</style>')[1].split('<script>')[0]
@@ -954,9 +956,28 @@ class BurnInTests(unittest.TestCase):
                                          f"--user-data-dir={self.directory / 'browser'}", "--dump-dom", page.as_uri()],
                                         capture_output=True, text=True, check=True, timeout=30)
                 top = float(result.stdout.split("<title>")[1].split("</title>")[0])
-                warnings = MODULE.layout_warnings([cue], layout, typ)
+                warnings = MODULE.layout_warnings([cue], layout, typ, doc, self.compositions.parent)
                 self.assertEqual(any("safe height" in message for message in warnings), top < layout.y)
-                self.assertEqual(top < layout.y, height in (65, 130))
+                self.assertEqual(top < layout.y, height in (65, 85, 130))
+
+    def test_burn_in_cli_reports_browser_soft_wrap_beyond_safe_height(self):
+        if MODULE.chromium_executable() is None:
+            self.skipTest("Chromium required for measured bounds")
+        self.source.write_text(json.dumps({"schema_version": 1, "lines": [
+            {"id": "cta", "start_s": 0, "end_s": 3, "text": {"en": "SHOP NOW"}}
+        ]}))
+        code, report, _ = self.run_cli("--size", "1080x1920", "--safe-rect", "100,1200,285,85",
+                                       "--font-family", "Arial", "--font-size", "50")
+        self.assertEqual(code, 0, report)
+        self.assertTrue(any("137 px exceeds the safe height 85 px" in warning
+                            for warning in json.loads(report)["warnings"]))
+
+    def test_missing_browser_reports_unverified_geometry_and_preserves_the_layer(self):
+        with patch.object(MODULE, "chromium_executable", return_value=None):
+            code, report, _ = self.run_cli("--size", "1080x1920", "--placement", "vertical-published")
+        self.assertEqual(code, 0)
+        self.assertTrue(any("unverified" in warning for warning in json.loads(report)["warnings"]))
+        self.assertTrue((self.compositions / "captions-en.html").is_file())
 
     def test_line_wider_than_the_safe_width_is_warned(self):
         code, stdout, _ = self.run_cli(
