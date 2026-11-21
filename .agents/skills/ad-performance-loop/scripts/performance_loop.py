@@ -450,10 +450,11 @@ def windows(
 
 
 def fatigue_status(series: list[dict[str, Any]]) -> tuple[str, str]:
-    usable = [window for window in series if window["impressions"]]
-    if len(usable) < 2:
+    if len(series) < 2:
         return "insufficient_data", "fewer than two dated windows with impressions"
-    previous, latest = usable[-2], usable[-1]
+    previous, latest = series[-2:]
+    if not previous["impressions"] or not latest["impressions"]:
+        return "insufficient_data", "no measured impressions in one of the latest two windows"
     if previous["frequency"] is None or latest["frequency"] is None:
         return "insufficient_data", "no reach or frequency column for both windows"
     comparable = [name for name in ("ctr", "hook_rate")

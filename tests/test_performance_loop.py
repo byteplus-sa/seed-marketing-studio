@@ -93,6 +93,12 @@ class PerformanceLoopTests(unittest.TestCase):
         rows = [{"ad_name": HERO, "clicks": 0, "impressions": 100}]
         self.assertEqual(loop.rank({"records": rows}, "ctr", 0)["ranked"][0]["ctr"], 0)
 
+    def test_incomplete_latest_window_is_not_replaced_by_older_measurements(self):
+        first = {"impressions": 100, "frequency": 1, "ctr": .1, "hook_rate": None}
+        for impressions in (None, 0):
+            series = [first, first, {**first, "impressions": impressions}]
+            self.assertEqual(loop.fatigue_status(series)[0], "insufficient_data")
+
     def test_fatigue_needs_a_shared_rate_in_both_latest_windows(self):
         first = {"impressions": 100, "frequency": 1, "ctr": .1, "hook_rate": None}
         for latest_hook_rate in (None, .2):

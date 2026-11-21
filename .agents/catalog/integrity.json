@@ -41,7 +41,7 @@
     ".agents/skills/ad-performance-loop/evals/evals.json": "5c7304a026bf47e07f8be945e2825d314975348b05490e4f544b5aec3dab1451",
     ".agents/skills/ad-performance-loop/references/column-mapping.md": "bae41804cc1e35c510b40b0439fdc750a39960fdb31ab2365cc7aef94e5e3ece",
     ".agents/skills/ad-performance-loop/references/interpretation.md": "a8b152793e281126c330859fa086c815c525e43bdf7b2242253c428d12284256",
-    ".agents/skills/ad-performance-loop/scripts/performance_loop.py": "1a684f14109a37d47b84ea1b95b2072fede0b6109bf330b838e6efcef8b0c1fb",
+    ".agents/skills/ad-performance-loop/scripts/performance_loop.py": "08bcd66766a64fee3ee32bdadc09b26fb1c00d27616b6c958808c1f59589a96f",
     ".agents/skills/ad-variant-matrix/SKILL.md": "5709f7bff236687050b17c7cb459a9a28abc53e115902074917d21ce73d615a5",
     ".agents/skills/ad-variant-matrix/agents/openai.yaml": "6b975607a8b42cc88aa452ec5770b7a14c69724d9e447ae5cf53900535469483",
     ".agents/skills/ad-variant-matrix/evals/evals.json": "3dfd01c58a81f952dd71ddef7e37641fac74e04ae3bfe9aaeb7d7b43945ae1b1",
