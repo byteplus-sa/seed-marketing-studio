@@ -266,7 +266,7 @@ human sign-off before final generation and delivery.
 
 ## Skills
 
-The workspace ships **92 skills**. Leaf skills are independent; declared orchestrators compose them. Edit skills only under `.agents/skills/`.
+The workspace ships **91 skills** locally. Leaf skills are independent; declared orchestrators compose them. Edit project skills only under `.agents/skills/`; Ark MCP guidance uses the global skill.
 
 ### Orchestration and review
 
@@ -393,9 +393,12 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 
 ### MCP integration
 
-| Skill | Summary |
-|---|---|
-| **ark-mcp** | Upstream Ark MCP usage skill for Seedream 5.5, Seedance 2.5 4K and Flash, audio, 3D, OmniHuman, MediaKit, assets and durable background jobs; repository contracts remain authoritative. |
+Ark MCP usage guidance comes from the global skill at
+`~/.agents/skills/ark-mcp/SKILL.md`; no project-local copy or alias is shipped.
+Repository contracts remain authoritative for generation scope, review,
+model selection and persistence. If the global skill is missing, report it
+and use live MCP tool schemas and official documentation; do not recreate
+a local bundle. Loading the skill does not configure or connect an MCP server.
 
 ### FFmpeg post
 
@@ -437,7 +440,6 @@ The workspace ships **92 skills**. Leaf skills are independent; declared orchest
 | Source | Type | Skills |
 |---|---|---|
 | **Project-authored** | `local` | All `seedance-*`, `seedream-*`, `seed-audio-*`, `ugc-*`, `ad-*` and `audio-*` skills, plus `acting-direction`, `scene-craft`, `blocking-map`, `brand-kit`, `product-intake`, `static-ad-batch`, `brief-intake`, `film-production`, `template-factory`, `prompt-review`, `reference-edit-rebuild`, `omnihuman-prompt-20`, `html-graphic-render`, `color-grade-palettes`, `source-subject-map`, `ffmpeg-scene-transitions`, `ffmpeg-side-by-side-comparison`, `lark-showcase-aigc`, `showcase-html`, `media-review`, `update` |
-| **Partner-authored, locally tracked** | `local` | `ark-mcp`: exact [upstream bundle](https://github.com/byteplus-sa/ark-mcp/tree/ca2850965171b8e4f4069d55805993752e883a52/.agents/skills/ark-mcp); SHA-256 entrypoint and bundle inventory retain local hash semantics. [MIT license](.agents/catalog/ark-mcp-LICENSE). |
 | **HyperFrames (vendored)** | `github: heygen-com/hyperframes` | `hyperframes`, `hyperframes-*` and `general-video`; never installed globally or on demand |
 | **FFmpeg (vendored)** | `github: digitalsamba/claude-code-video-toolkit` | `ffmpeg` |
 

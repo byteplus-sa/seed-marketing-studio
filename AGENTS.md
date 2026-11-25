@@ -108,6 +108,13 @@ uses the blocking-map capability.
 
 ## Skills and orchestration
 
+Ark MCP usage guidance comes from the global skill at
+`~/.agents/skills/ark-mcp/SKILL.md`; no project-local copy or alias is shipped.
+Repository contracts remain authoritative for generation scope, review,
+model selection and persistence. If the global skill is missing, report it
+and use live MCP tool schemas and official documentation; do not recreate
+a local bundle. Loading the skill does not configure or connect an MCP server.
+
 One skill provides one capability. Leaf skills remain independently usable;
 composition hints are prose, not directives to load siblings. Declared
 orchestrators own cross-skill sequencing, generation gates and delegation.
@@ -123,12 +130,12 @@ Specialized dialogue and editing leaves remain available. Preserve the supplied 
 defaults. The project [execution profile](.agents/contracts/seedance-execution-profiles.md)
 binds provider, model, operation, transport and schema revision independently
 of capability evidence; unknown support remains unresolved. Audio-only and
-delivery-only matrix rows get no video controls. Imported `ark-mcp` remains
-unchanged; history, hashes, selections and actual final inspection remain authoritative.
+delivery-only matrix rows get no video controls. The global `ark-mcp` skill is
+managed separately; history, hashes, selections and actual final inspection remain authoritative.
 
 ### Skill sources and symlinks
 
-`.agents/` is the only source of truth for skills, catalog, contracts and
+Project-local `.agents/` is the source of truth for bundled skills, catalog, contracts and
 scripts. `.claude/skills/<name>`, `.claude/catalog`, `.claude/contracts` and
 `.claude/scripts` are relative symlinks into `.agents/`; user-level skills use
 the same pattern (`~/.claude/skills/<name>` → `~/.agents/skills/<name>`).

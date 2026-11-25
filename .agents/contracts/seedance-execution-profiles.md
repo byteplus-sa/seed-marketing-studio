@@ -1,7 +1,7 @@
 # Seedance Execution Profiles
 
-Project-owned destination policy complements the unchanged imported `ark-mcp`
-bundle. Imported declarations and configured discovery are not account
+Project-owned destination policy complements the global `ark-mcp` skill at
+`~/.agents/skills/ark-mcp/SKILL.md`. Skill declarations and configured discovery are not account
 activation, current schema exposure or verified execution support. Do not
 rewrite imported bindings or resolve conflicts by selecting another model,
 transport, resolution or preview route without explicit scope.

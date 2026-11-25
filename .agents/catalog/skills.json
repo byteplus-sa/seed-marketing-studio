@@ -64,15 +64,6 @@
       "upstream_hash": null,
       "overlay_notes": "Selective Cinema PR #7 adoption from byteplus-sa/seed-cinema-studio at e302ab982bc6714597983733d371e6bbbff0248c (approved head 99c92cd5371ccd43e75d0a508aeb8a488e554a8e has the identical tree). Marketing overlays preserve exact copy, CTA, claims, product identity, pins, budgets, localization levels, native drafts and independent review modes. No original third-party archive or external archive hash imported."
     },
-    "ark-mcp": {
-      "kind": "tooling",
-      "description": "Use the BytePlus Ark Seed multimodal MCP server to generate images (Seedream), audio (Seed Audio), video (Seedance 2.0, regular 2.5 with 4K, and 2.5 Flash at 480p/720p), 3D (Hyper3D, Hitem3d) and OmniHuman avatar video; run VOD MediaKit enhance, transcode, subtitle and audio separation; understand images, video and audio; transcribe speech; manage the asset library. Flow - ark_list_models for exact model IDs and limits, then one create tool per product through ark_job_submit (variations, dry_run), then gen_task_get, vod_get_task or omnihuman_get_task to poll, then seed_media_* for artifacts.",
-      "readme_summary": "Upstream Ark MCP usage skill for Seedream 5.5, Seedance 2.5 4K and Flash, audio, 3D, OmniHuman, MediaKit, assets and durable background jobs; repository contracts remain authoritative.",
-      "dependencies": [],
-      "source_revision": "ca2850965171b8e4f4069d55805993752e883a52",
-      "upstream_hash": "3ed689b10f844b5c05832f573276b1927e3ad52143d72bd99b426daac992f35b",
-      "overlay_notes": "Exact upstream bundle, with no skill-local overlays. Repository generation scope, native drafts, review modes, rights, registration and no-financial-prerequisite policy remain authoritative; this import does not configure a server or credentials."
-    },
     "audio-dubbing": {
       "kind": "tooling",
       "description": "Dubs video or audio from one language to another using Seed Audio 1.0 voice cloning (TA2A). Takes a source audio/video file and a target-language script, clones all speaker voices from the original, preserves timing and pauses, and overlays the new audio onto the original video. Use this skill whenever the user asks to dub audio/video, translate audio with voice cloning, create a language dub, replace dialogue in a video with another language while keeping the same voices, do voice-over localization, or produce a multi-language version of a video using the original actors' voices. Also trigger when the user mentions dubbing, voice cloning for translation, audio localization, or replacing spoken dialogue in a clip. Works with any language pair supported by Seed Audio cross-lingual synthesis.",
