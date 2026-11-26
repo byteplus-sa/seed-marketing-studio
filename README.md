@@ -266,7 +266,7 @@ human sign-off before final generation and delivery.
 
 ## Skills
 
-The workspace ships **91 skills** locally. Leaf skills are independent; declared orchestrators compose them. Edit project skills only under `.agents/skills/`; Ark MCP guidance uses the global skill.
+The workspace ships **92 skills** locally. Leaf skills are independent; declared orchestrators compose them. Edit project skills only under `.agents/skills/`; Ark MCP guidance uses the global skill.
 
 ### Orchestration and review
 
@@ -387,6 +387,7 @@ The workspace ships **91 skills** locally. Leaf skills are independent; declared
 | Skill | Summary |
 |---|---|
 | **seed-audio-prompt** | Write structured Seed Audio 1.0 prompts for full-soundscape audio generation including dialogue, music, SFX, and ambience. |
+| **seed-audio-15-prompt** | Repository-managed, prompt-only optimization for explicitly selected Seed Audio 1.5 speech, soundscapes, visual-script conversion and stem separation; no API execution. |
 | **seed-audio-commercial** | Produce dramatic, story-driven audio commercials with BytePlus Seed Audio 1.0. |
 | **audio-dubbing** | Dubs video or audio from one language to another using Seed Audio 1.0 voice cloning (TA2A). |
 | **audio-split** | Splits an audio file into segments for Seed Audio reference preparation. |

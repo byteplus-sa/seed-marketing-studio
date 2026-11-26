@@ -3,6 +3,17 @@
 This is the single workspace entrypoint for agents and contributors.
 `CLAUDE.md` is a symlink to this file.
 
+## Seed Audio Prompt Routing
+
+Use `seed-audio-15-prompt` only for explicitly selected Seed Audio 1.5 prompt work.
+Keep existing audio skills and defaults unchanged; unspecified audio prompts
+retain their existing route. This prompt-only skill does not generate media,
+inspect assets or call APIs. Its supplied planning limits do not establish
+live capabilities or account access; the caller verifies the selected
+destination separately before any authorized generation.
+Maintain this adaptation through explicit repository changes, without
+automatic self-updates; keep it outside automated sync allowlists.
+
 ## Scope and authority
 
 This workspace produces AI-generated marketing content (ads, UGC, product

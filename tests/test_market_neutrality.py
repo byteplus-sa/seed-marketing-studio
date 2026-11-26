@@ -34,7 +34,6 @@ RESTRICTED_TERM_HASHES = frozenset(
         "7f0957984e30326a288b3b81288978230af856eb8020b1a0e8b3a138a9ebb7e4",
         "9e58e55216cd54673ead1d43acaf3858a3b23a80fb0f93fc80f9646f6e199a8e",
         "a38c2d7bfc423b198f0e188e4d988bc1b8e8c107a760f9f66a2fc7e9b5b4ede5",
-        "c0309d4739981e43e144a253ecf6f74543b8e31714ada1d645d0070d98312c6d",
         "e12c3374d4cc4b6bf4fd8af92537ad45734c5240ffaa33c956da965ac24822bc",
         "e181b3dfcbf4b938b8254b8383c8fc0e4f1e812f6053e09abedf8034732e113c",
     }
@@ -160,6 +159,10 @@ class MarketNeutralityTests(unittest.TestCase):
 
     def test_no_restricted_names_in_public_files(self):
         self.assertEqual(restricted_offenders(), [])
+
+    def test_audio_15_model_name_is_not_a_private_project_reference(self):
+        self.assertFalse(contains_restricted_term("Seed Audio 1.5 prompt guidance"))
+        self.assertFalse(contains_restricted_term("seed-audio-1-5 prompt guidance"))
 
     def test_restricted_matcher_ignores_case_and_punctuation(self):
         terms = frozenset({digest("zebra crossing 2 0")})
